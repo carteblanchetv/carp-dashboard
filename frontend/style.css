@@ -974,7 +974,7 @@ input:focus, select:focus, textarea:focus {
 .data-table th, .data-table td {
     padding: 0.6rem 0.4rem;
     border: 1px solid var(--border);
-    text-align: left;
+    text-align: center;
 }
 
 .data-table th:first-child, .data-table td:first-child { width: 100px; } /* Type */
