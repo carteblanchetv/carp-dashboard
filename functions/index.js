@@ -2195,32 +2195,79 @@ app.get('/api/admin/users', async (req, res) => {
     }
     
     const snapshot = await admin.firestore().collection('users').orderBy('addedAt', 'desc').get();
-    const users = snapshot.docs.map(doc => {
+
+    // Build full list first
+    const allDocs = snapshot.docs.map(doc => {
       const data = doc.data();
-      
-      // Decrypt PII if it's in the new format
-      const email = decrypt(data.email) || doc.id; // Fallback to doc ID if not encrypted (legacy)
+      const email = decrypt(data.email) || doc.id;
       const name = decrypt(data.name) || 'N/A';
       const surname = decrypt(data.surname) || '';
-      
-      return { 
+      const isEmailKey = doc.id.includes('@'); // Legacy docs use email as document ID
+      return {
         id: doc.id,
-        email: email,
-        name: name,
-        surname: surname,
+        email: email.toLowerCase(),
+        name,
+        surname,
         role: data.role,
         isEnabled: data.isEnabled,
         notifications: data.notifications || {},
-        addedAt: data.addedAt
+        addedAt: data.addedAt,
+        isEmailKey
       };
     });
-    
+
+    // Build a set of emails that have a UID-keyed (non-email) doc
+    const emailsWithUidDoc = new Set(
+      allDocs.filter(u => !u.isEmailKey).map(u => u.email)
+    );
+
+    // Keep UID-keyed docs always; only keep email-keyed docs if no UID doc exists for that email
+    const users = allDocs
+      .filter(u => !u.isEmailKey || !emailsWithUidDoc.has(u.email))
+      .map(({ isEmailKey, ...rest }) => rest); // strip internal flag before sending
+
     res.json({ success: true, users });
   } catch (error) {
     console.error('[USER_MGMT] List users failed:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
+// --- TEMP: One-shot cleanup of duplicate email-keyed user docs ---
+app.post('/api/admin/cleanup-duplicate-users', async (req, res) => {
+  try {
+    if (req.user.role !== 'super-admin') {
+      return res.status(403).json({ success: false, error: 'Super-admin only.' });
+    }
+    const snapshot = await admin.firestore().collection('users').get();
+    const allDocs = snapshot.docs.map(doc => ({
+      id: doc.id,
+      isEmailKey: doc.id.includes('@'),
+      emailField: doc.data().email ? decrypt(doc.data().email) : null
+    }));
+
+    // Emails that have a UID-keyed doc
+    const emailsWithUidDoc = new Set(
+      allDocs.filter(d => !d.isEmailKey).map(d => (d.emailField || '').toLowerCase())
+    );
+
+    const toDelete = allDocs.filter(d => d.isEmailKey && emailsWithUidDoc.has(d.id.toLowerCase()));
+    if (toDelete.length === 0) {
+      return res.json({ success: true, deleted: 0, message: 'No duplicates found.' });
+    }
+
+    const batch = admin.firestore().batch();
+    toDelete.forEach(d => batch.delete(admin.firestore().collection('users').doc(d.id)));
+    await batch.commit();
+
+    console.log(`[CLEANUP] Deleted ${toDelete.length} duplicate email-keyed user docs.`);
+    res.json({ success: true, deleted: toDelete.length, docs: toDelete.map(d => d.id) });
+  } catch (error) {
+    console.error('[CLEANUP] Failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+// --- END TEMP ---
 
 app.post('/api/admin/create-user', express.json(), async (req, res) => {
   try {
