@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Master Footage Hub - Carte Blanche</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    <script src="js/hub_init.js?v=5.1.1" type="module"></script>
+</head>
+<body class="dashboard-body">
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <a href="user_management.html" id="gnavAdminBtn" class="gnav-btn" style="display: none;">
+                    <span>👥</span>
+                    <span>USER MANAGEMENT</span>
+                </a>
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container wide">
+        <header class="dashboard-header">
+            <div class="logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
+            </div>
+            <h1>Master Footage Declaration (FDL)</h1>
+            <p>Select an action to proceed with footage declarations.</p>
+        </header>
+
+        <div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">
+            <a href="footage_agreement.html" class="app-card primary-action" style="border-color: var(--primary);">
+                <div class="card-icon">➕</div>
+                <div class="card-content">
+                    <h2>Create New FDL</h2>
+                    <p>Start a new Master Footage Declaration (FDL) form.</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <a href="past-fdl.html" class="app-card">
+                <div class="card-icon">📥</div>
+                <div class="card-content">
+                    <h2>Download Past FDLs</h2>
+                    <p>View and download previously submitted declarations.</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+        </div>
+
+        <div style="margin-top: 3rem; text-align: center;">
+            <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+                ← Back to Forms Hub
+            </a>
+        </div>
+    </div>
+</body>
+</html>

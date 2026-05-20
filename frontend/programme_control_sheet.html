@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Final Control Sheet (FCC)</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    
+    <script src="js/branding.js?v=5.1.1"></script>
+    <!-- Scripts for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script type="module">
+        import { checkAuth, isEditorialProduction } from './auth.js?v=5.1.1';
+        checkAuth().then(user => {
+            if (user) {
+                if (!isEditorialProduction(user)) {
+                    window.location.href = 'index.html';
+                } else {
+                    window.auth.initNavBar(user);
+                }
+            }
+        });
+    </script>
+</head>
+<body class="form-body">
+    <!-- Masquerade Banner (Managed by auth.js?v=5.1.0) -->
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <a href="index.html" class="gnav-btn" title="Back to Dashboard">
+                    <span>🏠</span>
+                    <span>HOME</span>
+                </a>
+                <a href="user_management.html" id="gnavAdminBtn" class="gnav-btn" style="display: none;">
+                    <span>👥</span>
+                    <span>USER MANAGEMENT</span>
+                </a>
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="masqueradeBanner" class="masquerade-banner">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 1.25rem;">🎭</span>
+            <div style="display: flex; flex-direction: column; gap: 0.1rem;">
+                <div style="line-height: 1.2;"><b>Masquerade Mode:</b> <span id="masqueradeName"></span></div>
+                <div style="opacity: 0.9; font-size: 0.8em; line-height: 1.2;">Perspective: <span id="masqueradeRole" style="text-transform: uppercase; font-weight: bold;"></span></div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <div id="masqueradeViewAction"></div>
+            <button onclick="window.auth.stopMasquerade()" class="btn-soft" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.4); padding: 0.4rem 0.8rem; font-size: 0.75rem; border-radius: 6px; cursor: pointer;">Stop Masquerade</button>
+        </div>
+    </div>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <h2 style="color: var(--primary);">Generating & Sending PDF...</h2>
+        <p>Please wait, this might take a moment.</p>
+    </div>
+
+    <div class="form-wrapper" id="formContentToPDF">
+        <header class="form-header">
+            <div class="logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
+            </div>
+
+                    <h1>Final Control Sheet (FCC)</h1>
+            
+            
+            <!-- This header specifically shows ONLY on the generated PDF -->
+            <div class="pdf-only-header">
+                <h3>CONTACT DETAILS:</h3>
+                <p>Nombuso Nkosi</p>
+                <p>083 700 3479</p>
+            </div>
+        </header>
+
+        <form id="controlSheetForm">
+            <input type="hidden" id="submissionId" name="submissionId">
+            <!-- Section 1 -->
+            <section class="form-section">
+                <h2>Show Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="txDate">TX Date</label>
+                        <input type="date" id="txDate" name="txDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="season">Season</label>
+                        <input type="text" id="season" name="season" placeholder="e.g. 35" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="episode">Episode</label>
+                        <input type="text" id="episode" name="episode" placeholder="e.g. 1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="uid">UID</label>
+                        <input type="text" id="uid" name="uid" placeholder="UID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Total Episode Duration (HH:MM:SS)</label>
+                        <input type="text" id="duration" name="duration" placeholder="00:00:00" required pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}" title="Format: HH:MM:SS">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2 -->
+            <section class="form-section">
+                <h2>Studio Anchors</h2>
+                <div id="anchorsContainer">
+                    <!-- Rows will be injected by JS here -->
+                </div>
+                <button type="button" class="add-btn" id="addAnchorBtn">
+                    <span>+</span> Add Anchor
+                </button>
+            </section>
+
+            <!-- Section 3 -->
+            <section class="form-section">
+                <h2>Episode Information</h2>
+                <div id="storiesContainer">
+                    <!-- Rows will be injected by JS here -->
+                </div>
+                <button type="button" class="add-btn" id="addStoryBtn">
+                    <span>+</span> Add Story
+                </button>
+            </section>
+
+            <!-- Section 4 -->
+            <section class="form-section">
+                <h2>Segments</h2>
+                <div id="segmentsContainer">
+                    <!-- Rows will be injected by JS here -->
+                </div>
+                <button type="button" class="add-btn" id="addSegmentBtn">
+                    <span>+</span> Add Segment
+                </button>
+            </section>
+
+            <div class="form-actions" id="formActionsGroup">
+                <!-- Used a specific ID to hide this section from the PDF output -->
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    Submit
+                </button>
+            </div>
+        </form>
+        <div style="margin-top: 3rem; text-align: center;">
+            <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+                ← Back to Forms Hub
+            </a>
+        </div>
+    </div>
+
+    <!-- Data List for Autocomplete -->
+    <datalist id="availableStories"></datalist>
+
+    <!-- Success Dialog -->
+    <div id="successDialog" class="dialog-overlay hidden">
+        <div class="dialog-box">
+            <h3 class="dialog-title">Submitted</h3>
+            <p class="dialog-message">Your FCC was successfully submitted.</p>
+            <button class="submit-btn" id="dialogCloseBtn">OK</button>
+        </div>
+    </div>
+
+    <script src="programme_control_sheet.js?v=5.1.1"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

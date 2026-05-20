@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper to check if user is an admin or higher
+    function isAdmin() {
+      let uid = request.auth.uid;
+      let email = request.auth.token.email.lower();
+      return request.auth != null && (
+        (exists(/databases/$(database)/documents/users/$(uid)) && get(/databases/$(database)/documents/users/$(uid)).data.role in ['admin', 'super-admin', 'editorial-production']) ||
+        (exists(/databases/$(database)/documents/users/$(email)) && get(/databases/$(database)/documents/users/$(email)).data.role in ['admin', 'super-admin', 'editorial-production'])
+      );
+    }
+
+    match /submissions/{docId} {
+      allow read: if request.auth != null && (isAdmin() || (resource != null && resource.data.submittedBy == request.auth.uid));
+      allow write: if false; // Handled by API
+    }
+
+    match /proposals/{docId} {
+      allow read: if request.auth != null && (isAdmin() || (resource != null && resource.data.submittedBy == request.auth.uid));
+      allow write: if false; // Handled by API
+    }
+
+    match /users/{uid} {
+      // Allow if it's the user's own profile (by UID or Email) OR if the requester is an Admin
+      allow read: if request.auth != null && (
+        request.auth.uid == uid || 
+        request.auth.token.email.lower() == uid ||
+        isAdmin()
+      );
+      // Writing is handled strictly by the backend API
+      allow write: if false;
+    }
+  }
+}

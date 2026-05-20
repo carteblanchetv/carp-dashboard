@@ -1,0 +1,24 @@
+# Firebase
+.firebase/
+.firebaserc.local
+
+# Node
+node_modules/
+functions/node_modules/
+
+# Secrets & sensitive data
+users.json
+users_credentials.json
+*.xlsx
+
+# Deploy logs
+deploy_log*.txt
+logs.txt
+
+# OS & editor
+.DS_Store
+Thumbs.db
+.cursor/
+
+# Scratch
+scratch/

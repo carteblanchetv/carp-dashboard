@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Insert Music Cue Sheet</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    
+    
+
+    <script src="js/branding.js?v=5.1.1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script type="module">
+        import { checkAuth, isAdmin, isSuperAdmin, isEditorialProduction } from './auth.js?v=5.1.1';
+        checkAuth().then(user => {
+            if (user) {
+                window.auth.initNavBar(user);
+            }
+        });
+    </script>
+</head>
+<body class="form-body">
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <a href="index.html" class="gnav-btn" title="Back to Dashboard">
+                    <span>🏠</span>
+                    <span>HOME</span>
+                </a>
+                <a href="user_management.html" id="gnavAdminBtn" class="gnav-btn" style="display: none;">
+                    <span>👥</span>
+                    <span>USER MANAGEMENT</span>
+                </a>
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="masqueradeBanner" class="masquerade-banner">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 1.25rem;">🎭</span>
+            <div style="display: flex; flex-direction: column; gap: 0.1rem;">
+                <div style="line-height: 1.2;"><b>Masquerade Mode:</b> <span id="masqueradeName"></span></div>
+                <div style="opacity: 0.9; font-size: 0.8em; line-height: 1.2;">Perspective: <span id="masqueradeRole" style="text-transform: uppercase; font-weight: bold;"></span></div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <div id="masqueradeViewAction"></div>
+            <button onclick="window.auth.stopMasquerade()" class="btn-soft" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.4); padding: 0.4rem 0.8rem; font-size: 0.75rem; border-radius: 6px; cursor: pointer;">Stop Masquerade</button>
+        </div>
+    </div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <h2 style="color: var(--primary);">Generating &amp; Sending PDF...</h2>
+        <p>Please wait, this might take a moment.</p>
+    </div>
+
+    <div class="form-wrapper wide" id="formContentToPDF">
+        <header class="form-header">
+            <div class="logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
+            </div>
+            <h1>Insert Music Cue Sheet</h1>
+            
+                    </header>
+
+        <!-- Story Deliverables Action Bar (Only for COMMISSIONED stories) -->
+        <div id="productionPhaseBar" class="hidden" style="background: var(--bg-card); border: 1px solid var(--border); border-top: 4px solid var(--primary); padding: 1.5rem 2.5rem; border-radius: var(--radius-lg); margin-bottom: 3.5rem; box-shadow: 0 12px 30px -8px rgba(0,0,0,0.15); background-image: radial-gradient(at top left, rgba(0,143,190,0.05), transparent);">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(0,143,190,0.3);">🛠️</div>
+                    <div>
+                        <div style="color: var(--primary); font-weight: 800; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase;">Story Deliverables</div>
+                        <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 500; margin-top: 0.1rem;">Upload Footage Declaration, Call Sheet & Script</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1.25rem;">
+                    <button type="button" id="btnFootageDec" class="btn-soft" style="padding: 0.75rem 1.75rem; font-size: 0.9rem; font-weight: 800; border: 2px solid #f59e0b; color: #f59e0b; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: rgba(245, 158, 11, 0.05);">Footage Declaration</button>
+                    <button type="button" id="btnCallSheet" class="btn-soft" style="padding: 0.75rem 1.75rem; font-size: 0.9rem; font-weight: 800; border: 2px solid var(--success); color: var(--success); border-radius: 10px; cursor: pointer; transition: all 0.2s; background: rgba(16, 185, 129, 0.05);">Call Sheet</button>
+                    <button type="button" id="btnFinalScript" class="btn-soft" style="padding: 0.75rem 1.75rem; font-size: 0.9rem; font-weight: 800; border: 2px solid #7c3aed; color: #7c3aed; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: rgba(124, 58, 237, 0.05);">Final Script</button>
+                    <button type="button" id="btnMusicCue" class="btn-soft" style="padding: 0.75rem 1.75rem; font-size: 0.9rem; font-weight: 800; border: 2px solid #ec4899; color: #ec4899; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: rgba(236, 72, 153, 0.05);">Music Cue Sheet</button>
+                </div>
+            </div>
+        </div>
+
+            <!-- STORY INFO SECTION -->
+            <section class="form-section">
+                <h2 class="section-title">Story Info</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="commission_number">Commission Number</label>
+                        <input type="text" id="commission_number" name="commission_number" placeholder="Enter number..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="story_name">Story Name</label>
+                        <input type="text" id="story_name" name="story_name" placeholder="Enter story name..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="producer_name">Producer Name</label>
+                        <input type="text" id="producer_name" name="producer_name" placeholder="Enter producer..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="afm_operator">AFM Operator Name</label>
+                        <input type="text" id="afm_operator" name="afm_operator" placeholder="Enter AFM operator..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="delivery_date">Delivery Date</label>
+                        <input type="date" id="delivery_date" name="delivery_date" required>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MUSIC CUES TABLE -->
+            <section class="form-section full-width">
+                <h2 class="section-title">Music Cues</h2>
+                <div class="table-container">
+                    <table class="data-table" id="cueTable">
+                        <thead>
+                            <tr>
+                                <th>Cue</th>
+                                <th>TC In</th>
+                                <th>TC Out</th>
+                                <th>Duration</th>
+                                <th>Song Title</th>
+                                <th>Composer</th>
+                                <th>Publisher</th>
+                                <th>Album Title</th>
+                                <th>Track No.</th>
+                                <th>ISRC</th>
+                                <th>ISWC</th>
+                                <th>Music Type</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cueTableBody">
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" id="addRowBtn" class="add-btn" style="margin-top: 1rem;">
+                    <span class="icon">+</span> Add Cue
+                </button>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit" id="submitBtn" class="submit-btn">Submit</button>
+            </div>
+        </form>
+        <div style="margin-top: 3rem; text-align: center;">
+            <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+                ← Back to Forms Hub
+            </a>
+        </div>
+    </div>
+
+    <!-- Success Dialog -->
+    <div id="successDialog" class="dialog-overlay hidden">
+        <div class="dialog-box">
+            <h3 class="dialog-title">Submitted</h3>
+            <p class="dialog-message">Your Music Cue Sheet was successfully submitted.</p>
+            <button class="submit-btn" id="dialogCloseBtn">OK</button>
+        </div>
+    </div>
+
+    <script src="music_cue_sheet.js?v=5.1.1"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

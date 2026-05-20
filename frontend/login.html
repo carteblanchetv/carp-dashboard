@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Login | Carte Blanche Deliverables</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer data-cfasync="false"></script>
+    <style>
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .login-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+        }
+
+        .login-logo-group {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .login-logo {
+            height: 40px;
+            width: auto;
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .login-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: white;
+            color: #1f2937;
+            border: 1px solid #d1d5db;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .google-btn:hover {
+            background-color: #f9fafb;
+            border-color: #9ca3af;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .google-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .error-message {
+            color: var(--danger);
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            display: none;
+        }
+    </style>
+</head>
+<body class="form-body">
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="login-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="login-logo">
+            </div>
+            <h1 class="login-title">Deliverables Portal</h1>
+            <p class="login-subtitle">Please sign in with your work account to continue.</p>
+            
+            <form id="emailLoginForm" style="text-align: left;">
+                <div class="form-group">
+                    <label style="font-size: 0.85rem; margin-bottom: 0.4rem; display: block;">Work Email</label>
+                    <input type="email" id="emailInput" class="table-input" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border);" placeholder="email@address.com" required>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label style="font-size: 0.85rem; margin-bottom: 0.4rem; display: block;">Password</label>
+                    <input type="password" id="passwordInput" class="table-input" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border);" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="submit-btn" id="emailLoginBtn" style="width: 100%; margin-top: 1.5rem; height: 42px;">
+                    Sign In
+                </button>
+            </form>
+            
+            <div id="systemStatus" style="margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 0.5rem; opacity: 0.7;">
+                <span id="statusDot" style="width: 8px; height: 8px; border-radius: 50%; background: #94a3b8;"></span>
+                <span id="statusText">Initializing Login System...</span>
+            </div>
+
+            <p id="errorMessage" class="error-message"></p>
+            
+            <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.7rem; opacity: 0.5;">
+                <p>Trouble signing in? <a href="reset.html" style="color: var(--primary);">Force Identity Reset</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/login.js?v=5.1.1"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

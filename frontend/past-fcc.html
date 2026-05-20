@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Past FCCs - Carte Blanche</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    <script type="module">
+        import { checkAuth, fetchWithAuth } from './auth.js?v=5.1.1';
+        checkAuth().then(user => {
+            if (user) {
+                window.loggedInUser = user;
+                window.auth.initNavBar(user);
+                loadSubmissions();
+            }
+        });
+        
+        const isAdmin = () => window.loggedInUser && (window.loggedInUser.role === 'admin' || window.loggedInUser.role === 'super-admin');
+        
+        // Load Submissions
+        async function loadSubmissions() {
+            const tableBody = document.getElementById('submissionsList');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            try {
+                loadingOverlay.classList.add('active');
+                const res = await fetchWithAuth('/api/my-submissions');
+                const result = await res.json();
+                
+                if (result.success) {
+                    // FILTER ONLY FCC
+                    const fccSubs = result.submissions.filter(s => s.formType === 'control_sheet');
+                    
+                    if (fccSubs.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">No past FCCs found.</td></tr>';
+                    } else {
+                        tableBody.innerHTML = fccSubs.map((s, idx) => {
+                            const rawDate = s.txDate || s.submittedAt;
+                            const date = rawDate ? (rawDate._seconds ? new Date(rawDate._seconds * 1000) : new Date(rawDate)) : new Date();
+                            const displayDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                            
+                            // Get main file
+                            let mainFile = (s.files || []).find(f => f.fieldname === 'declaration');
+                            if (!mainFile && s.storagePath) {
+                                mainFile = { storagePath: s.storagePath, filename: s.filename || 'FCC.pdf' };
+                            }
+                            
+                            const typeBadge = '<span style="font-size: 0.65rem; background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 0.2rem 0.4rem; border-radius: 4px; border: 1px solid rgba(59, 130, 246, 0.2); margin-left: 0.5rem;">FCC</span>';
+
+                            return `
+                                <tr>
+                                    <td>${displayDate}</td>
+                                    <td style="font-weight: 600;">S${s.season || '?'} E${s.episode || '?'} ${typeBadge}</td>
+                                    <td>${s.uid || 'N/A'}</td>
+                                    <td>
+                                        <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                            ${mainFile ? `
+                                                <button onclick="window.previewFile('${s.id}', '${mainFile.storagePath}')" class="btn-admin-cell success">Preview</button>
+                                                <button onclick="window.downloadFile('${s.id}', '${mainFile.storagePath}', '${mainFile.filename}')" class="btn-admin-cell">Download</button>
+                                                <button onclick="window.emailTo('${s.id}')" class="btn-admin-cell primary">Email To</button>
+                                                <a href="programme_control_sheet.html?id=${s.id}" class="btn-admin-cell warning" style="text-decoration: none;">Edit</a>
+                                            ` : '<span style="color: var(--text-muted);">No PDF</span>'}
+                                            ${isAdmin() ? `
+                                                <button onclick="window.deleteSubmission('${s.id}')" class="btn-admin-cell danger" title="Delete Submission">🗑️</button>
+                                            ` : ''}
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('');
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to load submissions:", err);
+                tableBody.innerHTML = '<tr><td colspan="4" style="color: var(--danger); text-align: center;">Error loading submissions.</td></tr>';
+            } finally {
+                loadingOverlay.classList.remove('active');
+            }
+        }
+
+        window.previewFile = async (id, path) => {
+            const url = `/api/get-file?id=${id}&path=${encodeURIComponent(path)}`;
+            const res = await fetchWithAuth(url);
+            if (res.ok) {
+                const blob = await res.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = path.split('/').pop();
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            } else {
+                alert("Failed to retrieve file.");
+            }
+        };
+
+        window.downloadFile = async (id, path, filename) => {
+            const url = `/api/get-file?id=${id}&path=${encodeURIComponent(path)}`;
+            const res = await fetchWithAuth(url);
+            if (res.ok) {
+                const blob = await res.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            } else {
+                alert("Failed to download file.");
+            }
+        };
+
+        window.emailTo = (id) => {
+            const email = prompt("Enter email address to send this FCC to:");
+            if (!email) return;
+            alert("Emailing feature is being integrated. For now, please download and email manually.");
+        };
+
+        window.deleteSubmission = async (id) => {
+            if (!confirm("Are you sure you want to PERMANENTLY delete this FCC and all its files?")) return;
+            try {
+                const res = await fetchWithAuth('/api/admin/delete-submission', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+                const result = await res.json();
+                if (result.success) {
+                    alert("Submission deleted successfully.");
+                    loadSubmissions();
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (err) {
+                alert("Delete failed: " + err.message);
+            }
+        };
+    </script>
+</head>
+<body class="dashboard-body">
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <a href="index.html" class="gnav-btn" title="Back to Dashboard">
+                    <span>🏠</span>
+                    <span>HOME</span>
+                </a>
+                <a href="user_management.html" id="gnavAdminBtn" class="gnav-btn" style="display: none;">
+                    <span>👥</span>
+                    <span>USER MANAGEMENT</span>
+                </a>
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <h2 style="color: var(--primary);">Fetching Control Sheets...</h2>
+    </div>
+
+    <div class="dashboard-container wide">
+        <header class="dashboard-header">
+            <h1>Past FCCs</h1>
+            <nav class="breadcrumb">
+                <a href="https://cb-deliverables.web.app/">Home</a> / <a href="programme_control_hub.html">Final Control Sheet Hub</a> / Past FCCs
+            </nav>
+        </header>
+
+        <section class="dashboard-section">
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 150px;">Date</th>
+                            <th>Episode</th>
+                            <th>UID</th>
+                            <th style="text-align: right; width: 300px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissionsList">
+                        <!-- Content will load here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <div style="margin-top: 3rem; text-align: center;">
+            <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+                ← Back to Forms Hub
+            </a>
+        </div>
+    </div>
+</body>
+</html>

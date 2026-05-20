@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Final Script - Carte Blanche</title>
+    <link rel="stylesheet" href="style.css?v=5.1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.0"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="js/branding.js?v=3.1.0"></script>
+    <script type="module">
+        import { checkAuth } from './auth.js?v=5.1.0';
+
+        // SAFETY TIMEOUT: Dismiss loading overlay if it hangs too long (network/firebase issues)
+        setTimeout(() => {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay && overlay.classList.contains('active')) {
+                console.warn("[DEBUG] Safety timeout triggered: Dismissing overlay.");
+                overlay.classList.remove('active');
+            }
+        }, 10000); // 10 seconds
+
+        checkAuth().then(user => {
+            if (user) {
+                window.auth.initNavBar(user);
+            }
+        });
+    </script>
+</head>
+<body class="admin-body">
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <a href="index.html" class="gnav-btn" title="Back to Dashboard">
+                    <span>🏠</span>
+                    <span>HOME</span>
+                </a>
+                <a id="backToProposalBtn" href="#" class="gnav-btn hidden" title="Back to Proposal">
+                    <span>📄</span>
+                    <span>PROPOSAL</span>
+                </a>
+                <a href="user_management.html" id="gnavAdminBtn" class="gnav-btn" style="display: none;">
+                    <span>👥</span>
+                    <span>USER MANAGEMENT</span>
+                </a>
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="form-wrapper wide">
+        <header class="form-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2.5rem; gap: 2rem;">
+            <div class="logo-group" style="display: flex; gap: 1rem;">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined" style="height: 40px; width: auto;">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo" style="height: 40px; width: auto;">
+            </div>
+            <div>
+                <h1 id="pageTitle">Final Script</h1>
+                <p id="pageSubtext">Complete the final script and promo details for this story.</p>
+            </div>
+            <div id="viewActions" class="no-print" style="display: flex; gap: 0.75rem;">
+                <button type="button" id="editScriptBtn" class="submit-btn hidden" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; margin-top: 0;">Edit Script</button>
+                <button type="button" id="downloadPdfBtn" class="btn-soft hidden">Download PDF</button>
+                <button type="button" id="viewDetailsBtn" class="btn-soft hidden">Proposal View</button>
+            </div>
+        </header>
+        
+        <!-- Story Deliverables Action Bar (Only for COMMISSIONED stories) -->
+        <div id="productionPhaseBar" class="hidden" style="background: var(--bg-card); border: 1px solid var(--border); border-top: 4px solid var(--primary); padding: 1.5rem 2.5rem; border-radius: var(--radius-lg); margin-bottom: 3.5rem; box-shadow: 0 12px 30px -8px rgba(0,0,0,0.15); background-image: radial-gradient(at top left, rgba(0,143,190,0.05), transparent);">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(0,143,190,0.3);">🛠️</div>
+                    <div>
+                        <div style="color: var(--primary); font-weight: 800; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase;">Story Deliverables</div>
+                        <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 500; margin-top: 0.1rem;">Upload Footage Declaration, Call Sheet & Script</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1.25rem;">
+                    <button type="button" id="btnFootageDec" class="btn-soft" style="padding: 0.75rem 1.75rem; font-size: 0.9rem; font-weight: 800; border: 2px solid #f59e0b; color: #f59e0b; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: rgba(245, 158, 11, 0.05);">Footage Declaration</button>
+                    <button type="button" id="btnCallSheet" class="btn-soft" style="padding: 0.75rem 1.75rem; font-size: 0.9rem; font-weight: 800; border: 2px solid var(--success); color: var(--success); border-radius: 10px; cursor: pointer; transition: all 0.2s; background: rgba(16, 185, 129, 0.05);">Call Sheet</button>
+                    <button type="button" id="btnFinalScript" class="btn-soft" style="padding: 0.75rem 1.75rem; font-size: 0.9rem; font-weight: 800; border: 2px solid #7c3aed; color: #7c3aed; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: rgba(124, 58, 237, 0.05);">Final Script</button>
+                </div>
+            </div>
+        </div>
+
+        <form id="finalScriptForm">
+            <!-- STORY INFO SECTION -->
+            <section class="form-section">
+                <h2 class="section-title">Story Info</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Commission Number</label>
+                        <input type="text" id="commission_number" name="commission_number" readonly style="background: var(--bg-light); cursor: not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label>Story Name</label>
+                        <input type="text" id="story_name" name="story_name" readonly style="background: var(--bg-light); cursor: not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration</label>
+                        <input type="text" id="duration" name="duration" readonly style="background: var(--bg-light); cursor: not-allowed;">
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROMO LINES SECTION -->
+            <section class="form-section" id="promoSection">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 class="section-title" style="margin-bottom: 0;">Promo Lines</h2>
+                    <button type="button" id="addPromoBtn" class="btn-soft" style="font-size: 0.85rem;">+ Add Promo Line</button>
+                </div>
+                <div id="promoLinesContainer" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Initial 3 fields will be added by JS -->
+                </div>
+            </section>
+
+            <!-- PRESS RELEASE SECTION -->
+            <section class="form-section" id="pressReleaseSection">
+                <h2 class="section-title">Press Release</h2>
+                <div class="form-group">
+                    <textarea id="press_release" name="press_release" rows="5" placeholder="Paste or type your press release summary here..." style="text-align: justify; font-family: var(--font); font-size: 0.95rem; line-height: 1.6;"></textarea>
+                    <div id="press_release_preview" class="hidden" style="text-align: justify; white-space: pre-wrap; background: transparent; padding: 0; min-height: 50px; color: var(--text-main); font-family: var(--font); font-size: 0.95rem; line-height: 1.6;"></div>
+                </div>
+            </section>
+
+            <!-- FINAL SCRIPT SECTION -->
+            <section class="form-section">
+                <h2 class="section-title">Final Script Content</h2>
+                
+                <div style="background: rgba(59, 130, 246, 0.08); padding: 1.25rem; border-radius: var(--radius-sm); border-left: 5px solid var(--primary); font-size: 0.95rem; margin-bottom: 2rem; color: var(--text-main);">
+                    <div style="display: flex; gap: 0.75rem; align-items: center;">
+                        <span style="font-size: 1.25rem;">📝</span>
+                        <b>Notice:</b> Ensure names, surnames and place names are correct. Do NOT include anonymous source names.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <textarea id="script_content" name="script_content" rows="20" placeholder="Paste or type your final script here..." required style="text-align: justify; font-family: var(--font); font-size: 0.95rem; line-height: 1.6;"></textarea>
+                    <div id="script_content_preview" class="hidden" style="text-align: justify; white-space: pre-wrap; background: transparent; padding: 0; min-height: 100px; color: var(--text-main); font-family: var(--font); font-size: 0.95rem; line-height: 1.6;"></div>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="button" onclick="history.back()" class="btn-soft" style="margin-right: 1rem; padding: 0.75rem 1.5rem;">Cancel</button>
+                <button type="submit" id="submitBtn" class="submit-btn">Submit Final Script</button>
+            </div>
+        </form>
+        <div style="margin-top: 3rem; text-align: center;">
+            <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+                ← Back to Forms Hub
+            </a>
+        </div>
+    </div>
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2 id="loadingHeading">Loading</h2>
+            <p id="loadingSubtext">Please wait...</p>
+        </div>
+    </div>
+
+    <div id="successDialog" class="dialog-overlay hidden">
+        <div class="dialog-box">
+            <h3 class="dialog-title">Submitted</h3>
+            <p class="dialog-message">Your final script has been successfully submitted.</p>
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <button class="submit-btn" id="dialogCloseBtn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script type="module" src="final_script.js?v=3.1.0"></script>
+</body>
+</html>

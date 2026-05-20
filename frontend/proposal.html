@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Proposals - Carte Blanche</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="js/branding.js?v=5.1.1"></script>
+
+    <style>
+        .editor-toolbar {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            padding: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+            border-top-left-radius: var(--radius-sm);
+            border-top-right-radius: var(--radius-sm);
+            position: sticky;
+            top: 60px;
+            z-index: 100;
+            transition: top 0.2s;
+        }
+        body.is-masquerading .editor-toolbar {
+            top: 108px;
+        }
+        @media (max-width: 480px) {
+            body.is-masquerading .editor-toolbar {
+                top: 100px;
+            }
+        }
+        .editor-toolbar button {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .editor-toolbar button:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .rich-editor {
+            border: 1px solid var(--border);
+            padding: 1rem;
+            min-height: 200px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            border-bottom-left-radius: var(--radius-sm);
+            border-bottom-right-radius: var(--radius-sm);
+            line-height: 1.6 !important;
+            overflow-y: auto;
+            text-align: justify;
+        }
+        .rich-editor:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--focus-ring);
+        }
+        .rich-editor[contenteditable]:empty:before {
+            content: attr(data-placeholder);
+            color: var(--text-muted);
+            cursor: text;
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <!-- Masquerade Banner (Managed by auth.js?v=5.1.0) -->
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <a href="index.html" class="gnav-btn" title="Back to Dashboard">
+                    <span>🏠</span>
+                    <span>HOME</span>
+                </a>
+                <a href="user_management.html" id="gnavAdminBtn" class="gnav-btn" style="display: none;">
+                    <span>👥</span>
+                    <span>USER MANAGEMENT</span>
+                </a>
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="masqueradeBanner" class="masquerade-banner" style="z-index: 2000;">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 1.25rem;">🎭</span>
+            <div style="display: flex; flex-direction: column; gap: 0.1rem;">
+                <div style="line-height: 1.2;"><b>Masquerade Mode:</b> <span id="masqueradeName"></span></div>
+                <div style="opacity: 0.9; font-size: 0.8em; line-height: 1.2;">Perspective: <span id="masqueradeRole" style="text-transform: uppercase; font-weight: bold;"></span></div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <div id="masqueradeViewAction"></div>
+            <button onclick="window.auth.stopMasquerade()" class="btn-soft" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.4); padding: 0.4rem 0.8rem; font-size: 0.75rem; border-radius: 6px; cursor: pointer;">Stop Masquerade</button>
+        </div>
+    </div>
+
+
+    <!-- Commission Details Modal (only shown when Approve is clicked) -->
+    <div id="pModalBackdrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); align-items:center; justify-content:center; z-index:10000;">
+        <div style="background:var(--bg-card); width:100%; max-width:550px; border-radius:var(--radius-lg); box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); border:1px solid var(--border); overflow:hidden;">
+            <div style="padding:1.5rem 2rem; background:rgba(255,255,255,0.03); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0; font-size:1.1rem;">Commission Details</h3>
+                <button id="pModalCloseBtn" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-muted); line-height:1;">&times;</button>
+            </div>
+            <div style="padding:2rem;">
+                <p style="margin:0 0 1.5rem 0; color:var(--text-muted); font-size:0.9rem;">Please provide the final production details for this story.</p>
+                <form id="pModalForm">
+                    <input type="hidden" id="pModalProposalId">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+                        <div class="form-group">
+                            <label for="pModalCommNum">Comm # (optional)</label>
+                            <input type="text" id="pModalCommNum" placeholder="Leave blank to auto-generate">
+                        </div>
+                        <div class="form-group">
+                            <label for="pModalDeliveryDate">Delivery Date</label>
+                            <input type="date" id="pModalDeliveryDate" required>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem;">
+                        <div class="form-group">
+                            <label for="pModalDuration">Duration (MM:SS)</label>
+                            <input type="text" id="pModalDuration" placeholder="e.g. 05:00" required pattern="[0-9]{2}:[0-9]{2}">
+                        </div>
+                        <div class="form-group">
+                            <label for="pModalRate">Rate (ZAR)</label>
+                            <div style="display:flex; align-items:center; background:var(--bg-light); border:1px solid var(--border); border-radius:var(--radius-sm);">
+                                <span style="padding-left:1rem; color:var(--text-muted); font-weight:700; user-select:none;">R</span>
+                                <input type="number" id="pModalRate" placeholder="0" required step="1" style="border:none !important; background:transparent !important; width:100%; padding:0.65rem 0.75rem 0.65rem 0.5rem; color:var(--text-main); outline:none !important; box-shadow:none !important;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:1.5rem;">
+                        <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
+                            <input type="checkbox" id="pModalContract" required>
+                            <span style="font-size:0.9rem;">I agree with the CAP Contractual Agreement</span>
+                        </label>
+                    </div>
+                    <div style="margin-top:2rem; display:flex; gap:1rem; justify-content:flex-end;">
+                        <button type="button" class="btn-soft" id="pModalCancelBtn">Cancel</button>
+                        <button type="submit" class="submit-btn" style="padding:0.75rem 1.5rem;">Confirm &amp; Commission</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <h2 id="loadingHeading" style="color: var(--primary);">Loading Proposal...</h2>
+        <p id="loadingSubtext">Please wait, this might take a moment.</p>
+    </div>
+
+    <!-- Story Deliverables Action Bar (Top of screen) -->
+    <div id="productionPhaseBar" class="hidden" style="max-width: 1600px; width: 95%; margin: 1.5rem auto 1rem; background: var(--bg-card); border: 1px solid var(--border); border-top: 4px solid var(--primary); padding: 1rem 2.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); background-image: radial-gradient(at top left, rgba(0,143,190,0.05), transparent);">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 2rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="background: var(--primary); color: white; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,143,190,0.3);">🛠️</div>
+                <div>
+                    <div style="color: var(--primary); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.05em; text-transform: uppercase;">Story Deliverables</div>
+                    <div style="color: var(--text-muted); font-size: 0.7rem; font-weight: 500; margin-top: 0.1rem;">Manage declarations, scripts & more</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" id="btnFootageDec" class="btn-soft" style="padding: 0.6rem 1.25rem; font-size: 0.8rem; font-weight: 800; border: 1px solid #f59e0b !important; color: #f59e0b; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: rgba(245, 158, 11, 0.05);">Footage Declaration</button>
+                <button type="button" id="btnCallSheet" class="btn-soft" style="padding: 0.6rem 1.25rem; font-size: 0.8rem; font-weight: 800; border: 1px solid var(--success) !important; color: var(--success); border-radius: 8px; cursor: pointer; transition: all 0.2s; background: rgba(16, 185, 129, 0.05);">Call Sheet</button>
+                <button type="button" id="btnFinalScript" class="btn-soft" style="padding: 0.6rem 1.25rem; font-size: 0.8rem; font-weight: 800; border: 1px solid #7c3aed !important; color: #7c3aed; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: rgba(124, 58, 237, 0.05);">Final Script</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-wrapper wide" id="formContentToPDF">
+        <header class="form-header">
+            <div id="viewModeBanner" class="hidden" style="background: rgba(0, 143, 190, 0.1); padding: 0.75rem; border-radius: var(--radius-md); border: 1px solid var(--primary); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: var(--primary); font-weight: 700; font-size: 0.85rem;">🔒 ADMIN VIEW MODE (READ-ONLY)</span>
+                <button type="button" id="backToAdminBtn" class="add-btn" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;" onclick="window.location.href='admin_dashboard.html'">Back to Admin Dashboard</button>
+            </div>
+            
+            <div class="logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1.5rem;">
+                <h1 id="pageMainTitle">Story Proposal</h1>
+                <h1 id="pageCallSheetTitle" class="hidden">Call Sheet</h1>
+                <div style="display: flex; gap: 0.75rem;">
+                    <button type="button" id="topDownloadProposalBtn" onclick="downloadProposalPDF()" class="submit-btn" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0;">Download Proposal as PDF</button>
+                    <a id="backToProposalBtn" href="#" class="btn-soft hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; border: 1px solid var(--border) !important; color: var(--text-main); border-radius: 8px; text-decoration: none; font-weight: 700; transition: all 0.2s;">← Back to Proposal</a>
+                </div>
+            </div>
+            
+            <div id="commNumBadgeTop" class="hidden" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.75rem;">
+                <div class="status-badge success">Approved - Commission #<span id="displayCommNum"></span></div>
+                <button type="button" id="adminEditCommBtn" class="btn-soft" style="padding: 0.25rem 0.6rem; font-size: 0.7rem; border: 1px solid var(--border) !important; display: none;">Edit #</button>
+            </div>
+        </header>
+
+        <div id="proposalSummary" class="hidden admin-report">
+            <!-- Report content will be injected here -->
+        </div>
+
+        <!-- Project Assets Section (Visible for Admin/Commissioned) -->
+        <section id="projectAssetsSection" class="form-section hidden" style="border-top: 2px solid var(--primary); padding-top: 2rem; margin-bottom: 3.5rem;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                <div style="background: var(--bg-card); color: var(--primary); width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; border: 1px solid var(--border); box-shadow: var(--shadow-sm);">📂</div>
+                <div>
+                    <h2 class="section-title" style="margin-bottom: 0;">Project Assets</h2>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">All documents and declarations linked to this story.</p>
+                </div>
+            </div>
+            <div id="projectAssetsList" class="form-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                <!-- Assets will be injected by JS -->
+                <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">Loading assets...</div>
+            </div>
+        </section>
+
+        <form id="proposalForm" class="modern-form hidden">
+            <div id="proposalFormContent">
+                <section class="form-section">
+                <h2 class="section-title">Initial Proposal</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="story_title">Story Title</label>
+                        <input type="text" id="story_title" name="story_title" placeholder="Enter title..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="show">Show</label>
+                        <input type="text" id="show" name="show" value="Carte Blanche" readonly style="background: var(--bg-light); cursor: not-allowed;">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1.5rem;">
+                    <label for="one_liner">One Liner (Tonight on Carte Blanche...)</label>
+                    <textarea id="one_liner" name="one_liner" class="one-liner-field" rows="2" maxlength="300" placeholder="Tonight on Carte Blanche..." required></textarea>
+                    <div class="counter" id="oneLinerCount">0 / 300 characters</div>
+                </div>
+
+                <div class="form-group" style="margin-top: 1.5rem;">
+                    <label for="summary">Story Summary</label>
+                    <div id="summaryToolbar" class="editor-toolbar">
+                        <button type="button" onclick="formatDoc('bold')" title="Bold"><b>B</b></button>
+                        <button type="button" onclick="formatDoc('underline')" title="Underline"><u>U</u></button>
+                        <button type="button" onclick="formatDoc('formatBlock', 'h3')" title="Sub-header (H3)">H3</button>
+                        <button type="button" onclick="formatDoc('formatBlock', 'h4')" title="Small Header (H4)">H4</button>
+                        <button type="button" onclick="formatDoc('createLink')" title="Link">🔗</button>
+                        <button type="button" onclick="formatDoc('unlink')" title="Remove Link">🚫</button>
+                        <button type="button" id="toggleHtmlBtn" class="hidden" onclick="window.toggleSummaryHtml()" style="margin-left: auto; color: var(--primary); font-weight: 700;">&lt;/&gt; HTML</button>
+                    </div>
+                    <div id="summaryEditor" class="rich-editor" contenteditable="true" data-placeholder="Enter story summary..."></div>
+                    <textarea id="summaryHtmlEditor" class="rich-editor hidden" style="font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; white-space: pre;"></textarea>
+                    <textarea id="summary" name="summary" style="display:none;"></textarea>
+                    <div class="counter" id="summaryCount">0 / 5000 words</div>
+                </div>
+            </section>
+
+            <section class="form-section collapsible-section" id="budgetSection">
+                <div class="collapsible-header" onclick="toggleSection('budgetSection')">
+                    <h2 class="section-title">Budget Details</h2>
+                    <span class="collapsible-trigger">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="form-group">
+                        <label>Extra Budget Items Required</label>
+                        <div class="form-switch">
+                            <label class="switch">
+                                <input type="checkbox" id="extra_budget_toggle" name="extra_budget_toggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span class="switch-label">Yes</span>
+                        </div>
+                    </div>
+
+                    <div id="budgetItemsContainer" class="hidden" style="margin-top: 1rem;">
+                        <div class="table-container">
+                            <table class="data-table equal-width-cols">
+                                <thead>
+                                    <tr>
+                                        <th>Budget Item</th>
+                                        <th>Reason</th>
+                                        <th>Projected Cost (Rand)</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="budgetTableBody"></tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="addBudgetBtn" class="add-btn" style="margin-top: 0.5rem;">+ Add Budget Item</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CASE STUDIES & EXPERTS -->
+            <div class="form-grid-2-col">
+                <section class="form-section collapsible-section" id="caseStudiesSection">
+                    <div class="collapsible-header" onclick="toggleSection('caseStudiesSection')">
+                        <h2 class="section-title">Case Studies</h2>
+                        <span class="collapsible-trigger">▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="table-container">
+                            <table class="data-table equal-width-cols">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Surname</th>
+                                        <th>Role</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="caseStudiesTableBody"></tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="addCaseStudyBtn" class="add-btn" style="margin-top: 0.5rem;">+ Add Case Study</button>
+                    </div>
+                </section>
+
+                <section class="form-section collapsible-section" id="expertsSection">
+                    <div class="collapsible-header" onclick="toggleSection('expertsSection')">
+                        <h2 class="section-title">Experts</h2>
+                        <span class="collapsible-trigger">▼</span>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="table-container">
+                            <table class="data-table equal-width-cols">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Surname</th>
+                                        <th>Role</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expertsTableBody"></tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="addExpertBtn" class="add-btn" style="margin-top: 0.5rem;">+ Add Expert</button>
+                    </div>
+                </section>
+            </div>
+
+            <section class="form-section collapsible-section" id="additionalInfoSection">
+                <div class="collapsible-header" onclick="toggleSection('additionalInfoSection')">
+                    <h2 class="section-title">Additional Info</h2>
+                    <span class="collapsible-trigger">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="form-group">
+                        <label>Location(s)</label>
+                        <div id="locationList" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                        <button type="button" id="addLocationBtn" class="add-btn" style="margin-top: 0.5rem; width: fit-content;">+ Add Location</button>
+                    </div>
+
+                    <div class="form-grid-3-col" style="margin-top: 1.5rem;">
+                        <div class="form-group">
+                            <label>Third Party Footage</label>
+                            <div class="form-switch">
+                                <label class="switch">
+                                    <input type="checkbox" id="third_party" name="third_party">
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="switch-label">Yes</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Hidden Camera</label>
+                            <div class="form-switch">
+                                <label class="switch">
+                                    <input type="checkbox" id="hidden_camera" name="hidden_camera">
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="switch-label">Yes</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Legal Required</label>
+                            <div class="form-switch">
+                                <label class="switch">
+                                    <input type="checkbox" id="legal_req" name="legal_req">
+                                    <span class="slider"></span>
+                                </label>
+                                <span class="switch-label">Yes</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+                <!-- Sensitivity Settings -->
+                <div id="sensitivitySection" style="margin-top: 2rem; padding: 1.5rem; background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.2); border-radius: var(--radius-md);">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <h3 style="font-size: 1rem; color: #ef4444; margin: 0;">Sensitive Story Restricted Access</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0.25rem 0 0 0;">If enabled, only specified reviewers and the Super Admin can view this proposal.</p>
+                        </div>
+                        <div class="form-switch">
+                            <label class="switch">
+                                <input type="checkbox" id="isSensitive" name="isSensitive">
+                                <span class="slider" style="background-color: #ccc;"></span>
+                            </label>
+                            <span class="switch-label">Yes</span>
+                        </div>
+                    </div>
+
+                    <div id="reviewerSelectionWrapper" class="hidden" style="margin-top: 1.5rem; border-top: 1px solid rgba(239, 68, 68, 0.1); padding-top: 1.5rem;">
+                        <label style="display: block; margin-bottom: 0.75rem; font-size: 0.85rem; font-weight: 600;">Specify Authorised Reviewers:</label>
+                        <div id="reviewerList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem;">
+                            <!-- Reviewers will be injected here -->
+                            <div style="color: var(--text-muted); font-size: 0.8rem;">Loading reviewers...</div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- INSERT DETAILS (PHASE 2 - HIDDEN BY DEFAULT) -->
+            <div id="phase2Container" class="hidden">
+                 <section class="form-section" style="border-top: 2px solid var(--primary); padding-top: 2rem; margin-top: 3rem;">
+                    <h2 class="section-title">Insert Details</h2>
+                    <div class="phase2-grid">
+                        <div class="form-group">
+                            <label for="presenter">Presenter</label>
+                            <select id="presenter" name="presenter">
+                                <option value="">-- Select --</option>
+                                <option value="Catherine Rice">Catherine Rice</option>
+                                <option value="Claire Mawisa">Claire Mawisa</option>
+                                <option value="Erin Bates">Erin Bates</option>
+                                <option value="Govan Whittles">Govan Whittles</option>
+                                <option value="Lourensa Eckard">Lourensa Eckard</option>
+                                <option value="Macfarlane Moleli">Macfarlane Moleli</option>
+                                <option value="Masa Kekana">Masa Kekana</option>
+                                <option value="Nickolaus Bauer">Nickolaus Bauer</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <div id="otherPresenterWrapper" class="hidden" style="margin-top: 0.75rem;">
+                                <input type="text" id="otherPresenter" name="otherPresenter" placeholder="Specify presenter name...">
+                            </div>
+                        </div>
+                        
+                        <!-- Researchers Dynamic List -->
+                        <div class="form-group">
+                            <label>Researcher(s)</label>
+                            <div id="researcherList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <!-- Dynamic rows go here -->
+                            </div>
+                            <button type="button" id="addResearcherBtn" class="add-btn" style="margin-top: 0.5rem; width: fit-content;">+ Add Researcher</button>
+                        </div>
+
+                        <!-- Cameras Dynamic List -->
+                        <div class="form-group">
+                            <label>Camera(s)</label>
+                            <div id="cameraList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <!-- Dynamic rows go here -->
+                            </div>
+                            <button type="button" id="addCameraBtn" class="add-btn" style="margin-top: 0.5rem; width: fit-content;">+ Add Camera</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Camera Assistant</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="camera_assistant_name" name="camera_assistant_name" placeholder="Name" style="flex: 1;">
+                                <input type="text" id="camera_assistant_surname" name="camera_assistant_surname" placeholder="Surname" style="flex: 1;">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>DOP</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="dop_name" name="dop_name" placeholder="Name" style="flex: 1;">
+                                <input type="text" id="dop_surname" name="dop_surname" placeholder="Surname" style="flex: 1;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Sound</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="sound_name" name="sound_name" placeholder="Name" style="flex: 1;">
+                                <input type="text" id="sound_surname" name="sound_surname" placeholder="Surname" style="flex: 1;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Offline Editor</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="offline_editor_name" name="offline_editor_name" placeholder="Name" style="flex: 1;">
+                                <input type="text" id="offline_editor_surname" name="offline_editor_surname" placeholder="Surname" style="flex: 1;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Online Editor</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="online_editor_name" name="online_editor_name" placeholder="Name" style="flex: 1;">
+                                <input type="text" id="online_editor_surname" name="online_editor_surname" placeholder="Surname" style="flex: 1;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Audio Final Mix</label>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="audio_final_mix_name" name="audio_final_mix_name" placeholder="Name" style="flex: 1;">
+                                <input type="text" id="audio_final_mix_surname" name="audio_final_mix_surname" placeholder="Surname" style="flex: 1;">
+                            </div>
+                        </div>
+
+                        <!-- Additional Crew Dynamic List -->
+                        <div class="form-group">
+                            <label>Additional Crew</label>
+                            <div id="crewList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <!-- Dynamic rows go here -->
+                            </div>
+                            <button type="button" id="addCrewBtn" class="add-btn" style="margin-top: 0.5rem; width: fit-content;">+ Add Additional Crew</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <section id="callSheetSection" class="form-section" style="border-top: 2px solid var(--success); padding-top: 2rem; margin-top: 3rem;">
+                    <h2 class="section-title" style="color: var(--success);">Call Sheet</h2>
+                    <p style="background: rgba(239, 68, 68, 0.08); padding: 1.25rem; border-radius: var(--radius-sm); border-left: 5px solid var(--danger); font-size: 1rem; margin-bottom: 2rem; color: var(--danger); font-weight: 600;">
+                        <b>IMPORTANT:</b> For insurance purposes, Call Sheet must be submitted before filming.
+                    </p>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Commission Number</label>
+                            <input type="text" id="cs_comm_num" readonly style="background: var(--bg-light); cursor: not-allowed;">
+                        </div>
+                        <div class="form-group">
+                            <label>Story Name</label>
+                            <input type="text" id="cs_story_name" readonly style="background: var(--bg-light); cursor: not-allowed;">
+                        </div>
+                        <div class="form-group">
+                            <label>Producer Name</label>
+                            <input type="text" id="cs_producer_name" readonly style="background: var(--bg-light); cursor: not-allowed;">
+                        </div>
+                    </div>
+
+                    <div class="form-grid" style="margin-top: 1.5rem;">
+                        <div class="form-group">
+                            <label>Producer Phone Number</label>
+                            <input type="text" id="cs_producer_phone" name="cs_producer_phone" placeholder="+27 82 123 4567" pattern="^\+27\d{9}$|^0\d{9}$" title="Please use SA dial code (+27) or 10-digit number" oninput="this.value = formatSA(this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Producer ID Number</label>
+                            <input type="text" id="cs_producer_id" name="cs_producer_id" placeholder="13 Digit ID Number" maxlength="13" minlength="13" pattern="\d{13}" title="Must be exactly 13 digits with no spaces">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-3-col" style="margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                        <div class="form-group">
+                            <label>Presenter Name</label>
+                            <select id="cs_presenter_name" name="cs_presenter_name">
+                                <option value="">-- Select Presenter --</option>
+                            </select>
+                            <div id="csPresenterOtherWrapper" class="hidden" style="margin-top: 0.75rem;">
+                                <input type="text" id="cs_presenter_other" name="cs_presenter_other" placeholder="Type name here...">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Presenter Phone Number</label>
+                            <input type="text" id="cs_presenter_phone" name="cs_presenter_phone" placeholder="+27 82 123 4567" pattern="^\+27\d{9}$|^0\d{9}$" oninput="this.value = formatSA(this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Presenter ID Number</label>
+                            <input type="text" id="cs_presenter_id" name="cs_presenter_id" placeholder="13 Digit ID Number" maxlength="13" minlength="13" pattern="\d{13}">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-3-col" style="margin-top: 1.5rem;">
+                        <div class="form-group">
+                            <label>DOP Name</label>
+                            <input type="text" id="cs_dop_name" name="cs_dop_name">
+                        </div>
+                        <div class="form-group">
+                            <label>DOP Phone Number</label>
+                            <input type="text" id="cs_dop_phone" name="cs_dop_phone" placeholder="+27 82 123 4567" pattern="^\+27\d{9}$|^0\d{9}$" oninput="this.value = formatSA(this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>DOP ID Number</label>
+                            <input type="text" id="cs_dop_id" name="cs_dop_id" placeholder="13 Digit ID Number" maxlength="13" minlength="13" pattern="\d{13}">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-3-col" style="margin-top: 1.5rem;">
+                        <div class="form-group">
+                            <label>Camera Assistant Name</label>
+                            <input type="text" id="cs_cam_assistant_name" name="cs_cam_assistant_name">
+                        </div>
+                        <div class="form-group">
+                            <label>Camera Assistant Phone Number</label>
+                            <input type="text" id="cs_cam_assistant_phone" name="cs_cam_assistant_phone" placeholder="+27 82 123 4567" pattern="^\+27\d{9}$|^0\d{9}$" oninput="this.value = formatSA(this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Camera Assistant ID Number</label>
+                            <input type="text" id="cs_cam_assistant_id" name="cs_cam_assistant_id" placeholder="13 Digit ID Number" maxlength="13" minlength="13" pattern="\d{13}">
+                        </div>
+                    </div>
+
+                    <div id="dynamicAdditionalCrew">
+                        <div class="form-grid-3-col" style="margin-top: 1.5rem; border-top: 1px dashed var(--border); padding-top: 1.5rem;">
+                            <div class="form-group">
+                                <label>Additional Name</label>
+                                <input type="text" id="cs_add1_name" name="cs_add1_name">
+                            </div>
+                            <div class="form-group">
+                                <label>Additional Phone Number</label>
+                                <input type="text" id="cs_add1_phone" name="cs_add1_phone" placeholder="+27 82 123 4567" pattern="^\+27\d{9}$|^0\d{9}$" oninput="this.value = formatSA(this.value)">
+                            </div>
+                            <div class="form-group">
+                                <label>Additional ID Number</label>
+                                <input type="text" id="cs_add1_id" name="cs_add1_id" placeholder="13 Digit ID Number" maxlength="13" minlength="13" pattern="\d{13}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="addCsCrewBtn" class="add-btn" style="margin-top: 1.5rem; width: fit-content;">+ Add Additional Details</button>
+
+                    <div class="form-group" style="margin-top: 2rem;">
+                        <label for="cs_story_description">Story Description (Risk Assessment)</label>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                            Please describe the kind of story you're doing. This is basically a risk assessment - skydiving, riot, mountain climbing, etc. Is it a feature, news piece, investigative, etc.
+                        </p>
+                        <textarea id="cs_story_description" name="cs_story_description" rows="4" placeholder="Describe the story and any risks..."></textarea>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 2rem;">
+                        <label>Shoot Schedule</label>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                            Please break ALL your shoot days down WITH dates. You need to indicate flying, driving (whose car), etc. We need every day broken up in slots with times, addresses and what you are shooting.
+                        </p>
+                        <div class="table-container">
+                            <table class="data-table" style="min-width: 1200px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 120px;">Date</th>
+                                        <th style="width: 100px;">Time</th>
+                                        <th>From Destination</th>
+                                        <th>To Destination</th>
+                                        <th style="width: 120px;">Transport</th>
+                                        <th style="width: 120px;">Vehicle Owner</th>
+                                        <th style="width: 150px;">Responsible Driver</th>
+                                        <th>What You are Shooting</th>
+                                        <th style="width: 50px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="shootScheduleTableBody">
+                                    <!-- Dynamic rows go here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="addShootRowBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Shoot Day/Slot</button>
+                    </div>
+                </section>
+
+            <div class="form-actions" id="standardFormActions">
+                <button type="button" id="saveDraftBtn" class="btn-soft" style="margin-right: 1rem; padding: 0.75rem 1.5rem;">Save Draft</button>
+                <button type="submit" id="submitBtn" class="submit-btn">Submit</button>
+            </div>
+        </form>
+
+    </div><!-- End of form-wrapper wide -->
+
+    <!-- Floating Admin Action Bar (Only for view=admin) -->
+    <div id="floatingAdminBar" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-card); border-top: 3px solid var(--primary); padding: 1.5rem 2rem; box-shadow: 0 -15px 35px rgba(0,0,0,0.4); z-index: 99999; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 2rem;">
+            <div style="flex: 1;">
+                <h4 style="margin: 0; font-size: 0.9rem; color: var(--primary); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 800;">Admin Review Actions</h4>
+                <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">Review the proposal content above before selecting an action.</p>
+            </div>
+            <div id="manualCommSectionFloating" style="flex: 1; max-width: 300px; display: none;">
+                <input type="text" id="manualCommissionNumber" placeholder="Manual Comm # (Optional)" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 0.85rem; background: var(--bg-light); color: var(--text-main); font-weight: 600;">
+            </div>
+            <div style="display: flex; gap: 1.25rem; flex: 2; justify-content: flex-end;">
+                <button type="button" id="adminRejectBtn" style="padding: 1rem 2rem; font-size: 0.95rem; font-weight: 800; cursor: pointer; min-width: 160px; border-radius: var(--radius-sm); border: 2px solid var(--danger); background: transparent; color: var(--danger); text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s;">REJECT</button>
+                <button type="button" id="adminApproveBtn" style="padding: 1rem 2.5rem; font-size: 0.95rem; font-weight: 800; cursor: pointer; min-width: 220px; border-radius: var(--radius-sm); border: none; background: var(--success); color: white; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); transition: all 0.2s;">ACCEPT & COMMISSION</button>
+            </div>
+        </div>
+        <div style="margin-top: 3rem; text-align: center;">
+            <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+                ← Back to Forms Hub
+            </a>
+        </div>
+    </div>
+
+    <!-- Success Dialog -->
+    <div id="successDialog" class="dialog-overlay hidden">
+        <div class="dialog-box">
+            <h3 class="dialog-title">Submitted</h3>
+            <p class="dialog-message">Your proposal has been successfully submitted.</p>
+            <div id="dialogActions" style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+                <button class="submit-btn" id="dialogCloseBtn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="proposal.js?v=5.1.1"></script>
+</body>
+</html>

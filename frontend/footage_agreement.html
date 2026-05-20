@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Master Footage Declaration (FDL)</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    
+    
+    <script src="js/branding.js?v=5.1.1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script type="module">
+        import { checkAuth, isAdmin, isSuperAdmin, isEditorialProduction } from './auth.js?v=5.1.1';
+        checkAuth().then(user => {
+            if (user) {
+                window.auth.initNavBar(user);
+            }
+        });
+    </script>
+</head>
+<body class="form-body">
+    <!-- Masquerade Banner (Managed by auth.js?v=5.1.0) -->
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <a href="index.html" class="gnav-btn" title="Back to Dashboard">
+                    <span>🏠</span>
+                    <span>HOME</span>
+                </a>
+                <a href="user_management.html" id="gnavAdminBtn" class="gnav-btn" style="display: none;">
+                    <span>👥</span>
+                    <span>USER MANAGEMENT</span>
+                </a>
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="masqueradeBanner" class="masquerade-banner">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 1.25rem;">🎭</span>
+            <div style="display: flex; flex-direction: column; gap: 0.1rem;">
+                <div style="line-height: 1.2;"><b>Masquerade Mode:</b> <span id="masqueradeName"></span></div>
+                <div style="opacity: 0.9; font-size: 0.8em; line-height: 1.2;">Perspective: <span id="masqueradeRole" style="text-transform: uppercase; font-weight: bold;"></span></div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <div id="masqueradeViewAction"></div>
+            <button onclick="window.auth.stopMasquerade()" class="btn-soft" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.4); padding: 0.4rem 0.8rem; font-size: 0.75rem; border-radius: 6px; cursor: pointer;">Stop Masquerade</button>
+        </div>
+    </div>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <h2 style="color: var(--primary);">Generating & Sending PDF...</h2>
+        <p>Please wait, this might take a moment.</p>
+    </div>
+
+    <div class="form-wrapper wide" id="formContentToPDF">
+        <header class="form-header">
+            <div class="logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
+            </div>
+
+            <h1>Master Footage Declaration (FDL)</h1>
+            
+            
+        </header>
+
+        <form id="footageAgreementForm" class="modern-form">
+            <!-- EPISODE INFO SECTION -->
+            <section class="form-section">
+                <h2 class="section-title">Episode Info</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="tx_date">TX Date</label>
+                        <input type="date" id="tx_date" name="tx_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="season">Season</label>
+                        <input type="text" id="season" name="season" placeholder="e.g. 35" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="episode">Episode</label>
+                        <input type="text" id="episode" name="episode" placeholder="e.g. 1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="uid_number">UID Number (Max 10)</label>
+                        <input type="text" id="uid_number" name="uid_number" placeholder="Enter UID..." maxlength="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="total_duration">Total Episode Duration (HH:MM:SS)</label>
+                        <input type="text" id="total_duration" name="total_duration" class="tc-input" placeholder="00:00:00" required>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STUDIO ANCHORS SECTION -->
+            <section class="form-section">
+                <h2 class="section-title">Studio Anchors</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="anchor_1">Anchor 1</label>
+                        <select id="anchor_1" name="anchor_1" required>
+                            <option value="">-- Select --</option>
+                            <option value="Catherine Rice">Catherine Rice</option>
+                            <option value="Claire Mawisa">Claire Mawisa</option>
+                            <option value="Erin Bates">Erin Bates</option>
+                            <option value="Govan Whittles">Govan Whittles</option>
+                            <option value="Lourensa Eckard">Lourensa Eckard</option>
+                            <option value="Macfarlane Moleli">Macfarlane Moleli</option>
+                            <option value="Masa Kekana">Masa Kekana</option>
+                            <option value="Nickolaus Bauer">Nickolaus Bauer</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="anchor_2">Anchor 2</label>
+                        <select id="anchor_2" name="anchor_2">
+                            <option value="">-- Select (Optional) --</option>
+                            <option value="Catherine Rice">Catherine Rice</option>
+                            <option value="Claire Mawisa">Claire Mawisa</option>
+                            <option value="Erin Bates">Erin Bates</option>
+                            <option value="Govan Whittles">Govan Whittles</option>
+                            <option value="Lourensa Eckard">Lourensa Eckard</option>
+                            <option value="Macfarlane Moleli">Macfarlane Moleli</option>
+                            <option value="Masa Kekana">Masa Kekana</option>
+                            <option value="Nickolaus Bauer">Nickolaus Bauer</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EPISODE SYNOPSIS SECTION -->
+            <section class="form-section">
+                <h2 class="section-title">Episode Synopsis</h2>
+                <div class="form-group full-width">
+                    <label for="episode_synopsis">Synopsis (Same as EPG)</label>
+                    <textarea id="episode_synopsis" name="episode_synopsis" rows="3" maxlength="400" placeholder="Enter synopsis..." required></textarea>
+                </div>
+            </section>
+
+            <!-- STORY IMPORT SECTION (Optional) -->
+            <section id="importSection" class="form-section">
+                <h2 class="section-title">Import from Insert Footage</h2>
+                <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                    You can pull footage data directly from a previously submitted "Insert Footage Declaration" story.
+                </p>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="importStorySelect">Select Story (Last 90 Days)</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <select id="importStorySelect" class="table-input" style="flex: 1;">
+                                <option value="">-- Loading stories... --</option>
+                            </select>
+                            <button type="button" id="refreshStoriesBtn" class="add-btn" style="margin-top: 0; padding: 0 0.75rem;" title="Refresh list">
+                                🔄
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: flex-end;">
+                        <button type="button" id="importBtn" class="add-btn" style="margin-top: 0; height: 42px; background: var(--primary); color: white; border: none;">
+                            Import & Append
+                        </button>
+                    </div>
+                </div>
+                <p id="importStatus" style="font-size: 0.8rem; margin-top: 0.5rem; color: var(--primary);"></p>
+            </section>
+
+            <!-- FOOTAGE DECLARATION SECTION (Conditional) -->
+            <section id="footageDeclarationSection" class="form-section full-width">
+                <h2 class="section-title">Footage Declaration</h2>
+                <div class="table-container">
+                    <table class="data-table" id="footageTable">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Clip Name</th>
+                                <th>Description</th>
+                                <th>Footage Source</th>
+                                <th>Contact Info</th>
+                                <th>Agreement</th>
+                                <th>TC In</th>
+                                <th>TC Out</th>
+                                <th>Duration</th>
+                                <th>Licence Req.</th>
+                                <th>Licence Period</th>
+                                <th>Resale</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="footageTableBody">
+                            <!-- Rows will be injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" id="addRowBtn" class="add-btn" style="margin-top: 1rem;">
+                    <span class="icon">+</span> Add New Entry
+                </button>
+            </section>
+
+            <!-- SUPPORTING DOCUMENTS SECTION -->
+            <section class="form-section">
+                <h2 class="section-title">Supporting Documents (Optional)</h2>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                        Upload additional PDFs (e.g., license agreements, contact sheets) to be merged later.
+                    </p>
+                    <input type="file" id="supportingDocsInput" multiple accept="application/pdf" style="display: none;">
+                    <label for="supportingDocsInput" class="add-btn" style="cursor: pointer;">
+                        <span class="icon">+</span> Select PDF Files
+                    </label>
+                </div>
+                
+                <div id="fileOrderList" class="file-order-list">
+                    <!-- Selected files will appear here -->
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">
+                    Submit
+                </button>
+            </div>
+        </form>
+        <div style="margin-top: 3rem; text-align: center;">
+            <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+                ← Back to Forms Hub
+            </a>
+        </div>
+    </div>
+
+    <!-- Success Dialog -->
+    <div id="successDialog" class="dialog-overlay hidden">
+        <div class="dialog-box">
+            <h3 class="dialog-title">Submitted</h3>
+            <p class="dialog-message">Your Master Footage Declaration (FDL) was successfully submitted.</p>
+            <button class="submit-btn" id="dialogCloseBtn">OK</button>
+        </div>
+    </div>
+
+    <script src="footage_agreement.js?v=5.1.1"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

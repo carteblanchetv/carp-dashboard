@@ -1,0 +1,662 @@
+[
+  {
+    "displayName": "Admin",
+    "email": "carteblanche.tv101@gmail.com",
+    "firstName": "Admin",
+    "lastName": "",
+    "tempPassword": "CB_6152D0F2!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Anina",
+    "email": "anina@carteblanche.co.za",
+    "firstName": "Anina",
+    "lastName": "Peens",
+    "tempPassword": "CB_23E91C85!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Annalise",
+    "email": "annalise@carteblanche.co.za",
+    "firstName": "Annalise",
+    "lastName": "Lubbe",
+    "tempPassword": "CB_716D971A!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Beth",
+    "email": "beth@carteblanche.co.za",
+    "firstName": "Beth",
+    "lastName": "Neale",
+    "tempPassword": "CB_3E57CD44!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Bryan",
+    "email": "bryan@carteblanche.co.za",
+    "firstName": "Bryan",
+    "lastName": "Bartle",
+    "tempPassword": "CB_8794C0A4!",
+    "role": "editorial-production",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Busisiwe",
+    "email": "busisiwe@carteblanche.co.za",
+    "firstName": "Busisiwe",
+    "lastName": "Gumede",
+    "tempPassword": "CB_9AEA84E6!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Carol",
+    "email": "Carolac@carteblanche.co.za",
+    "firstName": "Carol",
+    "lastName": "Albertyn Christie",
+    "tempPassword": "CB_5A046ED6!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Catherine",
+    "email": "Carolac@carteblanche.co.za",
+    "firstName": "Catherine",
+    "lastName": "Rice",
+    "tempPassword": "CB_61E2DCF6!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Diana",
+    "email": "Diana@carteblanche.co.za",
+    "firstName": "Diana",
+    "lastName": "Lucas",
+    "tempPassword": "CB_3F92EEDB!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Floris",
+    "email": "floris@carteblanche.co.za",
+    "firstName": "Floris",
+    "lastName": "Kotze",
+    "tempPassword": "CB_35B6F940!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Graham",
+    "email": "Graham@carteblanche.co.za",
+    "firstName": "Graham",
+    "lastName": "Coetzer",
+    "tempPassword": "CB_81C9ACF1!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Hamilton",
+    "email": "hwende@netactive.co.za",
+    "firstName": "Hamilton",
+    "lastName": "Wende",
+    "tempPassword": "CB_995C3E1B!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Harri",
+    "email": "harriv@carteblanche.co.za",
+    "firstName": "Harri",
+    "lastName": "Vithi",
+    "tempPassword": "CB_A1B5CA20!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Jabulile",
+    "email": "jabulile.curtis@gmail.com",
+    "firstName": "Jabulile",
+    "lastName": "Mbatha",
+    "tempPassword": "CB_46D6A44C!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Jo",
+    "email": "jlmunnik@gmail.com",
+    "firstName": "Jo",
+    "lastName": "Munnik",
+    "tempPassword": "CB_79D36243!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "John",
+    "email": "john@carteblanche.co.za",
+    "firstName": "John",
+    "lastName": "Webb",
+    "tempPassword": "CB_8E652752!",
+    "role": "editorial-production",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Joy",
+    "email": "Joys@carteblanche.co.za",
+    "firstName": "Joy",
+    "lastName": "Summers",
+    "tempPassword": "CB_B857990C!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Julian",
+    "email": "julian@carteblanche.co.za",
+    "firstName": "Julian",
+    "lastName": "Sun",
+    "tempPassword": "CB_30667078!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Kate Barry",
+    "email": "kate@carteblanche.co.za",
+    "firstName": "Kate",
+    "lastName": "Barry",
+    "tempPassword": "CB_4F7A22A1!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Kate Nokwe",
+    "email": "katenokwe@gmail.com",
+    "firstName": "Kate",
+    "lastName": "Nokwe",
+    "tempPassword": "CB_47EFF144!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Kevin",
+    "email": "kevin@combinedartists.co.za",
+    "firstName": "Kevin",
+    "lastName": "Freese",
+    "tempPassword": "CB_8D7745B7!",
+    "role": "editorial-production",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Latashia",
+    "email": "latashia@carteblanche.co.za",
+    "firstName": "Latashia",
+    "lastName": "Naidoo",
+    "tempPassword": "CB_EA09F54B!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Laura",
+    "email": "Laura@carteblanche.co.za",
+    "firstName": "Laura",
+    "lastName": "Byrne",
+    "tempPassword": "CB_E1BFC3C5!",
+    "role": "editorial-production",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Layton",
+    "email": "layton.beard@outlook.com",
+    "firstName": "Layton",
+    "lastName": "Beard",
+    "tempPassword": "CB_18118C0D!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Lezanne",
+    "email": "lezanne@carteblanche.co.za",
+    "firstName": "Lezanne",
+    "lastName": "Janse van Rensburg",
+    "tempPassword": "SUPER ADMIN",
+    "role": "super-admin",
+    "notifications": {
+      "proposal": true,
+      "proposal_commission": true,
+      "insert_footage": true,
+      "episode_footage": true,
+      "control_sheet": true
+    }
+  },
+  {
+    "displayName": "Liz",
+    "email": "Liz@carteblanche.co.za",
+    "firstName": "Liz",
+    "lastName": "Fish",
+    "tempPassword": "CB_207EB12A!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Marion",
+    "email": "marion@carteblanche.co.za",
+    "firstName": "Marion",
+    "lastName": "Edmunds",
+    "tempPassword": "CB_58FA307B!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Mart-Marie",
+    "email": "mart-marie@carteblanche.co.za",
+    "firstName": "Mart-Marie",
+    "lastName": "Faure",
+    "tempPassword": "CB_B0777513!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Masa",
+    "email": "masa@carteblanche.co.za",
+    "firstName": "Masa",
+    "lastName": "Kekana",
+    "tempPassword": "CB_7AC7E72D!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Matuba",
+    "email": "matuba@carteblanche.co.za",
+    "firstName": "Matuba",
+    "lastName": "Mahlatjie",
+    "tempPassword": "CB_D5451E49!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Meinie",
+    "email": "meinie@carteblanche.co.za",
+    "firstName": "Meinie",
+    "lastName": "Heydenrych",
+    "tempPassword": "CB_08C191B0!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Mihle",
+    "email": "mihle@combinedartists.co.za",
+    "firstName": "Mihle",
+    "lastName": "Klaas",
+    "tempPassword": "CB_3ED3CE90!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Nickolaus",
+    "email": "nickolaus@carteblanche.co.za",
+    "firstName": "Nickolaus",
+    "lastName": "Bauer",
+    "tempPassword": "CB_88EFFD9E!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Nicky",
+    "email": "nicky@carteblanche.co.za",
+    "firstName": "Nicky",
+    "lastName": "Troll",
+    "tempPassword": "CB_1088DFC2!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Nombuso",
+    "email": "nombuson@combinedartists.co.za",
+    "firstName": "Nombuso",
+    "lastName": "Nkosi",
+    "tempPassword": "CB_158BCEBD!",
+    "role": "editorial-production",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": true
+    }
+  },
+  {
+    "displayName": "Ofentse",
+    "email": "Ofentse@combinedartists.co.za",
+    "firstName": "Ofentse",
+    "lastName": "Lamola",
+    "tempPassword": "CB_C6F819BD!",
+    "role": "editorial-production",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Rudi",
+    "email": "rudi@combinedartists.co.za",
+    "firstName": "Rudi",
+    "lastName": "Botha",
+    "tempPassword": "CB_9D33B109!",
+    "role": "editorial-production",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": true
+    }
+  },
+  {
+    "displayName": "Sasha",
+    "email": "Sasha@carteblanche.co.za",
+    "firstName": "Sasha",
+    "lastName": "Schwendenwein",
+    "tempPassword": "CB_3BBD6544!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Sebe",
+    "email": "sebeb@carteblanche.co.za",
+    "firstName": "Sebe",
+    "lastName": "Buthelezi",
+    "tempPassword": "CB_2FA53A73!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Sinethemba",
+    "email": "Sinethemba@carteblanche.co.za",
+    "firstName": "Sinethemba",
+    "lastName": "Nogude",
+    "tempPassword": "CB_3C70ECFA!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Stenette",
+    "email": "stenette@carteblanche.co.za",
+    "firstName": "Stenette",
+    "lastName": "Grosskopf",
+    "tempPassword": "CB_8BBBE531!",
+    "role": "admin",
+    "notifications": {
+      "proposal": true,
+      "proposal_commission": true,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Tarryn",
+    "email": "tarryn@carteblanche.co.za",
+    "firstName": "Tarryn",
+    "lastName": "Crossman",
+    "tempPassword": "CB_A09EF689!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Viewfinder",
+    "email": "editor@viewfinder.org.za",
+    "firstName": "Viewfinder",
+    "lastName": "",
+    "tempPassword": "CB_6970FB4E!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  },
+  {
+    "displayName": "Zikhona",
+    "email": "zikhona.tshona@gmail.com",
+    "firstName": "Zikhona",
+    "lastName": "Tshona",
+    "tempPassword": "CB_2B1E6CF5!",
+    "role": "producer",
+    "notifications": {
+      "proposal": false,
+      "proposal_commission": false,
+      "insert_footage": false,
+      "episode_footage": false,
+      "control_sheet": false
+    }
+  }
+]

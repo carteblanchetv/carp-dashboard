@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Commission Agreement</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    <script src="js/branding.js?v=5.1.1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        :root {
+            --agreement-max-width: 800px;
+        }
+        .agreement-body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        .agreement-page {
+            background: white;
+            max-width: var(--agreement-max-width);
+            width: 100%;
+            padding: 4rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .agreement-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 1.5rem;
+        }
+        .agreement-header h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .parties-section {
+            margin-bottom: 2.5rem;
+            font-weight: 500;
+        }
+        .parties-section p {
+            margin: 0.5rem 0;
+        }
+        .data-grid {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+            background: #f1f5f9;
+            padding: 1.5rem;
+            border-radius: 6px;
+        }
+        .data-label {
+            font-weight: 700;
+            color: #475569;
+        }
+        .data-value {
+            color: #0f172a;
+        }
+        .tc-section h2 {
+            font-size: 1.1rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+        .tc-list {
+            list-style: none;
+            padding: 0;
+            counter-reset: tc-counter;
+        }
+        .tc-item {
+            margin-bottom: 1.25rem;
+            display: flex;
+            gap: 1rem;
+            font-size: 0.95rem;
+            text-align: justify;
+        }
+        .tc-item::before {
+            counter-increment: tc-counter;
+            content: counter(tc-counter) ".";
+            font-weight: 700;
+            min-width: 25px;
+            color: var(--primary);
+        }
+        .tc-sub-list {
+            list-style: lower-alpha;
+            padding-left: 2.5rem;
+            margin-top: 0.5rem;
+        }
+        .tc-sub-item {
+            margin-bottom: 0.5rem;
+        }
+        .tc-sub-sub-list {
+            list-style: lower-roman;
+            padding-left: 1.5rem;
+            margin-top: 0.25rem;
+        }
+        .signature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px dashed #cbd5e1;
+        }
+        .sig-block p {
+            margin: 0.25rem 0;
+            font-size: 0.9rem;
+        }
+        .sig-line {
+            margin-top: 2rem;
+            border-bottom: 1px solid #1e293b;
+            height: 20px;
+            margin-bottom: 0.5rem;
+        }
+        .sig-bold {
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .no-print {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+        @media print {
+            .no-print { display: none; }
+            .agreement-body { background: white; padding: 0; }
+            .agreement-page { box-shadow: none; padding: 0; border-radius: 0; max-width: none; }
+        }
+    </style>
+</head>
+<body class="agreement-body">
+    <div class="no-print">
+        <button id="downloadPdfBtn" class="submit-btn" style="background: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 1.2rem;">📥</span> Download PDF
+        </button>
+        <button onclick="window.close()" class="btn-soft">Close Tab</button>
+    </div>
+
+    <div class="agreement-page" id="agreementContent">
+        <div class="agreement-header">
+            <h1 id="pageHeading">INSERT COMMISSION AGREEMENT - CBD 2026/[...]</h1>
+        </div>
+
+        <div class="parties-section">
+            <p>Between <strong>COMBINED ARTISTIC PRODUCTIONS cc.</strong> (hereinafter referred to as the 'company')</p>
+            <p style="margin: 1rem 0; font-style: italic;">and</p>
+            <p><strong id="producerNameDisplay">[Producer Name]</strong> (hereinafter referred to as the 'producer')</p>
+        </div>
+
+        <div class="data-grid">
+            <div class="data-label">Insert Title:</div>
+            <div class="data-value" id="valTitle">...</div>
+            
+            <div class="data-label">Duration:</div>
+            <div class="data-value" id="valDuration">...</div>
+            
+            <div class="data-label">Presenter:</div>
+            <div class="data-value" id="valPresenter">...</div>
+            
+            <div class="data-label">Commission Date:</div>
+            <div class="data-value" id="valCommDate">...</div>
+            
+            <div class="data-label">Rate per minute broadcast:</div>
+            <div class="data-value" id="valRate">...</div>
+            
+            <div class="data-label">Location(s):</div>
+            <div class="data-value" id="valLocations">...</div>
+            
+            <div class="data-label">Delivery Date:</div>
+            <div class="data-value" id="valDeliveryDate">...</div>
+            
+            <div class="data-label">Email:</div>
+            <div class="data-value" id="valEmail">...</div>
+        </div>
+
+        <div class="tc-section">
+            <h2>TERMS & CONDITIONS</h2>
+            <div class="tc-list">
+                <div class="tc-item">This commission is valid for the production of the above-mentioned insert only.</div>
+                
+                <div class="tc-item">The duration of the delivered insert shall be as stipulated above. Any variation in duration must be approved by the company prior to delivery. The company reserves the right to amend the duration of the insert according to Carte Blanche's editorial requirements.</div>
+                
+                <div class="tc-item">The company shall pay the producer according to the minutes delivered multiplied by the per-minute rate (as stated above). The per-minute rate applies to all expenses incurred by the producer during research, pre-production, production and post-production.</div>
+                
+                <div class="tc-item">
+                    <div>
+                        The producer has an obligation to inform the company immediately of any potential conflict of interest that may exist or that may arise in relation to the insert. The company may decide not to proceed with the commissioning of the insert if it is of the view that a conflict of interest exists or that the perception of such a conflict may compromise the credibility of the insert.
+                        <ol class="tc-sub-list">
+                            <li class="tc-sub-item">Such a conflict of interest includes but is not limited to:
+                                <ol class="tc-sub-sub-list">
+                                    <li>the existence or prior existence of any relationship (whether business or personal) between the producer or any family member or friend of the producer, and any of the parties featured in the insert; and</li>
+                                    <li>the existence or prior existence of any financial interest of the producer or any family member or friend of the producer in any business being featured in the insert.</li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="tc-item">The producer shall have a period of two days to film the insert. Should the producer require additional days to film the insert, the producer must immediately request, telephonically and in writing, the company to authorize the additional days. All expenses incurred during the additional filming days shall be for the company's account and will be settled on receipt of proof of expenses.</div>
+
+                <div class="tc-item">
+                    <div>
+                        The producer shall apply the total amount paid by the company to cover:
+                        <ul class="tc-sub-list">
+                            <li class="tc-sub-item">the producer and/or director's fee(s);</li>
+                            <li class="tc-sub-item">the daily rates (including overtime) for the cameraman, audio operator and/or additional crew;</li>
+                            <li class="tc-sub-item">additional costs charged by the presenter in circumstances where:
+                                <ul style="list-style: circle; padding-left: 1.5rem; margin-top: 0.25rem;">
+                                    <li>work is performed outside the two-day period;</li>
+                                    <li>the presenter's call duration exceeds the maximum of 10 hours per day;</li>
+                                </ul>
+                            </li>
+                            <li class="tc-sub-item">the presenter's voice-over call fee.</li>
+                            <li class="tc-sub-item">all post-production related costs including, but not exclusive to the edit and audio final mix.</li>
+                            <li class="tc-sub-item">all transport and accommodation costs incurred within the producer's city of residence for all crew, including that of the presenter.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tc-item">All transport and accommodation costs incurred outside the producer's city of residence shall be for the company's account provided that the company approved such request(s) in writing or telephonically prior to travel. The producer shall provide the company with proof of expenses incurred within a reasonable period.</div>
+
+                <div class="tc-item">Following completion of the offline edit, a viewing shall be arranged with Carte Blanche's Executive Producer, and if necessary, with Carte Blanche's legal representatives. The delivered insert shall include the Executive Producer's and/or legal representatives' instructions.</div>
+
+                <div class="tc-item">The company reserves the right to reject the insert and to demand that the producer rectify any non-conformance within a period specified in writing, at the producers' own cost.</div>
+
+                <div class="tc-item">
+                    <div>
+                        The company reserves the right to terminate this commission agreement and hold the producer liable for production costs incurred if:
+                        <ol class="tc-sub-list">
+                            <li class="tc-sub-item">filming has not commenced within 4 (four) weeks of the date of commissioning;</li>
+                            <li class="tc-sub-item">the producer fails to deliver the insert, all relevant materials and shot footage by the agreed delivery date, without good cause shown;</li>
+                            <li class="tc-sub-item">the producer deviates from the agreed editorial and/or legal direction;</li>
+                            <li class="tc-sub-item">the production quality of the insert (including channel specifications), expected journalistic and ethical standards, all relevant materials and shot footage do not meet the company's minimum high definition standards as specified in the Producer Deliverables document, which can be obtained from Carte Blanche's Production Manager;</li>
+                            <li class="tc-sub-item">the producer has not disclosed a potential conflict of interest as provided for above.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="tc-item">The producer shall deliver the insert, all related materials and shot footage to the company as specified in the Producer Deliverables document a minimum of 4 (four) days prior to broadcast. If the producer fails to do so, the company reserves the right to withhold any payment(s).</div>
+
+                <div class="tc-item">The producer shall tender an original tax invoice stating the total amount (see clause 3) and the company shall proceed to settle the tax invoice within 14 (fourteen) days from the date of delivery of the insert and deliverables.</div>
+
+                <div class="tc-item">Any property borrowed from the company must be returned in its original order. Failing that, the producer shall reimburse the company the amount equivalent to the replacement value of the property.</div>
+
+                <div class="tc-item">The copyright of the insert, all related materials and the shot footage shall remain the property of M-Net. The producer shall not use the insert, any of the related materials and/or shot footage for any other purpose than the use for Carte Blanche.</div>
+
+                <div class="tc-item">The producer shall not license, sell or hand over the insert, any of the related material and/or shot footage to any third party without the written permission of the company and M-Net.</div>
+
+                <div class="tc-item">The producer waives any lien it may have over any of the items in clauses 14 and 15.</div>
+
+                <div class="tc-item">The company and M-Net reserve all rights, known and/or unknown, in perpetuity.</div>
+            </div>
+        </div>
+
+        <div class="signature-grid">
+            <div class="sig-block">
+                <p>Signed at Combined Artists on <span class="sig-date">...</span></p>
+                <p>Randburg</p>
+                <div class="sig-line"></div>
+                <p id="sigAdminName">...</p>
+                <p class="sig-bold">COMBINED ARTISTS</p>
+            </div>
+            <div class="sig-block">
+                <p>Signed at Combined Artists on <span class="sig-date">...</span></p>
+                <div class="sig-line"></div>
+                <p id="sigProducerName">...</p>
+                <p class="sig-bold">PRODUCER</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="commission_agreement.js"></script>
+</body>
+</html>
