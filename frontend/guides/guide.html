@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Producer Help Guide | Carte Blanche Deliverables</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    <style>
+        .guide-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2.5rem;
+        }
+
+        /* Sidebar Styling */
+        .guide-sidebar {
+            position: sticky;
+            top: 90px;
+            height: calc(100vh - 130px);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .guide-menu-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .guide-menu-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .guide-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .menu-item {
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(0, 143, 190, 0.08);
+            color: var(--text-main);
+        }
+
+        .menu-item.active {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Content Area Styling */
+        .guide-content-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+            min-height: 500px;
+        }
+
+        .guide-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        .guide-section.active {
+            display: block;
+        }
+
+        .section-eyebrow {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .guide-paragraph {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Visual Screenshot Frame */
+        .screenshot-frame {
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background-color: #0f172a;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        .screenshot-bar {
+            background-color: #1e293b;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .bar-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #22c55e; }
+
+        .screenshot-url {
+            margin-left: 1rem;
+            background-color: rgba(0,0,0,0.3);
+            font-size: 0.7rem;
+            padding: 0.2rem 0.75rem;
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-family: monospace;
+            max-width: 320px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .screenshot-frame img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* Steps & Instructions */
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .step-item {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .light-mode .step-item {
+            background-color: rgba(0, 0, 0, 0.01);
+        }
+
+        .step-badge {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 800;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            color: var(--text-main);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .step-text strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Warning & Tip Boxes */
+        .callout-box {
+            display: flex;
+            gap: 1rem;
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .callout-box.info {
+            background-color: rgba(0, 143, 190, 0.08);
+            border: 1px solid rgba(0, 143, 190, 0.25);
+            color: var(--text-main);
+        }
+
+        .callout-box.warning {
+            background-color: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: var(--text-main);
+        }
+
+        .callout-box.success {
+            background-color: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            color: var(--text-main);
+        }
+
+        .callout-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .callout-box strong {
+            color: var(--text-main);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 900px) {
+            .guide-container {
+                grid-template-columns: 1fr;
+            }
+            .guide-sidebar {
+                position: static;
+                height: auto;
+            }
+            .guide-content-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+    <!-- GLOBAL NAV BAR (Standardized dynamically by auth.js) -->
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <a href="index.html" class="gnav-btn">
+                    <span>🏠</span>
+                    <span>DASHBOARD</span>
+                </a>
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span class="theme-toggle-icon">🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="masqueradeBanner" class="masquerade-banner">
+        <!-- Injected by auth.js if masquerading -->
+    </div>
+
+    <div class="dashboard-container wide">
+        <header class="dashboard-header" style="margin-bottom: 2rem;">
+            <div class="logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
+            </div>
+            <h1>Producer Portal Help Guide</h1>
+            <p>Master the tools to submit proposals and deliver commissioned story packages.</p>
+        </header>
+
+        <div class="guide-container">
+            <!-- Navigation Sidebar -->
+            <aside class="guide-sidebar">
+                <div class="guide-menu-card">
+                    <div class="guide-menu-title">Guide Sections</div>
+                    <ul class="guide-menu">
+                        <li class="menu-item active" data-section="getting-started">
+                            <span>🔑</span> Sign In & Security
+                        </li>
+                        <li class="menu-item" data-section="dashboard-overview">
+                            <span>📋</span> Dashboard Hub
+                        </li>
+                        <li class="menu-item" data-section="proposal-submissions">
+                            <span>✍️</span> Story Proposals
+                        </li>
+                        <li class="menu-item" data-section="insert-details">
+                            <span>👥</span> Insert Details
+                        </li>
+                        <li class="menu-item" data-section="footage-declarations">
+                            <span>🎞️</span> Footage Declarations
+                        </li>
+                        <li class="menu-item" data-section="final-scripts">
+                            <span>📝</span> Final Scripts
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Guide Content Card -->
+            <article class="guide-content-card">
+                <!-- SECTION 1: GETTING STARTED -->
+                <section id="getting-started" class="guide-section active">
+                    <span class="section-eyebrow">Section 1</span>
+                    <h2 class="section-title">Signing In & Password Recovery</h2>
+                    
+                    <p class="guide-paragraph">
+                        Welcome to the Carte Blanche Forms Portal. To get started, you will need to access the site and authenticate using your work credentials.
+                    </p>
+
+                    <div class="screenshot-frame">
+                        <div class="screenshot-bar">
+                            <span class="bar-dot dot-red"></span>
+                            <span class="bar-dot dot-yellow"></span>
+                            <span class="bar-dot dot-green"></span>
+                            <span class="screenshot-url">cb-deliverables.web.app/login</span>
+                        </div>
+                        <img src="assets/walkthrough_step1_login_1779360393216.png" alt="Sign In Screen Screenshot">
+                    </div>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-badge">1</div>
+                            <div class="step-text">
+                                Open your browser and navigate to <strong>cb-deliverables.web.app</strong>.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">2</div>
+                            <div class="step-text">
+                                Under <strong>Work Email</strong> and <strong>Password</strong>, enter your credentials set up by your administrator, then click <strong>Sign In</strong>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout-box info">
+                        <span class="callout-icon">💡</span>
+                        <div>
+                            <strong>Account Setup:</strong> Your account must first be whitelisted and created by the administrator. If you are unable to log in, please contact the editorial staff to ensure your profile has been added.
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1.25rem;">Forgotten Password Recovery</h3>
+                    <p class="guide-paragraph">
+                        If you have forgotten your password, you can reset it securely using the self-service reset flow:
+                    </p>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-badge">1</div>
+                            <div class="step-text">
+                                Click the <strong>Forgot Password?</strong> link positioned right above the Password input.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">2</div>
+                            <div class="step-text">
+                                Enter your registered work email and click <strong>Send Reset Link</strong>.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">3</div>
+                            <div class="step-text">
+                                Check your email inbox (and spam folder) for a message containing a secure link. Click the link to define a new password.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: DASHBOARD -->
+                <section id="dashboard-overview" class="guide-section">
+                    <span class="section-eyebrow">Section 2</span>
+                    <h2 class="section-title">Navigating the Dashboard</h2>
+                    
+                    <p class="guide-paragraph">
+                        Upon logging in, you will land on the central <strong>Forms Dashboard</strong>. This page displays the forms available to you and serves as the hub for tracking your active stories.
+                    </p>
+
+                    <div class="screenshot-frame">
+                        <div class="screenshot-bar">
+                            <span class="bar-dot dot-red"></span>
+                            <span class="bar-dot dot-yellow"></span>
+                            <span class="bar-dot dot-green"></span>
+                            <span class="screenshot-url">cb-deliverables.web.app/index</span>
+                        </div>
+                        <img src="assets/walkthrough_step2_dashboard_1779360408508.png" alt="Forms Dashboard Screenshot">
+                    </div>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-badge">1</div>
+                            <div class="step-text">
+                                <strong>Action Cards:</strong> The grid at the top contains cards to perform actions, such as starting a <strong>New Proposal</strong>, managing your credentials in <strong>My Account</strong>, or launching the <strong>Submit Invoice</strong> portal.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">2</div>
+                            <div class="step-text">
+                                <strong>Global Search:</strong> The search bar allows you to quickly filter story titles, summaries, and expert names. You can also type in another producer's name to find their profile and view their stories.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout-box warning">
+                        <span class="callout-icon">⚠️</span>
+                        <div>
+                            <strong>IMPORTANT!</strong> Stories marked as Sensitive will not show in the search results.
+                        </div>
+                    </div>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-badge">3</div>
+                            <div class="step-text">
+                                <strong>My Stories Table:</strong> Scroll down to view the progress of all the proposals you have submitted. The table includes columns for <strong>Status</strong>, <strong>Commission Number</strong>, <strong>Delivery Date</strong>, and <strong>Actions</strong> (Edit / View / Delete).
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2.5rem; margin-bottom: 0.75rem; font-size: 1.25rem;">Tracking Your Proposals</h3>
+                    <p class="guide-paragraph">
+                        Use the <strong>My Stories</strong> list on your dashboard to monitor the status of your submissions. Here is a glossary of the status badges you will see:
+                    </p>
+
+                    <div class="screenshot-frame">
+                        <div class="screenshot-bar">
+                            <span class="bar-dot dot-red"></span>
+                            <span class="bar-dot dot-yellow"></span>
+                            <span class="bar-dot dot-green"></span>
+                            <span class="screenshot-url">cb-deliverables.web.app/index</span>
+                        </div>
+                        <img src="assets/walkthrough_step4_tracking_1779360438175.png" alt="Proposals Tracking Screenshot">
+                    </div>
+
+                    <div class="glossary-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1.5rem; margin-bottom: 1.5rem;">
+                        <div class="step-item" style="padding: 1.25rem; flex-direction: column; gap: 0.5rem; align-items: flex-start;">
+                            <span class="status-badge pending">Pending</span>
+                            <div class="step-text" style="font-size: 0.85rem;">
+                                <strong>Under Editorial Review:</strong> Your proposal has been submitted successfully and is waiting for the editorial team to review and commission.
+                            </div>
+                        </div>
+                        <div class="step-item" style="padding: 1.25rem; flex-direction: column; gap: 0.5rem; align-items: flex-start;">
+                            <span class="status-badge accepted">Commissioned</span>
+                            <div class="step-text" style="font-size: 0.85rem;">
+                                <strong>Story Approved:</strong> The editorial team has approved your story. A commission number has been assigned, and the deliverables phase is unlocked.
+                            </div>
+                        </div>
+                        <div class="step-item" style="padding: 1.25rem; flex-direction: column; gap: 0.5rem; align-items: flex-start;">
+                            <span class="status-badge rejected">Rejected</span>
+                            <div class="step-text" style="font-size: 0.85rem;">
+                                <strong>Not Proceeding:</strong> The story proposal was not selected for this production cycle. You can still view the details but editing is disabled.
+                            </div>
+                        </div>
+                        <div class="step-item" style="padding: 1.25rem; flex-direction: column; gap: 0.5rem; align-items: flex-start;">
+                            <span class="status-badge draft">Draft</span>
+                            <div class="step-text" style="font-size: 0.85rem;">
+                                <strong>Work In Progress:</strong> You have started filling in the proposal, but have not yet clicked submit. Only you can see this draft.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: PROPOSALS -->
+                <section id="proposal-submissions" class="guide-section">
+                    <span class="section-eyebrow">Section 3</span>
+                    <h2 class="section-title">Story Proposal Submissions</h2>
+                    
+                    <p class="guide-paragraph">
+                        This is where you create your story proposals. The editorial team will then review and commission your stories once submitted.
+                    </p>
+
+                    <div class="screenshot-frame">
+                        <div class="screenshot-bar">
+                            <span class="bar-dot dot-red"></span>
+                            <span class="bar-dot dot-yellow"></span>
+                            <span class="bar-dot dot-green"></span>
+                            <span class="screenshot-url">cb-deliverables.web.app/proposal</span>
+                        </div>
+                        <img src="assets/walkthrough_step3_proposal_form_1779360423592.png" alt="Story Proposal Form Screenshot">
+                    </div>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-badge">1</div>
+                            <div class="step-text">
+                                Click the <strong>New Proposal</strong> card from the Dashboard.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">2</div>
+                            <div class="step-text">
+                                Fill in all required details, such as the <strong>Story Title</strong>, <strong>One-Liner</strong> summary, and the main <strong>Story Summary</strong>.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">3</div>
+                            <div class="step-text">
+                                Scroll down to enter expert contacts, key interviewees, and production angles. <strong>NOTE:</strong> You can leave these fields empty if you're unsure about Case Studies, Experts, etc. You can edit your proposal at a later stage.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">4</div>
+                            <div class="step-text">
+                                Press <strong>Submit Proposal</strong> at the bottom of the page when complete.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout-box success">
+                        <span class="callout-icon">💾</span>
+                        <div>
+                            <strong>Autosave Integration:</strong> Your changes are automatically saved to the database in real-time as you type. If you close your browser or lose connection, your drafts are safely stored and can be edited via the dashboard anytime.
+                        </div>
+                    </div>
+
+                    <div class="callout-box warning">
+                        <span class="callout-icon">⚠️</span>
+                        <div>
+                            <strong>Required Fields:</strong> Fields outlined in red are mandatory. The form will prevent submission and highlight any incomplete fields.
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1.25rem;">Editing Draft or Pending Stories</h3>
+                    <p class="guide-paragraph">
+                        If your proposal is in <strong>DRAFT</strong> or <strong>PENDING</strong> status, you can modify it at any time. Simply find it in the dashboard table and click the <strong>✏️ Edit</strong> button. Once a story is <strong>COMMISSIONED</strong>, it becomes read-only to lock the editorial mandate, but you can upload deliverables for it.
+                    </p>
+                </section>
+
+                <!-- SECTION 4: INSERT DETAILS -->
+                <section id="insert-details" class="guide-section">
+                    <span class="section-eyebrow">Section 4</span>
+                    <h2 class="section-title">Insert Details & Crew Assignment</h2>
+                    
+                    <p class="guide-paragraph">
+                        Once the editorial team reviews and approves your proposal, they change the story status to <strong>COMMISSIONED</strong>. This status change automatically unlocks the <strong>Insert Details</strong> section on the proposal form, allowing you to assign the production crew who will work on the story.
+                    </p>
+
+                    <div class="screenshot-frame">
+                        <div class="screenshot-bar">
+                            <span class="bar-dot dot-red"></span>
+                            <span class="bar-dot dot-yellow"></span>
+                            <span class="bar-dot dot-green"></span>
+                            <span class="screenshot-url">cb-deliverables.web.app/proposal?id=...</span>
+                        </div>
+                        <img src="assets/walkthrough_insert_details_1779368934910.png" alt="Insert Details crew assignment fields">
+                    </div>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-badge">1</div>
+                            <div class="step-text">
+                                Go to the Dashboard, find your commissioned story (status badge is green: <strong>Commissioned</strong>), and click the <strong>✏️ Edit</strong> button.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">2</div>
+                            <div class="step-text">
+                                Scroll down below Additional Info. The previously locked <strong>Insert Details</strong> panel will now be fully visible and interactive.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">3</div>
+                            <div class="step-text">
+                                Fill in or select the assigned crew members <strong>(NOTE: Not all fields need to be completed)</strong>:
+                                <ul style="margin-top: 0.5rem; margin-bottom: 0px; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                                    <li><strong>Presenter:</strong> Select the presenter from the dropdown menu (e.g. Masa Kekana, Macfarlane Moleli) or select "Other" to specify a custom name.</li>
+                                    <li><strong>Researcher(s):</strong> Enter the names of the Researcher if applicable.</li>
+                                    <li><strong>Camera & Camera Assistant:</strong> List the camera operators used on the shoot and enter the names of the Camera Assistant if applicable.</li>
+                                    <li><strong>DOP (Director of Photography):</strong> Specify the name and surname of your DOP.</li>
+                                    <li><strong>Sound:</strong> Enter the names of the Sound Engineer.</li>
+                                    <li><strong>Offline/Online Editors:</strong> Enter the names of the Offline and Online Editors.</li>
+                                    <li><strong>AFM (Audio Final Mix) crew:</strong> Specify the name and surname of the Audio Final Mix engineer.</li>
+                                    <li><strong>Additional Crew:</strong> Enter the names of any additional crew.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">4</div>
+                            <div class="step-text">
+                                Click the <strong>Save</strong> button (or rely on the auto-save status) to ensure the crew list is logged in the database.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout-box info">
+                        <span class="callout-icon">💡</span>
+                        <div>
+                            <strong>Automatic Form Unlocking:</strong> You cannot access or edit the Insert Details section while a proposal is in <strong>Draft</strong> or <strong>Pending</strong> status. This section is reserved exclusively for approved, commissioned stories.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: FOOTAGE DECLARATIONS -->
+                <section id="footage-declarations" class="guide-section">
+                    <span class="section-eyebrow">Section 5</span>
+                    <h2 class="section-title">Submitting Footage Declarations</h2>
+                    
+                    <p class="guide-paragraph">
+                        Once you've delivered your insert, you need to submit a Footage Declaration. You can add the footage manually, or import it via Excel or Word documents.
+                    </p>
+
+                    <div class="screenshot-frame">
+                        <div class="screenshot-bar">
+                            <span class="bar-dot dot-red"></span>
+                            <span class="bar-dot dot-yellow"></span>
+                            <span class="bar-dot dot-green"></span>
+                            <span class="screenshot-url">cb-deliverables.web.app/proposal?id=...&view=preview</span>
+                        </div>
+                        <img src="assets/walkthrough_step5_commissioned_1779360451948.png" alt="Commissioned Deliverables Screenshot">
+                    </div>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-badge">1</div>
+                            <div class="step-text">
+                                Go to your Dashboard, find your commissioned story, and click <strong>📄 View</strong> (or click the story title).
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">2</div>
+                            <div class="step-text">
+                                On the story details page, locate the <strong>Story Deliverables menu bar</strong> at the top, and click the <strong>ORANGE Footage Declaration</strong> button.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">3</div>
+                            <div class="step-text">
+                                The system opens the declaration sheet, automatically mapping the commission number and details.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">4</div>
+                            <div class="step-text">
+                                Click <strong>Add Row</strong> to input footage items. Specify the <strong>Type</strong> (e.g., <em>Image</em>, <em>News Article</em>, <em>Video</em>), the <strong>Source</strong> (e.g. YouTube link or Getty), and the exact durations.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">5</div>
+                            <div class="step-text">
+                                Click <strong>Submit Declaration</strong> to save it. You can access it and edit it as needed before broadcast.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 6: FINAL SCRIPTS -->
+                <section id="final-scripts" class="guide-section">
+                    <span class="section-eyebrow">Section 6</span>
+                    <h2 class="section-title">Final Script Submission</h2>
+                    
+                    <p class="guide-paragraph">
+                        Once VO has been done, you must submit the final script matching the final edit.
+                    </p>
+
+                    <div class="callout-box warning">
+                        <span class="callout-icon">⚠️</span>
+                        <div>
+                            <strong>IMPORTANT!</strong> Do NOT include anonymous source names in the script. Also ensure all subtitles are exactly the same as they appear in the final mix - this includes punctuation and line breaks.
+                        </div>
+                    </div>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-badge">1</div>
+                            <div class="step-text">
+                                On the details page for your commissioned story, click the <strong>Final Script</strong> button in the purple deliverables bar.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">2</div>
+                            <div class="step-text">
+                                The script editor will load. You can paste your script text or compile it directly in the editor.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">3</div>
+                            <div class="step-text">
+                                Enter the duration, voiceover scripts, visual descriptors, and audio tracks aligned with timecodes.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge">4</div>
+                            <div class="step-text">
+                                Save the script. When finalised, click <strong>Submit Final Script</strong> to lock it for review.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout-box warning">
+                        <span class="callout-icon">⚠️</span>
+                        <div>
+                            <strong>IMPORTANT!</strong> This is a required deliverable. Payments will not be processed before the Final Script has been submitted.
+                        </div>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </div>
+
+    <!-- Script imports -->
+    <script type="module" src="js/guide.js?v=5.1.1"></script>
+</body>
+</html>
