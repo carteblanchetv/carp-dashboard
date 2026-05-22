@@ -3120,3 +3120,6 @@ body.is-masquerading .global-top-nav {
     color: #94a3b8;
     border: 1px solid rgba(148, 163, 184, 0.2);
 }
+
+.status-badge-modern.decommissioned, .status-badge.decommissioned, .res-status.decommissioned { background: rgba(107, 114, 128, 0.15); color: #6b7280; border: 1px solid rgba(107, 114, 128, 0.2); text-transform: uppercase; }
+

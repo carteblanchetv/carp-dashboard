@@ -11,7 +11,8 @@ let activeProducerFilter = null;
 let limits = {
     pending: 10,
     commissioned: 10,
-    paid: 10
+    paid: 10,
+    decommissioned: 10
 };
 
 async function init() {
@@ -142,6 +143,7 @@ function renderProposals(proposals, canDelete) {
     const propTableBody = document.getElementById('proposalTableBody');
     const commTableBody = document.getElementById('commissionedTableBody');
     const paidTableBody = document.getElementById('paidTableBody');
+    const decompTableBody = document.getElementById('decommissionedTableBody');
 
     if (!propTableBody || !commTableBody || !paidTableBody) {
         console.error("One or more table bodies not found in the DOM.");
@@ -220,6 +222,7 @@ function renderProposals(proposals, canDelete) {
                         <a href="proposal?id=${p.id}&view=admin" class="btn-admin-cell secondary">View Proposal</a>
                         <button class="btn-admin-cell info" onclick="window.openEditCommissionModal('${p.id}')">Edit Details</button>
                         <button class="btn-admin-cell success" onclick="window.handleProposalAction('${p.id}', 'pay')">Delivered</button>
+                        <button class="btn-admin-cell warning" onclick="window.openDecommissionModal('${p.id}')" style="background: var(--danger); color: white; border-color: var(--danger);">Decommission</button>
                         <button class="btn-admin-cell danger" onclick="window.handleProposalAction('${p.id}', 'revert-to-pending')">Revert</button>
                     </div>
                 </td>
@@ -271,6 +274,43 @@ function renderProposals(proposals, canDelete) {
             paidTableBody.appendChild(tr);
         });
         document.getElementById('paidViewMoreContainer').style.display = paid.length > limits.paid ? 'block' : 'none';
+    }
+
+    // 4. Decommissioned Stories
+    if (decompTableBody) {
+        decompTableBody.innerHTML = '';
+        const decommissioned = filtered.filter(p => p.status && p.status.toLowerCase() === 'decommissioned');
+        decommissioned.sort((a, b) => {
+            const getSortDate = (p) => {
+                if (p.decommissionedAt) return p.decommissionedAt._seconds ? new Date(p.decommissionedAt._seconds * 1000) : new Date(p.decommissionedAt);
+                return new Date(0);
+            };
+            return getSortDate(b) - getSortDate(a);
+        });
+        if (decommissioned.length === 0) {
+            decompTableBody.innerHTML = '<tr><td colspan="6" class="table-empty-msg">No decommissioned stories.</td></tr>';
+            document.getElementById('decommissionedViewMoreContainer').style.display = 'none';
+        } else {
+            const toShow = decommissioned.slice(0, limits.decommissioned);
+            toShow.forEach(p => {
+                const tr = document.createElement('tr');
+                const decDate = formatDate(p.decommissionedAt);
+                const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : p.submittedByEmail;
+                const reason = p.decommissionReason ? p.decommissionReason : '<i>No reason provided</i>';
+                tr.innerHTML = `
+                    <td data-label="Comm #"><strong>#${p.commissionNumber || '—'}</strong></td>
+                    <td data-label="Story Title"><a href="proposal?id=${p.id}&view=admin" class="story-title-link">${p.story_title}</a></td>
+                    <td data-label="Decommissioned Date">${decDate}</td>
+                    <td data-label="Reason" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${p.decommissionReason || ''}">${reason}</td>
+                    <td data-label="Producer"><a href="#" class="producer-filter-link" onclick="event.preventDefault(); window.setProducerFilter('${p.submittedBy}', '${submitterDisplay.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">${submitterDisplay}</a></td>
+                    <td data-label="Actions">
+                        <button class="btn-admin-cell warning" onclick="window.handleProposalAction('${p.id}', 'revert')">Revert to Commissioned</button>
+                    </td>
+                `;
+                decompTableBody.appendChild(tr);
+            });
+            document.getElementById('decommissionedViewMoreContainer').style.display = decommissioned.length > limits.decommissioned ? 'block' : 'none';
+        }
     }
 }
 
@@ -334,14 +374,17 @@ function updateStats(proposals) {
     const pending = proposals.filter(p => p.status && p.status.toLowerCase() === 'pending').length;
     const accepted = proposals.filter(p => p.status && p.status.toLowerCase() === 'accepted').length;
     const paid = proposals.filter(p => p.status && p.status.toLowerCase() === 'paid').length;
+    const decommissioned = proposals.filter(p => p.status && p.status.toLowerCase() === 'decommissioned').length;
 
     const pEl = document.getElementById('proposalCount');
     const aEl = document.getElementById('commissionedCount');
     const dEl = document.getElementById('paidCount');
+    const decEl = document.getElementById('decommissionedCount');
     
     if (pEl) pEl.textContent = pending;
     if (aEl) aEl.textContent = accepted;
     if (dEl) dEl.textContent = paid;
+    if (decEl) decEl.textContent = decommissioned;
 }
 
 window.deleteProposal = async (id, title) => {
@@ -449,6 +492,7 @@ async function executeProposalAction(id, action, extraData = {}) {
             if (action === 'revert') actionLabel = 'Reverted to Commissioned';
             if (action === 'revert-to-pending') actionLabel = `Reverted to Pending${result.freedCommNumber ? ` (Comm #${result.freedCommNumber} freed)` : ''}`;
             if (action === 'edit-commission') actionLabel = 'Commission Details Updated';
+            if (action === 'decommission') actionLabel = 'Decommissioned';
             
             alert(`Story ${actionLabel} successfully!`);
             await loadProposals();
@@ -571,6 +615,13 @@ window.openAcceptanceModal = (id) => {
     document.getElementById('acceptanceCommFeedback').textContent = '';
     document.getElementById('acceptanceCommNum').style.borderColor = 'var(--border)';
     
+    // Default Story Type
+    const storyTypeEl = document.getElementById('acceptanceStoryType');
+    if (storyTypeEl) {
+        storyTypeEl.value = 'Standard';
+        document.getElementById('acceptanceCommNumGroup').style.display = 'block';
+    }
+    
     // Pre-populate Presenter and Legal Req from proposal if they exist
     const presenterEl = document.getElementById('acceptancePresenter');
     if (presenterEl) {
@@ -607,6 +658,7 @@ if (acceptanceForm) {
         e.preventDefault();
         const id = document.getElementById('acceptanceProposalId').value;
         const manualCommissionNumber = document.getElementById('acceptanceCommNum').value;
+        const storyType = document.getElementById('acceptanceStoryType')?.value || 'Standard';
         const duration = document.getElementById('acceptanceDuration').value;
         const deliveryDate = document.getElementById('acceptanceDeliveryDate').value;
         const rate = document.getElementById('acceptanceRate').value;
@@ -616,7 +668,8 @@ if (acceptanceForm) {
         
         acceptanceModal.classList.remove('active');
         const res = await executeProposalAction(id, 'accept', { 
-            manualCommissionNumber,
+            manualCommissionNumber: storyType === 'TFU' ? null : manualCommissionNumber,
+            storyType,
             duration, 
             deliveryDate, 
             rate, 
@@ -738,6 +791,50 @@ const ecClose = document.getElementById('editCommModalCloseBtn');
 const ecCancel = document.getElementById('editCommModalCancelBtn');
 if (ecClose) ecClose.onclick = () => editCommissionModal.classList.remove('active');
 if (ecCancel) ecCancel.onclick = () => editCommissionModal.classList.remove('active');
+
+// --- TFU / STORY TYPE LOGIC ---
+const acceptanceStoryTypeEl = document.getElementById('acceptanceStoryType');
+if (acceptanceStoryTypeEl) {
+    acceptanceStoryTypeEl.addEventListener('change', (e) => {
+        const type = e.target.value;
+        const commNumGroup = document.getElementById('acceptanceCommNumGroup');
+        if (type === 'TFU') {
+            commNumGroup.style.display = 'none';
+        } else {
+            commNumGroup.style.display = 'block';
+        }
+    });
+}
+
+// --- DECOMMISSION MODAL LOGIC ---
+const decommissionModal = document.getElementById('decommissionModal');
+const decommissionForm = document.getElementById('decommissionForm');
+
+window.openDecommissionModal = (id) => {
+    const proposal = globalProposals.find(p => p.id === id);
+    if (!proposal) return;
+    
+    document.getElementById('decommissionProposalId').value = id;
+    document.getElementById('decommissionReason').value = '';
+    
+    decommissionModal.classList.add('active');
+};
+
+if (decommissionForm) {
+    decommissionForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('decommissionProposalId').value;
+        const decommissionReason = document.getElementById('decommissionReason').value.trim();
+        
+        decommissionModal.classList.remove('active');
+        await executeProposalAction(id, 'decommission', { decommissionReason });
+    };
+}
+
+const decClose = document.getElementById('decommissionModalCloseBtn');
+const decCancel = document.getElementById('decommissionModalCancelBtn');
+if (decClose) decClose.onclick = () => decommissionModal.classList.remove('active');
+if (decCancel) decCancel.onclick = () => decommissionModal.classList.remove('active');
 
 window.previewAgreement = () => {
     const id = document.getElementById('acceptanceProposalId').value;

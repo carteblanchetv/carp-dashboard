@@ -131,6 +131,10 @@
                 <span id="paidCount" class="stat-count">0</span>
                 <span class="stat-label">Delivered</span>
             </div>
+            <div class="stat-card" onclick="document.getElementById('decommissioned-section').scrollIntoView({behavior:'smooth'})">
+                <span id="decommissionedCount" class="stat-count">0</span>
+                <span class="stat-label">Decommissioned</span>
+            </div>
         </div>
 
         <!-- PRODUCTION PORTAL BANNER -->
@@ -204,6 +208,28 @@
                 </table>
                 <div id="paidViewMoreContainer" style="display: none; text-align: center; padding: 1rem; border-top: 1px solid var(--border); background: var(--bg-card); border-radius: 0 0 12px 12px;">
                     <button onclick="window.viewMore('paid')" class="btn-soft" style="width: 100%; max-width: 300px;">View More Delivered Stories</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="decommissioned-section" class="admin-section">
+            <h2 class="section-title">Decommissioned Stories</h2>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Comm #</th>
+                            <th>Story Title</th>
+                            <th>Decommissioned Date</th>
+                            <th>Reason</th>
+                            <th>Producer</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="decommissionedTableBody"></tbody>
+                </table>
+                <div id="decommissionedViewMoreContainer" style="display: none; text-align: center; padding: 1rem; border-top: 1px solid var(--border); background: var(--bg-card); border-radius: 0 0 12px 12px;">
+                    <button onclick="window.viewMore('decommissioned')" class="btn-soft" style="width: 100%; max-width: 300px;">View More Decommissioned Stories</button>
                 </div>
             </div>
         </section>
@@ -304,14 +330,23 @@
                         
                         <div class="form-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                             <div class="form-group">
+                                <label for="acceptanceStoryType">Story Type</label>
+                                <select id="acceptanceStoryType" required style="width: 100%; padding: 0.65rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-light); color: var(--text-main);">
+                                    <option value="Standard">Standard</option>
+                                    <option value="TFU">TFU</option>
+                                    <option value="Studio">Studio</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="acceptanceCommNumGroup">
                                 <label for="acceptanceCommNum">Comm #</label>
                                 <input type="text" id="acceptanceCommNum" placeholder="Leave blank to auto-generate">
                                 <div id="acceptanceCommFeedback" style="font-size: 0.75rem; margin-top: 0.25rem; min-height: 1em;"></div>
                             </div>
-                            <div class="form-group">
-                                <label for="acceptanceDeliveryDate">Delivery Date</label>
-                                <input type="date" id="acceptanceDeliveryDate" required>
-                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <label for="acceptanceDeliveryDate">Delivery Date</label>
+                            <input type="date" id="acceptanceDeliveryDate" required>
                         </div>
 
                         <div class="form-group" style="margin-top: 1.5rem;">
@@ -455,6 +490,32 @@
                         <div class="modal-actions" style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
                             <button type="button" class="btn-soft" id="editCommModalCancelBtn">Cancel</button>
                             <button type="submit" class="submit-btn" style="padding: 0.75rem 1.5rem;">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- DECOMMISSION MODAL -->
+        <div id="decommissionModal" class="modal-backdrop">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h3>Decommission Story</h3>
+                    <button class="close-modal" id="decommissionModalCloseBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-subtitle">Are you sure you want to decommission this story? It will keep its Commission Number but be moved out of the Commissioned view.</p>
+                    <form id="decommissionForm">
+                        <input type="hidden" id="decommissionProposalId">
+                        
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <label for="decommissionReason">Reason for Decommissioning (Optional)</label>
+                            <textarea id="decommissionReason" rows="3" placeholder="Enter the reason why this story is being decommissioned..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-light); color: var(--text-main); font-family: inherit; resize: vertical;"></textarea>
+                        </div>
+
+                        <div class="modal-actions" style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                            <button type="button" class="btn-soft" id="decommissionModalCancelBtn">Cancel</button>
+                            <button type="submit" class="submit-btn" style="padding: 0.75rem 1.5rem; background: var(--danger); border-color: var(--danger);">Decommission Story</button>
                         </div>
                     </form>
                 </div>
