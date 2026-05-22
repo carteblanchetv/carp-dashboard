@@ -102,6 +102,27 @@ document.addEventListener('DOMContentLoaded', () => {
             const words = text ? text.split(/\s+/).length : 0;
             if (summaryCount) summaryCount.textContent = `${words} / 5000 words`;
         });
+
+        // Handle keyboard shortcuts
+        summaryEditor.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                let cmd = null;
+                if (e.key.toLowerCase() === 'b') cmd = 'bold';
+                else if (e.key.toLowerCase() === 'i') cmd = 'italic';
+                else if (e.key.toLowerCase() === 'u') cmd = 'underline';
+                
+                if (cmd) {
+                    e.preventDefault();
+                    if (typeof window.formatDoc === 'function') {
+                        window.formatDoc(cmd);
+                    } else {
+                        document.execCommand(cmd, false, null);
+                        // Manually trigger input to sync textarea
+                        summaryEditor.dispatchEvent(new Event('input'));
+                    }
+                }
+            }
+        });
     }
 
     if (summaryHtmlEditor && summaryTextarea) {
@@ -1619,7 +1640,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${sub.summary ? `
                 <div style="margin-bottom: 3rem;">
                     <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Story Summary</h3>
-                    <div class="story-summary-content" style="color: var(--text-main); line-height: 1.6; font-size: 1.05rem; text-align: left;">${sub.summary}</div>
+                    <div class="story-summary-content" style="color: var(--text-main); line-height: 1.6; font-size: 1.05rem; text-align: left; white-space: pre-wrap;">${sub.summary}</div>
                 </div>` : ''}
 
                 ${detailsHtml}
@@ -1838,7 +1859,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div class="report-section">
-                <div class="report-section-title"><span>ðŸ“</span> One Liner</div>
+                <div class="report-section-title"><span>ðŸ“ </span> One Liner</div>
                 <div class="one-liner-callout">
                     "${sub.one_liner}"
                 </div>
@@ -1846,7 +1867,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div class="report-section">
                 <div class="report-section-title"><span>ðŸ“–</span> Story Summary</div>
-                <div class="report-text-block" style="line-height: 1.8;">${sub.summary}</div>
+                <div class="report-text-block" style="line-height: 1.8; white-space: pre-wrap;">${sub.summary}</div>
             </div>
 
             ${budgetHtml}
@@ -1861,16 +1882,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             ` : ''}
 
-            ${(isAdminView || (isPreviewView && window.auth.isAdmin(loggedInUser))) ? `
+            ${((isAdminView || (isPreviewView && window.auth.isAdmin(loggedInUser))) && sub.status !== 'accepted' && sub.status !== 'paid') ? `
                 <div class="report-section no-print" style="margin-top: 6rem; padding: 3rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 2px solid var(--primary); box-shadow: var(--shadow-lg); text-align: center;">
                     <h3 style="margin-bottom: 2rem; color: var(--primary); letter-spacing: 0.1rem; font-weight: 800; font-size: 1rem; text-transform: uppercase;">ADMIN REVIEW ACTION REQUIRED</h3>
                     <div style="display: flex; gap: 1.5rem; justify-content: center; width: 100%; max-width: 900px; margin: 0 auto;">
                         <button type="button" class="submit-btn" style="flex: 1; padding: 1.5rem; font-size: 1.25rem; font-weight: 800; cursor: pointer; background: var(--success); border: none; text-transform: uppercase; letter-spacing: 0.05em;" onclick="window.openPModal('${sub.id}', ${JSON.stringify(sub.acceptanceDetails || {}).replace(/"/g, '&quot;')})">ACCEPT PROPOSAL</button>
                         <button type="button" class="btn-soft btn-soft-danger" style="flex: 1; padding: 1.5rem; font-size: 1.25rem; font-weight: 800; cursor: pointer; border: 2px solid var(--danger); text-transform: uppercase; letter-spacing: 0.05em; color: var(--danger) !important;" onclick="window.handleAdminAction('${sub.id}', 'reject')">REJECT PROPOSAL</button>
                     </div>
-                    ${(sub.status === 'accepted' || sub.status === 'paid') ? `
-                        <p style="margin-top: 1.5rem; color: var(--success); font-weight: 700;">Note: This proposal is already ${sub.status.toUpperCase()}. Use buttons above to update details or re-commission.</p>
-                    ` : ''}
                 </div>
             ` : ''}
         `;

@@ -76,6 +76,15 @@
             color: var(--text-muted);
             cursor: text;
         }
+
+        .rich-editor ul, .rich-editor ol,
+        .story-summary-content ul, .story-summary-content ol,
+        .report-text-block ul, .report-text-block ol {
+            padding-left: 2.5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            list-style-position: outside;
+        }
     </style>
 </head>
 <body class="admin-body">
@@ -266,8 +275,12 @@
                 <div class="form-group" style="margin-top: 1.5rem;">
                     <label for="summary">Story Summary</label>
                     <div id="summaryToolbar" class="editor-toolbar">
-                        <button type="button" onclick="formatDoc('bold')" title="Bold"><b>B</b></button>
-                        <button type="button" onclick="formatDoc('underline')" title="Underline"><u>U</u></button>
+                        <button type="button" onclick="formatDoc('bold')" title="Bold (Ctrl+B)"><b>B</b></button>
+                        <button type="button" onclick="formatDoc('italic')" title="Italic (Ctrl+I)"><i>I</i></button>
+                        <button type="button" onclick="formatDoc('underline')" title="Underline (Ctrl+U)"><u>U</u></button>
+                        <button type="button" onclick="formatDoc('insertUnorderedList')" title="Bulleted List">&bull; Bullet</button>
+                        <button type="button" onclick="formatDoc('insertOrderedList')" title="Numbered List">1. Number</button>
+                        <button type="button" onclick="formatDoc('removeFormat')" title="Clear Formatting">✖ Clear</button>
                         <button type="button" onclick="formatDoc('formatBlock', 'h3')" title="Sub-header (H3)">H3</button>
                         <button type="button" onclick="formatDoc('formatBlock', 'h4')" title="Small Header (H4)">H4</button>
                         <button type="button" onclick="formatDoc('createLink')" title="Link">🔗</button>

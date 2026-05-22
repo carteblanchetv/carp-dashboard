@@ -1533,8 +1533,9 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
       
       let commissionNumber = manualCommissionNumber;
       let finalAcceptedAt = admin.firestore.FieldValue.serverTimestamp();
+      const wasAlreadyAccepted = existingData && (existingData.status === 'accepted' || existingData.status === 'paid');
 
-      if (existingData && existingData.status === 'accepted') {
+      if (wasAlreadyAccepted) {
           // If already accepted, keep existing commission number and timestamp unless manual override
           commissionNumber = manualCommissionNumber || existingData.commissionNumber;
           finalAcceptedAt = existingData.acceptedAt || finalAcceptedAt;
@@ -1560,52 +1561,54 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
       await docRef.update(updateData);
 
       // --- EMAIL NOTIFICATION FOR NEW COMMISSION ---
-      try {
-          const producerEmail = existingData.submittedByEmail || "Unknown";
-          let producerName = producerEmail;
-          
-          // Try to get Producer's full name from users collection
-          if (existingData.submittedBy) {
-              const uDoc = await admin.firestore().collection('users').doc(existingData.submittedBy).get();
-              if (uDoc.exists) {
-                  const uData = uDoc.data();
-                  const fName = decrypt(uData.firstName) || "";
-                  const lName = decrypt(uData.lastName) || "";
-                  if (fName || lName) producerName = `${fName} ${lName}`.trim();
+      if (!wasAlreadyAccepted) {
+          try {
+              const producerEmail = existingData.submittedByEmail || "Unknown";
+              let producerName = producerEmail;
+              
+              // Try to get Producer's full name from users collection
+              if (existingData.submittedBy) {
+                  const uDoc = await admin.firestore().collection('users').doc(existingData.submittedBy).get();
+                  if (uDoc.exists) {
+                      const uData = uDoc.data();
+                      const fName = decrypt(uData.firstName) || "";
+                      const lName = decrypt(uData.lastName) || "";
+                      if (fName || lName) producerName = `${fName} ${lName}`.trim();
+                  }
               }
+
+              const storyTitle = existingData.story_title || "Untitled Story";
+              const season = "39"; // Hardcoded for now per user example
+              const presenterName = presenter || (existingData.details && existingData.details.presenter) || "TBA";
+              const isLegalRequired = (legal_req || existingData.legal_req) === 'yes' ? "Yes" : "No";
+
+              const emailSubject = `S${season} | New Commission: ${storyTitle} | ${commissionNumber}`;
+              const emailHtml = `
+                <p><b>CARTE BLANCHE</b><br><b>NEW COMMISSION</b></p>
+                <ul>
+                    <li><b>Story Title:</b> ${storyTitle}</li>
+                    <li><b>Producer:</b> ${producerName}</li>
+                    <li><b>Presenter:</b> ${presenterName}</li>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0; width: 200px;" />
+                    <li><b>Commission Number:</b> ${commissionNumber}</li>
+                    <li><b>Duration:</b> ${duration || "TBA"}</li>
+                    <li><b>Delivery Date:</b> ${deliveryDate ? formatDisplayDate(deliveryDate) : "TBA"}</li>
+                    <li><b>Rate:</b> ${rate ? `R ${parseFloat(rate).toLocaleString()}` : "TBA"}</li>
+                    <li><b>Legal Viewing:</b> ${isLegalRequired}</li>
+                </ul>
+                <p style="font-size: 0.8rem; color: #666;">This is an automated notification from the CARP Dashboard.</p>
+              `;
+
+              const extraRecipients = ['commissions@carteblanche.co.za'];
+              if (producerEmail && producerEmail !== 'Unknown') {
+                  extraRecipients.push(producerEmail);
+              }
+
+              await notifyRelevantUsers('proposal_commission', emailSubject, emailHtml, [], extraRecipients);
+              console.log(`[NOTIFY] Commission email sent for Story: ${storyTitle}`);
+          } catch (emailErr) {
+              console.error("[NOTIFY] Failed to send commission email:", emailErr);
           }
-
-          const storyTitle = existingData.story_title || "Untitled Story";
-          const season = "39"; // Hardcoded for now per user example
-          const presenterName = presenter || (existingData.details && existingData.details.presenter) || "TBA";
-          const isLegalRequired = (legal_req || existingData.legal_req) === 'yes' ? "Yes" : "No";
-
-          const emailSubject = `S${season} | New Commission: ${storyTitle} | ${commissionNumber}`;
-          const emailHtml = `
-            <p><b>CARTE BLANCHE</b><br><b>NEW COMMISSION</b></p>
-            <ul>
-                <li><b>Story Title:</b> ${storyTitle}</li>
-                <li><b>Producer:</b> ${producerName}</li>
-                <li><b>Presenter:</b> ${presenterName}</li>
-                <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0; width: 200px;" />
-                <li><b>Commission Number:</b> ${commissionNumber}</li>
-                <li><b>Duration:</b> ${duration || "TBA"}</li>
-                <li><b>Delivery Date:</b> ${deliveryDate ? formatDisplayDate(deliveryDate) : "TBA"}</li>
-                <li><b>Rate:</b> ${rate ? `R ${parseFloat(rate).toLocaleString()}` : "TBA"}</li>
-                <li><b>Legal Viewing:</b> ${isLegalRequired}</li>
-            </ul>
-            <p style="font-size: 0.8rem; color: #666;">This is an automated notification from the CARP Dashboard.</p>
-          `;
-
-          const extraRecipients = ['commissions@carteblanche.co.za'];
-          if (producerEmail && producerEmail !== 'Unknown') {
-              extraRecipients.push(producerEmail);
-          }
-
-          await notifyRelevantUsers('proposal_commission', emailSubject, emailHtml, [], extraRecipients);
-          console.log(`[NOTIFY] Commission email sent for Story: ${storyTitle}`);
-      } catch (emailErr) {
-          console.error("[NOTIFY] Failed to send commission email:", emailErr);
       }
       res.json({ success: true, commissionNumber });
     } else if (action === 'pay') {
