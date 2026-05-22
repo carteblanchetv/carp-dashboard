@@ -2,15 +2,16 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const readline = require('readline');
 
-function prompt(query) {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
+function waitForReady() {
+    return new Promise(resolve => {
+        const interval = setInterval(() => {
+            if (fs.existsSync('ready.txt')) {
+                clearInterval(interval);
+                fs.unlinkSync('ready.txt');
+                resolve();
+            }
+        }, 1000);
     });
-    return new Promise(resolve => rl.question(query, ans => {
-        rl.close();
-        resolve(ans);
-    }));
 }
 
 (async () => {
@@ -27,7 +28,8 @@ function prompt(query) {
     console.log('\n--- MANUAL ACTION REQUIRED ---');
     console.log('1. Log in (with ReCAPTCHA and 2FA).');
     
-    await prompt('\nPress ENTER in this terminal ONLY AFTER you are logged in to the dashboard...');
+    console.log('\nWaiting for ready.txt to be created...');
+    await waitForReady();
 
     console.log('\nStarting extraction of TX Dates. Looping through 392 pages...');
     
