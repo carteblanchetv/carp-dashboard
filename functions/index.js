@@ -2585,35 +2585,7 @@ app.use((err, req, res, next) => {
 
 // Removed temporary TX date endpoint
 
-// --- TEMPORARY DELIVERED UPDATE ENDPOINT ---
-exports.updateDeliveredStatus = functions.runWith({ timeoutSeconds: 300, memory: '1GB' }).https.onRequest(async (req, res) => {
-    try {
-        const batch = admin.firestore().batch();
-        const cutoffDate = new Date('29 March 2026');
-        let updatedCount = 0;
-        
-        const proposalsSnap = await admin.firestore().collection('proposals').where('isImported', '==', true).get();
-        
-        proposalsSnap.forEach(doc => {
-            const data = doc.data();
-            if (data.txDate && typeof data.txDate === 'string') {
-                const txDateObj = new Date(data.txDate);
-                if (!isNaN(txDateObj) && txDateObj <= cutoffDate) {
-                    batch.update(doc.ref, { 
-                        status: 'delivered',
-                        rate: 'R6900'
-                    });
-                    updatedCount++;
-                }
-            }
-        });
-
-        await batch.commit();
-        res.json({ success: true, updatedCount });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
+// Removed temporary DELIVERED UPDATE endpoint
 
 exports.submissionServer = functions.runWith({ timeoutSeconds: 300, memory: '1GB' }).https.onRequest(app);
 
