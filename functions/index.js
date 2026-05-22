@@ -1524,7 +1524,7 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
       return res.status(403).json({ success: false, error: 'Unauthorized: Admin/Production access required.' });
     }
 
-    const { id, action, manualCommissionNumber, duration, deliveryDate, rate, contractAccepted, txDate, presenter, legal_req } = req.body; // action: 'accept' | 'reject' | 'pay'
+    const { id, action, manualCommissionNumber, storyType, duration, deliveryDate, rate, contractAccepted, txDate, presenter, legal_req, newProducerId, decommissionReason } = req.body; // action: 'accept' | 'reject' | 'pay' | 'revert' | 'revert-to-pending' | 'edit-commission' | 'decommission'
     const docRef = admin.firestore().collection('proposals').doc(id);
     
     if (action === 'accept') {
@@ -1539,6 +1539,9 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
           // If already accepted, keep existing commission number and timestamp unless manual override
           commissionNumber = manualCommissionNumber || existingData.commissionNumber;
           finalAcceptedAt = existingData.acceptedAt || finalAcceptedAt;
+      } else if (storyType === 'TFU') {
+          // TFU stories do not need a commission number
+          commissionNumber = null;
       } else if (!commissionNumber) {
           commissionNumber = await getNextCommissionNumber();
       }
@@ -1546,6 +1549,7 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
       const updateData = {
         status: 'accepted',
         commissionNumber: commissionNumber,
+        storyType: storyType || 'Standard',
         acceptedAt: finalAcceptedAt,
         acceptanceDetails: {
             duration: duration || null,
@@ -1614,18 +1618,6 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
     } else if (action === 'pay') {
       const { duration, txDate, rate, deliveryDate, commDuration, deliveredDuration, isPaid } = req.body;
       const existingDoc = await docRef.get();
-      const existingData = existingDoc.data();
-      const acc = existingData.acceptanceDetails || {};
-      
-      await docRef.update({ 
-        status: 'paid',
-        paidAt: admin.firestore.FieldValue.serverTimestamp(),
-        txDate: txDate || null,
-        acceptanceDetails: {
-            ...acc,
-            deliveryDate: deliveryDate || acc.deliveryDate,
-            duration: commDuration || acc.duration,
-            finalDuration: deliveredDuration || duration || acc.finalDuration,
             finalRate: rate || acc.finalRate,
             isPaid: isPaid || 'no'
         }
