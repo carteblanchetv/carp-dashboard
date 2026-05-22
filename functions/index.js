@@ -1390,9 +1390,9 @@ async function getNextCommissionNumber() {
     const counterRef = admin.firestore().collection('metadata').doc('projectCounter');
     return admin.firestore().runTransaction(async (transaction) => {
         const counterDoc = await transaction.get(counterRef);
-        let nextNum = 6904;
+        let nextNum = 6915;
         if (counterDoc.exists) {
-            nextNum = Math.max(counterDoc.data().nextCommissionNumber, 6904);
+            nextNum = Math.max(counterDoc.data().nextCommissionNumber, 6915);
         }
         transaction.set(counterRef, { nextCommissionNumber: nextNum + 1 });
         return nextNum;
@@ -2585,6 +2585,90 @@ exports.submissionServer = functions.runWith({ timeoutSeconds: 300, memory: '1GB
 /**
  * Verify Cloudflare Turnstile Token and Mint App Check Token
  */
+// --- HISTORICAL IMPORT ENDPOINT ---
+app.post('/api/import-historical-proposals', express.json({limit: '50mb'}), async (req, res) => {
+  try {
+    const { proposals } = req.body;
+    if (!proposals || !Array.isArray(proposals)) {
+        return res.status(400).json({ success: false, error: 'Invalid payload' });
+    }
+
+    let count = 0;
+    const batchSize = 100;
+    
+    // Helper to convert "Wednesday, 20 May 2026" to Timestamp
+    function parseDateString(dateStr) {
+        if (!dateStr || dateStr.trim() === '') return null;
+        try {
+            const parsed = new Date(dateStr);
+            if (!isNaN(parsed.getTime())) {
+                return admin.firestore.Timestamp.fromDate(parsed);
+            }
+        } catch (e) {
+            // ignore
+        }
+        return admin.firestore.FieldValue.serverTimestamp();
+    }
+
+    for (let i = 0; i < proposals.length; i += batchSize) {
+        const batch = admin.firestore().batch();
+        const chunk = proposals.slice(i, i + batchSize);
+        
+        for (const p of chunk) {
+            const docRef = admin.firestore().collection('proposals').doc();
+            
+            const proposalData = {
+                story_title: p.title || '',
+                one_liner: p.oneLiner || '',
+                summary: p.summary || '',
+                caseStudies: p.caseStudies || '',
+                experts: p.experts || '',
+                hidden_camera: p.hiddenCamera || 'No',
+                legal_req: p.legal || 'No',
+                txDate: p.txDate || null,
+                
+                commissionNumber: p.commissionNumber || null,
+                submittedAt: parseDateString(p.proposalDate),
+                acceptedAt: parseDateString(p.acceptedDate),
+                
+                status: 'accepted',
+                isImported: true,
+                historicalSubmitterName: p.submitterName || 'Unknown',
+                submittedBy: 'HISTORICAL_IMPORT',
+                submittedByEmail: 'imported@carteblanche.co.za',
+                
+                details: {
+                    presenter: p.presenter || '',
+                    researcher: p.researcher || '',
+                    camera: p.camera || '',
+                    dop: p.dop || '',
+                    onlineEditor: p.onlineEditor || '',
+                    cameraAssistant: p.cameraAssistant || '',
+                    offlineEditor: p.offlineEditor || '',
+                    afm: p.afm || '',
+                    footageDeclaration: p.footageDeclaration || ''
+                },
+                
+                acceptanceDetails: {
+                    duration: p.duration || null,
+                    rate: p.rate || null,
+                    deliveryDate: null,
+                    acceptedBy: p.acceptedBy || null,
+                    contractAccepted: false,
+                }
+            };
+            batch.set(docRef, proposalData);
+        }
+        await batch.commit();
+        count += chunk.length;
+    }
+    
+    res.json({ success: true, count });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 exports.verifyTurnstileToken = functions.https.onCall(async (data, context) => {
     const token = data.token;
     if (!token) {
