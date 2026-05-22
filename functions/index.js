@@ -1663,6 +1663,11 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
     } else if (action === 'edit-commission') {
       // Edits acceptanceDetails fields on an already-accepted story
       const { commissionNumber: newCommNum, duration, deliveryDate, rate, presenter, legal_req, newProducerId } = req.body;
+      
+      const existingDoc = await docRef.get();
+      const existingData = existingDoc.data() || {};
+      const accDetails = existingData.acceptanceDetails || {};
+      
       const updatePayload = {};
       if (newCommNum !== undefined) updatePayload.commissionNumber = newCommNum || null;
       if (duration !== undefined) updatePayload['acceptanceDetails.duration'] = duration || null;
@@ -1681,6 +1686,59 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
       }
 
       await docRef.update(updatePayload);
+
+      // --- NOTIFY ON KEY UPDATES ---
+      let changes = [];
+      if (duration !== undefined && duration !== accDetails.duration) changes.push(`Duration: ${accDetails.duration || 'TBA'} -> ${duration || 'TBA'}`);
+      if (deliveryDate !== undefined && deliveryDate !== accDetails.deliveryDate) changes.push(`Delivery Date: ${accDetails.deliveryDate ? formatDisplayDate(accDetails.deliveryDate) : 'TBA'} -> ${deliveryDate ? formatDisplayDate(deliveryDate) : 'TBA'}`);
+      if (presenter !== undefined && presenter !== accDetails.presenter) changes.push(`Presenter: ${accDetails.presenter || 'TBA'} -> ${presenter || 'TBA'}`);
+      
+      if (changes.length > 0) {
+          try {
+              const storyTitle = existingData.story_title || "Untitled Story";
+              const commNum = newCommNum !== undefined ? newCommNum : existingData.commissionNumber;
+              const season = "39";
+              const emailSubject = `S${season} | Update to Commission: ${storyTitle} | ${commNum}`;
+              
+              const producerEmail = updatePayload.submittedByEmail || existingData.submittedByEmail || "Unknown";
+              let producerName = producerEmail;
+              if (updatePayload.submittedBy || existingData.submittedBy) {
+                  const uid = updatePayload.submittedBy || existingData.submittedBy;
+                  const uDoc = await admin.firestore().collection('users').doc(uid).get();
+                  if (uDoc.exists) {
+                      const uData = uDoc.data();
+                      const fName = decrypt(uData.firstName) || "";
+                      const lName = decrypt(uData.lastName) || "";
+                      if (fName || lName) producerName = `${fName} ${lName}`.trim();
+                  }
+              }
+
+              const emailHtml = `
+                <p><b>CARTE BLANCHE</b><br><b>COMMISSION UPDATED</b></p>
+                <ul>
+                    <li><b>Story Title:</b> ${storyTitle}</li>
+                    <li><b>Producer:</b> ${producerName}</li>
+                    <li><b>Commission Number:</b> ${commNum}</li>
+                </ul>
+                <p>The following details have been updated:</p>
+                <ul>
+                    ${changes.map(c => `<li>${c}</li>`).join('')}
+                </ul>
+                <p style="font-size: 0.8rem; color: #666;">This is an automated notification from the CARP Dashboard.</p>
+              `;
+
+              const extraRecipients = ['commissions@carteblanche.co.za'];
+              if (producerEmail && producerEmail !== 'Unknown') {
+                  extraRecipients.push(producerEmail);
+              }
+
+              await notifyRelevantUsers('proposal_commission_update', emailSubject, emailHtml, [], extraRecipients);
+              console.log(`[NOTIFY] Commission update email sent for Story: ${storyTitle}`);
+          } catch (emailErr) {
+              console.error("[NOTIFY] Failed to send commission update email:", emailErr);
+          }
+      }
+
       res.json({ success: true });
     } else if (action === 'revert') {
       await docRef.update({ 
