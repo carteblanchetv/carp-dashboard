@@ -2581,6 +2581,8 @@ app.use((err, req, res, next) => {
     });
 });
 
+
+
 exports.submissionServer = functions.runWith({ timeoutSeconds: 300, memory: '1GB' }).https.onRequest(app);
 
 exports.verifyTurnstileToken = functions.https.onCall(async (data, context) => {
