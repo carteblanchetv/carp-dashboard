@@ -7,6 +7,7 @@ const loadingOverlay = document.getElementById('loadingOverlay');
 const loadingText = document.getElementById('loadingText');
 
 let globalProposals = [];
+let globalSubmissions = null;
 let activeProducerFilter = null;
 let activeTxDateFilter = null;
 let limits = {
@@ -22,10 +23,10 @@ async function init() {
 if (!document.getElementById('episodeModal')) {
     const modalHTML = `
     <div id="episodeModal" class="modal-backdrop">
-        <div class="modal-card" style="max-width: 500px;">
+        <div class="modal-card" style="max-width: 900px;">
             <div class="modal-header">
                 <h3 id="episodeModalTitle">Episode: </h3>
-                <button class="close-modal" onclick="document.getElementById('episodeModal').classList.remove('active')">&times;</button>
+                <button class="close-modal" onclick="document.getElementById('episodeModal').classList.remove('active'); document.body.style.overflow = '';">&times;</button>
             </div>
             <div class="modal-body">
                 <ul id="episodeModalList" class="episode-modal-list">
@@ -274,7 +275,6 @@ function renderProposals(proposals, canDelete) {
                     </div>
                 </td>
                 <td data-label="Producer"><a href="#" class="producer-filter-link" onclick="event.preventDefault(); window.setProducerFilter('${p.submittedBy}', '${submitterDisplay.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">${submitterDisplay}</a></td>
-                <td data-label="Status"><span class="status-badge" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2);">IN PRODUCTION</span></td>
                 <td data-label="Actions">
                     <div style="display: flex; gap: 0.5rem; flex-wrap: nowrap; align-items: center;">
                         <a href="proposal?id=${p.id}&view=admin" class="btn-admin-cell secondary">View Proposal</a>
@@ -410,50 +410,83 @@ window.masqueradeAsFiltered = () => {
 };
 
 
-window.setTxDateFilter = (txDate) => {
+window.setTxDateFilter = async (txDate) => {
     if (!txDate || txDate === 'undefined') return;
 
-    // Filter globalProposals for this TX Date
-    const matchingStories = globalProposals.filter(p => p.txDate && formatDate(p.txDate) === txDate);
-
-    // Sort by Commission Number ascending
-    matchingStories.sort((a, b) => {
-        const numA = parseInt(a.commissionNumber) || Infinity;
-        const numB = parseInt(b.commissionNumber) || Infinity;
-        return numA - numB;
-    });
-
     const modalList = document.getElementById('episodeModalList');
-    if (modalList) {
-        modalList.innerHTML = '';
-        if (matchingStories.length === 0) {
-            modalList.innerHTML = '<li>No stories found for this date.</li>';
-        } else {
-            matchingStories.forEach(story => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span class="comm-num">#${story.commissionNumber || '—'}</span> <span class="story-title">${story.story_title || 'Untitled'}</span>`;
-                modalList.appendChild(li);
-            });
-        }
+    const modalTitle = document.getElementById('episodeModalTitle');
+    
+    // Set basic title while loading
+    if (modalTitle) {
+        modalTitle.textContent = `Episode: ${txDate}`;
     }
 
-    const modalTitle = document.getElementById('episodeModalTitle');
-    if (modalTitle) {
-        const firstStoryWithMeta = matchingStories.find(s => s.season || s.episode || s.uid);
-        const s = firstStoryWithMeta || {};
-        const uidDisplay = s.uid || '—';
-        const seasonDisplay = s.season || '—';
-        const episodeDisplay = s.episode || '—';
-        
-        modalTitle.innerHTML = `
-            Episode: ${txDate}
-            <div style="font-size: 0.95rem; color: var(--text-light); font-weight: 500; margin-top: 0.4rem; letter-spacing: 0.5px;">
-                UID: ${uidDisplay} &nbsp;&bull;&nbsp; Season: ${seasonDisplay} &nbsp;&bull;&nbsp; Episode: ${episodeDisplay}
-            </div>
-        `;
+    if (modalList) {
+        modalList.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-muted);">Fetching document... <span class="spinner" style="display:inline-block; margin-left: 10px;">⏳</span></div>';
     }
 
     document.getElementById('episodeModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    try {
+        if (!globalSubmissions) {
+            const response = await window.auth.fetchWithAuth('/api/admin/submissions');
+            const data = await response.json();
+            if (data.success) {
+                globalSubmissions = data.submissions;
+            } else {
+                throw new Error(data.error || 'Failed to fetch submissions');
+            }
+        }
+
+        // Find the FCC for this date
+        const fcc = globalSubmissions.find(s => s.formType === 'control_sheet' && s.txDate && formatDate(s.txDate) === txDate);
+
+        // Fetch stories for this TX Date
+        const matchingStories = globalProposals.filter(p => p.txDate && formatDate(p.txDate) === txDate);
+        matchingStories.sort((a, b) => {
+            const numA = parseInt(a.commissionNumber) || Infinity;
+            const numB = parseInt(b.commissionNumber) || Infinity;
+            return numA - numB;
+        });
+
+        let storiesHtml = '';
+        if (matchingStories.length > 0) {
+            storiesHtml += '<div style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.2rem;">';
+            storiesHtml += '<h4 style="margin-bottom: 0.8rem; color: var(--text-main); font-size: 1rem; font-weight: 600;">Stories in this Episode</h4>';
+            storiesHtml += '<ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">';
+            matchingStories.forEach(story => {
+                storiesHtml += `<li style="padding: 0.6rem 0.8rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: var(--radius-sm); display: flex; align-items: center; gap: 0.8rem; transition: border-color 0.2s;"><span class="comm-num" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; min-width: 45px;">#${story.commissionNumber || '—'}</span> <a href="proposal?id=${story.id}&view=admin" target="_blank" class="story-title" style="color: var(--primary); text-decoration: none; font-weight: 500; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-hover)'; this.style.textDecoration='underline'" onmouseout="this.style.color='var(--primary)'; this.style.textDecoration='none'">${story.story_title || 'Untitled'}</a></li>`;
+            });
+            storiesHtml += '</ul></div>';
+        }
+
+        if (fcc) {
+            // Update Title with Metadata from FCC
+            if (modalTitle) {
+                modalTitle.innerHTML = `
+                    Episode: ${txDate}
+                    <div style="font-size: 0.95rem; color: var(--text-muted); font-weight: 500; margin-top: 0.4rem; letter-spacing: 0.5px;">
+                        UID: ${fcc.uid || '—'} &nbsp;&bull;&nbsp; Season: ${fcc.season || '—'} &nbsp;&bull;&nbsp; Episode: ${fcc.episode || '—'}
+                    </div>
+                `;
+            }
+
+            // Inject Stories and then iFrame
+            if (modalList) {
+                const token = await window.auth.getIdToken();
+                modalList.innerHTML = storiesHtml + `<iframe src="/api/admin/get-file?path=${encodeURIComponent(fcc.storagePath)}&inline=true&token=${token}" class="fcc-iframe"></iframe>`;
+            }
+        } else {
+            if (modalList) {
+                modalList.innerHTML = storiesHtml + '<div style="padding: 2.5rem; text-align: center; color: var(--text-muted); background: rgba(255, 255, 255, 0.02); border-radius: var(--radius-md); border: 1px dashed var(--border); margin-bottom: 1rem;">No FCC Document has been uploaded for this broadcast yet.</div>';
+            }
+        }
+    } catch (e) {
+        if (modalList) {
+            modalList.innerHTML = `<div style="padding: 2rem; text-align: center; color: #cc0000;">Error: ${e.message}</div>`;
+        }
+    }
 };
 
 window.clearFilters = () => {

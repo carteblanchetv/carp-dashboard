@@ -291,12 +291,16 @@ app.delete('/api/delete-editorial-leave/:id', async (req, res) => {
  */
 async function validateFirebaseIdToken(req, res, next) {
   console.log(`[AUTH] Checking token for ${req.method} ${req.url}`);
-  if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
+  let idToken;
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    idToken = req.headers.authorization.split('Bearer ')[1];
+  } else if (req.query.token) {
+    idToken = req.query.token;
+  } else {
     console.warn('[AUTH] Missing or malformed Authorization header');
     res.status(403).json({ success: false, error: 'Unauthorized: Missing token.' });
     return;
   }
-  let idToken = req.headers.authorization.split('Bearer ')[1];
   try {
     const decodedIdToken = await admin.auth().verifyIdToken(idToken);
     
@@ -2086,7 +2090,8 @@ app.get('/api/admin/get-file', async (req, res) => {
     const decryptedBuffer = decryptBuffer(fileBuffer);
 
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="${storagePath.split('/').pop()}"`);
+    const disposition = req.query.inline === 'true' ? 'inline' : 'attachment';
+    res.setHeader('Content-Disposition', `${disposition}; filename="${storagePath.split('/').pop()}"`);
     res.send(decryptedBuffer);
   } catch (error) {
     console.error('File decryption failed:', error);

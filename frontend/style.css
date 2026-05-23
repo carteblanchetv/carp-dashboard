@@ -709,8 +709,9 @@ input:focus, select:focus, textarea:focus {
     align-items: center !important;
     justify-content: center !important;
     height: 38px !important;
-    min-width: 100px !important;
-    padding: 0 1rem !important;
+    min-width: auto !important;
+    padding: 0 1.25rem !important;
+    white-space: nowrap !important;
     font-size: 0.85rem !important;
     font-weight: 600 !important;
     border-radius: 6px !important;
@@ -1667,6 +1668,9 @@ input:checked + .slider:before {
     background: var(--bg-card);
     width: 100%;
     max-width: 550px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     border-radius: var(--radius-lg);
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     border: 1px solid var(--border);
@@ -1711,6 +1715,8 @@ input:checked + .slider:before {
 
 .modal-body {
     padding: 2rem;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .modal-subtitle {
@@ -3287,4 +3293,18 @@ body.is-masquerading .global-top-nav {
 
 .episode-modal-list li span.story-title {
     font-weight: 500;
+}
+
+/* --- FCC IFRAME --- */
+.fcc-iframe {
+    width: 100%;
+    height: 75vh;
+    border: none;
+    border-radius: 6px;
+    background: #f8f9fa;
+}
+
+.col-story-title {
+    width: 45%;
+    min-width: 250px;
 }
