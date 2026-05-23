@@ -803,6 +803,24 @@ app.post('/api/send-insert-footage', async (req, res) => {
           });
         }
     }
+    // Check for existing footage declaration
+    let existingQuery = admin.firestore().collection('submissions')
+        .where('formType', '==', 'insert_footage');
+    
+    if (projectId) {
+        existingQuery = existingQuery.where('projectId', '==', projectId);
+    } else if (commissionNumber && storyName) {
+        existingQuery = existingQuery.where('commissionNumber', '==', commissionNumber)
+                                     .where('storyName', '==', storyName);
+    }
+
+    const existingDocs = await existingQuery.limit(1).get();
+    if (!existingDocs.empty) {
+        return res.status(409).json({ 
+            success: false, 
+            error: 'A footage declaration already exists for this story. Please return to the proposal page and click Edit instead.' 
+        });
+    }
 
     const { firestoreDocId } = await processMultiFileStorageAndFirestore(
       req, 'insert_footage', 'insert_footage', files,
