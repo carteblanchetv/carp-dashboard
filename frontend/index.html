@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.0"></script>
     
-    <script type="module" src="js/dashboard.js?v=5.1.1"></script>
+    <script type="module" src="js/dashboard.js?v=5.1.2"></script>
 </head>
 <body class="dashboard-body">
     <!-- GLOBAL THEME TOGGLE (ALWAYS VISIBLE) -->
@@ -150,8 +150,60 @@
             </a>
         </div>
 
+        
+        <!-- QUICK LINKS SECTION -->
+        <style>
+        .quick-link-btn {
+            font-size: 0.75rem; 
+            padding: 0.5rem 0.5rem; 
+            background: var(--bg-card); 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius-md); 
+            color: var(--text-main); 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem; 
+            transition: all 0.2s;
+            font-weight: 600;
+            flex: 1;
+            white-space: nowrap;
+        }
+        .quick-link-btn:hover {
+            background: rgba(0, 143, 190, 0.05);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+        </style>
+        <section id="quickLinksSection" class="quick-links-section" style="margin-top: 2rem; margin-bottom: 2rem; opacity: 0; transition: opacity 0.4s ease-in-out;">
+            <h3 style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2rem; padding-left: 0.2rem;">Legal &amp; Admin Forms</h3>
+            <div style="display: flex; flex-wrap: nowrap; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; width: 100%;">
+                <a href="https://www.jotform.com/sign/260763371107050/invite/01km0dqb2232a24be7490f0a04" target="_blank" class="quick-link-btn">
+                    <span>📄</span> Participant Release Form 2026
+                </a>
+                <a href="https://www.jotform.com/sign/260762990035056/invite/01km0d8mgn4e71c19b68f949e7" target="_blank" class="quick-link-btn">
+                    <span>📄</span> Minor Release Form 2026
+                </a>
+                <a href="https://www.jotform.com/sign/260763146699066/invite/01km0cy3bz5b59e0a83f355ccc" target="_blank" class="quick-link-btn">
+                    <span>📍</span> Location Agreement 2026
+                </a>
+                <a href="https://www.jotform.com/sign/260763666304056/invite/01km0cre8pff83aabb2b02d9b3" target="_blank" class="quick-link-btn">
+                    <span>🎞️</span> Footage Agreement 2026
+                </a>
+                <a href="https://www.jotform.com/sign/260763435351052/invite/01km0djfr7f789223f7dbe66ad" target="_blank" class="quick-link-btn">
+                    <span>🎵</span> Music Agreement 2026
+                </a>
+                <a href="https://www.jotform.com/sign/260802072507046/invite/01kma9gwngb63206105d92078f" target="_blank" class="quick-link-btn">
+                    <span>📝</span> Insert Sheet 2026
+                </a>
+            </div>
+        </section>
+
         <!-- MY STORIES SECTION -->
-        <section id="storiesSection" class="dashboard-section hidden" style="margin-top: 3rem;">
+        <section id="storiesSection" class="dashboard-section hidden" style="margin-top: 2rem;">
             <h2 class="section-title">My Stories</h2>
             <div class="table-container">
                 <table class="admin-table">

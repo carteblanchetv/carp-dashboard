@@ -234,7 +234,7 @@ function renderProposals(proposals, canDelete) {
             const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : p.submittedByEmail;
             tr.innerHTML = `
                 <td data-label="Date">${date}</td>
-                <td data-label="Story Title"><a href="proposal?id=${p.id}&view=admin" class="story-title-link">${p.story_title}</a></td>
+                <td data-label="Story Title" class="col-story-title"><a href="proposal?id=${p.id}&view=admin" class="story-title-link">${p.story_title}</a></td>
                 <td data-label="Submitted By"><a href="#" class="producer-filter-link" onclick="event.preventDefault(); window.setProducerFilter('${p.submittedBy}', '${submitterDisplay.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">${submitterDisplay}</a></td>
                 <td data-label="Actions">
                     <div style="display: flex; gap: 0.5rem; flex-wrap: nowrap; align-items: center;">
@@ -274,14 +274,14 @@ function renderProposals(proposals, canDelete) {
                         <a href="commission_agreement.html?id=${p.id}" target="_blank" title="Commission Agreement" style="text-decoration: none; font-size: 1.1rem; transition: opacity 0.2s; opacity: 0.85;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'">⚖️</a>
                     </div>
                 </td>
-                <td data-label="Producer"><a href="#" class="producer-filter-link" onclick="event.preventDefault(); window.setProducerFilter('${p.submittedBy}', '${submitterDisplay.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">${submitterDisplay}</a></td>
+                <td data-label="Producer" class="col-producer"><a href="#" class="producer-filter-link" onclick="event.preventDefault(); window.setProducerFilter('${p.submittedBy}', '${submitterDisplay.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">${submitterDisplay}</a></td>
                 <td data-label="Actions">
                     <div style="display: flex; gap: 0.5rem; flex-wrap: nowrap; align-items: center;">
-                        <a href="proposal?id=${p.id}&view=admin" class="btn-admin-cell secondary">View Proposal</a>
+                        <a href="proposal?id=${p.id}&view=admin" class="btn-admin-cell secondary">Preview</a>
                         <button class="btn-admin-cell info" onclick="window.openEditCommissionModal('${p.id}')">Edit Details</button>
                         <button class="btn-admin-cell success" onclick="window.handleProposalAction('${p.id}', 'pay')">Delivered</button>
-                        <button class="btn-admin-cell warning" onclick="window.openDecommissionModal('${p.id}')" style="background: var(--danger); color: white; border-color: var(--danger);">Decommission</button>
-                        <button class="btn-admin-cell danger" onclick="window.handleProposalAction('${p.id}', 'revert-to-pending')">Revert</button>
+                        <button class="btn-admin-cell danger" onclick="window.openDecommissionModal('${p.id}')">Decom</button>
+                        <button class="btn-admin-cell warning" onclick="window.handleProposalAction('${p.id}', 'revert-to-pending')">Revert</button>
                     </div>
                 </td>
             `;
@@ -323,7 +323,7 @@ function renderProposals(proposals, canDelete) {
                     </div>
                 </td>
                 <td data-label="TX Date">${txDateDisplay}</td>
-                <td data-label="Producer"><a href="#" class="producer-filter-link" onclick="event.preventDefault(); window.setProducerFilter('${p.submittedBy}', '${submitterDisplay.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">${submitterDisplay}</a></td>
+                <td data-label="Producer" class="col-producer"><a href="#" class="producer-filter-link" onclick="event.preventDefault(); window.setProducerFilter('${p.submittedBy}', '${submitterDisplay.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">${submitterDisplay}</a></td>
                 <td data-label="Actions">
                     <div style="display: flex; gap: 0.5rem; flex-wrap: nowrap; align-items: center;">
                         <a href="proposal?id=${p.id}&view=admin" class="btn-admin-cell secondary">Full Report</a>
@@ -360,10 +360,10 @@ function renderProposals(proposals, canDelete) {
                 const reason = p.decommissionReason ? p.decommissionReason : '<i>No reason provided</i>';
                 tr.innerHTML = `
                     <td data-label="Comm #"><strong>#${p.commissionNumber || '—'}</strong></td>
-                    <td data-label="Story Title"><a href="proposal?id=${p.id}&view=admin" class="story-title-link">${p.story_title}</a></td>
+                    <td data-label="Story Title" class="col-story-title"><a href="proposal?id=${p.id}&view=admin" class="story-title-link">${p.story_title}</a></td>
                     <td data-label="Decommissioned Date">${decDate}</td>
                     <td data-label="Reason" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${p.decommissionReason || ''}">${reason}</td>
-                    <td data-label="Producer"><a href="#" class="producer-filter-link" onclick="event.preventDefault(); window.setProducerFilter('${p.submittedBy}', '${submitterDisplay.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">${submitterDisplay}</a></td>
+                    <td data-label="Producer" class="col-producer"><a href="#" class="producer-filter-link" onclick="event.preventDefault(); window.setProducerFilter('${p.submittedBy}', '${submitterDisplay.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">${submitterDisplay}</a></td>
                     <td data-label="Actions">
                         <button class="btn-admin-cell warning" onclick="window.handleProposalAction('${p.id}', 'revert')">Revert to Commissioned</button>
                     </td>

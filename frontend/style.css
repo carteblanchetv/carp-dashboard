@@ -3305,6 +3305,15 @@ body.is-masquerading .global-top-nav {
 }
 
 .col-story-title {
-    width: 45%;
-    min-width: 250px;
+    width: 55% !important;
+    min-width: 400px !important;
+    text-align: left !important;
+}
+.data-table td:nth-child(2) {
+    text-align: left !important;
+}
+
+.col-producer {
+    width: 15% !important;
+    min-width: 180px !important;
 }
