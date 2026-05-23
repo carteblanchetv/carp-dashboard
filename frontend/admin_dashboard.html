@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Commission Dashboard - Carte Blanche</title>
-    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="stylesheet" href="style.css?v=4.1.1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script src="admin.js?v=5.1.1" type="module"></script>
+    <script src="admin.js?v=5.1.5" type="module"></script>
 </head>
 <body class="dashboard-body">
     <nav class="global-top-nav">
@@ -61,7 +61,15 @@
         <h2 id="loadingText" style="color: var(--primary);">Loading Submissions...</h2>
     </div>
 
-    <div class="dashboard-container wide">
+    <div class="admin-layout-wrapper">
+        <aside class="episodes-sidebar">
+            <h3>Episodes</h3>
+            <ul id="episodesSidebarList" class="episodes-list">
+                <!-- Populated by JS -->
+            </ul>
+        </aside>
+
+        <div class="dashboard-container wide admin-main-content">
 
         <header class="dashboard-header">
             <div class="logo-group">
@@ -115,7 +123,7 @@
                 <span id="filterText" style="font-weight: 600; color: var(--text);">Filtering by: Producer Name</span>
                 <button id="masqueradeBtn" onclick="window.masqueradeAsFiltered()" class="btn-admin-cell success" style="display: none; margin-left: 1rem; padding: 0.5rem 1rem;">View as this Producer</button>
             </div>
-            <button onclick="window.clearProducerFilter()" class="btn-soft" style="background: var(--bg-card); border: 1px solid var(--border);">Clear Filter</button>
+            <button onclick="window.clearFilters()" class="btn-soft" style="background: var(--bg-card); border: 1px solid var(--border);">Clear Filter</button>
         </div>
 
         <div class="admin-stats-grid">

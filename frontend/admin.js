@@ -8,6 +8,7 @@ const loadingText = document.getElementById('loadingText');
 
 let globalProposals = [];
 let activeProducerFilter = null;
+let activeTxDateFilter = null;
 let limits = {
     pending: 10,
     commissioned: 10,
@@ -139,6 +140,45 @@ async function loadProducers() {
     }
 }
 
+
+function populateEpisodesSidebar(proposals) {
+    const sidebarList = document.getElementById('episodesSidebarList');
+    if (!sidebarList) return;
+
+    const txDates = new Set();
+    proposals.forEach(p => {
+        if (p.txDate) {
+            const formatted = formatDate(p.txDate);
+            if (formatted !== '—') {
+                txDates.add(formatted);
+            }
+        }
+    });
+
+    const sortedDates = Array.from(txDates).sort((a, b) => new Date(b) - new Date(a));
+
+    sidebarList.innerHTML = '';
+    
+    if (sortedDates.length === 0) {
+        sidebarList.innerHTML = '<li><span style="padding: 0.6rem 0.8rem; display: block; color: var(--text-muted); font-size: 0.9rem;">No episodes yet.</span></li>';
+        return;
+    }
+
+    sortedDates.forEach(date => {
+        const li = document.createElement('li');
+        const btn = document.createElement('button');
+        btn.textContent = date;
+        btn.onclick = () => window.setTxDateFilter(date);
+        
+        if (activeTxDateFilter === date) {
+            btn.classList.add('active');
+        }
+        
+        li.appendChild(btn);
+        sidebarList.appendChild(li);
+    });
+}
+
 function renderProposals(proposals, canDelete) {
     const propTableBody = document.getElementById('proposalTableBody');
     const commTableBody = document.getElementById('commissionedTableBody');
@@ -251,7 +291,10 @@ function renderProposals(proposals, canDelete) {
         toShow.forEach(p => {
             const tr = document.createElement('tr');
             const paidDate = formatDate(p.paidAt);
-            const txDateDisplay = p.txDate ? formatDate(p.txDate) : paidDate;
+            const rawFormattedTx = p.txDate ? formatDate(p.txDate) : '—';
+            const txDateDisplay = rawFormattedTx !== '—' 
+                ? `<a href="#" onclick="event.preventDefault(); window.setTxDateFilter('${rawFormattedTx}')" style="color: var(--primary); text-decoration: underline;" title="View all stories for this episode">${rawFormattedTx}</a>`
+                : paidDate;
             const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : p.submittedByEmail;
             tr.innerHTML = `
                 <td data-label="Comm #"><strong>#${p.commissionNumber || '—'}</strong></td>
@@ -346,6 +389,31 @@ window.masqueradeAsFiltered = () => {
     const uid = masqBtn.dataset.uid;
     const name = masqBtn.dataset.name;
     window.auth.startMasquerade(uid, name, 'producer');
+};
+
+
+window.setTxDateFilter = (txDate) => {
+    if (!txDate || txDate === 'undefined') return;
+    activeTxDateFilter = txDate;
+    activeProducerFilter = null; // mutually exclusive for simplicity
+    document.getElementById('filterBar').style.display = 'flex';
+    document.getElementById('filterText').textContent = `Filtering by TX Date: ${txDate}`;
+    const masqBtn = document.getElementById('masqueradeBtn');
+    if (masqBtn) masqBtn.style.display = 'none';
+    
+    checkAuth().then(user => {
+        renderProposals(globalProposals, window.auth.isAdmin(user));
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.clearFilters = () => {
+    activeProducerFilter = null;
+    activeTxDateFilter = null;
+    document.getElementById('filterBar').style.display = 'none';
+    checkAuth().then(user => {
+        renderProposals(globalProposals, window.auth.isAdmin(user));
+    });
 };
 
 window.clearProducerFilter = () => {
