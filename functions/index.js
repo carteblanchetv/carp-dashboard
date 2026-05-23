@@ -1955,6 +1955,11 @@ app.get('/api/search', async (req, res) => {
 
     // 4. Filtering Results
     const filteredResults = proposals.filter(p => {
+        // Exclude decommissioned stories for non-admins (e.g. producers)
+        if (p.status === 'decommissioned' && !hasAdminAccess(req.user)) {
+            return false;
+        }
+
         // Sensitivity Check - Strictly exclude sensitive stories for non-admins
         if (p.isSensitive && !hasAdminAccess(req.user)) {
             return false;
