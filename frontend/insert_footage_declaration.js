@@ -143,65 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const producersPromise = autofillProfile();
 
-    // --- SUPPORTING DOCUMENTS & MERGING LOGIC ---
-    let agreementFiles = [];
-    let releaseFiles = [];
-
-    const agreementInput = document.getElementById('agreementFilesInput');
-    const releaseInput = document.getElementById('releaseFilesInput');
-    const agreementFileList = document.getElementById('agreementFileList');
-    const releaseFileList = document.getElementById('releaseFileList');
-
-    agreementInput.addEventListener('change', (e) => {
-        const newFiles = Array.from(e.target.files).filter(f => f.type === 'application/pdf');
-        agreementFiles = [...agreementFiles, ...newFiles];
-        renderFileList('agreement');
-        e.target.value = '';
-    });
-
-    releaseInput.addEventListener('change', (e) => {
-        const newFiles = Array.from(e.target.files).filter(f => f.type === 'application/pdf');
-        releaseFiles = [...releaseFiles, ...newFiles];
-        renderFileList('release');
-        e.target.value = '';
-    });
-
-    function renderFileList(category) {
-        const list = category === 'agreement' ? agreementFileList : releaseFileList;
-        const files = category === 'agreement' ? agreementFiles : releaseFiles;
-        
-        list.innerHTML = '';
-        files.forEach((file, index) => {
-            const item = document.createElement('div');
-            item.className = 'file-item';
-            item.innerHTML = `
-                <span class="file-name">${file.name}</span>
-                <div class="file-actions">
-                    <button type="button" class="action-icon-btn" onclick="window.moveFile('${category}', ${index}, -1)" ${index === 0 ? 'disabled' : ''} title="Move Up">↑</button>
-                    <button type="button" class="action-icon-btn" onclick="window.moveFile('${category}', ${index}, 1)" ${index === files.length - 1 ? 'disabled' : ''} title="Move Down">↓</button>
-                    <button type="button" class="action-icon-btn remove" onclick="window.removeFile('${category}', ${index})" title="Remove">&times;</button>
-                </div>
-            `;
-            list.appendChild(item);
-        });
-    }
-
-    window.moveFile = (category, index, direction) => {
-        const files = category === 'agreement' ? agreementFiles : releaseFiles;
-        const target = index + direction;
-        if (target < 0 || target >= files.length) return;
-        const temp = files[index];
-        files[index] = files[target];
-        files[target] = temp;
-        renderFileList(category);
-    };
-
-    window.removeFile = (category, index) => {
-        if (category === 'agreement') agreementFiles.splice(index, 1);
-        else releaseFiles.splice(index, 1);
-        renderFileList(category);
-    };
-
     // --- EXISTING FILES LOGIC (EDIT MODE) ---
     async function deleteExistingFile(storagePath) {
         if (!confirm('Are you sure you want to delete this file? This cannot be undone.')) return;
@@ -687,7 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 `).join('')}
                             </div>
                         `;
-                        document.getElementById('supportingDocsSection').insertAdjacentElement('beforebegin', section);
+                        document.querySelector('.form-actions').insertAdjacentElement('beforebegin', section);
                     }
                 }
                 
@@ -817,8 +758,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('loadingSubtext').textContent = "Please wait, this might take a moment.";
 
         try {
-            // Supporting documents are now optional (for historical data entry)
-            const combinedFiles = [...agreementFiles, ...releaseFiles];
+
 
             const pdfBlob = await generatePDFBlob();
             
@@ -834,10 +774,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Append declaration PDF
             formData.append('declaration', pdfBlob, `InsertFootage_${isEditMode ? 'Update_' : ''}${Date.now()}.pdf`);
             
-            // Append each supporting doc (combined)
-            combinedFiles.forEach((file, index) => {
-                formData.append(`supporting_${index}`, file, file.name);
-            });
+
 
             console.log(`Sending data to server...`);
             const token = await window.auth.getIdToken();
