@@ -17,6 +17,25 @@ let limits = {
 };
 
 async function init() {
+
+// Dynamically inject Episode Modal if not present
+if (!document.getElementById('episodeModal')) {
+    const modalHTML = `
+    <div id="episodeModal" class="modal-backdrop">
+        <div class="modal-card" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 id="episodeModalTitle">Episode: </h3>
+                <button class="close-modal" onclick="document.getElementById('episodeModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <ul id="episodeModalList" class="episode-modal-list">
+                </ul>
+            </div>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
     try {
         const user = await checkAuth();
         if (!user) return; 
@@ -155,7 +174,7 @@ function populateEpisodesSidebar(proposals) {
         }
     });
 
-    const sortedDates = Array.from(txDates).sort((a, b) => new Date(b) - new Date(a));
+    const sortedDates = Array.from(txDates).sort((a, b) => new Date(b) - new Date(a)).slice(0, 10);
 
     sidebarList.innerHTML = '';
     
@@ -170,9 +189,7 @@ function populateEpisodesSidebar(proposals) {
         btn.textContent = date;
         btn.onclick = () => window.setTxDateFilter(date);
         
-        if (activeTxDateFilter === date) {
-            btn.classList.add('active');
-        }
+
         
         li.appendChild(btn);
         sidebarList.appendChild(li);
@@ -180,6 +197,7 @@ function populateEpisodesSidebar(proposals) {
 }
 
 function renderProposals(proposals, canDelete) {
+    populateEpisodesSidebar(globalProposals);
     const propTableBody = document.getElementById('proposalTableBody');
     const commTableBody = document.getElementById('commissionedTableBody');
     const paidTableBody = document.getElementById('paidTableBody');
@@ -394,17 +412,48 @@ window.masqueradeAsFiltered = () => {
 
 window.setTxDateFilter = (txDate) => {
     if (!txDate || txDate === 'undefined') return;
-    activeTxDateFilter = txDate;
-    activeProducerFilter = null; // mutually exclusive for simplicity
-    document.getElementById('filterBar').style.display = 'flex';
-    document.getElementById('filterText').textContent = `Filtering by TX Date: ${txDate}`;
-    const masqBtn = document.getElementById('masqueradeBtn');
-    if (masqBtn) masqBtn.style.display = 'none';
-    
-    checkAuth().then(user => {
-        renderProposals(globalProposals, window.auth.isAdmin(user));
+
+    // Filter globalProposals for this TX Date
+    const matchingStories = globalProposals.filter(p => p.txDate && formatDate(p.txDate) === txDate);
+
+    // Sort by Commission Number ascending
+    matchingStories.sort((a, b) => {
+        const numA = parseInt(a.commissionNumber) || Infinity;
+        const numB = parseInt(b.commissionNumber) || Infinity;
+        return numA - numB;
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    const modalList = document.getElementById('episodeModalList');
+    if (modalList) {
+        modalList.innerHTML = '';
+        if (matchingStories.length === 0) {
+            modalList.innerHTML = '<li>No stories found for this date.</li>';
+        } else {
+            matchingStories.forEach(story => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="comm-num">#${story.commissionNumber || '—'}</span> <span class="story-title">${story.story_title || 'Untitled'}</span>`;
+                modalList.appendChild(li);
+            });
+        }
+    }
+
+    const modalTitle = document.getElementById('episodeModalTitle');
+    if (modalTitle) {
+        const firstStoryWithMeta = matchingStories.find(s => s.season || s.episode || s.uid);
+        const s = firstStoryWithMeta || {};
+        const uidDisplay = s.uid || '—';
+        const seasonDisplay = s.season || '—';
+        const episodeDisplay = s.episode || '—';
+        
+        modalTitle.innerHTML = `
+            Episode: ${txDate}
+            <div style="font-size: 0.95rem; color: var(--text-light); font-weight: 500; margin-top: 0.4rem; letter-spacing: 0.5px;">
+                UID: ${uidDisplay} &nbsp;&bull;&nbsp; Season: ${seasonDisplay} &nbsp;&bull;&nbsp; Episode: ${episodeDisplay}
+            </div>
+        `;
+    }
+
+    document.getElementById('episodeModal').classList.add('active');
 };
 
 window.clearFilters = () => {

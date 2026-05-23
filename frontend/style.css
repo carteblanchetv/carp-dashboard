@@ -3139,14 +3139,14 @@ body.is-masquerading .global-top-nav {
     grid-column: 1;
     width: 250px;
     background: var(--bg-card);
-    border-right: 1px solid var(--border);
-    border-radius: 0 8px 8px 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
     padding: 1.5rem 1rem;
     position: sticky;
-    top: 2rem;
-    max-height: calc(100vh - 4rem);
+    top: 5rem;
+    max-height: calc(100vh - 7rem);
     overflow-y: auto;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
     margin-top: 2rem;
 }
 
@@ -3159,13 +3159,21 @@ body.is-masquerading .global-top-nav {
 }
 
 .episodes-sidebar h3 {
-    font-size: 1.1rem;
-    color: var(--text);
-    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: var(--primary);
+    margin-bottom: 1.25rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 2px solid var(--border);
-    padding-bottom: 0.5rem;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.episodes-sidebar h3::before {
+    content: "📺";
+    font-size: 1.2rem;
 }
 
 .episodes-list {
@@ -3185,26 +3193,47 @@ body.is-masquerading .global-top-nav {
     width: 100%;
     text-align: left;
     background: none;
-    border: 1px solid transparent;
-    padding: 0.6rem 0.8rem;
-    border-radius: 6px;
+    border: none;
+    border-left: 3px solid transparent;
+    padding: 0.7rem 0.8rem 0.7rem 1rem;
+    border-radius: 0 6px 6px 0;
     cursor: pointer;
-    color: var(--text-light);
+    color: var(--text);
     font-size: 0.95rem;
     font-weight: 500;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.episodes-list button::before {
+    content: "•";
+    color: var(--border);
+    font-size: 1.5rem;
+    line-height: 0.5;
+    transition: color 0.2s;
 }
 
 .episodes-list button:hover {
-    background: rgba(0, 143, 190, 0.05);
+    background: linear-gradient(90deg, rgba(0,143,190,0.08) 0%, rgba(0,143,190,0.02) 100%);
+    color: var(--primary);
+    transform: translateX(4px);
+}
+.episodes-list button:hover::before {
     color: var(--primary);
 }
 
 .episodes-list button.active {
-    background: rgba(0, 143, 190, 0.1);
+    background: linear-gradient(90deg, rgba(0,143,190,0.15) 0%, rgba(0,143,190,0.02) 100%);
     color: var(--primary);
-    border-color: rgba(0, 143, 190, 0.2);
+    border-left-color: var(--primary);
     font-weight: 600;
+    transform: translateX(4px);
+}
+.episodes-list button.active::before {
+    color: var(--primary);
+    content: "📅";
+    font-size: 1rem;
 }
 
 @media (max-width: 1024px) {
@@ -3226,4 +3255,36 @@ body.is-masquerading .global-top-nav {
     .admin-main-content {
         padding-left: 1rem;
     }
+}
+
+/* === EPISODE MODAL === */
+.episode-modal-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.episode-modal-list li {
+    background: rgba(0, 143, 190, 0.05);
+    border: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text);
+    font-size: 1rem;
+}
+
+.episode-modal-list li span.comm-num {
+    font-weight: 700;
+    color: var(--primary);
+    min-width: 60px;
+}
+
+.episode-modal-list li span.story-title {
+    font-weight: 500;
 }
