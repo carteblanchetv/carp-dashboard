@@ -1529,7 +1529,7 @@ app.post('/api/submit-proposal', express.json(), async (req, res) => {
                 <li><b>Submitted By:</b> ${req.user.firstName} ${req.user.lastName}</li>
               </ul>
               <hr/>
-              <p><a href="https://cb-deliverables.web.app/proposal.html?id=${id}">Approve / Reject Story Proposal</a></p>`
+              <p><a href="https://cb-deliverables.web.app/proposal.html?id=${id}&view=admin">Approve / Reject Story Proposal</a></p>`
          );
     }
 
