@@ -52,6 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const phaseBar = document.getElementById('productionPhaseBar');
                 if (phaseBar && isCommissioned) {
                     phaseBar.classList.remove('hidden');
+
+                    if (sub._isRestrictedView) {
+                        const btnFootageDec = document.getElementById('btnFootageDec');
+                        const btnCallSheet = document.getElementById('btnCallSheet');
+                        const btnMusicCue = document.getElementById('btnMusicCue');
+                        if (btnFootageDec) btnFootageDec.style.display = 'none';
+                        if (btnCallSheet) btnCallSheet.style.display = 'none';
+                        if (btnMusicCue) btnMusicCue.style.display = 'none';
+                    }
                     
                     // Fetch linked assets for the project to correctly link buttons
                     const assets = result.linkedAssets || [];

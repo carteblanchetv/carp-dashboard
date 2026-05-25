@@ -265,6 +265,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const phaseBar = document.getElementById('productionPhaseBar');
                 if (phaseBar && isCommissioned) {
                     phaseBar.classList.remove('hidden');
+
+                    if (sub._isRestrictedView) {
+                        const btnFootageDec = document.getElementById('btnFootageDec');
+                        const btnCallSheet = document.getElementById('btnCallSheet');
+                        const btnMusicCue = document.getElementById('btnMusicCue');
+                        if (btnFootageDec) btnFootageDec.style.display = 'none';
+                        if (btnCallSheet) btnCallSheet.style.display = 'none';
+                        if (btnMusicCue) btnMusicCue.style.display = 'none';
+                    }
                     
                     const assets = result.linkedAssets || [];
                     const existingFootage = assets.find(a => a.formType === 'insert_footage');
