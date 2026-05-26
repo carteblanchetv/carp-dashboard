@@ -1,5 +1,5 @@
 // proposal.js
-// VERSION: 5.1.1
+// VERSION: 5.1.2
 import { getIdToken, fetchWithAuth, checkAuth, isAdmin, isSuperAdmin, isEditorialProduction } from './auth.js?v=5.1.1';
 
 function formatStoryDate(dateInput) {
@@ -976,104 +976,119 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     document.getElementById('cs_producer_name').value = producerName || '';
 
-                    if (sub.details && sub.details.callSheet) {
-                        const cs = sub.details.callSheet;
-                        const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ''; };
-                        
-                        setVal('cs_producer_phone', cs.producer_phone);
-                        setVal('cs_producer_id', cs.producer_id);
-                        
-                        const savedPresenter = cs.presenter_name || '';
-                        const standardPresenters = ['Catherine Rice', 'Claire Mawisa', 'Erin Bates', 'Govan Whittles', 'Lourensa Eckard', 'Macfarlane Moleli', 'Masa Kekana', 'Nickolaus Bauer'];
-                        if (savedPresenter) {
-                            if (standardPresenters.includes(savedPresenter)) {
-                                if (document.getElementById('cs_presenter_name')) document.getElementById('cs_presenter_name').value = savedPresenter;
-                                if (document.getElementById('csPresenterOtherWrapper')) document.getElementById('csPresenterOtherWrapper').classList.add('hidden');
-                            } else {
-                                if (document.getElementById('cs_presenter_name')) document.getElementById('cs_presenter_name').value = 'Other';
-                                if (document.getElementById('cs_presenter_other')) document.getElementById('cs_presenter_other').value = savedPresenter;
-                                if (document.getElementById('csPresenterOtherWrapper')) document.getElementById('csPresenterOtherWrapper').classList.remove('hidden');
-                            }
+                    const cs = (sub.details && sub.details.callSheet) || {};
+                    const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ''; };
+                    
+                    // Fallbacks for Crew from main Proposal if Call Sheet fields are empty/new
+                    const propPresenter = sub.details ? sub.details.presenter : '';
+                    let propDop = '';
+                    if (sub.details && sub.details.dop) {
+                        if (typeof sub.details.dop === 'object') {
+                            propDop = `${sub.details.dop.name || ''} ${sub.details.dop.surname || ''}`.trim();
+                        } else {
+                            propDop = sub.details.dop;
                         }
-                        
-                        setVal('cs_presenter_phone', cs.presenter_phone);
-                        setVal('cs_presenter_id', cs.presenter_id);
-                        setVal('cs_dop_name', cs.dop_name);
-                        setVal('cs_dop_phone', cs.dop_phone);
-                        setVal('cs_dop_id', cs.dop_id);
-                        setVal('cs_cam_assistant_name', cs.cam_assistant_name);
-                        setVal('cs_cam_assistant_phone', cs.cam_assistant_phone);
-                        setVal('cs_cam_assistant_id', cs.cam_assistant_id);
-                        setVal('cs_security_status', cs.security_status);
-                        setVal('cs_security_name', cs.security_name);
-                        setVal('cs_security_phone', cs.security_phone);
-                        setVal('cs_shoot_day', cs.shoot_day);
-                        setVal('cs_shoot_date', cs.shoot_date);
-                        
-                        // Kit
-                        if (cs.kit) {
-                            setVal('kit_camera', cs.kit.camera);
-                            setVal('kit_audio', cs.kit.audio);
-                            setVal('kit_lenses', cs.kit.lenses);
-                            setVal('kit_lighting', cs.kit.lighting);
-                            setVal('kit_rigs', cs.kit.rigs);
-                            setVal('kit_other', cs.kit.other);
+                    }
+                    let propAC = '';
+                    if (sub.details && sub.details.camera_assistant) {
+                        if (typeof sub.details.camera_assistant === 'object') {
+                            propAC = `${sub.details.camera_assistant.name || ''} ${sub.details.camera_assistant.surname || ''}`.trim();
+                        } else {
+                            propAC = sub.details.camera_assistant;
                         }
+                    }
 
-                        // Travel
-                        if (cs.travel) {
-                            setVal('travel_flight_name', cs.travel.flight_name);
-                            setVal('travel_flight_details', cs.travel.flight_details);
-                            setVal('travel_flight_file_path', cs.travel.flight_file_path);
-                            setVal('travel_flight_filename', cs.travel.flight_filename);
-                            if (document.getElementById('travel_flight_file_name_display')) {
-                                document.getElementById('travel_flight_file_name_display').textContent = cs.travel.flight_filename ? `✓ ${cs.travel.flight_filename}` : '';
-                            }
+                    const presenterVal = cs.presenter_name || propPresenter || '';
+                    const dopNameVal = cs.dop_name || propDop || '';
+                    const camAssistantNameVal = cs.cam_assistant_name || propAC || '';
 
-                            setVal('travel_accom_name', cs.travel.accom_name);
-                            setVal('travel_accom_location', cs.travel.accom_location);
-                            setVal('travel_accom_from', cs.travel.accom_from);
-                            setVal('travel_accom_to', cs.travel.accom_to);
-
-                            setVal('travel_trans_name', cs.travel.trans_name);
-                            setVal('travel_trans_from_loc', cs.travel.trans_from_loc);
-                            setVal('travel_trans_to_loc', cs.travel.trans_to_loc);
-                            setVal('travel_trans_from_date', cs.travel.trans_from_date);
-                            setVal('travel_trans_to_date', cs.travel.trans_to_date);
-                            setVal('travel_trans_from_time', cs.travel.trans_from_time);
-                            setVal('travel_trans_to_time', cs.travel.trans_to_time);
-                            setVal('travel_trans_file_path', cs.travel.trans_file_path);
-                            setVal('travel_trans_filename', cs.travel.trans_filename);
-                            if (document.getElementById('travel_trans_file_name_display')) {
-                                document.getElementById('travel_trans_file_name_display').textContent = cs.travel.trans_filename ? `✓ ${cs.travel.trans_filename}` : '';
-                            }
+                    setVal('cs_producer_phone', cs.producer_phone);
+                    setVal('cs_producer_id', cs.producer_id);
+                    
+                    const savedPresenter = presenterVal;
+                    const standardPresenters = ['Catherine Rice', 'Claire Mawisa', 'Erin Bates', 'Govan Whittles', 'Lourensa Eckard', 'Macfarlane Moleli', 'Masa Kekana', 'Nickolaus Bauer'];
+                    if (savedPresenter) {
+                        if (standardPresenters.includes(savedPresenter)) {
+                            if (document.getElementById('cs_presenter_name')) document.getElementById('cs_presenter_name').value = savedPresenter;
+                            if (document.getElementById('csPresenterOtherWrapper')) document.getElementById('csPresenterOtherWrapper').classList.add('hidden');
+                        } else {
+                            if (document.getElementById('cs_presenter_name')) document.getElementById('cs_presenter_name').value = 'Other';
+                            if (document.getElementById('cs_presenter_other')) document.getElementById('cs_presenter_other').value = savedPresenter;
+                            if (document.getElementById('csPresenterOtherWrapper')) document.getElementById('csPresenterOtherWrapper').classList.remove('hidden');
                         }
+                    }
+                    
+                    setVal('cs_presenter_phone', cs.presenter_phone);
+                    setVal('cs_presenter_id', cs.presenter_id);
+                    setVal('cs_dop_name', dopNameVal);
+                    setVal('cs_dop_phone', cs.dop_phone);
+                    setVal('cs_dop_id', cs.dop_id);
+                    setVal('cs_cam_assistant_name', camAssistantNameVal);
+                    setVal('cs_cam_assistant_phone', cs.cam_assistant_phone);
+                    setVal('cs_cam_assistant_id', cs.cam_assistant_id);
+                    setVal('cs_security_status', cs.security_status || 'not_required');
+                    setVal('cs_security_name', cs.security_name);
+                    setVal('cs_security_phone', cs.security_phone);
+                    setVal('cs_shoot_day', cs.shoot_day);
+                    setVal('cs_shoot_date', cs.shoot_date);
+                    
+                    // Kit
+                    if (cs.kit) {
+                        setVal('kit_camera', cs.kit.camera);
+                        setVal('kit_audio', cs.kit.audio);
+                        setVal('kit_lenses', cs.kit.lenses);
+                        setVal('kit_lighting', cs.kit.lighting);
+                        setVal('kit_rigs', cs.kit.rigs);
+                        setVal('kit_other', cs.kit.other);
+                    }
 
-                        // Additional Crew
-                        const csCrewContainer = document.getElementById('dynamicAdditionalCrew');
-                        if (csCrewContainer) {
-                            csCrewContainer.innerHTML = '';
-                            if (cs.additionalCrew && cs.additionalCrew.length > 0) {
-                                cs.additionalCrew.forEach(c => addCsCrewRow(c));
-                            }
+                    // Travel
+                    if (cs.travel) {
+                        setVal('travel_flight_name', cs.travel.flight_name);
+                        setVal('travel_flight_details', cs.travel.flight_details);
+                        setVal('travel_flight_file_path', cs.travel.flight_file_path);
+                        setVal('travel_flight_filename', cs.travel.flight_filename);
+                        if (document.getElementById('travel_flight_file_name_display')) {
+                            document.getElementById('travel_flight_file_name_display').textContent = cs.travel.flight_filename ? `✓ ${cs.travel.flight_filename}` : '';
                         }
 
-                        setVal('cs_story_description', cs.story_description);
+                        setVal('travel_accom_name', cs.travel.accom_name);
+                        setVal('travel_accom_location', cs.travel.accom_location);
+                        setVal('travel_accom_from', cs.travel.accom_from);
+                        setVal('travel_accom_to', cs.travel.accom_to);
 
-                        // Populate Movement Order Table
-                        const ssBody = document.getElementById('movementOrderTableBody');
-                        if (ssBody) {
-                            ssBody.innerHTML = '';
-                            if (cs.movementOrder && cs.movementOrder.length > 0) {
-                                cs.movementOrder.forEach(row => addMovementRow(row));
-                            } else {
-                                for (let i = 0; i < 5; i++) addMovementRow();
-                            }
+                        setVal('travel_trans_name', cs.travel.trans_name);
+                        setVal('travel_trans_from_loc', cs.travel.trans_from_loc);
+                        setVal('travel_trans_to_loc', cs.travel.trans_to_loc);
+                        setVal('travel_trans_from_date', cs.travel.trans_from_date);
+                        setVal('travel_trans_to_date', cs.travel.trans_to_date);
+                        setVal('travel_trans_from_time', cs.travel.trans_from_time);
+                        setVal('travel_trans_to_time', cs.travel.trans_to_time);
+                        setVal('travel_trans_file_path', cs.travel.trans_file_path);
+                        setVal('travel_trans_filename', cs.travel.trans_filename);
+                        if (document.getElementById('travel_trans_file_name_display')) {
+                            document.getElementById('travel_trans_file_name_display').textContent = cs.travel.trans_filename ? `✓ ${cs.travel.trans_filename}` : '';
                         }
-                    } else {
-                        const ssBody = document.getElementById('movementOrderTableBody');
-                        if (ssBody) {
-                            ssBody.innerHTML = '';
+                    }
+
+                    // Additional Crew
+                    const csCrewContainer = document.getElementById('dynamicAdditionalCrew');
+                    if (csCrewContainer) {
+                        csCrewContainer.innerHTML = '';
+                        if (cs.additionalCrew && cs.additionalCrew.length > 0) {
+                            cs.additionalCrew.forEach(c => addCsCrewRow(c));
+                        }
+                    }
+
+                    setVal('cs_story_description', cs.story_description);
+
+                    // Populate Movement Order Table
+                    const ssBody = document.getElementById('movementOrderTableBody');
+                    if (ssBody) {
+                        ssBody.innerHTML = '';
+                        if (cs.movementOrder && cs.movementOrder.length > 0) {
+                            cs.movementOrder.forEach(row => addMovementRow(row));
+                        } else {
                             for (let i = 0; i < 5; i++) addMovementRow();
                         }
                     }
