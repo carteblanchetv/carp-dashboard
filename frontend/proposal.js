@@ -1,5 +1,5 @@
 // proposal.js
-// VERSION: 5.1.4
+// VERSION: 5.1.5
 import { getIdToken, fetchWithAuth, checkAuth, isAdmin, isSuperAdmin, isEditorialProduction } from './auth.js?v=5.1.1';
 
 function formatStoryDate(dateInput) {
@@ -181,6 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('proposalForm');
 
         const backBtn = document.getElementById('backToProposalBtn');
+        const topEditCallSheetBtn = document.getElementById('topEditCallSheetBtn');
+        if (topEditCallSheetBtn) topEditCallSheetBtn.style.display = 'none';
 
         if (isCallSheetMode) {
             console.log("[DEBUG] Activating Call Sheet View");
@@ -1728,6 +1730,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function showProposalPreview(sub, linkedAssets = []) {
         console.log("[DEBUG] showProposalPreview - ID:", sub.id, "Status:", sub.status, "isAdminView:", isAdminView);
 
+        const topEditCallSheetBtn = document.getElementById('topEditCallSheetBtn');
+        if (topEditCallSheetBtn) topEditCallSheetBtn.style.display = 'none';
+
         // Setup Story Deliverables Bar (Visible in Preview too)
         setupDeliverablesBar(sub, linkedAssets, isReadOnly);
         
@@ -2902,6 +2907,20 @@ function showCallSheetPreview(sub, assets) {
         pdfBtn.onclick = () => window.downloadCallSheetPDF();
         pdfBtn.style.display = 'inline-block';
     }
+    
+    // Setup Edit Call Sheet Button
+    const editBtn = document.getElementById('topEditCallSheetBtn');
+    if (editBtn) {
+        if (isAdminView) {
+            editBtn.style.display = 'none';
+        } else {
+            editBtn.style.display = 'inline-block';
+            editBtn.onclick = () => {
+                window.location.href = `proposal.html?id=${sub.id}#CallSheet`;
+            };
+        }
+    }
+    
     const backBtn = document.getElementById('backToProposalBtn');
     if (backBtn) {
         backBtn.classList.remove('hidden');
