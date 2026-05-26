@@ -121,6 +121,18 @@ function decryptCallSheet(details) {
         });
     }
 
+    // Decrypt new crew list
+    if (cs.crew && Array.isArray(cs.crew)) {
+        cs.crew.forEach(member => {
+            if (member.phone && member.phone._encrypted) member.phone = decrypt(member.phone);
+        });
+    }
+
+    // Decrypt new security phone
+    if (cs.security && cs.security.phone && cs.security.phone._encrypted) {
+        cs.security.phone = decrypt(cs.security.phone);
+    }
+
     return details;
 }
 
@@ -1823,6 +1835,18 @@ app.post('/api/update-proposal-details', express.json(), async (req, res) => {
                 if (member.phone) member.phone = encrypt(member.phone);
                 if (member.id) member.id = encrypt(member.id);
             });
+        }
+
+        // Encrypt new crew list
+        if (cs.crew && Array.isArray(cs.crew)) {
+            cs.crew.forEach(member => {
+                if (member.phone) member.phone = encrypt(member.phone);
+            });
+        }
+
+        // Encrypt new security phone
+        if (cs.security && cs.security.phone) {
+            cs.security.phone = encrypt(cs.security.phone);
         }
     }
 

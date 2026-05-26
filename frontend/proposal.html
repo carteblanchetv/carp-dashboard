@@ -550,306 +550,232 @@
             </div>
 
             <section id="callSheetSection" class="form-section" style="border-top: 2px solid var(--success); padding-top: 2rem; margin-top: 3rem;">
-                    <h2 class="section-title" style="color: var(--success);">Call Sheet</h2>
-                    <p style="background: rgba(239, 68, 68, 0.08); padding: 1.25rem; border-radius: var(--radius-sm); border-left: 5px solid var(--danger); font-size: 1rem; margin-bottom: 2rem; color: var(--danger); font-weight: 600;">
-                        <b>IMPORTANT:</b> For insurance purposes, Call Sheet must be submitted before filming.
-                    </p>
+                <h2 class="section-title" style="color: var(--success);">Call Sheet</h2>
+                <p style="background: rgba(239, 68, 68, 0.08); padding: 1.25rem; border-radius: var(--radius-sm); border-left: 5px solid var(--danger); font-size: 1rem; margin-bottom: 2rem; color: var(--danger); font-weight: 600;">
+                    <b>IMPORTANT:</b> For insurance purposes, Call Sheet must be submitted before filming.
+                </p>
 
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Commission Number</label>
-                            <input type="text" id="cs_comm_num" readonly style="background: var(--bg-light); cursor: not-allowed;">
-                        </div>
-                        <div class="form-group">
-                            <label>Story Name</label>
-                            <input type="text" id="cs_story_name" readonly style="background: var(--bg-light); cursor: not-allowed;">
-                        </div>
-                        <div class="form-group">
-                            <label>Producer Name</label>
-                            <input type="text" id="cs_producer_name" readonly style="background: var(--bg-light); cursor: not-allowed;">
-                        </div>
+                <!-- Hidden inputs for linking and metadata -->
+                <div class="form-grid" style="display: none;">
+                    <input type="text" id="cs_comm_num" readonly>
+                    <input type="text" id="cs_story_name" readonly>
+                    <input type="text" id="cs_producer_name" readonly>
+                </div>
+
+                <!-- SHOOT DATES (MULTIPLE SELECTION) -->
+                <div style="margin-top: 1.5rem; margin-bottom: 2rem;">
+                    <h3 style="color: var(--success); font-size: 1.15rem; font-weight: 800; margin-bottom: 0.75rem;">SHOOT DATES: Select Multiple Dates</h3>
+                    <div id="cs_shoot_dates_container" style="display: flex; flex-direction: column; gap: 0.5rem; max-width: 300px;">
+                        <!-- Dynamic date rows -->
                     </div>
+                    <button type="button" id="addCsDateBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Shoot Date</button>
+                </div>
 
-                    <!-- CREW SECTION -->
-                    <div style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
-                        <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Crew Details</h3>
-                        
-                        <div class="form-grid" style="margin-top: 1.5rem;">
-                            <div class="form-group">
-                                <label>Producer Phone Number</label>
-                                <input type="text" id="cs_producer_phone" name="cs_producer_phone" placeholder="+27 82 123 4567" pattern="^\+27\d{9}$|^0\d{9}$" required title="Please use SA dial code (+27) or 10-digit number" oninput="this.value = formatSA(this.value)">
-                            </div>
-                            <div class="form-group">
-                                <label>Producer ID Number</label>
-                                <input type="text" id="cs_producer_id" name="cs_producer_id" placeholder="13 Digit ID Number" required maxlength="13" minlength="13" pattern="\d{13}" title="Must be exactly 13 digits with no spaces">
-                            </div>
-                        </div>
+                <!-- SECTION 1: CREW DETAILS -->
+                <div style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Section 1: Crew Details</h3>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Role</th>
+                                    <th>Name & Surname</th>
+                                    <th>Cell Number</th>
+                                    <th style="width: 50px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="csCrewTableBody">
+                                <!-- 4 Required Rows Pre-populated in UI -->
+                                <tr>
+                                    <td><input type="text" name="cs_crew_role[]" value="Presenter" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
+                                    <td><input type="text" name="cs_crew_name[]" placeholder="Presenter Name" required></td>
+                                    <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." required oninput="this.value = formatSA(this.value)"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" name="cs_crew_role[]" value="Producer" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
+                                    <td><input type="text" name="cs_crew_name[]" placeholder="Producer Name" required></td>
+                                    <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." required oninput="this.value = formatSA(this.value)"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" name="cs_crew_role[]" value="DOP" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
+                                    <td><input type="text" name="cs_crew_name[]" placeholder="DOP Name" required></td>
+                                    <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." required oninput="this.value = formatSA(this.value)"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><input type="text" name="cs_crew_role[]" value="Camera Assistant" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
+                                    <td><input type="text" name="cs_crew_name[]" placeholder="Camera Assistant Name" required></td>
+                                    <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." required oninput="this.value = formatSA(this.value)"></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" id="addCsOtherCrewBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Other Crew</button>
 
-                        <div class="form-grid-3-col" style="margin-top: 1.5rem;">
-                            <div class="form-group">
-                                <label>Presenter Name</label>
-                                <select id="cs_presenter_name" name="cs_presenter_name" required>
-                                    <option value="">-- Select Presenter --</option>
-                                </select>
-                                <div id="csPresenterOtherWrapper" class="hidden" style="margin-top: 0.75rem;">
-                                    <input type="text" id="cs_presenter_other" name="cs_presenter_other" placeholder="Type name here...">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Presenter Phone Number</label>
-                                <input type="text" id="cs_presenter_phone" name="cs_presenter_phone" placeholder="+27 82 123 4567" pattern="^\+27\d{9}$|^0\d{9}$" required oninput="this.value = formatSA(this.value)">
-                            </div>
-                            <div class="form-group">
-                                <label>Presenter ID Number</label>
-                                <input type="text" id="cs_presenter_id" name="cs_presenter_id" placeholder="13 Digit ID Number" required maxlength="13" minlength="13" pattern="\d{13}">
-                            </div>
-                        </div>
-
-                        <div class="form-grid-3-col" style="margin-top: 1.5rem;">
-                            <div class="form-group">
-                                <label>DOP Name</label>
-                                <input type="text" id="cs_dop_name" name="cs_dop_name" required>
-                            </div>
-                            <div class="form-group">
-                                <label>DOP Phone Number</label>
-                                <input type="text" id="cs_dop_phone" name="cs_dop_phone" placeholder="+27 82 123 4567" pattern="^\+27\d{9}$|^0\d{9}$" required oninput="this.value = formatSA(this.value)">
-                            </div>
-                            <div class="form-group">
-                                <label>DOP ID Number</label>
-                                <input type="text" id="cs_dop_id" name="cs_dop_id" placeholder="13 Digit ID Number" required maxlength="13" minlength="13" pattern="\d{13}">
-                            </div>
-                        </div>
-
-                        <div class="form-grid-3-col" style="margin-top: 1.5rem;">
-                            <div class="form-group">
-                                <label>Camera Assistant Name</label>
-                                <input type="text" id="cs_cam_assistant_name" name="cs_cam_assistant_name" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Camera Assistant Phone Number</label>
-                                <input type="text" id="cs_cam_assistant_phone" name="cs_cam_assistant_phone" placeholder="+27 82 123 4567" pattern="^\+27\d{9}$|^0\d{9}$" required oninput="this.value = formatSA(this.value)">
-                            </div>
-                            <div class="form-group">
-                                <label>Camera Assistant ID Number</label>
-                                <input type="text" id="cs_cam_assistant_id" name="cs_cam_assistant_id" placeholder="13 Digit ID Number" required maxlength="13" minlength="13" pattern="\d{13}">
-                            </div>
-                        </div>
-
-                        <!-- SECURITY (OPTIONAL) -->
-                        <div class="form-grid-3-col" style="margin-top: 1.5rem; border-top: 1px dashed var(--border); padding-top: 1.5rem;">
-                            <div class="form-group">
-                                <label>Security Status</label>
-                                <select id="cs_security_status" name="cs_security_status">
-                                    <option value="not_required" selected>Not Required</option>
-                                    <option value="required">Required</option>
-                                </select>
-                            </div>
+                    <!-- Security Section (Optional) -->
+                    <div style="margin-top: 1.5rem; border-top: 1px dashed var(--border); padding-top: 1.5rem;">
+                        <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-main);">Security (If Applicable)</h4>
+                        <div class="form-grid">
                             <div class="form-group">
                                 <label>Security Name & Surname</label>
                                 <input type="text" id="cs_security_name" name="cs_security_name" placeholder="Name & Surname">
                             </div>
                             <div class="form-group">
-                                <label>Security Phone Number</label>
-                                <input type="text" id="cs_security_phone" name="cs_security_phone" placeholder="+27 82 123 4567" oninput="this.value = formatSA(this.value)">
+                                <label>Security Cell Number</label>
+                                <input type="text" id="cs_security_phone" name="cs_security_phone" placeholder="+27 ..." oninput="this.value = formatSA(this.value)">
                             </div>
                         </div>
-
-                        <div id="dynamicAdditionalCrew"></div>
-                        <button type="button" id="addCsCrewBtn" class="add-btn" style="margin-top: 1.5rem; width: fit-content;">+ Add Additional Details</button>
                     </div>
+                </div>
 
-                    <!-- MOVEMENT ORDER -->
-                    <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                        <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Movement Order</h3>
-                        
-                        <div class="form-grid" style="margin-bottom: 1.5rem;">
-                            <div class="form-group">
-                                <label for="cs_shoot_day">Shoot Day</label>
-                                <select id="cs_shoot_day" name="cs_shoot_day" required>
-                                    <option value="">-- Select Shoot Day --</option>
-                                    <option value="0.5">0.5</option>
-                                    <option value="1">1</option>
-                                    <option value="1.5">1.5</option>
-                                    <option value="2">2</option>
-                                    <option value="2.5">2.5</option>
-                                    <option value="3">3</option>
-                                    <option value="3.5">3.5</option>
-                                    <option value="4">4</option>
-                                    <option value="4.5">4.5</option>
-                                    <option value="5">5</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="cs_shoot_date">Shoot Date</label>
-                                <input type="date" id="cs_shoot_date" name="cs_shoot_date" required>
-                            </div>
-                        </div>
+                <!-- SECTION 2: STORY RISK ASSESSMENT -->
+                <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Section 2: Story Risk Assessment</h3>
+                    <div class="form-group">
+                        <label style="font-weight: 600;">Describe the potential risk factors linked to the filming of your story.</label>
+                        <textarea id="cs_risk_assessment" name="cs_risk_assessment" rows="4" placeholder="Describe potential risk factors..."></textarea>
+                    </div>
+                </div>
 
+                <!-- SECTION 3: MOVEMENT ORDER -->
+                <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Section 3: Movement Order</h3>
+                    <div id="movement_orders_container">
+                        <!-- Dynamic Movement Order Section Blocks -->
+                    </div>
+                    <button type="button" id="addMovementOrderSectionBtn" class="add-btn" style="margin-top: 1rem;">+ Add Movement Order Section</button>
+                </div>
+
+                <!-- SECTION 4: EQUIPMENT -->
+                <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Section 4: Equipment</h3>
+                    
+                    <div class="form-grid">
                         <div class="form-group">
-                            <div class="table-container">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 150px;">Time [24H Format]</th>
-                                            <th>What's Happening?</th>
-                                            <th>Location</th>
-                                            <th style="width: 50px;"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="movementOrderTableBody">
-                                        <!-- Dynamic rows go here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                            <button type="button" id="addMovementRowBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Movement Slot</button>
+                            <label>CAMERA Equipment Type</label>
+                            <select id="eq_camera_type" name="eq_camera_type">
+                                <option value="">-- Select Camera --</option>
+                                <option value="Cam A">Cam A</option>
+                                <option value="Cam B">Cam B</option>
+                                <option value="Cam C">Cam C</option>
+                                <option value="Cam D">Cam D</option>
+                                <option value="Cam E">Cam E</option>
+                                <option value="Cam F">Cam F</option>
+                            </select>
                         </div>
-
-                        <div class="form-group" style="margin-top: 2rem;">
-                            <label for="cs_story_description">Story Description (Risk Assessment)</label>
-                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-                                Please describe the kind of story you're doing. This is basically a risk assessment - skydiving, riot, mountain climbing, etc. Is it a feature, news piece, investigative, etc.
-                            </p>
-                            <textarea id="cs_story_description" name="cs_story_description" rows="4" placeholder="Describe the story and any risks..."></textarea>
+                        <div class="form-group">
+                            <label>CAMERA Description</label>
+                            <input type="text" id="eq_camera_desc" name="eq_camera_desc" placeholder="Describe camera equipment...">
                         </div>
                     </div>
 
-                    <!-- KIT / EQUIPMENT -->
-                    <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                        <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Kit / Equipment</h3>
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="kit_camera">Camera (Cam A - Cam F)</label>
-                                <input type="text" id="kit_camera" name="kit_camera" placeholder="Camera details...">
-                            </div>
-                            <div class="form-group">
-                                <label for="kit_audio">Audio (Mic 1 - Mic 6)</label>
-                                <input type="text" id="kit_audio" name="kit_audio" placeholder="Audio details...">
-                            </div>
+                    <div class="form-grid" style="margin-top: 1.25rem;">
+                        <div class="form-group">
+                            <label>AUDIO Equipment Type</label>
+                            <select id="eq_audio_type" name="eq_audio_type">
+                                <option value="">-- Select Audio --</option>
+                                <option value="Mic 1">Mic 1</option>
+                                <option value="Mic 2">Mic 2</option>
+                                <option value="Mic 3">Mic 3</option>
+                                <option value="Mic 4">Mic 4</option>
+                                <option value="Mic 5">Mic 5</option>
+                                <option value="Mic 6">Mic 6</option>
+                            </select>
                         </div>
-                        <div class="form-grid" style="margin-top: 1.5rem;">
-                            <div class="form-group">
-                                <label for="kit_lenses">Lenses</label>
-                                <input type="text" id="kit_lenses" name="kit_lenses" placeholder="Lenses details...">
-                            </div>
-                            <div class="form-group">
-                                <label for="kit_lighting">Lighting Kit</label>
-                                <input type="text" id="kit_lighting" name="kit_lighting" placeholder="Lighting details...">
-                            </div>
+                        <div class="form-group">
+                            <label>AUDIO Description</label>
+                            <input type="text" id="eq_audio_desc" name="eq_audio_desc" placeholder="Describe audio equipment...">
                         </div>
-                        <div class="form-grid" style="margin-top: 1.5rem;">
-                            <div class="form-group">
-                                <label for="kit_rigs">Rigs</label>
-                                <input type="text" id="kit_rigs" name="kit_rigs" placeholder="Rigs details...">
-                            </div>
-                            <div class="form-group">
-                                <label for="kit_other">Other</label>
-                                <input type="text" id="kit_other" name="kit_other" placeholder="Other equipment details...">
+                    </div>
+
+                    <div class="form-grid" style="margin-top: 1.25rem;">
+                        <div class="form-group">
+                            <label>LENSES Description</label>
+                            <input type="text" id="eq_lenses_desc" name="eq_lenses_desc" placeholder="Describe lenses...">
+                        </div>
+                        <div class="form-group">
+                            <label>LIGHTING KIT Description</label>
+                            <input type="text" id="eq_lighting_desc" name="eq_lighting_desc" placeholder="Describe lighting kit...">
+                        </div>
+                    </div>
+
+                    <div class="form-grid" style="margin-top: 1.25rem;">
+                        <div class="form-group">
+                            <label>RIGS Description</label>
+                            <input type="text" id="eq_rigs_desc" name="eq_rigs_desc" placeholder="Describe rigs...">
+                        </div>
+                        <div class="form-group">
+                            <label>OTHER Equipment Description</label>
+                            <input type="text" id="eq_other_desc" name="eq_other_desc" placeholder="Describe other equipment...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 5: TRAVEL AND VEHICLES -->
+                <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Section 5: Travel and Vehicles</h3>
+                    
+                    <!-- FLIGHT DETAILS -->
+                    <div style="margin-bottom: 2.5rem; border-bottom: 1px dashed var(--border); padding-bottom: 2rem;">
+                        <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Flight Details</h4>
+                        <div id="travel_flights_container">
+                            <!-- Dynamic Flight Individual Rows -->
+                        </div>
+                        <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
+                            <button type="button" id="addTravelFlightBtn" class="add-btn">+ Add Individual</button>
+                            
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <button type="button" class="btn-soft" onclick="document.getElementById('travel_flight_file').click()">Attach Flight Booking</button>
+                                <input type="file" id="travel_flight_file" accept=".pdf,image/*" style="display: none;">
+                                <input type="hidden" id="travel_flight_file_path" name="travel_flight_file_path">
+                                <input type="hidden" id="travel_flight_filename" name="travel_flight_filename">
+                                <span id="travel_flight_file_name_display" style="font-size: 0.75rem; color: var(--success); font-weight: 600;"></span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- TRAVEL & VEHICLES -->
-                    <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                        <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Travel & Vehicles</h3>
-                        
-                        <!-- Flight Details -->
-                        <div style="margin-bottom: 2rem; border-bottom: 1px dashed var(--border); padding-bottom: 1.5rem;">
-                            <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Flight Details</h4>
-                            <div class="form-grid-3-col">
-                                <div class="form-group">
-                                    <label for="travel_flight_name">Name / Surname</label>
-                                    <input type="text" id="travel_flight_name" name="travel_flight_name" placeholder="Passenger Name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="travel_flight_details">Flight Details</label>
-                                    <input type="text" id="travel_flight_details" name="travel_flight_details" placeholder="e.g. Flight No, Airline, Time">
-                                </div>
-                                <div class="form-group">
-                                    <label>Travel Booking PDF</label>
-                                    <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-                                        <input type="file" id="travel_flight_file" accept=".pdf">
-                                        <input type="hidden" id="travel_flight_file_path" name="travel_flight_file_path">
-                                        <input type="hidden" id="travel_flight_filename" name="travel_flight_filename">
-                                        <span id="travel_flight_file_name_display" style="font-size: 0.75rem; color: var(--success); font-weight: 600;"></span>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- ACCOMMODATION DETAILS -->
+                    <div style="margin-bottom: 2.5rem; border-bottom: 1px dashed var(--border); padding-bottom: 2rem;">
+                        <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Accommodation Details</h4>
+                        <div id="travel_accoms_container">
+                            <!-- Dynamic Accommodation Individual Rows -->
                         </div>
-
-                        <!-- Accommodation Details -->
-                        <div style="margin-bottom: 2rem; border-bottom: 1px dashed var(--border); padding-bottom: 1.5rem;">
-                            <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Accommodation Details</h4>
-                            <div class="form-grid-2-col">
-                                <div class="form-group">
-                                    <label for="travel_accom_name">Name / Surname</label>
-                                    <input type="text" id="travel_accom_name" name="travel_accom_name" placeholder="Guest Name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="travel_accom_location">Location / Address</label>
-                                    <input type="text" id="travel_accom_location" name="travel_accom_location" placeholder="e.g. Hotel name & address">
-                                </div>
-                            </div>
-                            <div class="form-grid" style="margin-top: 1.5rem;">
-                                <div class="form-group">
-                                    <label for="travel_accom_from">From Date</label>
-                                    <input type="date" id="travel_accom_from" name="travel_accom_from">
-                                </div>
-                                <div class="form-group">
-                                    <label for="travel_accom_to">To Date</label>
-                                    <input type="date" id="travel_accom_to" name="travel_accom_to">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Transport Details -->
-                        <div>
-                            <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Transport Details</h4>
-                            <div class="form-grid-3-col">
-                                <div class="form-group">
-                                    <label for="travel_trans_name">Name / Surname</label>
-                                    <input type="text" id="travel_trans_name" name="travel_trans_name" placeholder="Driver / Passenger Name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="travel_trans_from_loc">From Location</label>
-                                    <input type="text" id="travel_trans_from_loc" name="travel_trans_from_loc" placeholder="Departure location">
-                                </div>
-                                <div class="form-group">
-                                    <label for="travel_trans_to_loc">To Location</label>
-                                    <input type="text" id="travel_trans_to_loc" name="travel_trans_to_loc" placeholder="Destination location">
-                                </div>
-                            </div>
-                            <div class="form-grid-2-col" style="margin-top: 1.5rem;">
-                                <div class="form-group">
-                                    <label for="travel_trans_from_date">From Date</label>
-                                    <input type="date" id="travel_trans_from_date" name="travel_trans_from_date">
-                                </div>
-                                <div class="form-group">
-                                    <label for="travel_trans_to_date">To Date</label>
-                                    <input type="date" id="travel_trans_to_date" name="travel_trans_to_date">
-                                </div>
-                            </div>
-                            <div class="form-grid-3-col" style="margin-top: 1.5rem;">
-                                <div class="form-group">
-                                    <label for="travel_trans_from_time">From Time</label>
-                                    <input type="text" id="travel_trans_from_time" name="travel_trans_from_time" placeholder="e.g. 09:00">
-                                </div>
-                                <div class="form-group">
-                                    <label for="travel_trans_to_time">To Time</label>
-                                    <input type="text" id="travel_trans_to_time" name="travel_trans_to_time" placeholder="e.g. 17:00">
-                                </div>
-                                <div class="form-group">
-                                    <label>Rental Booking PDF</label>
-                                    <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-                                        <input type="file" id="travel_trans_file" accept=".pdf">
-                                        <input type="hidden" id="travel_trans_file_path" name="travel_trans_file_path">
-                                        <input type="hidden" id="travel_trans_filename" name="travel_trans_filename">
-                                        <span id="travel_trans_file_name_display" style="font-size: 0.75rem; color: var(--success); font-weight: 600;"></span>
-                                    </div>
-                                </div>
+                        <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
+                            <button type="button" id="addTravelAccomBtn" class="add-btn">+ Add Individual</button>
+                            
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <button type="button" class="btn-soft" onclick="document.getElementById('travel_accom_file').click()">Attach Accommodation Booking</button>
+                                <input type="file" id="travel_accom_file" accept=".pdf,image/*" style="display: none;">
+                                <input type="hidden" id="travel_accom_file_path" name="travel_accom_file_path">
+                                <input type="hidden" id="travel_accom_filename" name="travel_accom_filename">
+                                <span id="travel_accom_file_name_display" style="font-size: 0.75rem; color: var(--success); font-weight: 600;"></span>
                             </div>
                         </div>
                     </div>
-                </section>
+
+                    <!-- TRANSPORT DETAILS -->
+                    <div>
+                        <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Transport Details</h4>
+                        <div id="travel_transports_container">
+                            <!-- Dynamic Transport Sections -->
+                        </div>
+                        <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
+                            <button type="button" id="addTravelTransportBtn" class="add-btn">+ Add Transport Section</button>
+                            
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <button type="button" class="btn-soft" onclick="document.getElementById('travel_trans_file').click()">Attach Rental Booking</button>
+                                <input type="file" id="travel_trans_file" accept=".pdf,image/*" style="display: none;">
+                                <input type="hidden" id="travel_trans_file_path" name="travel_trans_file_path">
+                                <input type="hidden" id="travel_trans_filename" name="travel_trans_filename">
+                                <span id="travel_trans_file_name_display" style="font-size: 0.75rem; color: var(--success); font-weight: 600;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <div class="form-actions" id="standardFormActions">
                 <button type="button" id="saveDraftBtn" class="btn-soft" style="margin-right: 1rem; padding: 0.75rem 1.5rem;">Save Draft</button>
@@ -892,6 +818,6 @@
         </div>
     </div>
 
-    <script type="module" src="proposal.js?v=5.1.3"></script>
+    <script type="module" src="proposal.js?v=5.1.4"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // proposal.js
-// VERSION: 5.1.3
+// VERSION: 5.1.4
 import { getIdToken, fetchWithAuth, checkAuth, isAdmin, isSuperAdmin, isEditorialProduction } from './auth.js?v=5.1.1';
 
 function formatStoryDate(dateInput) {
@@ -370,38 +370,274 @@ document.addEventListener('DOMContentLoaded', () => {
         `);
     }
 
-    function addMovementRow(data = {}) {
-        return createGenericRow('movementOrderTableBody', `
-            <td><input type="text" name="mo_time[]" class="table-input" value="${data.time || ''}" placeholder="e.g. 09:00"></td>
-            <td><input type="text" name="mo_what[]" class="table-input" value="${data.what || ''}" placeholder="What's happening?"></td>
-            <td><input type="text" name="mo_location[]" class="table-input" value="${data.location || ''}"></td>
-        `);
+    function updateAllMovementOrderDateOptions() {
+        const dateInputs = document.querySelectorAll('#cs_shoot_dates_container input[name="cs_shoot_dates[]"]');
+        const dates = Array.from(dateInputs).map(inp => inp.value).filter(val => val !== '');
+        document.querySelectorAll('.cs-mo-shoot-date').forEach(select => {
+            const currentVal = select.value;
+            select.innerHTML = '<option value="">-- Select Date --</option>';
+            dates.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                select.appendChild(opt);
+            });
+            select.value = currentVal;
+        });
     }
 
-    function addCsCrewRow(data = {}) {
-        const container = document.getElementById('dynamicAdditionalCrew');
+    function addCsShootDate(dateVal = '') {
+        const container = document.getElementById('cs_shoot_dates_container');
         if (!container) return;
-        const rowId = 'cs_crew_' + Date.now();
+        const rowId = 'cs_date_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
         const div = document.createElement('div');
         div.id = rowId;
-        div.className = 'form-grid-3-col';
-        div.style.marginTop = '1.5rem';
-        div.style.borderTop = '1px dashed var(--border)';
-        div.style.paddingTop = '1.5rem';
+        div.className = 'cs-shoot-date-row';
+        div.style.cssText = 'display: flex; gap: 0.5rem; align-items: center; width: 100%;';
+        div.innerHTML = `
+            <input type="date" class="cs-shoot-date-item" name="cs_shoot_dates[]" value="${dateVal}" required style="flex: 1;">
+            <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove(); updateAllMovementOrderDateOptions();" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px;">✖</button>
+        `;
+        container.appendChild(div);
+        
+        const input = div.querySelector('input');
+        input.onchange = updateAllMovementOrderDateOptions;
+        input.oninput = updateAllMovementOrderDateOptions;
+        
+        updateAllMovementOrderDateOptions();
+    }
+
+    function addCsOtherCrewRow(role = '', name = '', phone = '') {
+        const tbody = document.getElementById('csCrewTableBody');
+        if (!tbody) return;
+        const rowId = 'cs_crew_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+        const tr = document.createElement('tr');
+        tr.id = rowId;
+        tr.innerHTML = `
+            <td><input type="text" name="cs_crew_role[]" value="${role}" placeholder="Role (e.g. Sound)" required class="table-input"></td>
+            <td><input type="text" name="cs_crew_name[]" value="${name}" placeholder="Name & Surname" required class="table-input"></td>
+            <td><input type="text" name="cs_crew_phone[]" value="${phone}" placeholder="+27 ..." required class="table-input" oninput="this.value = formatSA(this.value)"></td>
+            <td>
+                <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function addCsMovementOrderSection(data = {}) {
+        const container = document.getElementById('movement_orders_container');
+        if (!container) return;
+        const sectionId = 'mo_sec_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+        const div = document.createElement('div');
+        div.id = sectionId;
+        div.className = 'movement-order-section-block';
+        div.style.cssText = 'border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; border-radius: var(--radius-sm); position: relative;';
+        div.innerHTML = `
+            <button type="button" class="btn-soft" onclick="document.getElementById('${sectionId}').remove()" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important;">Remove Section</button>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Shoot Day</label>
+                    <select class="cs-mo-shoot-day" name="cs_mo_shoot_day[]" required>
+                        <option value="">-- Choose Shoot Day --</option>
+                        <option value="0.5">0.5</option>
+                        <option value="1">1</option>
+                        <option value="1.5">1.5</option>
+                        <option value="2">2</option>
+                        <option value="2.5">2.5</option>
+                        <option value="3">3</option>
+                        <option value="3.5">3.5</option>
+                        <option value="4">4</option>
+                        <option value="4.5">4.5</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Shoot Date</label>
+                    <select class="cs-mo-shoot-date" name="cs_mo_shoot_date[]" required>
+                        <option value="">-- Select Date --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-container" style="margin-top: 1rem;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 150px;">Time [24H Format]</th>
+                            <th>What's Happening?</th>
+                            <th>Location</th>
+                            <th style="width: 50px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="mo-items-tbody">
+                        <!-- Rows go here -->
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" class="add-mo-row-btn add-btn" style="margin-top: 0.5rem;">+ Add Row</button>
+        `;
+        container.appendChild(div);
+
+        const selectDay = div.querySelector('.cs-mo-shoot-day');
+        if (data.shootDay) selectDay.value = data.shootDay;
+
+        const selectDate = div.querySelector('.cs-mo-shoot-date');
+        const dateInputs = document.querySelectorAll('#cs_shoot_dates_container input[name="cs_shoot_dates[]"]');
+        const dates = Array.from(dateInputs).map(inp => inp.value).filter(val => val !== '');
+        dates.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d;
+            opt.textContent = d;
+            selectDate.appendChild(opt);
+        });
+        if (data.shootDate) selectDate.value = data.shootDate;
+
+        const tbody = div.querySelector('.mo-items-tbody');
+        const addRowBtn = div.querySelector('.add-mo-row-btn');
+        addRowBtn.onclick = () => addCsMovementOrderRow(tbody);
+
+        if (data.items && data.items.length > 0) {
+            data.items.forEach(item => addCsMovementOrderRow(tbody, item));
+        } else {
+            addCsMovementOrderRow(tbody);
+            addCsMovementOrderRow(tbody);
+        }
+    }
+
+    function addCsMovementOrderRow(tbody, data = {}) {
+        const rowId = 'mo_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+        const tr = document.createElement('tr');
+        tr.id = rowId;
+        tr.innerHTML = `
+            <td><input type="time" class="mo-time-input table-input" value="${data.time || ''}" required></td>
+            <td><input type="text" class="mo-what-input table-input" value="${data.what || ''}" placeholder="What's happening?" required></td>
+            <td><input type="text" class="mo-location-input table-input" value="${data.location || ''}" placeholder="Location" required></td>
+            <td>
+                <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function addTravelFlightRow(data = {}) {
+        const container = document.getElementById('travel_flights_container');
+        if (!container) return;
+        const rowId = 'flight_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+        const div = document.createElement('div');
+        div.id = rowId;
+        div.className = 'flight-row-block form-grid-3-col';
+        div.style.cssText = 'margin-top: 1rem; border-top: 1px dotted var(--border); padding-top: 1rem;';
         div.innerHTML = `
             <div class="form-group">
-                <label>Additional Name</label>
-                <input type="text" name="cs_add_name[]" value="${data.name || ''}">
+                <label>Name</label>
+                <input type="text" class="flight-name-input" value="${data.name || ''}" placeholder="Name">
             </div>
             <div class="form-group">
-                <label>Additional Phone Number</label>
-                <input type="text" name="cs_add_phone[]" value="${data.phone || ''}" placeholder="+27 82 123 4567" oninput="this.value = formatSA(this.value)">
+                <label>Surname</label>
+                <input type="text" class="flight-surname-input" value="${data.surname || ''}" placeholder="Surname">
             </div>
             <div class="form-group">
-                <label>Additional ID Number</label>
-                <div style="display: flex; gap: 0.5rem;">
-                    <input type="text" name="cs_add_id[]" value="${data.id || ''}" placeholder="13 Digits" maxlength="13" minlength="13" pattern="\\d{13}" style="flex: 1;">
-                    <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger);">âœ•</button>
+                <label>Flight Details</label>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <input type="text" class="flight-details-input" value="${data.details || ''}" placeholder="Flight No, Airline, Time" style="flex: 1;">
+                    <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+
+    function addTravelAccomRow(data = {}) {
+        const container = document.getElementById('travel_accoms_container');
+        if (!container) return;
+        const rowId = 'accom_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+        const div = document.createElement('div');
+        div.id = rowId;
+        div.className = 'accom-row-block';
+        div.style.cssText = 'margin-top: 1rem; border-top: 1px dotted var(--border); padding-top: 1rem;';
+        div.innerHTML = `
+            <div class="form-grid-3-col">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="accom-name-input" value="${data.name || ''}" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label>Surname</label>
+                    <input type="text" class="accom-surname-input" value="${data.surname || ''}" placeholder="Surname">
+                </div>
+                <div class="form-group">
+                    <label>Location / Address</label>
+                    <input type="text" class="accom-location-input" value="${data.location || ''}" placeholder="Hotel/B&B address">
+                </div>
+            </div>
+            <div class="form-grid" style="margin-top: 0.75rem;">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="date" class="accom-from-date-input" value="${data.from_date || ''}">
+                </div>
+                <div class="form-group">
+                    <label>To Date</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="date" class="accom-to-date-input" value="${data.to_date || ''}" style="flex: 1;">
+                        <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    }
+
+    function addTravelTransportBlock(data = {}) {
+        const container = document.getElementById('travel_transports_container');
+        if (!container) return;
+        const rowId = 'trans_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+        const div = document.createElement('div');
+        div.id = rowId;
+        div.className = 'transport-row-block';
+        div.style.cssText = 'margin-top: 1.5rem; border-top: 1px dashed var(--border); padding-top: 1.5rem;';
+        div.innerHTML = `
+            <div class="form-grid-3-col">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="trans-name-input" value="${data.name || ''}" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label>Surname</label>
+                    <input type="text" class="trans-surname-input" value="${data.surname || ''}" placeholder="Surname">
+                </div>
+                <div class="form-group">
+                    <label>Responsible Driver</label>
+                    <input type="text" class="trans-driver-input" value="${data.driver || ''}" placeholder="Driver Name">
+                </div>
+            </div>
+            <div class="form-grid-4-col" style="margin-top: 0.75rem;">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="date" class="trans-from-date-input" value="${data.from_date || ''}">
+                </div>
+                <div class="form-group">
+                    <label>To Date</label>
+                    <input type="date" class="trans-to-date-input" value="${data.to_date || ''}">
+                </div>
+                <div class="form-group">
+                    <label>From Time</label>
+                    <input type="time" class="trans-from-time-input" value="${data.from_time || ''}">
+                </div>
+                <div class="form-group">
+                    <label>To Time</label>
+                    <input type="time" class="trans-to-time-input" value="${data.to_time || ''}">
+                </div>
+            </div>
+            <div class="form-grid" style="margin-top: 0.75rem;">
+                <div class="form-group">
+                    <label>From Location</label>
+                    <input type="text" class="trans-from-loc-input" value="${data.from_loc || ''}" placeholder="Departure">
+                </div>
+                <div class="form-group">
+                    <label>To Location</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="text" class="trans-to-loc-input" value="${data.to_loc || ''}" placeholder="Destination" style="flex: 1;">
+                        <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
+                    </div>
                 </div>
             </div>
         `;
@@ -628,27 +864,42 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addCameraBtn').onclick = () => addCameraRow();
     document.getElementById('addCrewBtn').onclick = () => addCrewRow();
     
-    const addMovementRowBtn = document.getElementById('addMovementRowBtn');
-    if (addMovementRowBtn) addMovementRowBtn.onclick = () => addMovementRow();
-    
-    const addCsCrewBtn = document.getElementById('addCsCrewBtn');
-    if (addCsCrewBtn) addCsCrewBtn.onclick = () => addCsCrewRow();
+    const addCsDateBtn = document.getElementById('addCsDateBtn');
+    if (addCsDateBtn) addCsDateBtn.onclick = () => addCsShootDate();
+
+    const addCsOtherCrewBtn = document.getElementById('addCsOtherCrewBtn');
+    if (addCsOtherCrewBtn) addCsOtherCrewBtn.onclick = () => addCsOtherCrewRow();
+
+    const addMovementOrderSectionBtn = document.getElementById('addMovementOrderSectionBtn');
+    if (addMovementOrderSectionBtn) addMovementOrderSectionBtn.onclick = () => addCsMovementOrderSection();
+
+    const addTravelFlightBtn = document.getElementById('addTravelFlightBtn');
+    if (addTravelFlightBtn) addTravelFlightBtn.onclick = () => addTravelFlightRow();
+
+    const addTravelAccomBtn = document.getElementById('addTravelAccomBtn');
+    if (addTravelAccomBtn) addTravelAccomBtn.onclick = () => addTravelAccomRow();
+
+    const addTravelTransportBtn = document.getElementById('addTravelTransportBtn');
+    if (addTravelTransportBtn) addTravelTransportBtn.onclick = () => addTravelTransportBlock();
 
     // Phone Formatting Listeners
-    ['cs_producer_phone', 'cs_presenter_phone', 'cs_dop_phone', 'cs_cam_assistant_phone', 'cs_security_phone'].forEach(id => {
+    ['cs_security_phone'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.oninput = (e) => { e.target.value = formatSA(e.target.value); };
     });
 
     // File Upload Listeners
     const travelFlightFile = document.getElementById('travel_flight_file');
+    const travelAccomFile = document.getElementById('travel_accom_file');
     const travelTransFile = document.getElementById('travel_trans_file');
 
     const handleCallSheetFileUpload = async (inputEl, pathHiddenEl, nameHiddenEl, displayEl) => {
         const file = inputEl.files[0];
         if (!file) return;
-        if (file.type !== 'application/pdf') {
-            alert('Only PDF files are allowed.');
+        
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Only PDF or standard image files are allowed.');
             inputEl.value = '';
             return;
         }
@@ -656,7 +907,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (loadingOverlay) loadingOverlay.classList.add('active');
             document.getElementById('loadingHeading').textContent = 'Uploading File...';
-            document.getElementById('loadingSubtext').textContent = 'Please wait while your PDF is uploaded and encrypted.';
+            document.getElementById('loadingSubtext').textContent = 'Please wait while your booking attachment is uploaded and encrypted.';
 
             const formData = new FormData();
             formData.append('file', file);
@@ -692,6 +943,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('travel_flight_file_path'),
                 document.getElementById('travel_flight_filename'),
                 document.getElementById('travel_flight_file_name_display')
+            );
+        });
+    }
+
+    if (travelAccomFile) {
+        travelAccomFile.addEventListener('change', () => {
+            handleCallSheetFileUpload(
+                travelAccomFile,
+                document.getElementById('travel_accom_file_path'),
+                document.getElementById('travel_accom_filename'),
+                document.getElementById('travel_accom_file_name_display')
             );
         });
     }
@@ -957,120 +1219,132 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     // --- CALL SHEET POPULATION ---
-                    document.getElementById('cs_comm_num').value = sub.commissionNumber || '';
-                    document.getElementById('cs_story_name').value = sub.story_title || '';
-                    
-                    // Sync Presenter Options
-                    const csPresenter = document.getElementById('cs_presenter_name');
-                    if (csPresenter && presenterSelect) {
-                        csPresenter.innerHTML = presenterSelect.innerHTML;
-                    }
-
-                    // Producer Name: Use current user if possible, fallback to submitter
-                    let producerName = "";
-                    if (loggedInUser) {
-                        producerName = (loggedInUser.firstName && loggedInUser.lastName) ? `${loggedInUser.firstName} ${loggedInUser.lastName}` : loggedInUser.displayName;
-                    }
-                    if (!producerName) {
-                        producerName = (sub.submittedByName && sub.submittedBySurname) ? `${sub.submittedByName} ${sub.submittedBySurname}` : sub.submittedByEmail;
-                    }
-                    document.getElementById('cs_producer_name').value = producerName || '';
-
                     const cs = (sub.details && sub.details.callSheet) || {};
                     const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ''; };
-                    const presenterVal = cs.presenter_name || '';
-                    const dopNameVal = cs.dop_name || '';
-                    const camAssistantNameVal = cs.cam_assistant_name || '';
 
-                    setVal('cs_producer_phone', cs.producer_phone);
-                    setVal('cs_producer_id', cs.producer_id);
-                    
-                    const savedPresenter = presenterVal;
-                    const standardPresenters = ['Catherine Rice', 'Claire Mawisa', 'Erin Bates', 'Govan Whittles', 'Lourensa Eckard', 'Macfarlane Moleli', 'Masa Kekana', 'Nickolaus Bauer'];
-                    if (savedPresenter) {
-                        if (standardPresenters.includes(savedPresenter)) {
-                            if (document.getElementById('cs_presenter_name')) document.getElementById('cs_presenter_name').value = savedPresenter;
-                            if (document.getElementById('csPresenterOtherWrapper')) document.getElementById('csPresenterOtherWrapper').classList.add('hidden');
+                    // Pop Shoot Dates
+                    const datesContainer = document.getElementById('cs_shoot_dates_container');
+                    if (datesContainer) {
+                        datesContainer.innerHTML = '';
+                        const shootDates = cs.shoot_dates || [];
+                        if (shootDates.length > 0) {
+                            shootDates.forEach(d => addCsShootDate(d));
                         } else {
-                            if (document.getElementById('cs_presenter_name')) document.getElementById('cs_presenter_name').value = 'Other';
-                            if (document.getElementById('cs_presenter_other')) document.getElementById('cs_presenter_other').value = savedPresenter;
-                            if (document.getElementById('csPresenterOtherWrapper')) document.getElementById('csPresenterOtherWrapper').classList.remove('hidden');
+                            addCsShootDate(); // default 1 date row
                         }
                     }
-                    
-                    setVal('cs_presenter_phone', cs.presenter_phone);
-                    setVal('cs_presenter_id', cs.presenter_id);
-                    setVal('cs_dop_name', dopNameVal);
-                    setVal('cs_dop_phone', cs.dop_phone);
-                    setVal('cs_dop_id', cs.dop_id);
-                    setVal('cs_cam_assistant_name', camAssistantNameVal);
-                    setVal('cs_cam_assistant_phone', cs.cam_assistant_phone);
-                    setVal('cs_cam_assistant_id', cs.cam_assistant_id);
-                    setVal('cs_security_status', cs.security_status || 'not_required');
-                    setVal('cs_security_name', cs.security_name);
-                    setVal('cs_security_phone', cs.security_phone);
-                    setVal('cs_shoot_day', cs.shoot_day);
-                    setVal('cs_shoot_date', cs.shoot_date);
-                    
-                    // Kit
-                    if (cs.kit) {
-                        setVal('kit_camera', cs.kit.camera);
-                        setVal('kit_audio', cs.kit.audio);
-                        setVal('kit_lenses', cs.kit.lenses);
-                        setVal('kit_lighting', cs.kit.lighting);
-                        setVal('kit_rigs', cs.kit.rigs);
-                        setVal('kit_other', cs.kit.other);
+
+                    // Reset and Pop Crew List (presenter, producer, dop, camera assistant, others)
+                    const crewList = cs.crew || [];
+                    const staticRoles = ['presenter', 'producer', 'dop', 'camera assistant'];
+                    const staticRows = document.querySelectorAll('#csCrewTableBody tr');
+                    staticRows.forEach(row => {
+                        const roleVal = row.querySelector('input[name="cs_crew_role[]"]')?.value || '';
+                        const nameInp = row.querySelector('input[name="cs_crew_name[]"]');
+                        const phoneInp = row.querySelector('input[name="cs_crew_phone[]"]');
+                        if (nameInp) nameInp.value = '';
+                        if (phoneInp) phoneInp.value = '';
+
+                        const match = crewList.find(m => (m.role || '').toLowerCase() === roleVal.toLowerCase());
+                        if (match) {
+                            if (nameInp) nameInp.value = match.name || '';
+                            if (phoneInp) phoneInp.value = match.phone || '';
+                        }
+                    });
+
+                    // Remove dynamic rows before adding new ones
+                    const oldCrewRows = Array.from(document.querySelectorAll('#csCrewTableBody tr')).slice(4);
+                    oldCrewRows.forEach(row => row.remove());
+
+                    crewList.forEach(m => {
+                        if (!staticRoles.includes((m.role || '').toLowerCase())) {
+                            addCsOtherCrewRow(m.role, m.name, m.phone);
+                        }
+                    });
+
+                    // Security
+                    const sec = cs.security || {};
+                    setVal('cs_security_name', sec.name);
+                    setVal('cs_security_phone', sec.phone);
+
+                    // Risk Assessment
+                    setVal('cs_risk_assessment', cs.risk_assessment);
+
+                    // Movement Orders
+                    const moContainer = document.getElementById('movement_orders_container');
+                    if (moContainer) {
+                        moContainer.innerHTML = '';
+                        const sections = cs.movement_orders || [];
+                        if (sections.length > 0) {
+                            sections.forEach(s => addCsMovementOrderSection(s));
+                        } else {
+                            addCsMovementOrderSection(); // default 1 section
+                        }
                     }
+
+                    // Equipment
+                    const eq = cs.equipment || {};
+                    setVal('eq_camera_type', eq.camera_type);
+                    setVal('eq_camera_desc', eq.camera_desc);
+                    setVal('eq_audio_type', eq.audio_type);
+                    setVal('eq_audio_desc', eq.audio_desc);
+                    setVal('eq_lenses_desc', eq.lenses_desc);
+                    setVal('eq_lighting_desc', eq.lighting_desc);
+                    setVal('eq_rigs_desc', eq.rigs_desc);
+                    setVal('eq_other_desc', eq.other_desc);
 
                     // Travel
-                    if (cs.travel) {
-                        setVal('travel_flight_name', cs.travel.flight_name);
-                        setVal('travel_flight_details', cs.travel.flight_details);
-                        setVal('travel_flight_file_path', cs.travel.flight_file_path);
-                        setVal('travel_flight_filename', cs.travel.flight_filename);
-                        if (document.getElementById('travel_flight_file_name_display')) {
-                            document.getElementById('travel_flight_file_name_display').textContent = cs.travel.flight_filename ? `✓ ${cs.travel.flight_filename}` : '';
-                        }
+                    const travel = cs.travel || {};
 
-                        setVal('travel_accom_name', cs.travel.accom_name);
-                        setVal('travel_accom_location', cs.travel.accom_location);
-                        setVal('travel_accom_from', cs.travel.accom_from);
-                        setVal('travel_accom_to', cs.travel.accom_to);
-
-                        setVal('travel_trans_name', cs.travel.trans_name);
-                        setVal('travel_trans_from_loc', cs.travel.trans_from_loc);
-                        setVal('travel_trans_to_loc', cs.travel.trans_to_loc);
-                        setVal('travel_trans_from_date', cs.travel.trans_from_date);
-                        setVal('travel_trans_to_date', cs.travel.trans_to_date);
-                        setVal('travel_trans_from_time', cs.travel.trans_from_time);
-                        setVal('travel_trans_to_time', cs.travel.trans_to_time);
-                        setVal('travel_trans_file_path', cs.travel.trans_file_path);
-                        setVal('travel_trans_filename', cs.travel.trans_filename);
-                        if (document.getElementById('travel_trans_file_name_display')) {
-                            document.getElementById('travel_trans_file_name_display').textContent = cs.travel.trans_filename ? `✓ ${cs.travel.trans_filename}` : '';
-                        }
-                    }
-
-                    // Additional Crew
-                    const csCrewContainer = document.getElementById('dynamicAdditionalCrew');
-                    if (csCrewContainer) {
-                        csCrewContainer.innerHTML = '';
-                        if (cs.additionalCrew && cs.additionalCrew.length > 0) {
-                            cs.additionalCrew.forEach(c => addCsCrewRow(c));
-                        }
-                    }
-
-                    setVal('cs_story_description', cs.story_description);
-
-                    // Populate Movement Order Table
-                    const ssBody = document.getElementById('movementOrderTableBody');
-                    if (ssBody) {
-                        ssBody.innerHTML = '';
-                        if (cs.movementOrder && cs.movementOrder.length > 0) {
-                            cs.movementOrder.forEach(row => addMovementRow(row));
+                    // Flights
+                    const flightsContainer = document.getElementById('travel_flights_container');
+                    if (flightsContainer) {
+                        flightsContainer.innerHTML = '';
+                        const flights = travel.flights || [];
+                        if (flights.length > 0) {
+                            flights.forEach(f => addTravelFlightRow(f));
                         } else {
-                            for (let i = 0; i < 5; i++) addMovementRow();
+                            addTravelFlightRow();
                         }
+                    }
+                    setVal('travel_flight_file_path', travel.flight_file_path);
+                    setVal('travel_flight_filename', travel.flight_filename);
+                    if (document.getElementById('travel_flight_file_name_display')) {
+                        document.getElementById('travel_flight_file_name_display').textContent = travel.flight_filename ? `✓ ${travel.flight_filename}` : '';
+                    }
+
+                    // Accommodation
+                    const accomsContainer = document.getElementById('travel_accoms_container');
+                    if (accomsContainer) {
+                        accomsContainer.innerHTML = '';
+                        const accoms = travel.accoms || [];
+                        if (accoms.length > 0) {
+                            accoms.forEach(a => addTravelAccomRow(a));
+                        } else {
+                            addTravelAccomRow();
+                        }
+                    }
+                    setVal('travel_accom_file_path', travel.accom_file_path);
+                    setVal('travel_accom_filename', travel.accom_filename);
+                    if (document.getElementById('travel_accom_file_name_display')) {
+                        document.getElementById('travel_accom_file_name_display').textContent = travel.accom_filename ? `✓ ${travel.accom_filename}` : '';
+                    }
+
+                    // Transports
+                    const transportsContainer = document.getElementById('travel_transports_container');
+                    if (transportsContainer) {
+                        transportsContainer.innerHTML = '';
+                        const transports = travel.transports || [];
+                        if (transports.length > 0) {
+                            transports.forEach(t => addTravelTransportBlock(t));
+                        } else {
+                            addTravelTransportBlock();
+                        }
+                    }
+                    setVal('travel_trans_file_path', travel.trans_file_path);
+                    setVal('travel_trans_filename', travel.trans_filename);
+                    if (document.getElementById('travel_trans_file_name_display')) {
+                        document.getElementById('travel_trans_file_name_display').textContent = travel.trans_filename ? `✓ ${travel.trans_filename}` : '';
                     }
 
                     // Always ensure at least one row exists if empty after loading
@@ -1102,6 +1376,82 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // if (isEditMode) loadProposalData(); // Moved to checkAuth.then
+
+    function gatherCallSheetData() {
+        return {
+            shoot_dates: Array.from(document.querySelectorAll('#cs_shoot_dates_container input[name="cs_shoot_dates[]"]')).map(inp => inp.value).filter(val => val !== ''),
+            crew: Array.from(document.querySelectorAll('#csCrewTableBody tr')).map(row => {
+                const roleInp = row.querySelector('input[name="cs_crew_role[]"]');
+                const nameInp = row.querySelector('input[name="cs_crew_name[]"]');
+                const phoneInp = row.querySelector('input[name="cs_crew_phone[]"]');
+                return {
+                    role: roleInp ? roleInp.value.trim() : '',
+                    name: nameInp ? nameInp.value.trim() : '',
+                    phone: phoneInp ? phoneInp.value.trim() : ''
+                };
+            }).filter(c => c.role || c.name || c.phone),
+            security: {
+                name: document.getElementById('cs_security_name')?.value || '',
+                phone: document.getElementById('cs_security_phone')?.value || ''
+            },
+            risk_assessment: document.getElementById('cs_risk_assessment')?.value || '',
+            movement_orders: Array.from(document.querySelectorAll('.movement-order-section-block')).map(block => {
+                const shootDay = block.querySelector('.cs-mo-shoot-day')?.value || '';
+                const shootDate = block.querySelector('.cs-mo-shoot-date')?.value || '';
+                const items = Array.from(block.querySelectorAll('.mo-items-tbody tr')).map(row => {
+                    return {
+                        time: row.querySelector('.mo-time-input')?.value || '',
+                        what: row.querySelector('.mo-what-input')?.value || '',
+                        location: row.querySelector('.mo-location-input')?.value || ''
+                    };
+                }).filter(item => item.time || item.what || item.location);
+                return { shootDay, shootDate, items };
+            }),
+            equipment: {
+                camera_type: document.getElementById('eq_camera_type')?.value || '',
+                camera_desc: document.getElementById('eq_camera_desc')?.value || '',
+                audio_type: document.getElementById('eq_audio_type')?.value || '',
+                audio_desc: document.getElementById('eq_audio_desc')?.value || '',
+                lenses_desc: document.getElementById('eq_lenses_desc')?.value || '',
+                lighting_desc: document.getElementById('eq_lighting_desc')?.value || '',
+                rigs_desc: document.getElementById('eq_rigs_desc')?.value || '',
+                other_desc: document.getElementById('eq_other_desc')?.value || ''
+            },
+            travel: {
+                flights: Array.from(document.querySelectorAll('.flight-row-block')).map(row => ({
+                    name: row.querySelector('.flight-name-input')?.value || '',
+                    surname: row.querySelector('.flight-surname-input')?.value || '',
+                    details: row.querySelector('.flight-details-input')?.value || ''
+                })).filter(f => f.name || f.surname || f.details),
+                flight_file_path: document.getElementById('travel_flight_file_path')?.value || '',
+                flight_filename: document.getElementById('travel_flight_filename')?.value || '',
+
+                accoms: Array.from(document.querySelectorAll('.accom-row-block')).map(row => ({
+                    name: row.querySelector('.accom-name-input')?.value || '',
+                    surname: row.querySelector('.accom-surname-input')?.value || '',
+                    location: row.querySelector('.accom-location-input')?.value || '',
+                    from_date: row.querySelector('.accom-from-date-input')?.value || '',
+                    to_date: row.querySelector('.accom-to-date-input')?.value || ''
+                })).filter(a => a.name || a.surname || a.location),
+                accom_file_path: document.getElementById('travel_accom_file_path')?.value || '',
+                accom_filename: document.getElementById('travel_accom_filename')?.value || '',
+
+                transports: Array.from(document.querySelectorAll('.transport-row-block')).map(block => ({
+                    name: block.querySelector('.trans-name-input')?.value || '',
+                    surname: block.querySelector('.trans-surname-input')?.value || '',
+                    driver: block.querySelector('.trans-driver-input')?.value || '',
+                    from_date: block.querySelector('.trans-from-date-input')?.value || '',
+                    to_date: block.querySelector('.trans-to-date-input')?.value || '',
+                    from_time: block.querySelector('.trans-from-time-input')?.value || '',
+                    to_time: block.querySelector('.trans-to-time-input')?.value || '',
+                    from_loc: block.querySelector('.trans-from-loc-input')?.value || '',
+                    to_loc: block.querySelector('.trans-to-loc-input')?.value || ''
+                })).filter(t => t.name || t.surname || t.driver || t.from_loc || t.to_loc),
+                trans_file_path: document.getElementById('travel_trans_file_path')?.value || '',
+                trans_filename: document.getElementById('travel_trans_filename')?.value || ''
+            }
+        };
+    }
 
     // --- GATHER DATA ---
     function getProposalData() {
@@ -1158,6 +1508,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (name) data.experts.push({ name, surname: ex_surnames[i], role: ex_roles[i] });
         });
 
+        data.details = {
+            ...(window.currentProposal?.details || {}),
+            callSheet: gatherCallSheetData()
+        };
         return data;
     }
 
@@ -1341,62 +1695,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             surname: formData.getAll('crew_surname[]')[i]?.trim() || '',
                             role: formData.getAll('crew_role[]')[i]?.trim() || ''
                         })).filter(c => c.name !== '' || c.surname !== ''),
-                        callSheet: {
-                            producer_phone: formData.get('cs_producer_phone'),
-                            producer_id: formData.get('cs_producer_id'),
-                            presenter_name: formData.get('cs_presenter_name') === 'Other' ? formData.get('cs_presenter_other') : formData.get('cs_presenter_name'),
-                            presenter_phone: formData.get('cs_presenter_phone'),
-                            presenter_id: formData.get('cs_presenter_id'),
-                            dop_name: formData.get('cs_dop_name'),
-                            dop_phone: formData.get('cs_dop_phone'),
-                            dop_id: formData.get('cs_dop_id'),
-                            cam_assistant_name: formData.get('cs_cam_assistant_name'),
-                            cam_assistant_phone: formData.get('cs_cam_assistant_phone'),
-                            cam_assistant_id: formData.get('cs_cam_assistant_id'),
-                            security_status: formData.get('cs_security_status'),
-                            security_name: formData.get('cs_security_name'),
-                            security_phone: formData.get('cs_security_phone'),
-                            shoot_day: formData.get('cs_shoot_day'),
-                            shoot_date: formData.get('cs_shoot_date'),
-                            movementOrder: Array.from(document.querySelectorAll('#movementOrderTableBody tr')).map(row => ({
-                                time: row.querySelector('input[name="mo_time[]"]')?.value || '',
-                                what: row.querySelector('input[name="mo_what[]"]')?.value || '',
-                                location: row.querySelector('input[name="mo_location[]"]')?.value || ''
-                            })).filter(row => row.time || row.what || row.location),
-                            kit: {
-                                camera: formData.get('kit_camera'),
-                                audio: formData.get('kit_audio'),
-                                lenses: formData.get('kit_lenses'),
-                                lighting: formData.get('kit_lighting'),
-                                rigs: formData.get('kit_rigs'),
-                                other: formData.get('kit_other')
-                            },
-                            travel: {
-                                flight_name: formData.get('travel_flight_name'),
-                                flight_details: formData.get('travel_flight_details'),
-                                flight_file_path: formData.get('travel_flight_file_path'),
-                                flight_filename: formData.get('travel_flight_filename'),
-                                accom_name: formData.get('travel_accom_name'),
-                                accom_location: formData.get('travel_accom_location'),
-                                accom_from: formData.get('travel_accom_from'),
-                                accom_to: formData.get('travel_accom_to'),
-                                trans_name: formData.get('travel_trans_name'),
-                                trans_from_loc: formData.get('travel_trans_from_loc'),
-                                trans_to_loc: formData.get('travel_trans_to_loc'),
-                                trans_from_date: formData.get('travel_trans_from_date'),
-                                trans_to_date: formData.get('travel_trans_to_date'),
-                                trans_from_time: formData.get('travel_trans_from_time'),
-                                trans_to_time: formData.get('travel_trans_to_time'),
-                                trans_file_path: formData.get('travel_trans_file_path'),
-                                trans_filename: formData.get('travel_trans_filename')
-                            },
-                            additionalCrew: formData.getAll('cs_add_name[]').map((name, i) => ({
-                                name: name.trim(),
-                                phone: formData.getAll('cs_add_phone[]')[i]?.trim() || '',
-                                id: formData.getAll('cs_add_id[]')[i]?.trim() || ''
-                            })).filter(c => c.name !== ''),
-                            story_description: formData.get('cs_story_description')
-                        }
+                        callSheet: gatherCallSheetData()
                     }
                 };
                 const response = await fetchWithAuth('/api/update-proposal-details', {
@@ -2616,28 +2915,98 @@ function renderCallSheetReport(sub) {
     if (!summaryDiv) return;
     
     const cs = (sub.details && sub.details.callSheet) || {};
-    
-    // Prepare Crew HTML
-    const crewFields = [
-        { label: 'Presenter', name: cs.presenter_name || '—', phone: cs.presenter_phone || '—', id: cs.presenter_id || '—' },
-        { label: 'Producer / Director', name: (sub.submittedByName && sub.submittedBySurname) ? `${sub.submittedByName} ${sub.submittedBySurname}` : sub.submittedByEmail, phone: cs.producer_phone || '—', id: cs.producer_id || '—' },
-        { label: 'DOP', name: cs.dop_name || '—', phone: cs.dop_phone || '—', id: cs.dop_id || '—' },
-        { label: 'Camera Assistant', name: cs.cam_assistant_name || '—', phone: cs.cam_assistant_phone || '—', id: cs.cam_assistant_id || '—' },
-        { label: 'Security', name: cs.security_name || '—', phone: cs.security_phone || '—', id: 'Status: ' + (cs.security_status === 'required' ? 'Required' : 'Not Required') }
-    ];
+    const t = cs.travel || {};
     
     let flightFileHtml = '—';
-    if (cs.travel && cs.travel.flight_file_path) {
-        flightFileHtml = `<button type="button" class="btn-soft" onclick="window.downloadCallSheetFile('${sub.id}', '${cs.travel.flight_file_path}', '${cs.travel.flight_filename || 'Flight_Booking.pdf'}')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Download PDF Attachment</button>`;
+    if (t.flight_file_path) {
+        flightFileHtml = `<button type="button" class="btn-soft" onclick="window.downloadCallSheetFile('${sub.id}', '${t.flight_file_path}', '${t.flight_filename || 'Flight_Booking.pdf'}')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Download PDF/Image</button>`;
     }
     
-    let transFileHtml = '—';
-    if (cs.travel && cs.travel.trans_file_path) {
-        transFileHtml = `<button type="button" class="btn-soft" onclick="window.downloadCallSheetFile('${sub.id}', '${cs.travel.trans_file_path}', '${cs.travel.trans_filename || 'Transport_Booking.pdf'}')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Download PDF Attachment</button>`;
+    let accomFileHtml = '—';
+    if (t.accom_file_path) {
+        accomFileHtml = `<button type="button" class="btn-soft" onclick="window.downloadCallSheetFile('${sub.id}', '${t.accom_file_path}', '${t.accom_filename || 'Accommodation_Booking.pdf'}')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Download PDF/Image</button>`;
     }
 
-    const t = cs.travel || {};
-    const k = cs.kit || {};
+    let transFileHtml = '—';
+    if (t.trans_file_path) {
+        transFileHtml = `<button type="button" class="btn-soft" onclick="window.downloadCallSheetFile('${sub.id}', '${t.trans_file_path}', '${t.trans_filename || 'Transport_Booking.pdf'}')" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Download PDF/Image</button>`;
+    }
+
+    const crewHtml = (cs.crew || []).map(m => `
+        <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 600;">${m.role}</td>
+            <td style="padding: 0.75rem 0.5rem;">${m.name}</td>
+            <td style="padding: 0.75rem 0.5rem;">${m.phone}</td>
+        </tr>
+    `).join('');
+
+    const securityHtml = cs.security && (cs.security.name || cs.security.phone) ? `
+        <tr style="border-bottom: 1px solid var(--border); background: var(--bg-light);">
+            <td style="padding: 0.75rem 0.5rem; font-weight: 600;">Security (Optional)</td>
+            <td style="padding: 0.75rem 0.5rem;">${cs.security.name || '—'}</td>
+            <td style="padding: 0.75rem 0.5rem;">${cs.security.phone || '—'}</td>
+        </tr>
+    ` : '';
+
+    const moSectionsHtml = (cs.movement_orders || []).map((sec, idx) => `
+        <div style="margin-bottom: 2rem; border: 1px solid var(--border); padding: 1.25rem; border-radius: 8px; background: var(--bg-card);">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                <h4 style="color: var(--success); margin: 0; font-size: 0.95rem; font-weight: 700;">Movement Order #${idx + 1}</h4>
+                <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Shoot Day: ${sec.shootDay || '—'} | Date: ${sec.shootDate || '—'}</span>
+            </div>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">
+                        <th style="text-align: left; padding: 0.5rem; width: 150px;">Time</th>
+                        <th style="text-align: left; padding: 0.5rem;">What's Happening?</th>
+                        <th style="text-align: left; padding: 0.5rem;">Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${sec.items && sec.items.length > 0 ? sec.items.map(r => `
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 0.75rem 0.5rem; font-weight: 600;">${r.time}</td>
+                            <td style="padding: 0.75rem 0.5rem;">${r.what}</td>
+                            <td style="padding: 0.75rem 0.5rem;">${r.location}</td>
+                        </tr>
+                    `).join('') : `<tr><td colspan="3" style="padding: 1rem; text-align: center; color: var(--text-muted);">No movement items recorded.</td></tr>`}
+                </tbody>
+            </table>
+        </div>
+    `).join('');
+
+    const flightsHtml = (t.flights || []).map(f => `
+        <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem;">${f.name}</td>
+            <td style="padding: 0.75rem 0.5rem;">${f.surname}</td>
+            <td style="padding: 0.75rem 0.5rem;">${f.details}</td>
+        </tr>
+    `).join('');
+
+    const accomsHtml = (t.accoms || []).map(a => `
+        <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding: 0.75rem 0.5rem;">${a.name}</td>
+            <td style="padding: 0.75rem 0.5rem;">${a.surname}</td>
+            <td style="padding: 0.75rem 0.5rem;">${a.location}</td>
+            <td style="padding: 0.75rem 0.5rem;">${a.from_date || '—'} to ${a.to_date || '—'}</td>
+        </tr>
+    `).join('');
+
+    const transportsHtml = (t.transports || []).map(trBlock => `
+        <div style="margin-bottom: 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-light);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem;">
+                <div><span style="color: var(--text-muted); display: block;">Passenger</span><b>${trBlock.name} ${trBlock.surname}</b></div>
+                <div><span style="color: var(--text-muted); display: block;">Driver</span><b>${trBlock.driver || '—'}</b></div>
+                <div><span style="color: var(--text-muted); display: block;">Route</span><b>From ${trBlock.from_loc || '—'} to ${trBlock.to_loc || '—'}</b></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.85rem;">
+                <div><span style="color: var(--text-muted); display: block;">Dates</span><b>${trBlock.from_date || '—'} to ${trBlock.to_date || '—'}</b></div>
+                <div><span style="color: var(--text-muted); display: block;">Times</span><b>${trBlock.from_time || '—'} to ${trBlock.to_time || '—'}</b></div>
+            </div>
+        </div>
+    `).join('');
+
+    const eq = cs.equipment || {};
 
     summaryDiv.innerHTML = `
         <div style="max-width: 900px; margin: 0 auto; padding: 3rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-lg); color: var(--text-main); font-family: 'Inter', sans-serif;">
@@ -2646,6 +3015,9 @@ function renderCallSheetReport(sub) {
                     <h1 style="font-size: 2.25rem; margin: 0; color: var(--text-main); line-height: 1.2;">CALL SHEET</h1>
                     <p style="margin: 0.75rem 0 0 0; color: var(--text-muted); font-size: 0.9rem;">
                         Story: <b style="color: var(--text-main);">${sub.story_title}</b>
+                    </p>
+                    <p style="margin: 0.25rem 0 0 0; color: var(--text-muted); font-size: 0.9rem;">
+                        Shoot Dates: <b style="color: var(--text-main);">${cs.shoot_dates ? cs.shoot_dates.join(', ') : '—'}</b>
                     </p>
                 </div>
                 <div style="text-align: right;">
@@ -2656,109 +3028,104 @@ function renderCallSheetReport(sub) {
                 </div>
             </div>
 
-            <!-- CREW DETAILS -->
+            <!-- SECTION 1: CREW DETAILS -->
             <div style="margin-bottom: 3rem;">
-                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Crew Details</h3>
+                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Section 1: Crew Details</h3>
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
                     <thead>
                         <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">
-                            <th style="text-align: left; padding: 0.5rem;">Role</th>
-                            <th style="text-align: left; padding: 0.5rem;">Name & Surname</th>
-                            <th style="text-align: left; padding: 0.5rem;">Cell Number</th>
-                            <th style="text-align: left; padding: 0.5rem;">ID Number / Status</th>
+                            <th style="text-align: left; padding: 0.5rem; width: 30%;">Role</th>
+                            <th style="text-align: left; padding: 0.5rem; width: 40%;">Name & Surname</th>
+                            <th style="text-align: left; padding: 0.5rem; width: 30%;">Cell Number</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${crewFields.map(f => `
-                            <tr style="border-bottom: 1px solid var(--border);">
-                                <td style="padding: 0.75rem 0.5rem; font-weight: 600;">${f.label}</td>
-                                <td style="padding: 0.75rem 0.5rem;">${f.name}</td>
-                                <td style="padding: 0.75rem 0.5rem;">${f.phone}</td>
-                                <td style="padding: 0.75rem 0.5rem;">${f.id}</td>
-                            </tr>
-                        `).join('')}
+                        ${crewHtml}
+                        ${securityHtml}
                     </tbody>
                 </table>
             </div>
 
-            <!-- MOVEMENT ORDER -->
+            <!-- SECTION 2: STORY RISK ASSESSMENT -->
             <div style="margin-bottom: 3rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem;">
-                    <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--success); margin: 0; font-weight: 700;">Movement Order</h3>
-                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Shoot Day ${cs.shoot_day || '—'} (${formatStoryDate(cs.shoot_date)})</span>
-                </div>
-                
-                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 1.5rem;">
-                    <thead>
-                        <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">
-                            <th style="text-align: left; padding: 0.5rem; width: 150px;">Time [24H]</th>
-                            <th style="text-align: left; padding: 0.5rem;">What's Happening?</th>
-                            <th style="text-align: left; padding: 0.5rem;">Location</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${cs.movementOrder && cs.movementOrder.length > 0 ? cs.movementOrder.map(r => `
-                            <tr style="border-bottom: 1px solid var(--border);">
-                                <td style="padding: 0.75rem 0.5rem; font-weight: 600;">${r.time}</td>
-                                <td style="padding: 0.75rem 0.5rem;">${r.what}</td>
-                                <td style="padding: 0.75rem 0.5rem;">${r.location}</td>
-                            </tr>
-                        `).join('') : `<tr><td colspan="3" style="padding: 1.5rem; text-align: center; color: var(--text-muted);">No movement items scheduled.</td></tr>`}
-                    </tbody>
-                </table>
-
-                <div style="margin-top: 1.5rem; background: rgba(0,0,0,0.02); padding: 1.25rem; border-radius: 8px; border: 1px dashed var(--border);">
-                    <h4 style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin: 0 0 0.5rem 0;">Story Description (Risk Assessment)</h4>
-                    <p style="margin: 0; font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap;">${cs.story_description || 'No description / risk assessment provided.'}</p>
+                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Section 2: Story Risk Assessment</h3>
+                <div style="background: rgba(0,0,0,0.02); padding: 1.25rem; border-radius: 8px; border: 1px dashed var(--border);">
+                    <p style="margin: 0; font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap;">${cs.risk_assessment || 'No risk assessment / story description provided.'}</p>
                 </div>
             </div>
 
-            <!-- KIT / EQUIPMENT -->
+            <!-- SECTION 3: MOVEMENT ORDER -->
             <div style="margin-bottom: 3rem;">
-                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Kit / Equipment</h3>
+                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Section 3: Movement Order</h3>
+                ${moSectionsHtml || '<div style="color: var(--text-muted); font-size: 0.9rem;">No movement orders scheduled.</div>'}
+            </div>
+
+            <!-- SECTION 4: EQUIPMENT -->
+            <div style="margin-bottom: 3rem;">
+                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Section 4: Equipment</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-size: 0.9rem;">
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Camera (Cam A-F)</span><span style="font-weight: 600;">${k.camera || '—'}</span></div>
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Audio (Mic 1-6)</span><span style="font-weight: 600;">${k.audio || '—'}</span></div>
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Lenses</span><span style="font-weight: 600;">${k.lenses || '—'}</span></div>
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Lighting Kit</span><span style="font-weight: 600;">${k.lighting || '—'}</span></div>
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Rigs</span><span style="font-weight: 600;">${k.rigs || '—'}</span></div>
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Other</span><span style="font-weight: 600;">${k.other || '—'}</span></div>
+                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Camera Equipment (${eq.camera_type || '—'})</span><span style="font-weight: 600;">${eq.camera_desc || '—'}</span></div>
+                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Audio Equipment (${eq.audio_type || '—'})</span><span style="font-weight: 600;">${eq.audio_desc || '—'}</span></div>
+                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Lenses</span><span style="font-weight: 600;">${eq.lenses_desc || '—'}</span></div>
+                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Lighting Kit</span><span style="font-weight: 600;">${eq.lighting_desc || '—'}</span></div>
+                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Rigs</span><span style="font-weight: 600;">${eq.rigs_desc || '—'}</span></div>
+                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Other Equipment</span><span style="font-weight: 600;">${eq.other_desc || '—'}</span></div>
                 </div>
             </div>
 
-            <!-- TRAVEL & VEHICLES -->
+            <!-- SECTION 5: TRAVEL AND VEHICLES -->
             <div style="margin-bottom: 3rem;">
-                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Travel & Vehicles</h3>
+                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Section 5: Travel and Vehicles</h3>
                 
-                <div style="margin-bottom: 1.5rem; background: rgba(0,0,0,0.01); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
-                    <h4 style="font-size: 0.85rem; color: var(--success); margin: 0 0 1rem 0;">Flight Details</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">Passenger Name</span><span style="font-weight: 600;">${t.flight_name || '—'}</span></div>
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">Flight Details</span><span style="font-weight: 600;">${t.flight_details || '—'}</span></div>
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">Travel Booking PDF</span>${flightFileHtml}</div>
+                <!-- Flight Details -->
+                <div style="margin-bottom: 1.5rem; border: 1px solid var(--border); padding: 1.25rem; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="font-size: 0.9rem; color: var(--success); margin: 0; font-weight: 700;">Flight Details</h4>
+                        <div>${flightFileHtml}</div>
                     </div>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); text-transform: uppercase;">
+                                <th style="text-align: left; padding: 0.4rem;">Name</th>
+                                <th style="text-align: left; padding: 0.4rem;">Surname</th>
+                                <th style="text-align: left; padding: 0.4rem;">Flight Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${flightsHtml || '<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 0.5rem;">No flights.</td></tr>'}
+                        </tbody>
+                    </table>
                 </div>
 
-                <div style="margin-bottom: 1.5rem; background: rgba(0,0,0,0.01); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
-                    <h4 style="font-size: 0.85rem; color: var(--success); margin: 0 0 1rem 0;">Accommodation Details</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">Guest Name</span><span style="font-weight: 600;">${t.accom_name || '—'}</span></div>
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">Location / Address</span><span style="font-weight: 600;">${t.accom_location || '—'}</span></div>
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">Duration Dates</span><span style="font-weight: 600;">${t.accom_from ? `${formatStoryDate(t.accom_from)} to ${formatStoryDate(t.accom_to)}` : '—'}</span></div>
+                <!-- Accommodation Details -->
+                <div style="margin-bottom: 1.5rem; border: 1px solid var(--border); padding: 1.25rem; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="font-size: 0.9rem; color: var(--success); margin: 0; font-weight: 700;">Accommodation Details</h4>
+                        <div>${accomFileHtml}</div>
                     </div>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); text-transform: uppercase;">
+                                <th style="text-align: left; padding: 0.4rem;">Name</th>
+                                <th style="text-align: left; padding: 0.4rem;">Surname</th>
+                                <th style="text-align: left; padding: 0.4rem;">Location</th>
+                                <th style="text-align: left; padding: 0.4rem;">Dates</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${accomsHtml || '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 0.5rem;">No accommodation details.</td></tr>'}
+                        </tbody>
+                    </table>
                 </div>
 
-                <div style="background: rgba(0,0,0,0.01); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
-                    <h4 style="font-size: 0.85rem; color: var(--success); margin: 0 0 1rem 0;">Transport Details</h4>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; font-size: 0.9rem; margin-bottom: 1rem;">
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">Name / Surname</span><span style="font-weight: 600;">${t.trans_name || '—'}</span></div>
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">From Location</span><span style="font-weight: 600;">${t.trans_from_loc || '—'}</span></div>
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">To Location</span><span style="font-weight: 600;">${t.trans_to_loc || '—'}</span></div>
+                <!-- Transport Details -->
+                <div style="border: 1px solid var(--border); padding: 1.25rem; border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="font-size: 0.9rem; color: var(--success); margin: 0; font-weight: 700;">Transport Details</h4>
+                        <div>${transFileHtml}</div>
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">Dates</span><span style="font-weight: 600;">${t.trans_from_date ? `${formatStoryDate(t.trans_from_date)} to ${formatStoryDate(t.trans_to_date)}` : '—'}</span></div>
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">Time Slot</span><span style="font-weight: 600;">${t.trans_from_time || '—'} to ${t.trans_to_time || '—'}</span></div>
-                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-bottom: 0.2rem;">Rental Booking PDF</span>${transFileHtml}</div>
+                    <div>
+                        ${transportsHtml || '<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">No transport details.</div>'}
                     </div>
                 </div>
             </div>
@@ -2818,8 +3185,7 @@ window.downloadCallSheetPDF = async () => {
         const metadata = [
             ['Story Title', sub.story_title || 'Untitled'],
             ['Commission No', sub.commissionNumber || 'N/A'],
-            ['Shoot Day', cs.shoot_day || '—'],
-            ['Shoot Date', cs.shoot_date ? formatStoryDate(cs.shoot_date) : '—']
+            ['Shoot Dates', cs.shoot_dates ? cs.shoot_dates.join(', ') : '—']
         ];
         doc.autoTable({
             startY: currentY,
@@ -2838,17 +3204,13 @@ window.downloadCallSheetPDF = async () => {
         doc.text('CREW DETAILS', margin, currentY);
         currentY += 6;
 
-        const producerName = (sub.submittedByName && sub.submittedBySurname) ? `${sub.submittedByName} ${sub.submittedBySurname}` : sub.submittedByEmail;
-        const crewData = [
-            ['Presenter', cs.presenter_name || '—', cs.presenter_phone || '—', cs.presenter_id || '—'],
-            ['Producer / Director', producerName, cs.producer_phone || '—', cs.producer_id || '—'],
-            ['DOP', cs.dop_name || '—', cs.dop_phone || '—', cs.dop_id || '—'],
-            ['Camera Assistant', cs.cam_assistant_name || '—', cs.cam_assistant_phone || '—', cs.cs_cam_assistant_id || cs.cam_assistant_id || '—'],
-            ['Security', cs.security_name || '—', cs.security_phone || '—', cs.security_status === 'required' ? 'Required' : 'Not Required']
-        ];
+        const crewData = (cs.crew || []).map(m => [m.role || '—', m.name || '—', m.phone || '—']);
+        if (cs.security && (cs.security.name || cs.security.phone)) {
+            crewData.push(['Security (Optional)', cs.security.name || '—', cs.security.phone || '—']);
+        }
         doc.autoTable({
             startY: currentY,
-            head: [['Role', 'Name & Surname', 'Cell Number', 'ID Number / Status']],
+            head: [['Role', 'Name & Surname', 'Cell Number']],
             body: crewData,
             theme: 'striped',
             headStyles: { fillColor: [16, 185, 129], textColor: 255 },
@@ -2857,28 +3219,8 @@ window.downloadCallSheetPDF = async () => {
         });
         currentY = doc.lastAutoTable.finalY + 10;
 
-        // Movement Order
-        doc.setFontSize(12);
-        doc.setTextColor(16, 185, 129);
-        doc.setFont('helvetica', 'bold');
-        doc.text('MOVEMENT ORDER', margin, currentY);
-        currentY += 6;
-
-        const moData = (cs.movementOrder || []).map(r => [r.time || '', r.what || '', r.location || '']);
-        doc.autoTable({
-            startY: currentY,
-            head: [['Time', 'What\'s Happening?', 'Location']],
-            body: moData.length > 0 ? moData : [['—', 'No movement slots scheduled.', '—']],
-            theme: 'striped',
-            headStyles: { fillColor: [16, 185, 129], textColor: 255 },
-            styles: { fontSize: 9, cellPadding: 2.5 },
-            margin: { left: margin, right: margin }
-        });
-        currentY = doc.lastAutoTable.finalY + 10;
-
         // Risk Assessment
-        if (currentY > 250) { doc.addPage(); currentY = 20; }
-        doc.setFontSize(11);
+        doc.setFontSize(12);
         doc.setTextColor(16, 185, 129);
         doc.setFont('helvetica', 'bold');
         doc.text('RISK ASSESSMENT / STORY DESCRIPTION', margin, currentY);
@@ -2886,32 +3228,56 @@ window.downloadCallSheetPDF = async () => {
         doc.setFontSize(9);
         doc.setTextColor(33, 33, 33);
         doc.setFont('helvetica', 'normal');
-        const splitDesc = doc.splitTextToSize(cs.story_description || 'No description provided.', pageWidth - margin * 2);
+        const splitDesc = doc.splitTextToSize(cs.risk_assessment || 'No risk assessment provided.', pageWidth - margin * 2);
         doc.text(splitDesc, margin, currentY);
         currentY += (splitDesc.length * 5) + 10;
 
-        // Kit
-        if (currentY > 240) { doc.addPage(); currentY = 20; }
+        // Movement Orders
+        if (cs.movement_orders && cs.movement_orders.length > 0) {
+            cs.movement_orders.forEach((sec, idx) => {
+                if (currentY > 240) { doc.addPage(); currentY = 20; }
+                doc.setFontSize(11);
+                doc.setTextColor(16, 185, 129);
+                doc.setFont('helvetica', 'bold');
+                doc.text(`MOVEMENT ORDER SECTION #${idx + 1} (Shoot Day: ${sec.shootDay || '—'}, Date: ${sec.shootDate || '—'})`, margin, currentY);
+                currentY += 6;
+                const moData = (sec.items || []).map(r => [r.time || '', r.what || '', r.location || '']);
+                doc.autoTable({
+                    startY: currentY,
+                    head: [['Time', 'What\'s Happening?', 'Location']],
+                    body: moData.length > 0 ? moData : [['—', 'No movement slots scheduled.', '—']],
+                    theme: 'striped',
+                    headStyles: { fillColor: [16, 185, 129], textColor: 255 },
+                    styles: { fontSize: 9, cellPadding: 2.5 },
+                    margin: { left: margin, right: margin }
+                });
+                currentY = doc.lastAutoTable.finalY + 8;
+            });
+            currentY += 4;
+        }
+
+        // Equipment
+        if (currentY > 230) { doc.addPage(); currentY = 20; }
         doc.setFontSize(11);
         doc.setTextColor(16, 185, 129);
         doc.setFont('helvetica', 'bold');
         doc.text('KIT / EQUIPMENT', margin, currentY);
         currentY += 6;
-        const k = cs.kit || {};
+        const eq = cs.equipment || {};
         const kitData = [
-            ['Camera', k.camera || '—'],
-            ['Audio', k.audio || '—'],
-            ['Lenses', k.lenses || '—'],
-            ['Lighting Kit', k.lighting || '—'],
-            ['Rigs', k.rigs || '—'],
-            ['Other', k.other || '—']
+            [`Camera (${eq.camera_type || '—'})`, eq.camera_desc || '—'],
+            [`Audio (${eq.audio_type || '—'})`, eq.audio_desc || '—'],
+            ['Lenses', eq.lenses_desc || '—'],
+            ['Lighting Kit', eq.lighting_desc || '—'],
+            ['Rigs', eq.rigs_desc || '—'],
+            ['Other', eq.other_desc || '—']
         ];
         doc.autoTable({
             startY: currentY,
             body: kitData,
             theme: 'plain',
             styles: { fontSize: 9, cellPadding: 2 },
-            columnStyles: { 0: { fontStyle: 'bold', cellWidth: 40 } },
+            columnStyles: { 0: { fontStyle: 'bold', cellWidth: 50 } },
             margin: { left: margin, right: margin }
         });
         currentY = doc.lastAutoTable.finalY + 10;
@@ -2921,26 +3287,75 @@ window.downloadCallSheetPDF = async () => {
         doc.setFontSize(11);
         doc.setTextColor(16, 185, 129);
         doc.setFont('helvetica', 'bold');
-        doc.text('TRAVEL & VEHICLES', margin, currentY);
+        doc.text('TRAVEL AND VEHICLES', margin, currentY);
         currentY += 6;
+
+        const travel = cs.travel || {};
         
-        const t = cs.travel || {};
-        const travelData = [
-            ['Flight Guest', t.flight_name || '—', 'Flight Info', t.flight_details || '—'],
-            ['Accom Guest', t.accom_name || '—', 'Accom Address', t.accom_location || '—'],
-            ['Accom From', t.accom_from || '—', 'Accom To', t.accom_to || '—'],
-            ['Driver', t.trans_name || '—', 'Transport route', `From ${t.trans_from_loc || '—'} to ${t.trans_to_loc || '—'}`],
-            ['Transport From', t.trans_from_date || '—', 'Transport To', t.trans_to_date || '—'],
-            ['Trans Times', `From ${t.trans_from_time || '—'} to ${t.trans_to_time || '—'}`, '', '']
-        ];
-        doc.autoTable({
-            startY: currentY,
-            body: travelData,
-            theme: 'striped',
-            styles: { fontSize: 9, cellPadding: 2 },
-            columnStyles: { 0: { fontStyle: 'bold', cellWidth: 35 }, 2: { fontStyle: 'bold', cellWidth: 35 } },
-            margin: { left: margin, right: margin }
-        });
+        // Flights
+        if (travel.flights && travel.flights.length > 0) {
+            doc.setFontSize(9);
+            doc.setTextColor(50, 50, 50);
+            doc.text('Flight Details:', margin, currentY);
+            currentY += 4;
+            const flightDataRows = travel.flights.map(f => [f.name || '—', f.surname || '—', f.details || '—']);
+            doc.autoTable({
+                startY: currentY,
+                head: [['Name', 'Surname', 'Flight Details']],
+                body: flightDataRows,
+                theme: 'striped',
+                headStyles: { fillColor: [16, 185, 129], textColor: 255 },
+                styles: { fontSize: 8.5, cellPadding: 2 },
+                margin: { left: margin, right: margin }
+            });
+            currentY = doc.lastAutoTable.finalY + 6;
+        }
+
+        // Accommodation
+        if (travel.accoms && travel.accoms.length > 0) {
+            if (currentY > 240) { doc.addPage(); currentY = 20; }
+            doc.setFontSize(9);
+            doc.setTextColor(50, 50, 50);
+            doc.text('Accommodation Details:', margin, currentY);
+            currentY += 4;
+            const accomDataRows = travel.accoms.map(a => [a.name || '—', a.surname || '—', a.location || '—', `${a.from_date || '—'} to ${a.to_date || '—'}`]);
+            doc.autoTable({
+                startY: currentY,
+                head: [['Name', 'Surname', 'Location', 'Dates']],
+                body: accomDataRows,
+                theme: 'striped',
+                headStyles: { fillColor: [16, 185, 129], textColor: 255 },
+                styles: { fontSize: 8.5, cellPadding: 2 },
+                margin: { left: margin, right: margin }
+            });
+            currentY = doc.lastAutoTable.finalY + 6;
+        }
+
+        // Transports
+        if (travel.transports && travel.transports.length > 0) {
+            if (currentY > 240) { doc.addPage(); currentY = 20; }
+            doc.setFontSize(9);
+            doc.setTextColor(50, 50, 50);
+            doc.text('Transport Details:', margin, currentY);
+            currentY += 4;
+            const transportDataRows = travel.transports.map(t => [
+                `${t.name || ''} ${t.surname || ''}`.trim(),
+                t.driver || '—',
+                `From ${t.from_loc || '—'} to ${t.to_loc || '—'}`,
+                `${t.from_date || '—'} to ${t.to_date || '—'}`,
+                `${t.from_time || '—'} to ${t.to_time || '—'}`
+            ]);
+            doc.autoTable({
+                startY: currentY,
+                head: [['Passenger', 'Driver', 'Route', 'Dates', 'Times']],
+                body: transportDataRows,
+                theme: 'striped',
+                headStyles: { fillColor: [16, 185, 129], textColor: 255 },
+                styles: { fontSize: 8.5, cellPadding: 2 },
+                margin: { left: margin, right: margin }
+            });
+            currentY = doc.lastAutoTable.finalY + 6;
+        }
 
         const blob = doc.output('blob');
         const url = URL.createObjectURL(blob);
