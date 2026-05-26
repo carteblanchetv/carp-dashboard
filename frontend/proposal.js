@@ -1,5 +1,5 @@
 // proposal.js
-// VERSION: 5.2.0
+// VERSION: 5.2.1
 import { getIdToken, fetchWithAuth, checkAuth, isAdmin, isSuperAdmin, isEditorialProduction } from './auth.js?v=5.1.1';
 
 function formatStoryDate(dateInput) {
