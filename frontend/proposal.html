@@ -566,7 +566,7 @@
 
                 <!-- SHOOT DATES (MULTIPLE SELECTION) -->
                 <div style="margin-top: 1.5rem; margin-bottom: 2rem;">
-                    <h3 style="color: var(--primary); font-size: 1.15rem; font-weight: 800; margin-bottom: 0.75rem;">Shoot Dates</h3>
+                    <h3 class="cs-section-header">Shoot Dates</h3>
                     <div id="cs_shoot_dates_container" style="display: flex; flex-direction: column; gap: 0.5rem; max-width: 300px;">
                         <!-- Dynamic date rows -->
                     </div>
@@ -575,13 +575,14 @@
 
                 <!-- SECTION 1: CREW DETAILS -->
                 <div style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
-                    <h3 style="color: var(--primary); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Crew Details</h3>
+                    <h3 class="cs-section-header">Crew Details</h3>
                     <div class="table-container">
-                        <table class="data-table">
+                        <table class="data-table equal-width-cols">
                             <thead>
                                 <tr>
                                     <th>Role</th>
-                                    <th>Name & Surname</th>
+                                    <th>Name</th>
+                                    <th>Surname</th>
                                     <th>Cell Number</th>
                                     <th style="width: 50px;"></th>
                                 </tr>
@@ -591,24 +592,28 @@
                                 <tr>
                                     <td><input type="text" name="cs_crew_role[]" value="Presenter" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
                                     <td><input type="text" name="cs_crew_name[]" placeholder="Presenter Name" required></td>
+                                    <td><input type="text" name="cs_crew_surname[]" placeholder="Presenter Surname" required></td>
                                     <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." required oninput="this.value = formatSA(this.value)"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td><input type="text" name="cs_crew_role[]" value="Producer" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
                                     <td><input type="text" name="cs_crew_name[]" placeholder="Producer Name" required></td>
+                                    <td><input type="text" name="cs_crew_surname[]" placeholder="Producer Surname" required></td>
                                     <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." required oninput="this.value = formatSA(this.value)"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td><input type="text" name="cs_crew_role[]" value="DOP" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
                                     <td><input type="text" name="cs_crew_name[]" placeholder="DOP Name" required></td>
+                                    <td><input type="text" name="cs_crew_surname[]" placeholder="DOP Surname" required></td>
                                     <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." required oninput="this.value = formatSA(this.value)"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
                                     <td><input type="text" name="cs_crew_role[]" value="Camera Assistant" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
                                     <td><input type="text" name="cs_crew_name[]" placeholder="Camera Assistant Name" required></td>
+                                    <td><input type="text" name="cs_crew_surname[]" placeholder="Camera Assistant Surname" required></td>
                                     <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." required oninput="this.value = formatSA(this.value)"></td>
                                     <td></td>
                                 </tr>
@@ -619,14 +624,22 @@
 
                     <!-- Security Section (Optional) -->
                     <div style="margin-top: 1.5rem; border-top: 1px dashed var(--border); padding-top: 1.5rem;">
-                        <h3 style="color: var(--primary); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Security (if Applicable)</h3>
-                        <div class="form-grid">
+                        <h3 class="cs-section-header">Security (if Applicable)</h3>
+                        <div class="form-grid-4-col">
                             <div class="form-group">
-                                <label>Security Name & Surname</label>
-                                <input type="text" id="cs_security_name" name="cs_security_name" placeholder="Name & Surname">
+                                <label>Name</label>
+                                <input type="text" id="cs_security_name" name="cs_security_name" placeholder="Name">
                             </div>
                             <div class="form-group">
-                                <label>Security Cell Number</label>
+                                <label>Surname</label>
+                                <input type="text" id="cs_security_surname" name="cs_security_surname" placeholder="Surname">
+                            </div>
+                            <div class="form-group">
+                                <label>Security Company</label>
+                                <input type="text" id="cs_security_company" name="cs_security_company" placeholder="Company Name">
+                            </div>
+                            <div class="form-group">
+                                <label>Cell Number</label>
                                 <input type="text" id="cs_security_phone" name="cs_security_phone" placeholder="+27 ..." oninput="this.value = formatSA(this.value)">
                             </div>
                         </div>
@@ -635,7 +648,7 @@
 
                 <!-- SECTION 2: STORY RISK ASSESSMENT -->
                 <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                    <h3 style="color: var(--primary); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Risk Assessment</h3>
+                    <h3 class="cs-section-header">Risk Assessment</h3>
                     <div class="form-group">
                         <label style="font-weight: 600;">Describe the potential risk factors linked to the filming of your story.</label>
                         <textarea id="cs_risk_assessment" name="cs_risk_assessment" rows="4" placeholder="Describe potential risk factors..."></textarea>
@@ -644,7 +657,7 @@
 
                 <!-- SECTION 3: MOVEMENT ORDER -->
                 <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                    <h3 style="color: var(--primary); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Movement Order</h3>
+                    <h3 class="cs-section-header">Movement Order</h3>
                     <div id="movement_orders_container">
                         <!-- Dynamic Movement Order Section Blocks -->
                     </div>
@@ -653,7 +666,7 @@
 
                 <!-- SECTION 4: EQUIPMENT -->
                 <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                    <h3 style="color: var(--primary); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Equipment</h3>
+                    <h3 class="cs-section-header">Equipment</h3>
                     
                     <div class="form-grid">
                         <div class="form-group">
@@ -718,7 +731,7 @@
 
                 <!-- SECTION 5: TRAVEL AND VEHICLES -->
                 <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                    <h3 style="color: var(--primary); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Travel & Vehicles</h3>
+                    <h3 class="cs-section-header">Travel & Vehicles</h3>
                     
                     <!-- FLIGHT DETAILS -->
                     <div style="margin-bottom: 2.5rem; border-bottom: 1px dashed var(--border); padding-bottom: 2rem;">

@@ -412,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAllMovementOrderDateOptions();
     }
 
-    function addCsOtherCrewRow(role = '', name = '', phone = '') {
+    function addCsOtherCrewRow(role = '', name = '', surname = '', phone = '') {
         const tbody = document.getElementById('csCrewTableBody');
         if (!tbody) return;
         const rowId = 'cs_crew_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
@@ -420,7 +420,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tr.id = rowId;
         tr.innerHTML = `
             <td><input type="text" name="cs_crew_role[]" value="${role}" placeholder="Role (e.g. Sound)" required class="table-input"></td>
-            <td><input type="text" name="cs_crew_name[]" value="${name}" placeholder="Name & Surname" required class="table-input"></td>
+            <td><input type="text" name="cs_crew_name[]" value="${name}" placeholder="Name" required class="table-input"></td>
+            <td><input type="text" name="cs_crew_surname[]" value="${surname}" placeholder="Surname" required class="table-input"></td>
             <td><input type="text" name="cs_crew_phone[]" value="${phone}" placeholder="+27 ..." required class="table-input" oninput="this.value = formatSA(this.value)"></td>
             <td>
                 <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
@@ -529,22 +530,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const rowId = 'flight_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
         const div = document.createElement('div');
         div.id = rowId;
-        div.className = 'flight-row-block form-grid-3-col';
+        div.className = 'flight-row-block';
         div.style.cssText = 'margin-top: 1rem; border-top: 1px dotted var(--border); padding-top: 1rem;';
         div.innerHTML = `
-            <div class="form-group">
-                <label>Name</label>
-                <input type="text" class="flight-name-input" value="${data.name || ''}" placeholder="Name">
+            <div class="form-grid-3-col">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="flight-name-input" value="${data.name || ''}" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label>Surname</label>
+                    <input type="text" class="flight-surname-input" value="${data.surname || ''}" placeholder="Surname">
+                </div>
+                <div class="form-group">
+                    <label>Flight Number</label>
+                    <input type="text" class="flight-number-input" value="${data.flight_number || ''}" placeholder="Flight No">
+                </div>
             </div>
-            <div class="form-group">
-                <label>Surname</label>
-                <input type="text" class="flight-surname-input" value="${data.surname || ''}" placeholder="Surname">
-            </div>
-            <div class="form-group">
-                <label>Flight Details</label>
-                <div style="display: flex; gap: 0.5rem; align-items: center;">
-                    <input type="text" class="flight-details-input" value="${data.details || ''}" placeholder="Flight No, Airline, Time" style="flex: 1;">
-                    <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
+            <div class="form-grid-3-col" style="margin-top: 0.75rem;">
+                <div class="form-group">
+                    <label>Airline</label>
+                    <input type="text" class="flight-airline-input" value="${data.airline || ''}" placeholder="Airline">
+                </div>
+                <div class="form-group">
+                    <label>Departure Time</label>
+                    <input type="time" class="flight-dep-time-input" value="${data.dep_time || ''}">
+                </div>
+                <div class="form-group">
+                    <label>Arrival Time</label>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="time" class="flight-arr-time-input" value="${data.arr_time || ''}" style="flex: 1;">
+                        <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px;">✖</button>
+                    </div>
                 </div>
             </div>
         `;
@@ -570,11 +587,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="text" class="accom-surname-input" value="${data.surname || ''}" placeholder="Surname">
                 </div>
                 <div class="form-group">
-                    <label>Location / Address</label>
-                    <input type="text" class="accom-location-input" value="${data.location || ''}" placeholder="Hotel/B&B address">
+                    <label>Hotel/B&B Name</label>
+                    <input type="text" class="accom-hotel-input" value="${data.hotel_name || ''}" placeholder="Hotel/B&B Name">
                 </div>
             </div>
-            <div class="form-grid" style="margin-top: 0.75rem;">
+            <div class="form-grid-3-col" style="margin-top: 0.75rem;">
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" class="accom-address-input" value="${data.address || ''}" placeholder="Address">
+                </div>
                 <div class="form-group">
                     <label>From Date</label>
                     <input type="date" class="accom-from-date-input" value="${data.from_date || ''}">
@@ -583,7 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <label>To Date</label>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
                         <input type="date" class="accom-to-date-input" value="${data.to_date || ''}" style="flex: 1;">
-                        <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
+                        <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px;">✖</button>
                     </div>
                 </div>
             </div>
@@ -614,34 +635,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="text" class="trans-driver-input" value="${data.driver || ''}" placeholder="Driver Name">
                 </div>
             </div>
-            <div class="form-grid-4-col" style="margin-top: 0.75rem;">
+            <div class="form-grid-3-col" style="margin-top: 0.75rem;">
                 <div class="form-group">
                     <label>From Date</label>
                     <input type="date" class="trans-from-date-input" value="${data.from_date || ''}">
-                </div>
-                <div class="form-group">
-                    <label>To Date</label>
-                    <input type="date" class="trans-to-date-input" value="${data.to_date || ''}">
                 </div>
                 <div class="form-group">
                     <label>From Time</label>
                     <input type="time" class="trans-from-time-input" value="${data.from_time || ''}">
                 </div>
                 <div class="form-group">
-                    <label>To Time</label>
-                    <input type="time" class="trans-to-time-input" value="${data.to_time || ''}">
-                </div>
-            </div>
-            <div class="form-grid" style="margin-top: 0.75rem;">
-                <div class="form-group">
                     <label>From Location</label>
                     <input type="text" class="trans-from-loc-input" value="${data.from_loc || ''}" placeholder="Departure">
+                </div>
+            </div>
+            <div class="form-grid-3-col" style="margin-top: 0.75rem;">
+                <div class="form-group">
+                    <label>To Date</label>
+                    <input type="date" class="trans-to-date-input" value="${data.to_date || ''}">
+                </div>
+                <div class="form-group">
+                    <label>To Time</label>
+                    <input type="time" class="trans-to-time-input" value="${data.to_time || ''}">
                 </div>
                 <div class="form-group">
                     <label>To Location</label>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
                         <input type="text" class="trans-to-loc-input" value="${data.to_loc || ''}" placeholder="Destination" style="flex: 1;">
-                        <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
+                        <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px;">✖</button>
                     </div>
                 </div>
             </div>
@@ -982,6 +1003,12 @@ document.addEventListener('DOMContentLoaded', () => {
         addResearcherRow();
         addCameraRow();
         
+        // Default Call Sheet fields
+        addCsShootDate();
+        addCsShootDate();
+        addCsShootDate();
+        addCsMovementOrderSection();
+        
         form.classList.remove('hidden');
     }
 
@@ -1235,7 +1262,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (shootDates.length > 0) {
                             shootDates.forEach(d => addCsShootDate(d));
                         } else {
-                            addCsShootDate(); // default 1 date row
+                            addCsShootDate();
+                            addCsShootDate();
+                            addCsShootDate();
                         }
                     }
 
@@ -1246,13 +1275,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     staticRows.forEach(row => {
                         const roleVal = row.querySelector('input[name="cs_crew_role[]"]')?.value || '';
                         const nameInp = row.querySelector('input[name="cs_crew_name[]"]');
+                        const surnameInp = row.querySelector('input[name="cs_crew_surname[]"]');
                         const phoneInp = row.querySelector('input[name="cs_crew_phone[]"]');
                         if (nameInp) nameInp.value = '';
+                        if (surnameInp) surnameInp.value = '';
                         if (phoneInp) phoneInp.value = '';
 
                         const match = crewList.find(m => (m.role || '').toLowerCase() === roleVal.toLowerCase());
                         if (match) {
                             if (nameInp) nameInp.value = match.name || '';
+                            if (surnameInp) surnameInp.value = match.surname || '';
                             if (phoneInp) phoneInp.value = match.phone || '';
                         }
                     });
@@ -1263,13 +1295,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     crewList.forEach(m => {
                         if (!staticRoles.includes((m.role || '').toLowerCase())) {
-                            addCsOtherCrewRow(m.role, m.name, m.phone);
+                            addCsOtherCrewRow(m.role, m.name, m.surname || '', m.phone);
                         }
                     });
 
                     // Security
                     const sec = cs.security || {};
                     setVal('cs_security_name', sec.name);
+                    setVal('cs_security_surname', sec.surname);
+                    setVal('cs_security_company', sec.company);
                     setVal('cs_security_phone', sec.phone);
 
                     // Risk Assessment
@@ -1388,15 +1422,19 @@ document.addEventListener('DOMContentLoaded', () => {
             crew: Array.from(document.querySelectorAll('#csCrewTableBody tr')).map(row => {
                 const roleInp = row.querySelector('input[name="cs_crew_role[]"]');
                 const nameInp = row.querySelector('input[name="cs_crew_name[]"]');
+                const surnameInp = row.querySelector('input[name="cs_crew_surname[]"]');
                 const phoneInp = row.querySelector('input[name="cs_crew_phone[]"]');
                 return {
                     role: roleInp ? roleInp.value.trim() : '',
                     name: nameInp ? nameInp.value.trim() : '',
+                    surname: surnameInp ? surnameInp.value.trim() : '',
                     phone: phoneInp ? phoneInp.value.trim() : ''
                 };
-            }).filter(c => c.role || c.name || c.phone),
+            }).filter(c => c.role || c.name || c.surname || c.phone),
             security: {
                 name: document.getElementById('cs_security_name')?.value || '',
+                surname: document.getElementById('cs_security_surname')?.value || '',
+                company: document.getElementById('cs_security_company')?.value || '',
                 phone: document.getElementById('cs_security_phone')?.value || ''
             },
             risk_assessment: document.getElementById('cs_risk_assessment')?.value || '',
@@ -1426,18 +1464,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 flights: Array.from(document.querySelectorAll('.flight-row-block')).map(row => ({
                     name: row.querySelector('.flight-name-input')?.value || '',
                     surname: row.querySelector('.flight-surname-input')?.value || '',
-                    details: row.querySelector('.flight-details-input')?.value || ''
-                })).filter(f => f.name || f.surname || f.details),
+                    flight_number: row.querySelector('.flight-number-input')?.value || '',
+                    airline: row.querySelector('.flight-airline-input')?.value || '',
+                    dep_time: row.querySelector('.flight-dep-time-input')?.value || '',
+                    arr_time: row.querySelector('.flight-arr-time-input')?.value || ''
+                })).filter(f => f.name || f.surname || f.flight_number || f.airline),
                 flight_file_path: document.getElementById('travel_flight_file_path')?.value || '',
                 flight_filename: document.getElementById('travel_flight_filename')?.value || '',
 
                 accoms: Array.from(document.querySelectorAll('.accom-row-block')).map(row => ({
                     name: row.querySelector('.accom-name-input')?.value || '',
                     surname: row.querySelector('.accom-surname-input')?.value || '',
-                    location: row.querySelector('.accom-location-input')?.value || '',
+                    hotel_name: row.querySelector('.accom-hotel-input')?.value || '',
+                    address: row.querySelector('.accom-address-input')?.value || '',
                     from_date: row.querySelector('.accom-from-date-input')?.value || '',
                     to_date: row.querySelector('.accom-to-date-input')?.value || ''
-                })).filter(a => a.name || a.surname || a.location),
+                })).filter(a => a.name || a.surname || a.hotel_name || a.address),
                 accom_file_path: document.getElementById('travel_accom_file_path')?.value || '',
                 accom_filename: document.getElementById('travel_accom_filename')?.value || '',
 
@@ -2963,14 +3005,16 @@ function renderCallSheetReport(sub) {
         <tr style="border-bottom: 1px solid var(--border);">
             <td style="padding: 0.75rem 0.5rem; font-weight: 600;">${m.role}</td>
             <td style="padding: 0.75rem 0.5rem;">${m.name}</td>
+            <td style="padding: 0.75rem 0.5rem;">${m.surname || '—'}</td>
             <td style="padding: 0.75rem 0.5rem;">${m.phone}</td>
         </tr>
     `).join('');
 
-    const securityHtml = cs.security && (cs.security.name || cs.security.phone) ? `
+    const securityHtml = cs.security && (cs.security.name || cs.security.surname || cs.security.phone) ? `
         <tr style="border-bottom: 1px solid var(--border); background: var(--bg-light);">
-            <td style="padding: 0.75rem 0.5rem; font-weight: 600;">Security (Optional)</td>
+            <td style="padding: 0.75rem 0.5rem; font-weight: 600;">Security ${cs.security.company ? `(${cs.security.company})` : ''}</td>
             <td style="padding: 0.75rem 0.5rem;">${cs.security.name || '—'}</td>
+            <td style="padding: 0.75rem 0.5rem;">${cs.security.surname || '—'}</td>
             <td style="padding: 0.75rem 0.5rem;">${cs.security.phone || '—'}</td>
         </tr>
     ` : '';
@@ -3006,7 +3050,10 @@ function renderCallSheetReport(sub) {
         <tr style="border-bottom: 1px solid var(--border);">
             <td style="padding: 0.75rem 0.5rem;">${f.name}</td>
             <td style="padding: 0.75rem 0.5rem;">${f.surname}</td>
-            <td style="padding: 0.75rem 0.5rem;">${f.details}</td>
+            <td style="padding: 0.75rem 0.5rem;">${f.flight_number || '—'}</td>
+            <td style="padding: 0.75rem 0.5rem;">${f.airline || '—'}</td>
+            <td style="padding: 0.75rem 0.5rem;">${f.dep_time || '—'}</td>
+            <td style="padding: 0.75rem 0.5rem;">${f.arr_time || '—'}</td>
         </tr>
     `).join('');
 
@@ -3014,7 +3061,8 @@ function renderCallSheetReport(sub) {
         <tr style="border-bottom: 1px solid var(--border);">
             <td style="padding: 0.75rem 0.5rem;">${a.name}</td>
             <td style="padding: 0.75rem 0.5rem;">${a.surname}</td>
-            <td style="padding: 0.75rem 0.5rem;">${a.location}</td>
+            <td style="padding: 0.75rem 0.5rem;">${a.hotel_name || '—'}</td>
+            <td style="padding: 0.75rem 0.5rem;">${a.address || '—'}</td>
             <td style="padding: 0.75rem 0.5rem;">${a.from_date || '—'} to ${a.to_date || '—'}</td>
         </tr>
     `).join('');
@@ -3024,11 +3072,17 @@ function renderCallSheetReport(sub) {
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem;">
                 <div><span style="color: var(--text-muted); display: block;">Passenger</span><b>${trBlock.name} ${trBlock.surname}</b></div>
                 <div><span style="color: var(--text-muted); display: block;">Driver</span><b>${trBlock.driver || '—'}</b></div>
-                <div><span style="color: var(--text-muted); display: block;">Route</span><b>From ${trBlock.from_loc || '—'} to ${trBlock.to_loc || '—'}</b></div>
+                <div></div>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.85rem;">
-                <div><span style="color: var(--text-muted); display: block;">Dates</span><b>${trBlock.from_date || '—'} to ${trBlock.to_date || '—'}</b></div>
-                <div><span style="color: var(--text-muted); display: block;">Times</span><b>${trBlock.from_time || '—'} to ${trBlock.to_time || '—'}</b></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; border-top: 1px dotted var(--border); padding-top: 0.5rem;">
+                <div><span style="color: var(--text-muted); display: block;">From Date</span><b>${trBlock.from_date || '—'}</b></div>
+                <div><span style="color: var(--text-muted); display: block;">From Time</span><b>${trBlock.from_time || '—'}</b></div>
+                <div><span style="color: var(--text-muted); display: block;">From Location</span><b>${trBlock.from_loc || '—'}</b></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; font-size: 0.85rem; border-top: 1px dotted var(--border); padding-top: 0.5rem;">
+                <div><span style="color: var(--text-muted); display: block;">To Date</span><b>${trBlock.to_date || '—'}</b></div>
+                <div><span style="color: var(--text-muted); display: block;">To Time</span><b>${trBlock.to_time || '—'}</b></div>
+                <div><span style="color: var(--text-muted); display: block;">To Location</span><b>${trBlock.to_loc || '—'}</b></div>
             </div>
         </div>
     `).join('');
@@ -3061,9 +3115,10 @@ function renderCallSheetReport(sub) {
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
                     <thead>
                         <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">
-                            <th style="text-align: left; padding: 0.5rem; width: 30%;">Role</th>
-                            <th style="text-align: left; padding: 0.5rem; width: 40%;">Name & Surname</th>
-                            <th style="text-align: left; padding: 0.5rem; width: 30%;">Cell Number</th>
+                            <th style="text-align: left; padding: 0.5rem; width: 25%;">Role</th>
+                            <th style="text-align: left; padding: 0.5rem; width: 25%;">Name</th>
+                            <th style="text-align: left; padding: 0.5rem; width: 25%;">Surname</th>
+                            <th style="text-align: left; padding: 0.5rem; width: 25%;">Cell Number</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -3115,11 +3170,14 @@ function renderCallSheetReport(sub) {
                             <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); text-transform: uppercase;">
                                 <th style="text-align: left; padding: 0.4rem;">Name</th>
                                 <th style="text-align: left; padding: 0.4rem;">Surname</th>
-                                <th style="text-align: left; padding: 0.4rem;">Flight Details</th>
+                                <th style="text-align: left; padding: 0.4rem;">Flight Number</th>
+                                <th style="text-align: left; padding: 0.4rem;">Airline</th>
+                                <th style="text-align: left; padding: 0.4rem;">Departure Time</th>
+                                <th style="text-align: left; padding: 0.4rem;">Arrival Time</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${flightsHtml || '<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 0.5rem;">No flights.</td></tr>'}
+                            ${flightsHtml || '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 0.5rem;">No flights.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
@@ -3135,12 +3193,13 @@ function renderCallSheetReport(sub) {
                             <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); text-transform: uppercase;">
                                 <th style="text-align: left; padding: 0.4rem;">Name</th>
                                 <th style="text-align: left; padding: 0.4rem;">Surname</th>
-                                <th style="text-align: left; padding: 0.4rem;">Location</th>
+                                <th style="text-align: left; padding: 0.4rem;">Hotel/B&B Name</th>
+                                <th style="text-align: left; padding: 0.4rem;">Address</th>
                                 <th style="text-align: left; padding: 0.4rem;">Dates</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${accomsHtml || '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 0.5rem;">No accommodation details.</td></tr>'}
+                            ${accomsHtml || '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 0.5rem;">No accommodation details.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
