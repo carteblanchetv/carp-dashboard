@@ -405,3 +405,19 @@
 [2026-05-26 10:08:44]    93dc920..fc737ee  main -> main
 [2026-05-26 10:08:44] Sync complete.
 [2026-05-26 10:38:44] Changes detected. Syncing...
+[2026-05-26 10:38:44] warning: in the working copy of 'frontend/proposal.html', LF will be replaced by CRLF the next time Git touches it
+[2026-05-26 10:38:44] warning: in the working copy of 'frontend/proposal.js', LF will be replaced by CRLF the next time Git touches it
+[2026-05-26 10:38:44] warning: in the working copy of 'patch.js', LF will be replaced by CRLF the next time Git touches it
+[2026-05-26 10:38:44] warning: in the working copy of 'patch_html.js', LF will be replaced by CRLF the next time Git touches it
+[2026-05-26 10:38:44] warning: in the working copy of 'patch_js.js', LF will be replaced by CRLF the next time Git touches it
+[2026-05-26 10:38:44] warning: in the working copy of 'patch_js_functions.js', LF will be replaced by CRLF the next time Git touches it
+[2026-05-26 10:38:44] [main b94f908] auto-sync: 2026-05-26 10:38
+[2026-05-26 10:38:44]  11 files changed, 4186 insertions(+), 2784 deletions(-)
+[2026-05-26 10:38:44]  create mode 100644 Call Sheet Template - Rough.pdf
+[2026-05-26 10:38:44]  create mode 100644 patch_js.js
+[2026-05-26 10:38:44]  create mode 100644 patch_js_functions.js
+[2026-05-26 10:38:44]  create mode 100644 pdf_text.txt
+[2026-05-26 10:38:44] To https://github.com/OwlArcana/cb-deliverables
+[2026-05-26 10:38:44]    fc737ee..b94f908  main -> main
+[2026-05-26 10:38:44] Sync complete.
+[2026-05-26 11:08:44] Changes detected. Syncing...
