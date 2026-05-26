@@ -1,5 +1,5 @@
 // proposal.js
-// VERSION: 5.1.5
+// VERSION: 5.1.6
 import { getIdToken, fetchWithAuth, checkAuth, isAdmin, isSuperAdmin, isEditorialProduction } from './auth.js?v=5.1.1';
 
 function formatStoryDate(dateInput) {
@@ -182,7 +182,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const backBtn = document.getElementById('backToProposalBtn');
         const topEditCallSheetBtn = document.getElementById('topEditCallSheetBtn');
-        if (topEditCallSheetBtn) topEditCallSheetBtn.style.display = 'none';
+        if (topEditCallSheetBtn) {
+            topEditCallSheetBtn.classList.add('hidden');
+            topEditCallSheetBtn.style.display = 'none';
+        }
 
         if (isCallSheetMode) {
             console.log("[DEBUG] Activating Call Sheet View");
@@ -1731,7 +1734,10 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("[DEBUG] showProposalPreview - ID:", sub.id, "Status:", sub.status, "isAdminView:", isAdminView);
 
         const topEditCallSheetBtn = document.getElementById('topEditCallSheetBtn');
-        if (topEditCallSheetBtn) topEditCallSheetBtn.style.display = 'none';
+        if (topEditCallSheetBtn) {
+            topEditCallSheetBtn.classList.add('hidden');
+            topEditCallSheetBtn.style.display = 'none';
+        }
 
         // Setup Story Deliverables Bar (Visible in Preview too)
         setupDeliverablesBar(sub, linkedAssets, isReadOnly);
@@ -2912,8 +2918,10 @@ function showCallSheetPreview(sub, assets) {
     const editBtn = document.getElementById('topEditCallSheetBtn');
     if (editBtn) {
         if (isAdminView) {
+            editBtn.classList.add('hidden');
             editBtn.style.display = 'none';
         } else {
+            editBtn.classList.remove('hidden');
             editBtn.style.display = 'inline-block';
             editBtn.onclick = () => {
                 window.location.href = `proposal.html?id=${sub.id}#CallSheet`;
