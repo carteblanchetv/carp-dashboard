@@ -1,109 +1,3 @@
-[2026-05-22 20:38:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-22 20:38:44]    ad0a6a7..86dc9ac  main -> main
-[2026-05-22 20:38:44] Sync complete.
-[2026-05-22 21:08:44] Changes detected. Syncing...
-[2026-05-22 21:08:44] [main e26addd] auto-sync: 2026-05-22 21:08
-[2026-05-22 21:08:44]  1 file changed, 6 insertions(+)
-[2026-05-22 21:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-22 21:08:44]    86dc9ac..e26addd  main -> main
-[2026-05-22 21:08:44] Sync complete.
-[2026-05-22 21:38:44] Changes detected. Syncing...
-[2026-05-22 21:38:44] [main 749ddec] auto-sync: 2026-05-22 21:38
-[2026-05-22 21:38:44]  2 files changed, 11 insertions(+), 13 deletions(-)
-[2026-05-22 21:38:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-22 21:38:44]    e26addd..749ddec  main -> main
-[2026-05-22 21:38:44] Sync complete.
-[2026-05-22 22:08:44] Changes detected. Syncing...
-[2026-05-22 22:08:44] [main d7b1552] auto-sync: 2026-05-22 22:08
-[2026-05-22 22:08:44]  1 file changed, 6 insertions(+)
-[2026-05-22 22:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-22 22:08:44]    749ddec..d7b1552  main -> main
-[2026-05-22 22:08:44] Sync complete.
-[2026-05-23 14:56:49] Changes detected. Syncing...
-[2026-05-23 14:56:49] warning: in the working copy of 'functions/index.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 14:56:49] warning: in the working copy of 'patch.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 14:56:49] warning: in the working copy of 'patch_search.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 14:56:49] [main 13393f4] auto-sync: 2026-05-23 14:56
-[2026-05-23 14:56:49]  4 files changed, 86 insertions(+), 5 deletions(-)
-[2026-05-23 14:56:49]  create mode 100644 patch.js
-[2026-05-23 14:56:49]  create mode 100644 patch_search.js
-[2026-05-23 14:56:49] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-23 14:56:49]    d7b1552..13393f4  main -> main
-[2026-05-23 14:56:49] Sync complete.
-[2026-05-23 15:08:44] Changes detected. Syncing...
-[2026-05-23 15:08:44] [main 67f2a8d] auto-sync: 2026-05-23 15:08
-[2026-05-23 15:08:44]  1 file changed, 11 insertions(+)
-[2026-05-23 15:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-23 15:08:44]    13393f4..67f2a8d  main -> main
-[2026-05-23 15:08:44] Sync complete.
-[2026-05-23 15:38:44] Changes detected. Syncing...
-[2026-05-23 15:38:44] [main ebd0801] auto-sync: 2026-05-23 15:38
-[2026-05-23 15:38:44]  1 file changed, 6 insertions(+)
-[2026-05-23 15:38:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-23 15:38:44]    67f2a8d..ebd0801  main -> main
-[2026-05-23 15:38:44] Sync complete.
-[2026-05-23 16:08:44] Changes detected. Syncing...
-[2026-05-23 16:08:44] [main a2d3576] auto-sync: 2026-05-23 16:08
-[2026-05-23 16:08:44]  1 file changed, 6 insertions(+)
-[2026-05-23 16:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-23 16:08:44]    ebd0801..a2d3576  main -> main
-[2026-05-23 16:08:44] Sync complete.
-[2026-05-23 16:38:44] Changes detected. Syncing...
-[2026-05-23 16:38:44] warning: in the working copy of 'frontend/admin.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 16:38:44] warning: in the working copy of 'frontend/admin_dashboard.html', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 16:38:44] warning: in the working copy of 'frontend/style.css', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 16:38:44] warning: in the working copy of 'patch_admin.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 16:38:44] warning: in the working copy of 'patch_admin2.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 16:38:44] warning: in the working copy of 'patch_admin3.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 16:38:44] warning: in the working copy of 'patch_admin4.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 16:38:44] warning: in the working copy of 'patch_css.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 16:38:44] warning: in the working copy of 'patch_css2.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 16:38:44] warning: in the working copy of 'patch_html.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 16:38:44] [main 5acf8a9] auto-sync: 2026-05-23 16:38
-[2026-05-23 16:38:44]  11 files changed, 710 insertions(+), 5 deletions(-)
-[2026-05-23 16:38:44]  create mode 100644 patch_admin.js
-[2026-05-23 16:38:44]  create mode 100644 patch_admin2.js
-[2026-05-23 16:38:44]  create mode 100644 patch_admin3.js
-[2026-05-23 16:38:44]  create mode 100644 patch_admin4.js
-[2026-05-23 16:38:44]  create mode 100644 patch_css.js
-[2026-05-23 16:38:44]  create mode 100644 patch_css2.js
-[2026-05-23 16:38:44]  create mode 100644 patch_html.js
-[2026-05-23 16:38:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-23 16:38:44]    a2d3576..5acf8a9  main -> main
-[2026-05-23 16:38:44] Sync complete.
-[2026-05-23 17:08:44] Changes detected. Syncing...
-[2026-05-23 17:08:44] warning: in the working copy of 'frontend/admin.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:08:44] warning: in the working copy of 'frontend/admin_dashboard.html', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:08:44] warning: in the working copy of 'frontend/style.css', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:08:44] warning: in the working copy of 'patch_admin5.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:08:44] warning: in the working copy of 'patch_duplicate.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:08:44] warning: in the working copy of 'patch_modal.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:08:44] warning: in the working copy of 'patch_modal_classes.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:08:44] warning: in the working copy of 'patch_modal_css.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:08:44] warning: in the working copy of 'patch_modal_inject.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:08:44] warning: in the working copy of 'patch_modal_meta.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:08:44] warning: in the working copy of 'patch_ui.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:08:44] [main 65b51e4] auto-sync: 2026-05-23 17:08
-[2026-05-23 17:08:44]  12 files changed, 635 insertions(+), 36 deletions(-)
-[2026-05-23 17:08:44]  create mode 100644 patch_admin5.js
-[2026-05-23 17:08:44]  create mode 100644 patch_duplicate.js
-[2026-05-23 17:08:44]  create mode 100644 patch_modal.js
-[2026-05-23 17:08:44]  create mode 100644 patch_modal_classes.js
-[2026-05-23 17:08:44]  create mode 100644 patch_modal_css.js
-[2026-05-23 17:08:44]  create mode 100644 patch_modal_inject.js
-[2026-05-23 17:08:44]  create mode 100644 patch_modal_meta.js
-[2026-05-23 17:08:44]  create mode 100644 patch_ui.js
-[2026-05-23 17:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-23 17:08:44]    5acf8a9..65b51e4  main -> main
-[2026-05-23 17:08:44] Sync complete.
-[2026-05-23 17:38:44] Changes detected. Syncing...
-[2026-05-23 17:38:44] warning: in the working copy of 'frontend/admin.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:38:44] warning: in the working copy of 'frontend/admin_dashboard.html', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:38:44] warning: in the working copy of 'frontend/style.css', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:38:44] warning: in the working copy of 'functions/index.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:38:44] warning: in the working copy of 'patch_backend_inline.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:38:44] warning: in the working copy of 'patch_clickable.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-23 17:38:44] warning: in the working copy of 'patch_combine.js', LF will be replaced by CRLF the next time Git touches it
 [2026-05-23 17:38:44] warning: in the working copy of 'patch_frontend_pdf.js', LF will be replaced by CRLF the next time Git touches it
 [2026-05-23 17:38:44] warning: in the working copy of 'patch_layout.js', LF will be replaced by CRLF the next time Git touches it
 [2026-05-23 17:38:44] warning: in the working copy of 'patch_scroll.js', LF will be replaced by CRLF the next time Git touches it
@@ -499,3 +393,9 @@
 [2026-05-26 16:38:44]    35a8381..5e2ed8b  main -> main
 [2026-05-26 16:38:44] Sync complete.
 [2026-05-26 17:08:44] Changes detected. Syncing...
+[2026-05-26 17:08:44] [main 1ccd609] auto-sync: 2026-05-26 17:08
+[2026-05-26 17:08:44]  1 file changed, 6 insertions(+)
+[2026-05-26 17:08:44] To https://github.com/OwlArcana/cb-deliverables
+[2026-05-26 17:08:44]    ab86b1b..1ccd609  main -> main
+[2026-05-26 17:08:44] Sync complete.
+[2026-05-26 17:38:44] Changes detected. Syncing...
