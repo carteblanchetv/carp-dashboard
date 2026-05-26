@@ -1,5 +1,5 @@
 // proposal.js
-// VERSION: 5.1.7
+// VERSION: 5.1.8
 import { getIdToken, fetchWithAuth, checkAuth, isAdmin, isSuperAdmin, isEditorialProduction } from './auth.js?v=5.1.1';
 
 function formatStoryDate(dateInput) {
@@ -3057,7 +3057,7 @@ function renderCallSheetReport(sub) {
 
             <!-- SECTION 1: CREW DETAILS -->
             <div style="margin-bottom: 3rem;">
-                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Section 1: Crew Details</h3>
+                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">CREW DETAILS</h3>
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
                     <thead>
                         <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">
@@ -3075,7 +3075,7 @@ function renderCallSheetReport(sub) {
 
             <!-- SECTION 2: STORY RISK ASSESSMENT -->
             <div style="margin-bottom: 3rem;">
-                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Section 2: Story Risk Assessment</h3>
+                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">RISK ASSESSMENT</h3>
                 <div style="background: rgba(0,0,0,0.02); padding: 1.25rem; border-radius: 8px; border: 1px dashed var(--border);">
                     <p style="margin: 0; font-size: 0.9rem; line-height: 1.5; white-space: pre-wrap;">${cs.risk_assessment || 'No risk assessment / story description provided.'}</p>
                 </div>
@@ -3083,13 +3083,13 @@ function renderCallSheetReport(sub) {
 
             <!-- SECTION 3: MOVEMENT ORDER -->
             <div style="margin-bottom: 3rem;">
-                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Section 3: Movement Order</h3>
+                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">MOVEMENT ORDER</h3>
                 ${moSectionsHtml || '<div style="color: var(--text-muted); font-size: 0.9rem;">No movement orders scheduled.</div>'}
             </div>
 
             <!-- SECTION 4: EQUIPMENT -->
             <div style="margin-bottom: 3rem;">
-                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Section 4: Equipment</h3>
+                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">EQUIPMENT</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-size: 0.9rem;">
                     <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Camera Equipment (${eq.camera_type || '—'})</span><span style="font-weight: 600;">${eq.camera_desc || '—'}</span></div>
                     <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Audio Equipment (${eq.audio_type || '—'})</span><span style="font-weight: 600;">${eq.audio_desc || '—'}</span></div>
@@ -3102,7 +3102,7 @@ function renderCallSheetReport(sub) {
 
             <!-- SECTION 5: TRAVEL AND VEHICLES -->
             <div style="margin-bottom: 3rem;">
-                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Section 5: Travel and Vehicles</h3>
+                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--success); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">TRAVEL & VEHICLES</h3>
                 
                 <!-- Flight Details -->
                 <div style="margin-bottom: 1.5rem; border: 1px solid var(--border); padding: 1.25rem; border-radius: 8px;">

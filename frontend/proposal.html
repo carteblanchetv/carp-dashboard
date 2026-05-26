@@ -554,7 +554,7 @@
             <section id="callSheetSection" class="form-section" style="border-top: 2px solid var(--success); padding-top: 2rem; margin-top: 3rem;">
                 <h2 class="section-title" style="color: var(--success);">Call Sheet</h2>
                 <p style="background: rgba(239, 68, 68, 0.08); padding: 1.25rem; border-radius: var(--radius-sm); border-left: 5px solid var(--danger); font-size: 1rem; margin-bottom: 2rem; color: var(--danger); font-weight: 600;">
-                    <b>IMPORTANT:</b> For insurance purposes, Call Sheet must be submitted before filming.
+                    <b>IMPORTANT:</b> For insurance purposes, a Call Sheet must be submitted before filming.
                 </p>
 
                 <!-- Hidden inputs for linking and metadata -->
@@ -566,7 +566,7 @@
 
                 <!-- SHOOT DATES (MULTIPLE SELECTION) -->
                 <div style="margin-top: 1.5rem; margin-bottom: 2rem;">
-                    <h3 style="color: var(--success); font-size: 1.15rem; font-weight: 800; margin-bottom: 0.75rem;">SHOOT DATES: Select Multiple Dates</h3>
+                    <h3 style="color: var(--success); font-size: 1.15rem; font-weight: 800; margin-bottom: 0.75rem;">SHOOT DATES</h3>
                     <div id="cs_shoot_dates_container" style="display: flex; flex-direction: column; gap: 0.5rem; max-width: 300px;">
                         <!-- Dynamic date rows -->
                     </div>
@@ -575,7 +575,7 @@
 
                 <!-- SECTION 1: CREW DETAILS -->
                 <div style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
-                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Section 1: Crew Details</h3>
+                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">CREW DETAILS</h3>
                     <div class="table-container">
                         <table class="data-table">
                             <thead>
@@ -615,11 +615,11 @@
                             </tbody>
                         </table>
                     </div>
-                    <button type="button" id="addCsOtherCrewBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Other Crew</button>
+                    <button type="button" id="addCsOtherCrewBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add More Crew</button>
 
                     <!-- Security Section (Optional) -->
                     <div style="margin-top: 1.5rem; border-top: 1px dashed var(--border); padding-top: 1.5rem;">
-                        <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-main);">Security (If Applicable)</h4>
+                        <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-main);">Security (if Applicable)</h3>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label>Security Name & Surname</label>
@@ -635,7 +635,7 @@
 
                 <!-- SECTION 2: STORY RISK ASSESSMENT -->
                 <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Section 2: Story Risk Assessment</h3>
+                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">RISK ASSESSMENT</h3>
                     <div class="form-group">
                         <label style="font-weight: 600;">Describe the potential risk factors linked to the filming of your story.</label>
                         <textarea id="cs_risk_assessment" name="cs_risk_assessment" rows="4" placeholder="Describe potential risk factors..."></textarea>
@@ -644,7 +644,7 @@
 
                 <!-- SECTION 3: MOVEMENT ORDER -->
                 <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Section 3: Movement Order</h3>
+                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">MOVEMENT ORDER</h3>
                     <div id="movement_orders_container">
                         <!-- Dynamic Movement Order Section Blocks -->
                     </div>
@@ -653,13 +653,13 @@
 
                 <!-- SECTION 4: EQUIPMENT -->
                 <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Section 4: Equipment</h3>
+                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">EQUIPMENT</h3>
                     
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>CAMERA Equipment Type</label>
+                            <label>Camera Equipment</label>
                             <select id="eq_camera_type" name="eq_camera_type">
-                                <option value="">-- Select Camera --</option>
+                                <option value="">-- Select Camera Device--</option>
                                 <option value="Cam A">Cam A</option>
                                 <option value="Cam B">Cam B</option>
                                 <option value="Cam C">Cam C</option>
@@ -669,16 +669,16 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>CAMERA Description</label>
+                            <label>Camera Description</label>
                             <input type="text" id="eq_camera_desc" name="eq_camera_desc" placeholder="Describe camera equipment...">
                         </div>
                     </div>
 
                     <div class="form-grid" style="margin-top: 1.25rem;">
                         <div class="form-group">
-                            <label>AUDIO Equipment Type</label>
+                            <label>Audio Equipment</label>
                             <select id="eq_audio_type" name="eq_audio_type">
-                                <option value="">-- Select Audio --</option>
+                                <option value="">-- Select Audio Device --</option>
                                 <option value="Mic 1">Mic 1</option>
                                 <option value="Mic 2">Mic 2</option>
                                 <option value="Mic 3">Mic 3</option>
@@ -688,29 +688,29 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>AUDIO Description</label>
+                            <label>Audio Description</label>
                             <input type="text" id="eq_audio_desc" name="eq_audio_desc" placeholder="Describe audio equipment...">
                         </div>
                     </div>
 
                     <div class="form-grid" style="margin-top: 1.25rem;">
                         <div class="form-group">
-                            <label>LENSES Description</label>
+                            <label>Lenses Description</label>
                             <input type="text" id="eq_lenses_desc" name="eq_lenses_desc" placeholder="Describe lenses...">
                         </div>
                         <div class="form-group">
-                            <label>LIGHTING KIT Description</label>
+                            <label>Lighting Kit Description</label>
                             <input type="text" id="eq_lighting_desc" name="eq_lighting_desc" placeholder="Describe lighting kit...">
                         </div>
                     </div>
 
                     <div class="form-grid" style="margin-top: 1.25rem;">
                         <div class="form-group">
-                            <label>RIGS Description</label>
+                            <label>Rigs Description</label>
                             <input type="text" id="eq_rigs_desc" name="eq_rigs_desc" placeholder="Describe rigs...">
                         </div>
                         <div class="form-group">
-                            <label>OTHER Equipment Description</label>
+                            <label>Other Equipment Description</label>
                             <input type="text" id="eq_other_desc" name="eq_other_desc" placeholder="Describe other equipment...">
                         </div>
                     </div>
@@ -718,7 +718,7 @@
 
                 <!-- SECTION 5: TRAVEL AND VEHICLES -->
                 <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Section 5: Travel and Vehicles</h3>
+                    <h3 style="color: var(--success); font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">TRAVEL & VEHICLES</h3>
                     
                     <!-- FLIGHT DETAILS -->
                     <div style="margin-bottom: 2.5rem; border-bottom: 1px dashed var(--border); padding-bottom: 2rem;">
@@ -820,6 +820,6 @@
         </div>
     </div>
 
-    <script type="module" src="proposal.js?v=5.1.7"></script>
+    <script type="module" src="proposal.js?v=5.1.8"></script>
 </body>
 </html>
