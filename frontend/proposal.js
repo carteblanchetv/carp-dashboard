@@ -370,6 +370,14 @@ document.addEventListener('DOMContentLoaded', () => {
         `);
     }
 
+    function addMovementRow(data = {}) {
+        return createGenericRow('movementOrderTableBody', `
+            <td><input type="text" name="mo_time[]" class="table-input" value="${data.time || ''}" placeholder="e.g. 09:00"></td>
+            <td><input type="text" name="mo_what[]" class="table-input" value="${data.what || ''}" placeholder="What's happening?"></td>
+            <td><input type="text" name="mo_location[]" class="table-input" value="${data.location || ''}"></td>
+        `);
+    }
+
     function addCsCrewRow(data = {}) {
         const container = document.getElementById('dynamicAdditionalCrew');
         if (!container) return;
@@ -619,15 +627,85 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addResearcherBtn').onclick = () => addResearcherRow();
     document.getElementById('addCameraBtn').onclick = () => addCameraRow();
     document.getElementById('addCrewBtn').onclick = () => addCrewRow();
-    document.getElementById('addShootRowBtn').onclick = () => addShootScheduleRow();
+    
+    const addMovementRowBtn = document.getElementById('addMovementRowBtn');
+    if (addMovementRowBtn) addMovementRowBtn.onclick = () => addMovementRow();
+    
     const addCsCrewBtn = document.getElementById('addCsCrewBtn');
     if (addCsCrewBtn) addCsCrewBtn.onclick = () => addCsCrewRow();
 
     // Phone Formatting Listeners
-    ['cs_producer_phone', 'cs_presenter_phone', 'cs_dop_phone', 'cs_cam_assistant_phone'].forEach(id => {
+    ['cs_producer_phone', 'cs_presenter_phone', 'cs_dop_phone', 'cs_cam_assistant_phone', 'cs_security_phone'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.oninput = (e) => { e.target.value = formatSA(e.target.value); };
     });
+
+    // File Upload Listeners
+    const travelFlightFile = document.getElementById('travel_flight_file');
+    const travelTransFile = document.getElementById('travel_trans_file');
+
+    const handleCallSheetFileUpload = async (inputEl, pathHiddenEl, nameHiddenEl, displayEl) => {
+        const file = inputEl.files[0];
+        if (!file) return;
+        if (file.type !== 'application/pdf') {
+            alert('Only PDF files are allowed.');
+            inputEl.value = '';
+            return;
+        }
+
+        try {
+            if (loadingOverlay) loadingOverlay.classList.add('active');
+            document.getElementById('loadingHeading').textContent = 'Uploading File...';
+            document.getElementById('loadingSubtext').textContent = 'Please wait while your PDF is uploaded and encrypted.';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const token = await window.auth.getIdToken();
+            const response = await fetch('/api/upload-call-sheet-file', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` },
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                pathHiddenEl.value = result.storagePath;
+                nameHiddenEl.value = result.filename;
+                displayEl.textContent = `✓ ${result.filename}`;
+            } else {
+                throw new Error(result.error);
+            }
+        } catch (err) {
+            console.error('File upload failed:', err);
+            alert('Upload failed: ' + err.message);
+            inputEl.value = '';
+        } finally {
+            if (loadingOverlay) loadingOverlay.classList.remove('active');
+        }
+    };
+
+    if (travelFlightFile) {
+        travelFlightFile.addEventListener('change', () => {
+            handleCallSheetFileUpload(
+                travelFlightFile,
+                document.getElementById('travel_flight_file_path'),
+                document.getElementById('travel_flight_filename'),
+                document.getElementById('travel_flight_file_name_display')
+            );
+        });
+    }
+
+    if (travelTransFile) {
+        travelTransFile.addEventListener('change', () => {
+            handleCallSheetFileUpload(
+                travelTransFile,
+                document.getElementById('travel_trans_file_path'),
+                document.getElementById('travel_trans_filename'),
+                document.getElementById('travel_trans_file_name_display')
+            );
+        });
+    }
 
     // Initial rows
     if (!isEditMode) {
@@ -687,10 +765,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderProjectAssets(linkedAssets, sub);
                 
                 const isCallSheetMode = window.location.hash === '#CallSheet';
-                if (isReadOnly && !isCallSheetMode) {
-                    console.log("[DEBUG] Entering Read-Only (Preview) mode");
-                    showProposalPreview(sub, linkedAssets);
-                    return;
+                if (isReadOnly) {
+                    if (isCallSheetMode) {
+                        console.log("[DEBUG] Entering Read-Only Call Sheet mode");
+                        showCallSheetPreview(sub, linkedAssets);
+                        return;
+                    } else {
+                        console.log("[DEBUG] Entering Read-Only (Preview) mode");
+                        showProposalPreview(sub, linkedAssets);
+                        return;
+                    }
                 }
                 // Show form for editing
                 form.classList.remove('hidden');
@@ -898,9 +982,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         setVal('cs_producer_phone', cs.producer_phone);
                         setVal('cs_producer_id', cs.producer_id);
+                        
                         const savedPresenter = cs.presenter_name || '';
                         const standardPresenters = ['Catherine Rice', 'Claire Mawisa', 'Erin Bates', 'Govan Whittles', 'Lourensa Eckard', 'Macfarlane Moleli', 'Masa Kekana', 'Nickolaus Bauer'];
-                        
                         if (savedPresenter) {
                             if (standardPresenters.includes(savedPresenter)) {
                                 if (document.getElementById('cs_presenter_name')) document.getElementById('cs_presenter_name').value = savedPresenter;
@@ -911,6 +995,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 if (document.getElementById('csPresenterOtherWrapper')) document.getElementById('csPresenterOtherWrapper').classList.remove('hidden');
                             }
                         }
+                        
                         setVal('cs_presenter_phone', cs.presenter_phone);
                         setVal('cs_presenter_id', cs.presenter_id);
                         setVal('cs_dop_name', cs.dop_name);
@@ -919,33 +1004,78 @@ document.addEventListener('DOMContentLoaded', () => {
                         setVal('cs_cam_assistant_name', cs.cam_assistant_name);
                         setVal('cs_cam_assistant_phone', cs.cam_assistant_phone);
                         setVal('cs_cam_assistant_id', cs.cam_assistant_id);
+                        setVal('cs_security_status', cs.security_status);
+                        setVal('cs_security_name', cs.security_name);
+                        setVal('cs_security_phone', cs.security_phone);
+                        setVal('cs_shoot_day', cs.shoot_day);
+                        setVal('cs_shoot_date', cs.shoot_date);
                         
-                        // Populate Additional Crew
+                        // Kit
+                        if (cs.kit) {
+                            setVal('kit_camera', cs.kit.camera);
+                            setVal('kit_audio', cs.kit.audio);
+                            setVal('kit_lenses', cs.kit.lenses);
+                            setVal('kit_lighting', cs.kit.lighting);
+                            setVal('kit_rigs', cs.kit.rigs);
+                            setVal('kit_other', cs.kit.other);
+                        }
+
+                        // Travel
+                        if (cs.travel) {
+                            setVal('travel_flight_name', cs.travel.flight_name);
+                            setVal('travel_flight_details', cs.travel.flight_details);
+                            setVal('travel_flight_file_path', cs.travel.flight_file_path);
+                            setVal('travel_flight_filename', cs.travel.flight_filename);
+                            if (document.getElementById('travel_flight_file_name_display')) {
+                                document.getElementById('travel_flight_file_name_display').textContent = cs.travel.flight_filename ? `✓ ${cs.travel.flight_filename}` : '';
+                            }
+
+                            setVal('travel_accom_name', cs.travel.accom_name);
+                            setVal('travel_accom_location', cs.travel.accom_location);
+                            setVal('travel_accom_from', cs.travel.accom_from);
+                            setVal('travel_accom_to', cs.travel.accom_to);
+
+                            setVal('travel_trans_name', cs.travel.trans_name);
+                            setVal('travel_trans_from_loc', cs.travel.trans_from_loc);
+                            setVal('travel_trans_to_loc', cs.travel.trans_to_loc);
+                            setVal('travel_trans_from_date', cs.travel.trans_from_date);
+                            setVal('travel_trans_to_date', cs.travel.trans_to_date);
+                            setVal('travel_trans_from_time', cs.travel.trans_from_time);
+                            setVal('travel_trans_to_time', cs.travel.trans_to_time);
+                            setVal('travel_trans_file_path', cs.travel.trans_file_path);
+                            setVal('travel_trans_filename', cs.travel.trans_filename);
+                            if (document.getElementById('travel_trans_file_name_display')) {
+                                document.getElementById('travel_trans_file_name_display').textContent = cs.travel.trans_filename ? `✓ ${cs.travel.trans_filename}` : '';
+                            }
+                        }
+
+                        // Additional Crew
                         const csCrewContainer = document.getElementById('dynamicAdditionalCrew');
                         if (csCrewContainer) {
                             csCrewContainer.innerHTML = '';
                             if (cs.additionalCrew && cs.additionalCrew.length > 0) {
                                 cs.additionalCrew.forEach(c => addCsCrewRow(c));
-                            } else {
-                                // Backward compatibility for old add1/add2 fields
-                                if (cs.add1_name) addCsCrewRow({ name: cs.add1_name, phone: cs.add1_phone, id: cs.add1_id });
-                                if (cs.add2_name) addCsCrewRow({ name: cs.add2_name, phone: cs.add2_phone, id: cs.add2_id });
                             }
                         }
 
                         setVal('cs_story_description', cs.story_description);
 
-                        // Populate Shoot Schedule Table
-                        const ssBody = document.getElementById('shootScheduleTableBody');
-                        ssBody.innerHTML = '';
-                        if (cs.shootSchedule && cs.shootSchedule.length > 0) {
-                            cs.shootSchedule.forEach(row => addShootScheduleRow(row));
-                        } else {
-                            for (let i = 0; i < 5; i++) addShootScheduleRow();
+                        // Populate Movement Order Table
+                        const ssBody = document.getElementById('movementOrderTableBody');
+                        if (ssBody) {
+                            ssBody.innerHTML = '';
+                            if (cs.movementOrder && cs.movementOrder.length > 0) {
+                                cs.movementOrder.forEach(row => addMovementRow(row));
+                            } else {
+                                for (let i = 0; i < 5; i++) addMovementRow();
+                            }
                         }
                     } else {
-                        // Default five empty rows for new call sheet
-                        for (let i = 0; i < 5; i++) addShootScheduleRow();
+                        const ssBody = document.getElementById('movementOrderTableBody');
+                        if (ssBody) {
+                            ssBody.innerHTML = '';
+                            for (let i = 0; i < 5; i++) addMovementRow();
+                        }
                     }
 
                     // Always ensure at least one row exists if empty after loading
@@ -1228,13 +1358,49 @@ document.addEventListener('DOMContentLoaded', () => {
                             cam_assistant_name: formData.get('cs_cam_assistant_name'),
                             cam_assistant_phone: formData.get('cs_cam_assistant_phone'),
                             cam_assistant_id: formData.get('cs_cam_assistant_id'),
+                            security_status: formData.get('cs_security_status'),
+                            security_name: formData.get('cs_security_name'),
+                            security_phone: formData.get('cs_security_phone'),
+                            shoot_day: formData.get('cs_shoot_day'),
+                            shoot_date: formData.get('cs_shoot_date'),
+                            movementOrder: Array.from(document.querySelectorAll('#movementOrderTableBody tr')).map(row => ({
+                                time: row.querySelector('input[name="mo_time[]"]')?.value || '',
+                                what: row.querySelector('input[name="mo_what[]"]')?.value || '',
+                                location: row.querySelector('input[name="mo_location[]"]')?.value || ''
+                            })).filter(row => row.time || row.what || row.location),
+                            kit: {
+                                camera: formData.get('kit_camera'),
+                                audio: formData.get('kit_audio'),
+                                lenses: formData.get('kit_lenses'),
+                                lighting: formData.get('kit_lighting'),
+                                rigs: formData.get('kit_rigs'),
+                                other: formData.get('kit_other')
+                            },
+                            travel: {
+                                flight_name: formData.get('travel_flight_name'),
+                                flight_details: formData.get('travel_flight_details'),
+                                flight_file_path: formData.get('travel_flight_file_path'),
+                                flight_filename: formData.get('travel_flight_filename'),
+                                accom_name: formData.get('travel_accom_name'),
+                                accom_location: formData.get('travel_accom_location'),
+                                accom_from: formData.get('travel_accom_from'),
+                                accom_to: formData.get('travel_accom_to'),
+                                trans_name: formData.get('travel_trans_name'),
+                                trans_from_loc: formData.get('travel_trans_from_loc'),
+                                trans_to_loc: formData.get('travel_trans_to_loc'),
+                                trans_from_date: formData.get('travel_trans_from_date'),
+                                trans_to_date: formData.get('travel_trans_to_date'),
+                                trans_from_time: formData.get('travel_trans_from_time'),
+                                trans_to_time: formData.get('travel_trans_to_time'),
+                                trans_file_path: formData.get('travel_trans_file_path'),
+                                trans_filename: formData.get('travel_trans_filename')
+                            },
                             additionalCrew: formData.getAll('cs_add_name[]').map((name, i) => ({
                                 name: name.trim(),
                                 phone: formData.getAll('cs_add_phone[]')[i]?.trim() || '',
                                 id: formData.getAll('cs_add_id[]')[i]?.trim() || ''
                             })).filter(c => c.name !== ''),
-                            story_description: formData.get('cs_story_description'),
-                            shootSchedule: gatherShootSchedule()
+                            story_description: formData.get('cs_story_description')
                         }
                     }
                 };
@@ -2102,11 +2268,11 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             
             document.getElementById('btnCallSheet').onclick = () => {
+                window.location.hash = '#CallSheet';
+                checkStandaloneMode();
                 if (isReadOnly) {
-                    window.location.href = `proposal.html?id=${sub.id}#CallSheet`;
+                    showCallSheetPreview(sub, linkedAssets);
                 } else {
-                    window.location.hash = '#CallSheet';
-                    checkStandaloneMode();
                     window.scrollTo(0,0);
                 }
             };

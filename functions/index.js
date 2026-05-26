@@ -103,6 +103,7 @@ function decryptCallSheet(details) {
         'presenter_phone', 'presenter_id',
         'dop_phone', 'dop_id',
         'cam_assistant_phone', 'cam_assistant_id',
+        'security_phone',
         'add1_phone', 'add1_id',
         'add2_phone', 'add2_id'
     ];
@@ -1808,6 +1809,7 @@ app.post('/api/update-proposal-details', express.json(), async (req, res) => {
             'presenter_phone', 'presenter_id',
             'dop_phone', 'dop_id',
             'cam_assistant_phone', 'cam_assistant_id',
+            'security_phone',
             'add1_phone', 'add1_id',
             'add2_phone', 'add2_id'
         ];
@@ -1832,7 +1834,7 @@ app.post('/api/update-proposal-details', express.json(), async (req, res) => {
             updateData[`details.${key}`] = details[key];
         }
     }
-    
+
     // Allow updating top-level fields too (e.g. for Admin edits or typos)
     if (story_title !== undefined) updateData.story_title = story_title;
     if (show !== undefined) updateData.show = show;
@@ -1852,6 +1854,58 @@ app.post('/api/update-proposal-details', express.json(), async (req, res) => {
     });
     res.json({ success: true });
   } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/upload-call-sheet-file', async (req, res) => {
+  try {
+    const { fields, files, file } = await parseMultipart(req);
+    if (!file) return res.status(400).json({ success: false, error: 'No file provided' });
+    const timestamp = Date.now();
+    const storagePath = `proposals/call_sheets/${timestamp}_${file.filename}`;
+    console.log(`[STORAGE] Encrypting ${file.filename} before upload...`);
+    const encryptedBuffer = encryptBuffer(file.buffer);
+    await defaultBucket.file(storagePath).save(encryptedBuffer, {
+      contentType: file.mimeType || 'application/pdf',
+      metadata: { firebaseStorageDownloadTokens: timestamp.toString() }
+    });
+    res.json({ success: true, storagePath, filename: file.filename });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.get('/api/get-call-sheet-file', async (req, res) => {
+  try {
+    const { id, path } = req.query;
+    if (!id || !path) return res.status(400).json({ success: false, error: 'Proposal ID and Path required' });
+
+    const doc = await admin.firestore().collection('proposals').doc(id).get();
+    if (!doc.exists) return res.status(404).json({ success: false, error: 'Proposal not found' });
+    
+    const data = doc.data();
+    const isAdmin = hasAdminAccess(req.user);
+    if (data.submittedBy !== req.user.uid && !isAdmin) {
+      return res.status(403).json({ success: false, error: 'Access denied' });
+    }
+
+    const cs = data.details?.callSheet || {};
+    const pathIsValid = cs.travel_flight_file_path === path || cs.travel_trans_file_path === path;
+    if (!pathIsValid && !isAdmin) {
+      return res.status(404).json({ success: false, error: 'File not found in this Call Sheet' });
+    }
+
+    console.log(`[STORAGE] Decrypting Call Sheet file: ${path}`);
+    const [fileBuffer] = await defaultBucket.file(path).download();
+    const decryptedBuffer = decryptBuffer(fileBuffer);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    const filename = path.split('/').pop().replace(/^\d+_/, '');
+    res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+    res.send(decryptedBuffer);
+  } catch (error) {
+    console.error('Call Sheet file retrieval failed:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
