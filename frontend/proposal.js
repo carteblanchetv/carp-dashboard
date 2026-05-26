@@ -1,5 +1,5 @@
 // proposal.js
-// VERSION: 5.1.2
+// VERSION: 5.1.3
 import { getIdToken, fetchWithAuth, checkAuth, isAdmin, isSuperAdmin, isEditorialProduction } from './auth.js?v=5.1.1';
 
 function formatStoryDate(dateInput) {
@@ -978,29 +978,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const cs = (sub.details && sub.details.callSheet) || {};
                     const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ''; };
-                    
-                    // Fallbacks for Crew from main Proposal if Call Sheet fields are empty/new
-                    const propPresenter = sub.details ? sub.details.presenter : '';
-                    let propDop = '';
-                    if (sub.details && sub.details.dop) {
-                        if (typeof sub.details.dop === 'object') {
-                            propDop = `${sub.details.dop.name || ''} ${sub.details.dop.surname || ''}`.trim();
-                        } else {
-                            propDop = sub.details.dop;
-                        }
-                    }
-                    let propAC = '';
-                    if (sub.details && sub.details.camera_assistant) {
-                        if (typeof sub.details.camera_assistant === 'object') {
-                            propAC = `${sub.details.camera_assistant.name || ''} ${sub.details.camera_assistant.surname || ''}`.trim();
-                        } else {
-                            propAC = sub.details.camera_assistant;
-                        }
-                    }
-
-                    const presenterVal = cs.presenter_name || propPresenter || '';
-                    const dopNameVal = cs.dop_name || propDop || '';
-                    const camAssistantNameVal = cs.cam_assistant_name || propAC || '';
+                    const presenterVal = cs.presenter_name || '';
+                    const dopNameVal = cs.dop_name || '';
+                    const camAssistantNameVal = cs.cam_assistant_name || '';
 
                     setVal('cs_producer_phone', cs.producer_phone);
                     setVal('cs_producer_id', cs.producer_id);
