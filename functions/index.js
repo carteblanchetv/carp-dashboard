@@ -2133,7 +2133,6 @@ app.get('/api/search', async (req, res) => {
   }
 });
 
-
 app.get('/api/debug/proposals', async (req, res) => {
   try {
     const docRef = admin.firestore().collection('proposals').doc('JuzkNpP44qplQ0s9CJgk');

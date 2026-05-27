@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Check if we should show read-only preview
             const csData = window.currentProposal && window.currentProposal.details && window.currentProposal.details.callSheet;
-            const hasCallSheetData = !!(csData && (csData.producer_name || csData.shoot_date || csData.shoot_city));
+            const hasCallSheetData = !!(csData && ((csData.shoot_dates && csData.shoot_dates.length > 0) || (csData.crew && csData.crew.length > 0)));
             
             if (!isCallSheetEdit && (isAdminView || isTextView || hasCallSheetData)) {
                 if (window.currentProposal) {
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("[DEBUG] Unhiding Back to Proposal button");
                 backBtn.classList.remove('hidden');
                 backBtn.style.display = 'inline-block';
-                backBtn.href = isReadOnly ? `proposal.html?id=${proposalId}&view=preview` : `proposal.html?id=${proposalId}`;
+                backBtn.href = `proposal.html?id=${proposalId}&view=preview`;
             }
             if (productionBar) productionBar.classList.remove('hidden'); // Keep the tools visible
             const floatingBar = document.getElementById('floatingAdminBar');
@@ -386,7 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return createGenericRow('budgetTableBody', `
             <td><input type="text" name="b_item[]" class="table-input" placeholder="Item..."></td>
             <td><input type="text" name="b_reason[]" class="table-input" placeholder="Reason..."></td>
-            <td><input type="text" name="b_cost[]" class="table-input" placeholder="R 00.00"></td>
         `);
     }
 
@@ -1197,7 +1196,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isCallSheetMode = window.location.hash === '#CallSheet';
                 const isCallSheetEditMode = window.location.hash === '#CallSheetEdit';
                 const csData = sub.details && sub.details.callSheet;
-                const hasCallSheetData = !!(csData && (csData.producer_name || csData.shoot_date || csData.shoot_city));
+                const hasCallSheetData = !!(csData && ((csData.shoot_dates && csData.shoot_dates.length > 0) || (csData.crew && csData.crew.length > 0)));
 
                 if (isCallSheetMode || isCallSheetEditMode) {
                     if (isAdminView || isTextView || (!isCallSheetEditMode && hasCallSheetData)) {
@@ -1285,7 +1284,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 populateTable('budgetTableBody', sub.budgetItems, addBudgetRow, (row, item) => {
                     row.querySelector('[name="b_item[]"]').value = item.item;
                     row.querySelector('[name="b_reason[]"]').value = item.reason;
-                    row.querySelector('[name="b_cost[]"]').value = item.cost;
                 });
 
                 populateTable('caseStudiesTableBody', sub.caseStudies, addCaseStudyRow, (row, item) => {
@@ -2000,6 +1998,21 @@ document.addEventListener('DOMContentLoaded', () => {
             topEditCallSheetBtn.classList.add('hidden');
             topEditCallSheetBtn.style.display = 'none';
         }
+        const csPdfBtn = document.getElementById('topDownloadCallSheetBtn');
+        if (csPdfBtn) {
+            csPdfBtn.classList.add('hidden');
+            csPdfBtn.style.display = 'none';
+        }
+        const proposalPdfBtn = document.getElementById('topDownloadProposalBtn');
+        if (proposalPdfBtn) {
+            if (sub._isRestrictedView) {
+                proposalPdfBtn.classList.add('hidden');
+                proposalPdfBtn.style.display = 'none';
+            } else {
+                proposalPdfBtn.classList.remove('hidden');
+                proposalPdfBtn.style.display = 'inline-block';
+            }
+        }
 
         // Setup Story Deliverables Bar (Visible in Preview too)
         setupDeliverablesBar(sub, linkedAssets, isReadOnly);
@@ -2265,10 +2278,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Extra Budget Items</h3>
                 <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem;">
                     <thead>
-                        <tr style="border-bottom: 1px solid var(--border);"><th style="text-align: left; padding: 0.75rem 0.5rem;">Item</th><th style="text-align: left; padding: 0.75rem 0.5rem;">Reason</th><th style="text-align: right; padding: 0.75rem 0.5rem;">Est. Cost</th></tr>
+                        <tr style="border-bottom: 1px solid var(--border);"><th style="text-align: left; padding: 0.75rem 0.5rem;">Item</th><th style="text-align: left; padding: 0.75rem 0.5rem;">Reason</th></tr>
                     </thead>
                     <tbody>
-                        ${(sub.budgetItems || []).map(b => `<tr><td style="padding: 0.75rem 0.5rem;">${b.item}</td><td style="padding: 0.75rem 0.5rem;">${b.reason}</td><td style="padding: 0.75rem 0.5rem; text-align: right; font-weight: 700;">${b.cost}</td></tr>`).join('')}
+                        ${(sub.budgetItems || []).map(b => `<tr><td style="padding: 0.75rem 0.5rem;">${b.item}</td><td style="padding: 0.75rem 0.5rem;">${b.reason}</td></tr>`).join('')}
                     </tbody>
                 </table>
             </div>
@@ -2464,10 +2477,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="report-section-title"><span>ðŸ’°</span> Extra Budget Items</div>
                 <table class="report-table">
                     <thead>
-                        <tr><th>Item</th><th>Reason</th><th style="text-align: right;">Est. Cost</th></tr>
+                        <tr><th>Item</th><th>Reason</th></tr>
                     </thead>
                     <tbody>
-                        ${(sub.budgetItems || []).map(b => `<tr><td>${b.item}</td><td>${b.reason}</td><td style="text-align: right; font-weight: 700;">${b.cost}</td></tr>`).join('')}
+                        ${(sub.budgetItems || []).map(b => `<tr><td>${b.item}</td><td>${b.reason}</td></tr>`).join('')}
                     </tbody>
                 </table>
             </div>
@@ -2861,7 +2874,7 @@ function renderProjectAssets(assets, proposal) {
     const isAllowedView = viewMode === 'preview' || viewMode === 'admin';
     const hasFinalScript = proposal.details && proposal.details.finalScript;
     const csData = proposal.details && proposal.details.callSheet;
-    const hasCallSheetData = csData && (csData.producer_name || csData.shoot_date || csData.shoot_city);
+    const hasCallSheetData = !!(csData && ((csData.shoot_dates && csData.shoot_dates.length > 0) || (csData.crew && csData.crew.length > 0)));
     
     let hasAnyVisibleAsset = hasCallSheetData || hasFinalScript || (assets && assets.length > 0);
     
@@ -3164,11 +3177,15 @@ function showCallSheetPreview(sub, assets) {
     document.title = "Call Sheet - Carte Blanche";
     
     // Setup header action button
-    const pdfBtn = document.getElementById('topDownloadProposalBtn');
-    if (pdfBtn) {
-        pdfBtn.textContent = 'Download Call Sheet PDF';
-        pdfBtn.onclick = () => window.downloadCallSheetPDF();
-        pdfBtn.style.display = 'inline-block';
+    const proposalPdfBtn = document.getElementById('topDownloadProposalBtn');
+    if (proposalPdfBtn) {
+        proposalPdfBtn.classList.add('hidden');
+        proposalPdfBtn.style.display = 'none';
+    }
+    const csPdfBtn = document.getElementById('topDownloadCallSheetBtn');
+    if (csPdfBtn) {
+        csPdfBtn.classList.remove('hidden');
+        csPdfBtn.style.display = 'inline-block';
     }
     
     // Setup Edit Call Sheet Button
@@ -3190,7 +3207,7 @@ function showCallSheetPreview(sub, assets) {
     if (backBtn) {
         backBtn.classList.remove('hidden');
         backBtn.style.display = 'inline-block';
-        backBtn.href = isReadOnly ? `proposal.html?id=${sub.id}&view=preview` : `proposal.html?id=${sub.id}`;
+        backBtn.href = `proposal.html?id=${sub.id}&view=preview`;
     }
 }
 
@@ -3315,7 +3332,7 @@ function renderCallSheetReport(sub) {
                         Story: <b style="color: var(--text-main);">${sub.story_title}</b>
                     </p>
                     <p style="margin: 0.25rem 0 0 0; color: var(--text-muted); font-size: 0.9rem;">
-                        Shoot Dates: <b style="color: var(--text-main);">${cs.shoot_dates ? cs.shoot_dates.join(', ') : '—'}</b>
+                        Shoot Dates: <b style="color: var(--text-main);">${cs.shoot_dates ? cs.shoot_dates.map(d => formatStoryDate(d)).join(', ') : '—'}</b>
                     </p>
                 </div>
                 <div style="text-align: right;">
@@ -3504,7 +3521,7 @@ window.downloadCallSheetPDF = async () => {
         const metadata = [
             ['Story Title', sub.story_title || 'Untitled'],
             ['Commission No', sub.commissionNumber || 'N/A'],
-            ['Shoot Dates', cs.shoot_dates ? cs.shoot_dates.join(', ') : '—']
+            ['Shoot Dates', cs.shoot_dates ? cs.shoot_dates.map(d => formatStoryDate(d)).join(', ') : '—']
         ];
         doc.autoTable({
             startY: currentY,
@@ -3850,8 +3867,8 @@ window.downloadProposalPDF = async () => {
             
             doc.autoTable({
                 startY: currentY,
-                head: [['Item', 'Reason', 'Cost']],
-                body: sub.budgetItems.map(b => [b.item, b.reason, b.cost]),
+                head: [['Item', 'Reason']],
+                body: sub.budgetItems.map(b => [b.item, b.reason]),
                 theme: 'striped',
                 headStyles: { fillColor: [0, 143, 190], textColor: 255 },
                 styles: { fontSize: 9 },
