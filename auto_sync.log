@@ -399,3 +399,12 @@
 [2026-05-27 12:38:44]    4663a19..aec7ea6  main -> main
 [2026-05-27 12:38:44] Sync complete.
 [2026-05-27 13:08:44] Changes detected. Syncing...
+[2026-05-27 13:08:44] warning: in the working copy of 'frontend/proposal.html', LF will be replaced by CRLF the next time Git touches it
+[2026-05-27 13:08:44] warning: in the working copy of 'frontend/proposal.js', LF will be replaced by CRLF the next time Git touches it
+[2026-05-27 13:08:44] [main 5973d8f] auto-sync: 2026-05-27 13:08
+[2026-05-27 13:08:44]  5 files changed, 47 insertions(+), 123 deletions(-)
+[2026-05-27 13:08:44]  create mode 100644 firebase-debug.log
+[2026-05-27 13:08:44] To https://github.com/OwlArcana/cb-deliverables
+[2026-05-27 13:08:44]    aec7ea6..5973d8f  main -> main
+[2026-05-27 13:08:44] Sync complete.
+[2026-05-27 13:38:44] Changes detected. Syncing...
