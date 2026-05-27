@@ -180,6 +180,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return html;
     }
 
+    function toggleCallSheetRequired(required) {
+        const container = document.getElementById('callSheetSection');
+        if (!container) return;
+        const inputs = container.querySelectorAll('input[name="cs_crew_name[]"], input[name="cs_crew_surname[]"], input[name="cs_crew_phone[]"]');
+        inputs.forEach(input => {
+            if (required) {
+                input.setAttribute('required', 'required');
+            } else {
+                input.removeAttribute('required');
+            }
+        });
+    }
+
     // --- STANDALONE CALL SHEET MODE ---
     function checkStandaloneMode() {
         console.log("[DEBUG] checkStandaloneMode - Hash:", window.location.hash);
@@ -215,6 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (!isCallSheetEdit && (isAdminView || isTextView || hasCallSheetData)) {
                 if (window.currentProposal) {
+                    toggleCallSheetRequired(false);
                     showCallSheetPreview(window.currentProposal, window.linkedAssets || []);
                     return;
                 }
@@ -222,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Otherwise, show fillable call sheet form
             console.log("[DEBUG] Activating Call Sheet Edit/Form View");
+            toggleCallSheetRequired(true);
             const summaryDiv = document.getElementById('proposalSummary');
             if (summaryDiv) {
                 summaryDiv.classList.add('hidden');
@@ -251,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.title = "Call Sheet - Carte Blanche";
         } else {
             console.log("[DEBUG] Activating Proposal View");
+            toggleCallSheetRequired(false);
             const summaryDiv = document.getElementById('proposalSummary');
             if (summaryDiv && isReadOnly) {
                 summaryDiv.classList.remove('hidden');
@@ -461,11 +477,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const rowId = 'cs_crew_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
         const tr = document.createElement('tr');
         tr.id = rowId;
+        const isCsActive = window.location.hash === '#CallSheet' || window.location.hash === '#CallSheetEdit';
+        const reqAttr = isCsActive ? 'required' : '';
         tr.innerHTML = `
-            <td><input type="text" name="cs_crew_role[]" value="${role}" placeholder="Role (e.g. Sound)" required class="table-input"></td>
-            <td><input type="text" name="cs_crew_name[]" value="${name}" placeholder="Name" required class="table-input"></td>
-            <td><input type="text" name="cs_crew_surname[]" value="${surname}" placeholder="Surname" required class="table-input"></td>
-            <td><input type="text" name="cs_crew_phone[]" value="${phone}" placeholder="+27 ..." required class="table-input" oninput="this.value = formatSA(this.value)"></td>
+            <td><input type="text" name="cs_crew_role[]" value="${role}" placeholder="Role (e.g. Sound)" ${reqAttr} class="table-input"></td>
+            <td><input type="text" name="cs_crew_name[]" value="${name}" placeholder="Name" ${reqAttr} class="table-input"></td>
+            <td><input type="text" name="cs_crew_surname[]" value="${surname}" placeholder="Surname" ${reqAttr} class="table-input"></td>
+            <td><input type="text" name="cs_crew_phone[]" value="${phone}" placeholder="+27 ..." ${reqAttr} class="table-input" oninput="this.value = formatSA(this.value)"></td>
             <td>
                 <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
             </td>
