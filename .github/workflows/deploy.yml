@@ -29,4 +29,6 @@ jobs:
         working-directory: functions
 
       - name: Deploy to Firebase
-        run: firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}" --non-interactive
+        run: firebase deploy --non-interactive
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
