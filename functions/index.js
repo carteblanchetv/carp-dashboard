@@ -1516,8 +1516,8 @@ app.post('/api/submit-proposal', express.json(), async (req, res) => {
         let updatedPayload = { ...payload };
         const currentStatus = doc.data().status;
         
-        // Prevent downgrading an accepted or paid story back to pending
-        if ((currentStatus === 'accepted' || currentStatus === 'paid') && updatedPayload.status === 'pending') {
+        // Prevent downgrading an accepted or paid story back to pending or draft
+        if (currentStatus === 'accepted' || currentStatus === 'paid') {
             updatedPayload.status = currentStatus; 
         }
 

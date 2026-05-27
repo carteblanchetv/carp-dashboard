@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             ? `final_script.html?id=${sub.id}&assetId=${existingScript.id}` 
                             : `final_script.html?id=${sub.id}`;
                         window.location.href = url;
-                    }; }
+                    };
                 }
             }
         } catch (e) {

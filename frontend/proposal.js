@@ -162,6 +162,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const isTextView = viewMode === 'text';
     const isReadOnly = isAdminView || isPreviewView || isTextView;
 
+    function getTimeOptionsHtml(selectedVal = '') {
+        // Normalize time value to HH:MM format
+        if (selectedVal && selectedVal.length > 5) {
+            selectedVal = selectedVal.substring(0, 5);
+        }
+        let html = '<option value="">-- Select Time --</option>';
+        for (let h = 0; h < 24; h++) {
+            const hStr = h.toString().padStart(2, '0');
+            for (let m = 0; m < 60; m += 15) {
+                const mStr = m.toString().padStart(2, '0');
+                const val = `${hStr}:${mStr}`;
+                const sel = val === selectedVal ? 'selected' : '';
+                html += `<option value="${val}" ${sel}>${val}</option>`;
+            }
+        }
+        return html;
+    }
+
     // --- STANDALONE CALL SHEET MODE ---
     function checkStandaloneMode() {
         console.log("[DEBUG] checkStandaloneMode - Hash:", window.location.hash);
@@ -590,7 +608,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const tr = document.createElement('tr');
         tr.id = rowId;
         tr.innerHTML = `
-            <td><input type="time" class="mo-time-input table-input" value="${data.time || ''}" required></td>
+            <td>
+                <select class="mo-time-input table-input" required>
+                    ${getTimeOptionsHtml(data.time)}
+                </select>
+            </td>
             <td><input type="text" class="mo-what-input table-input" value="${data.what || ''}" placeholder="What's happening?" required></td>
             <td><input type="text" class="mo-location-input table-input" value="${data.location || ''}" placeholder="Location" required></td>
             <td>
@@ -629,14 +651,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="text" class="flight-airline-input" value="${data.airline || ''}" placeholder="Airline">
                 </div>
                 <div class="form-group">
+                    <label>Departure Date</label>
+                    <input type="date" class="flight-dep-date-input table-input" value="${data.dep_date || ''}">
+                </div>
+                <div class="form-group">
                     <label>Departure Time</label>
-                    <input type="time" class="flight-dep-time-input" value="${data.dep_time || ''}">
+                    <select class="flight-dep-time-input table-input">
+                        ${getTimeOptionsHtml(data.dep_time)}
+                    </select>
+                </div>
+            </div>
+            <div class="form-grid-3-col" style="margin-top: 0.75rem;">
+                <div class="form-group">
+                    <!-- spacing/empty -->
+                </div>
+                <div class="form-group">
+                    <label>Arrival Date</label>
+                    <input type="date" class="flight-arr-date-input table-input" value="${data.arr_date || ''}">
                 </div>
                 <div class="form-group">
                     <label>Arrival Time</label>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
-                        <input type="time" class="flight-arr-time-input" value="${data.arr_time || ''}" style="flex: 1;">
-                        <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px;">✖</button>
+                        <select class="flight-arr-time-input table-input" style="flex: 1;">
+                            ${getTimeOptionsHtml(data.arr_time)}
+                        </select>
+                        <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px; height: 38px;">✖</button>
                     </div>
                 </div>
             </div>
@@ -718,7 +757,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="form-group">
                     <label>From Time</label>
-                    <input type="time" class="trans-from-time-input" value="${data.from_time || ''}">
+                    <select class="trans-from-time-input table-input">
+                        ${getTimeOptionsHtml(data.from_time)}
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>From Location</label>
@@ -732,13 +773,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="form-group">
                     <label>To Time</label>
-                    <input type="time" class="trans-to-time-input" value="${data.to_time || ''}">
+                    <select class="trans-to-time-input table-input">
+                        ${getTimeOptionsHtml(data.to_time)}
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>To Location</label>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
                         <input type="text" class="trans-to-loc-input" value="${data.to_loc || ''}" placeholder="Destination" style="flex: 1;">
-                        <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px;">✖</button>
+                        <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px; height: 38px;">✖</button>
                     </div>
                 </div>
             </div>
@@ -1579,10 +1622,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return { shootDay, shootDate, items };
             }),
             equipment: {
-                camera_type: document.getElementById('eq_camera_type')?.value || '',
-                camera_desc: document.getElementById('eq_camera_desc')?.value || '',
-                audio_type: document.getElementById('eq_audio_type')?.value || '',
-                audio_desc: document.getElementById('eq_audio_desc')?.value || '',
+                cameras: Array.from(document.querySelectorAll('#cs_cameras_table_body tr')).map(row => ({
+                    type: row.querySelector('.eq-camera-type')?.value || '',
+                    desc: row.querySelector('.eq-camera-desc')?.value || ''
+                })).filter(c => c.type || c.desc),
+                audios: Array.from(document.querySelectorAll('#cs_audios_table_body tr')).map(row => ({
+                    type: row.querySelector('.eq-audio-type')?.value || '',
+                    desc: row.querySelector('.eq-audio-desc')?.value || ''
+                })).filter(a => a.type || a.desc),
+                camera_type: document.querySelector('#cs_cameras_table_body tr select')?.value || '',
+                camera_desc: document.querySelector('#cs_cameras_table_body tr input')?.value || '',
+                audio_type: document.querySelector('#cs_audios_table_body tr select')?.value || '',
+                audio_desc: document.querySelector('#cs_audios_table_body tr input')?.value || '',
                 lenses_desc: document.getElementById('eq_lenses_desc')?.value || '',
                 lighting_desc: document.getElementById('eq_lighting_desc')?.value || '',
                 rigs_desc: document.getElementById('eq_rigs_desc')?.value || '',
@@ -1594,9 +1645,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     surname: row.querySelector('.flight-surname-input')?.value || '',
                     flight_number: row.querySelector('.flight-number-input')?.value || '',
                     airline: row.querySelector('.flight-airline-input')?.value || '',
+                    dep_date: row.querySelector('.flight-dep-date-input')?.value || '',
                     dep_time: row.querySelector('.flight-dep-time-input')?.value || '',
+                    arr_date: row.querySelector('.flight-arr-date-input')?.value || '',
                     arr_time: row.querySelector('.flight-arr-time-input')?.value || ''
-                })).filter(f => f.name || f.surname || f.flight_number || f.airline),
+                })).filter(f => f.name || f.surname || f.flight_number || f.airline || f.dep_date || f.arr_date),
                 flight_file_path: document.getElementById('travel_flight_file_path')?.value || '',
                 flight_filename: document.getElementById('travel_flight_filename')?.value || '',
 
@@ -1806,6 +1859,96 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
+    async function updateProposalDetails(isSaveDraft = false) {
+        loadingOverlay.classList.add('active');
+        const heading = document.getElementById('loadingHeading');
+        const subtext = document.getElementById('loadingSubtext');
+        if (heading) heading.textContent = isSaveDraft ? "Saving Draft..." : "Submitting Details...";
+        if (subtext) subtext.textContent = isSaveDraft ? "Please wait while your progress is saved." : "Please wait, this might take a moment.";
+
+        try {
+            const formData = new FormData(form);
+            let finalPresenter = formData.get('presenter');
+            if (finalPresenter === 'Other') {
+                finalPresenter = formData.get('otherPresenter');
+            }
+
+            const data = getProposalData();
+            
+            const payload = {
+                ...data,
+                id: proposalId,
+                details: {
+                    presenter: finalPresenter,
+                    researcher: formData.getAll('res_name[]').map((name, i) => ({
+                        name: name.trim(),
+                        surname: formData.getAll('res_surname[]')[i]?.trim() || ''
+                    })).filter(r => r.name !== '' || r.surname !== ''),
+                    camera: formData.getAll('cam_name[]').map((name, i) => ({
+                        name: name.trim(),
+                        surname: formData.getAll('cam_surname[]')[i]?.trim() || ''
+                    })).filter(c => c.name !== '' || c.surname !== ''),
+                    camera_assistant: { name: formData.get('camera_assistant_name'), surname: formData.get('camera_assistant_surname') },
+                    dop: { name: formData.get('dop_name'), surname: formData.get('dop_surname') },
+                    sound: { name: formData.get('sound_name'), surname: formData.get('sound_surname') },
+                    offline_editor: { name: formData.get('offline_editor_name'), surname: formData.get('offline_editor_surname') },
+                    online_editor: { name: formData.get('online_editor_name'), surname: formData.get('online_editor_surname') },
+                    audio_final_mix: { name: formData.get('audio_final_mix_name'), surname: formData.get('audio_final_mix_surname') },
+                    additionalCrew: formData.getAll('crew_name[]').map((name, i) => ({
+                        name: name.trim(),
+                        surname: formData.getAll('crew_surname[]')[i]?.trim() || '',
+                        role: formData.getAll('crew_role[]')[i]?.trim() || ''
+                    })).filter(c => c.name !== '' || c.surname !== ''),
+                    callSheet: gatherCallSheetData()
+                }
+            };
+            const response = await fetchWithAuth('/api/update-proposal-details', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            if (result.success) {
+                const dialog = document.getElementById('successDialog');
+                const dTitle = dialog.querySelector('.dialog-title');
+                const dMsg = dialog.querySelector('.dialog-message');
+                const dialogActions = document.getElementById('dialogActions');
+                const dialogIcon = document.getElementById('dialogIcon');
+
+                if (isSaveDraft) {
+                    if (dialogIcon) {
+                        dialogIcon.textContent = '💾';
+                        dialogIcon.style.color = 'var(--primary)';
+                    }
+                    dTitle.textContent = "Draft Saved";
+                    dMsg.textContent = "Your progress has been saved successfully.";
+                    dialogActions.innerHTML = `
+                        <button type="button" class="btn-soft" id="draftContinueBtn" style="flex: 1; height: 42px !important; border-radius: 8px !important; font-size: 0.8rem !important; font-weight: 700 !important; letter-spacing: 0.05em !important; justify-content: center;">Continue Editing</button>
+                        <button type="button" class="submit-btn" id="draftDashboardBtn" style="flex: 1; height: 42px !important; border-radius: 8px !important; font-size: 0.8rem !important; font-weight: 700 !important; letter-spacing: 0.05em !important; justify-content: center; margin: 0; text-transform: uppercase;">Return to Dashboard</button>
+                    `;
+                    document.getElementById('draftContinueBtn').onclick = () => dialog.classList.add('hidden');
+                    document.getElementById('draftDashboardBtn').onclick = () => window.location.href = 'index.html';
+                } else {
+                    if (dialogIcon) {
+                        dialogIcon.textContent = '🎉';
+                        dialogIcon.style.color = 'var(--success)';
+                    }
+                    dTitle.textContent = "Submitted";
+                    dMsg.textContent = "Your call sheet has been successfully submitted.";
+                    dialogActions.innerHTML = `<button type="button" class="submit-btn" id="dialogCloseBtn" style="height: 42px !important; border-radius: 8px !important; font-size: 0.8rem !important; font-weight: 700 !important; letter-spacing: 0.05em !important; justify-content: center;">OK</button>`;
+                    document.getElementById('dialogCloseBtn').onclick = () => window.location.href = `proposal.html?id=${proposalId}&view=preview`;
+                }
+                dialog.classList.remove('hidden');
+            } else {
+                throw new Error(result.error || 'Failed to update details.');
+            }
+        } catch (err) {
+            alert("Update failed: " + err.message);
+        } finally {
+            loadingOverlay.classList.remove('active');
+        }
+    }
+
     // --- SAVE DRAFT HANDLER ---
     const saveDraftBtn = document.getElementById('saveDraftBtn');
     if (saveDraftBtn) {
@@ -1814,7 +1957,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Please provide at least a Story Title and One-liner to save a draft.");
                 return;
             }
-            await handleSubmissionSync('draft');
+            const container2 = document.getElementById('phase2Container');
+            if (isEditMode && !container2.classList.contains('hidden')) {
+                await updateProposalDetails(true);
+            } else {
+                await handleSubmissionSync('draft');
+            }
         };
     }
 
@@ -1835,63 +1983,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Phase 2 check (Details update for accepted proposals)
         const container2 = document.getElementById('phase2Container');
         if (isEditMode && !container2.classList.contains('hidden')) {
-            loadingOverlay.classList.add('active');
-            try {
-                const formData = new FormData(form);
-                let finalPresenter = formData.get('presenter');
-                if (finalPresenter === 'Other') {
-                    finalPresenter = formData.get('otherPresenter');
-                }
-
-                const data = getProposalData();
-                console.log("[UPDATE] Sending payload with summary length:", data.summary ? data.summary.length : 0);
-                
-                const payload = {
-                    ...data,
-                    id: proposalId,
-                    details: {
-                        presenter: finalPresenter,
-                        researcher: formData.getAll('res_name[]').map((name, i) => ({
-                            name: name.trim(),
-                            surname: formData.getAll('res_surname[]')[i]?.trim() || ''
-                        })).filter(r => r.name !== '' || r.surname !== ''),
-                        camera: formData.getAll('cam_name[]').map((name, i) => ({
-                            name: name.trim(),
-                            surname: formData.getAll('cam_surname[]')[i]?.trim() || ''
-                        })).filter(c => c.name !== '' || c.surname !== ''),
-                        camera_assistant: { name: formData.get('camera_assistant_name'), surname: formData.get('camera_assistant_surname') },
-                        dop: { name: formData.get('dop_name'), surname: formData.get('dop_surname') },
-                        sound: { name: formData.get('sound_name'), surname: formData.get('sound_surname') },
-                        offline_editor: { name: formData.get('offline_editor_name'), surname: formData.get('offline_editor_surname') },
-                        online_editor: { name: formData.get('online_editor_name'), surname: formData.get('online_editor_surname') },
-                        audio_final_mix: { name: formData.get('audio_final_mix_name'), surname: formData.get('audio_final_mix_surname') },
-                        additionalCrew: formData.getAll('crew_name[]').map((name, i) => ({
-                            name: name.trim(),
-                            surname: formData.getAll('crew_surname[]')[i]?.trim() || '',
-                            role: formData.getAll('crew_role[]')[i]?.trim() || ''
-                        })).filter(c => c.name !== '' || c.surname !== ''),
-                        callSheet: gatherCallSheetData()
-                    }
-                };
-                const response = await fetchWithAuth('/api/update-proposal-details', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-                if (result.success) {
-                    const dialog = document.getElementById('successDialog');
-                    dialog.querySelector('.dialog-title').textContent = "Submitted";
-                    dialog.querySelector('.dialog-message').textContent = "Your proposal has been successfully submitted.";
-                    dialog.classList.remove('hidden');
-                    document.getElementById('dialogCloseBtn').onclick = () => window.location.href = `proposal.html?id=${proposalId}&view=preview`;
-
-                }
-            } catch (err) {
-                alert("Update failed: " + err.message);
-            } finally {
-                loadingOverlay.classList.remove('active');
-            }
+            await updateProposalDetails(false);
             return;
         }
 
@@ -3175,7 +3267,9 @@ function renderCallSheetReport(sub) {
             <td style="padding: 0.75rem 0.5rem;">${f.surname}</td>
             <td style="padding: 0.75rem 0.5rem;">${f.flight_number || '—'}</td>
             <td style="padding: 0.75rem 0.5rem;">${f.airline || '—'}</td>
+            <td style="padding: 0.75rem 0.5rem;">${f.dep_date || '—'}</td>
             <td style="padding: 0.75rem 0.5rem;">${f.dep_time || '—'}</td>
+            <td style="padding: 0.75rem 0.5rem;">${f.arr_date || '—'}</td>
             <td style="padding: 0.75rem 0.5rem;">${f.arr_time || '—'}</td>
         </tr>
     `).join('');
@@ -3269,8 +3363,22 @@ function renderCallSheetReport(sub) {
             <div style="margin-bottom: 3rem;">
                 <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Equipment</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-size: 0.9rem;">
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Camera Equipment (${eq.camera_type || '—'})</span><span style="font-weight: 600;">${eq.camera_desc || '—'}</span></div>
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Audio Equipment (${eq.audio_type || '—'})</span><span style="font-weight: 600;">${eq.audio_desc || '—'}</span></div>
+                    <div>
+                        <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Camera Equipment</span>
+                        <div style="font-weight: 600; line-height: 1.4;">
+                            ${(eq.cameras && eq.cameras.length > 0)
+                              ? eq.cameras.map(c => `• ${c.type || '—'}: ${c.desc || '—'}`).join('<br>')
+                              : `• ${eq.camera_type || '—'}: ${eq.camera_desc || '—'}`}
+                        </div>
+                    </div>
+                    <div>
+                        <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Audio Equipment</span>
+                        <div style="font-weight: 600; line-height: 1.4;">
+                            ${(eq.audios && eq.audios.length > 0)
+                              ? eq.audios.map(a => `• ${a.type || '—'}: ${a.desc || '—'}`).join('<br>')
+                              : `• ${eq.audio_type || '—'}: ${eq.audio_desc || '—'}`}
+                        </div>
+                    </div>
                     <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Lenses</span><span style="font-weight: 600;">${eq.lenses_desc || '—'}</span></div>
                     <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Lighting Kit</span><span style="font-weight: 600;">${eq.lighting_desc || '—'}</span></div>
                     <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Rigs</span><span style="font-weight: 600;">${eq.rigs_desc || '—'}</span></div>
@@ -3295,12 +3403,14 @@ function renderCallSheetReport(sub) {
                                 <th style="text-align: left; padding: 0.4rem;">Surname</th>
                                 <th style="text-align: left; padding: 0.4rem;">Flight Number</th>
                                 <th style="text-align: left; padding: 0.4rem;">Airline</th>
+                                <th style="text-align: left; padding: 0.4rem;">Departure Date</th>
                                 <th style="text-align: left; padding: 0.4rem;">Departure Time</th>
+                                <th style="text-align: left; padding: 0.4rem;">Arrival Date</th>
                                 <th style="text-align: left; padding: 0.4rem;">Arrival Time</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${flightsHtml || '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 0.5rem;">No flights.</td></tr>'}
+                            ${flightsHtml || '<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 0.5rem;">No flights.</td></tr>'}
                         </tbody>
                     </table>
                 </div>
@@ -3473,14 +3583,25 @@ window.downloadCallSheetPDF = async () => {
         doc.text('KIT / EQUIPMENT', margin, currentY);
         currentY += 6;
         const eq = cs.equipment || {};
-        const kitData = [
-            [`Camera (${eq.camera_type || '—'})`, eq.camera_desc || '—'],
-            [`Audio (${eq.audio_type || '—'})`, eq.audio_desc || '—'],
-            ['Lenses', eq.lenses_desc || '—'],
-            ['Lighting Kit', eq.lighting_desc || '—'],
-            ['Rigs', eq.rigs_desc || '—'],
-            ['Other', eq.other_desc || '—']
-        ];
+        const kitData = [];
+        if (eq.cameras && eq.cameras.length > 0) {
+            eq.cameras.forEach((c, idx) => {
+                kitData.push([idx === 0 ? 'Camera Equipment' : '', `${c.type || '—'}: ${c.desc || '—'}`]);
+            });
+        } else {
+            kitData.push([`Camera (${eq.camera_type || '—'})`, eq.camera_desc || '—']);
+        }
+        if (eq.audios && eq.audios.length > 0) {
+            eq.audios.forEach((a, idx) => {
+                kitData.push([idx === 0 ? 'Audio/Sound Equipment' : '', `${a.type || '—'}: ${a.desc || '—'}`]);
+            });
+        } else {
+            kitData.push([`Audio (${eq.audio_type || '—'})`, eq.audio_desc || '—']);
+        }
+        kitData.push(['Lenses', eq.lenses_desc || '—']);
+        kitData.push(['Lighting Kit', eq.lighting_desc || '—']);
+        kitData.push(['Rigs', eq.rigs_desc || '—']);
+        kitData.push(['Other', eq.other_desc || '—']);
         doc.autoTable({
             startY: currentY,
             body: kitData,
@@ -3507,14 +3628,23 @@ window.downloadCallSheetPDF = async () => {
             doc.setTextColor(50, 50, 50);
             doc.text('Flight Details:', margin, currentY);
             currentY += 4;
-            const flightDataRows = travel.flights.map(f => [f.name || '—', f.surname || '—', f.details || '—']);
+            const flightDataRows = travel.flights.map(f => [
+                f.name || '—',
+                f.surname || '—',
+                f.flight_number || '—',
+                f.airline || '—',
+                f.dep_date || '—',
+                f.dep_time || '—',
+                f.arr_date || '—',
+                f.arr_time || '—'
+            ]);
             doc.autoTable({
                 startY: currentY,
-                head: [['Name', 'Surname', 'Flight Details']],
+                head: [['Name', 'Surname', 'Flight No', 'Airline', 'Dep Date', 'Dep Time', 'Arr Date', 'Arr Time']],
                 body: flightDataRows,
                 theme: 'striped',
                 headStyles: { fillColor: [16, 185, 129], textColor: 255 },
-                styles: { fontSize: 8.5, cellPadding: 2 },
+                styles: { fontSize: 8, cellPadding: 2 },
                 margin: { left: margin, right: margin }
             });
             currentY = doc.lastAutoTable.finalY + 6;

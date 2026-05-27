@@ -1035,6 +1035,10 @@ input:focus, select:focus, textarea:focus {
     min-width: 60px;
 }
 
+select.table-input {
+    background-color: var(--bg-light);
+}
+
 .table-input:focus {
     background: var(--bg-card);
     border-color: var(--accent);
