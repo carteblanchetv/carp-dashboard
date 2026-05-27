@@ -567,7 +567,7 @@
                 <!-- SHOOT DATES (MULTIPLE SELECTION) -->
                 <div style="margin-top: 1.5rem; margin-bottom: 2rem;">
                     <h3 class="cs-section-header">Shoot Dates</h3>
-                    <div id="cs_shoot_dates_container" style="display: flex; flex-direction: column; gap: 0.5rem; max-width: 300px;">
+                    <div id="cs_shoot_dates_container" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 1rem; width: 100%;">
                         <!-- Dynamic date rows -->
                     </div>
                     <button type="button" id="addCsDateBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Shoot Date</button>
@@ -668,45 +668,47 @@
                 <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
                     <h3 class="cs-section-header">Equipment</h3>
                     
+                    <!-- Camera Equipment Table -->
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Camera Equipment</h4>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">Camera Device</th>
+                                        <th>Description</th>
+                                        <th style="width: 50px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cs_cameras_table_body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="addEqCameraBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Camera Device</button>
+                    </div>
+
+                    <!-- Audio Equipment Table -->
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Audio Equipment</h4>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 30%;">Audio Device</th>
+                                        <th>Description</th>
+                                        <th style="width: 50px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cs_audios_table_body">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="addEqAudioBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Audio Device</button>
+                    </div>
+
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>Camera Equipment</label>
-                            <select id="eq_camera_type" name="eq_camera_type">
-                                <option value="">-- Select Camera Device--</option>
-                                <option value="Cam A">Cam A</option>
-                                <option value="Cam B">Cam B</option>
-                                <option value="Cam C">Cam C</option>
-                                <option value="Cam D">Cam D</option>
-                                <option value="Cam E">Cam E</option>
-                                <option value="Cam F">Cam F</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Camera Description</label>
-                            <input type="text" id="eq_camera_desc" name="eq_camera_desc" placeholder="Describe camera equipment...">
-                        </div>
-                    </div>
-
-                    <div class="form-grid" style="margin-top: 1.25rem;">
-                        <div class="form-group">
-                            <label>Audio Equipment</label>
-                            <select id="eq_audio_type" name="eq_audio_type">
-                                <option value="">-- Select Audio Device --</option>
-                                <option value="Mic 1">Mic 1</option>
-                                <option value="Mic 2">Mic 2</option>
-                                <option value="Mic 3">Mic 3</option>
-                                <option value="Mic 4">Mic 4</option>
-                                <option value="Mic 5">Mic 5</option>
-                                <option value="Mic 6">Mic 6</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Audio Description</label>
-                            <input type="text" id="eq_audio_desc" name="eq_audio_desc" placeholder="Describe audio equipment...">
-                        </div>
-                    </div>
-
-                    <div class="form-grid" style="margin-top: 1.25rem;">
                         <div class="form-group">
                             <label>Lenses Description</label>
                             <input type="text" id="eq_lenses_desc" name="eq_lenses_desc" placeholder="Describe lenses...">

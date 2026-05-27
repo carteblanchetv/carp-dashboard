@@ -52,21 +52,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 const phaseBar = document.getElementById('productionPhaseBar');
                 if (phaseBar && isCommissioned) {
                     phaseBar.classList.remove('hidden');
-
                     if (sub._isRestrictedView) {
                         const btnFootageDec = document.getElementById('btnFootageDec');
                         const btnCallSheet = document.getElementById('btnCallSheet');
-                        const btnMusicCue = document.getElementById('btnMusicCue');
                         if (btnFootageDec) btnFootageDec.style.display = 'none';
                         if (btnCallSheet) btnCallSheet.style.display = 'none';
-                        if (btnMusicCue) btnMusicCue.style.display = 'none';
                     }
                     
                     // Fetch linked assets for the project to correctly link buttons
                     const assets = result.linkedAssets || [];
                     const existingFootage = assets.find(a => a.formType === 'insert_footage');
                     const existingScript = assets.find(a => a.formType === 'final_script');
-                    const existingMusic = assets.find(a => a.formType === 'music_cue_sheet');
 
                     document.getElementById('btnFootageDec').onclick = () => {
                         if (isEditMode && submissionId === existingFootage?.id) {
@@ -85,16 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             ? `final_script.html?id=${sub.id}&assetId=${existingScript.id}` 
                             : `final_script.html?id=${sub.id}`;
                         window.location.href = url;
-                    };
-                    const btnMusic = document.getElementById('btnMusicCue');
-                    if (btnMusic) {
-                        btnMusic.onclick = () => {
-                            const url = existingMusic
-                                ? `music_cue_sheet.html?id=${existingMusic.id}&project=${sub.id}`
-                                : `music_cue_sheet.html?project=${sub.id}`;
-                            window.location.href = url;
-                        };
-                    }
+                    }; }
                 }
             }
         } catch (e) {

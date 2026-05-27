@@ -172,7 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return; // Hash change will trigger another event
         }
 
-        const isCallSheetMode = window.location.hash === '#CallSheet';
+        const isCallSheetMode = window.location.hash === '#CallSheet' || window.location.hash === '#CallSheetEdit';
+        const isCallSheetEdit = window.location.hash === '#CallSheetEdit';
         const proposalContent = document.getElementById('proposalFormContent');
         const callSheetSec = document.getElementById('callSheetSection');
         const mainTitle = document.getElementById('pageMainTitle');
@@ -189,6 +190,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isCallSheetMode) {
             console.log("[DEBUG] Activating Call Sheet View");
+            
+            // Check if we should show read-only preview
+            const csData = window.currentProposal && window.currentProposal.details && window.currentProposal.details.callSheet;
+            const hasCallSheetData = !!(csData && (csData.producer_name || csData.shoot_date || csData.shoot_city));
+            
+            if (!isCallSheetEdit && (isAdminView || isTextView || hasCallSheetData)) {
+                if (window.currentProposal) {
+                    showCallSheetPreview(window.currentProposal, window.linkedAssets || []);
+                    return;
+                }
+            }
+
+            // Otherwise, show fillable call sheet form
+            console.log("[DEBUG] Activating Call Sheet Edit/Form View");
+            const summaryDiv = document.getElementById('proposalSummary');
+            if (summaryDiv) {
+                summaryDiv.classList.add('hidden');
+                summaryDiv.style.display = 'none';
+            }
+
             if (proposalContent) proposalContent.classList.add('hidden');
             if (form) form.classList.remove('hidden'); // Ensure parent form is visible
             if (callSheetSec) {
@@ -202,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("[DEBUG] Unhiding Back to Proposal button");
                 backBtn.classList.remove('hidden');
                 backBtn.style.display = 'inline-block';
-                backBtn.href = `proposal.html?id=${proposalId}&view=preview`;
+                backBtn.href = isReadOnly ? `proposal.html?id=${proposalId}&view=preview` : `proposal.html?id=${proposalId}`;
             }
             if (productionBar) productionBar.classList.remove('hidden'); // Keep the tools visible
             const floatingBar = document.getElementById('floatingAdminBar');
@@ -212,6 +233,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.title = "Call Sheet - Carte Blanche";
         } else {
             console.log("[DEBUG] Activating Proposal View");
+            const summaryDiv = document.getElementById('proposalSummary');
+            if (summaryDiv && isReadOnly) {
+                summaryDiv.classList.remove('hidden');
+                summaryDiv.style.display = 'block';
+            }
             if (proposalContent) proposalContent.classList.remove('hidden');
             if (callSheetSec) {
                 callSheetSec.classList.add('hidden');
@@ -398,10 +424,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.id = rowId;
         div.className = 'cs-shoot-date-row';
-        div.style.cssText = 'display: flex; gap: 0.5rem; align-items: center; width: 100%;';
+        div.style.cssText = 'display: flex; gap: 0.5rem; align-items: center; min-width: 180px; max-width: 250px; flex: 1;';
         div.innerHTML = `
-            <input type="date" class="cs-shoot-date-item" name="cs_shoot_dates[]" value="${dateVal}" required style="flex: 1;">
-            <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove(); updateAllMovementOrderDateOptions();" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px;">✖</button>
+            <input type="date" class="cs-shoot-date-item" name="cs_shoot_dates[]" value="${dateVal}" required style="flex: 1; min-width: 0;">
+            <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove(); updateAllMovementOrderDateOptions();" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px; height: 38px;">✖</button>
         `;
         container.appendChild(div);
         
@@ -428,6 +454,56 @@ document.addEventListener('DOMContentLoaded', () => {
             </td>
         `;
         tbody.appendChild(tr);
+    }
+
+    function addEqCamera(type = '', desc = '') {
+        const tbody = document.getElementById('cs_cameras_table_body');
+        if (!tbody) return;
+        const rowId = 'eq_cam_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+        const tr = document.createElement('tr');
+        tr.id = rowId;
+        tr.innerHTML = `
+            <td>
+                <select class="table-input eq-camera-type" name="eq_camera_type[]" required>
+                    <option value="">-- Select Camera Device --</option>
+                    <option value="Cam A">Cam A</option>
+                    <option value="Cam B">Cam B</option>
+                    <option value="Cam C">Cam C</option>
+                    <option value="Cam D">Cam D</option>
+                    <option value="Cam E">Cam E</option>
+                    <option value="Cam F">Cam F</option>
+                </select>
+            </td>
+            <td><input type="text" class="table-input eq-camera-desc" name="eq_camera_desc[]" value="${desc}" placeholder="Describe camera equipment..." required></td>
+            <td style="text-align: center;"><button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px; height: 38px;">✖</button></td>
+        `;
+        tbody.appendChild(tr);
+        if (type) tr.querySelector('select').value = type;
+    }
+
+    function addEqAudio(type = '', desc = '') {
+        const tbody = document.getElementById('cs_audios_table_body');
+        if (!tbody) return;
+        const rowId = 'eq_aud_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+        const tr = document.createElement('tr');
+        tr.id = rowId;
+        tr.innerHTML = `
+            <td>
+                <select class="table-input eq-audio-type" name="eq_audio_type[]" required>
+                    <option value="">-- Select Audio Device --</option>
+                    <option value="Mic 1">Mic 1</option>
+                    <option value="Mic 2">Mic 2</option>
+                    <option value="Mic 3">Mic 3</option>
+                    <option value="Mic 4">Mic 4</option>
+                    <option value="Mic 5">Mic 5</option>
+                    <option value="Mic 6">Mic 6</option>
+                </select>
+            </td>
+            <td><input type="text" class="table-input eq-audio-desc" name="eq_audio_desc[]" value="${desc}" placeholder="Describe audio equipment..." required></td>
+            <td style="text-align: center;"><button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px; height: 38px;">✖</button></td>
+        `;
+        tbody.appendChild(tr);
+        if (type) tr.querySelector('select').value = type;
     }
 
     function addCsMovementOrderSection(data = {}) {
@@ -896,6 +972,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const addCsOtherCrewBtn = document.getElementById('addCsOtherCrewBtn');
     if (addCsOtherCrewBtn) addCsOtherCrewBtn.onclick = () => addCsOtherCrewRow();
 
+    const addEqCameraBtn = document.getElementById('addEqCameraBtn');
+    if (addEqCameraBtn) addEqCameraBtn.onclick = () => addEqCamera();
+
+    const addEqAudioBtn = document.getElementById('addEqAudioBtn');
+    if (addEqAudioBtn) addEqAudioBtn.onclick = () => addEqAudio();
+
     const addMovementOrderSectionBtn = document.getElementById('addMovementOrderSectionBtn');
     if (addMovementOrderSectionBtn) addMovementOrderSectionBtn.onclick = () => addCsMovementOrderSection();
 
@@ -1008,6 +1090,17 @@ document.addEventListener('DOMContentLoaded', () => {
         addCsShootDate();
         addCsShootDate();
         addCsMovementOrderSection();
+        addCsMovementOrderSection();
+        addCsMovementOrderSection();
+        
+        addEqCamera();
+        addEqCamera();
+        addEqAudio();
+        addEqAudio();
+        
+        addTravelFlightRow();
+        addTravelAccomRow();
+        addTravelTransportBlock();
         
         form.classList.remove('hidden');
     }
@@ -1059,16 +1152,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderProjectAssets(linkedAssets, sub);
                 
                 const isCallSheetMode = window.location.hash === '#CallSheet';
-                if (isReadOnly) {
-                    if (isCallSheetMode) {
+                const isCallSheetEditMode = window.location.hash === '#CallSheetEdit';
+                const csData = sub.details && sub.details.callSheet;
+                const hasCallSheetData = !!(csData && (csData.producer_name || csData.shoot_date || csData.shoot_city));
+
+                if (isCallSheetMode || isCallSheetEditMode) {
+                    if (isAdminView || isTextView || (!isCallSheetEditMode && hasCallSheetData)) {
                         console.log("[DEBUG] Entering Read-Only Call Sheet mode");
                         showCallSheetPreview(sub, linkedAssets);
                         return;
-                    } else {
-                        console.log("[DEBUG] Entering Read-Only (Preview) mode");
-                        showProposalPreview(sub, linkedAssets);
-                        return;
                     }
+                } else if (isReadOnly) {
+                    console.log("[DEBUG] Entering Read-Only (Preview) mode");
+                    showProposalPreview(sub, linkedAssets);
+                    return;
                 }
                 // Show form for editing
                 form.classList.remove('hidden');
@@ -1317,16 +1414,47 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (sections.length > 0) {
                             sections.forEach(s => addCsMovementOrderSection(s));
                         } else {
-                            addCsMovementOrderSection(); // default 1 section
+                            addCsMovementOrderSection();
+                            addCsMovementOrderSection();
+                            addCsMovementOrderSection();
                         }
                     }
 
                     // Equipment
                     const eq = cs.equipment || {};
-                    setVal('eq_camera_type', eq.camera_type);
-                    setVal('eq_camera_desc', eq.camera_desc);
-                    setVal('eq_audio_type', eq.audio_type);
-                    setVal('eq_audio_desc', eq.audio_desc);
+                    const camerasContainer = document.getElementById('cs_cameras_table_body');
+                    if (camerasContainer) {
+                        camerasContainer.innerHTML = '';
+                        const cameras = eq.cameras || [];
+                        if (cameras.length > 0) {
+                            cameras.forEach(c => addEqCamera(c.type, c.desc));
+                        } else {
+                            if (eq.camera_type || eq.camera_desc) {
+                                addEqCamera(eq.camera_type, eq.camera_desc);
+                                addEqCamera();
+                            } else {
+                                addEqCamera();
+                                addEqCamera();
+                            }
+                        }
+                    }
+
+                    const audiosContainer = document.getElementById('cs_audios_table_body');
+                    if (audiosContainer) {
+                        audiosContainer.innerHTML = '';
+                        const audios = eq.audios || [];
+                        if (audios.length > 0) {
+                            audios.forEach(a => addEqAudio(a.type, a.desc));
+                        } else {
+                            if (eq.audio_type || eq.audio_desc) {
+                                addEqAudio(eq.audio_type, eq.audio_desc);
+                                addEqAudio();
+                            } else {
+                                addEqAudio();
+                                addEqAudio();
+                            }
+                        }
+                    }
                     setVal('eq_lenses_desc', eq.lenses_desc);
                     setVal('eq_lighting_desc', eq.lighting_desc);
                     setVal('eq_rigs_desc', eq.rigs_desc);
@@ -2616,12 +2744,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             document.getElementById('btnCallSheet').onclick = () => {
                 window.location.hash = '#CallSheet';
-                checkStandaloneMode();
-                if (isReadOnly) {
-                    showCallSheetPreview(sub, linkedAssets);
-                } else {
-                    window.scrollTo(0,0);
-                }
+                window.scrollTo(0,0);
             };
             
             document.getElementById('btnFinalScript').onclick = () => {
@@ -2966,7 +3089,7 @@ function showCallSheetPreview(sub, assets) {
             editBtn.classList.remove('hidden');
             editBtn.style.display = 'inline-block';
             editBtn.onclick = () => {
-                window.location.href = `proposal.html?id=${sub.id}#CallSheet`;
+                window.location.href = `proposal.html?id=${sub.id}#CallSheetEdit`;
             };
         }
     }
@@ -2975,7 +3098,7 @@ function showCallSheetPreview(sub, assets) {
     if (backBtn) {
         backBtn.classList.remove('hidden');
         backBtn.style.display = 'inline-block';
-        backBtn.href = `proposal.html?id=${sub.id}&view=preview`;
+        backBtn.href = isReadOnly ? `proposal.html?id=${sub.id}&view=preview` : `proposal.html?id=${sub.id}`;
     }
 }
 

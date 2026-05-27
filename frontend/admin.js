@@ -37,6 +37,119 @@ if (!document.getElementById('episodeModal')) {
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 }
 
+    try {
+        const user = await checkAuth();
+        if (!user) return;
+
+        if (window.auth.isEditorialProduction(user)) {
+            // Editorial dashboard specific init could go here
+        }
+
+        globalProposals = await loadProposals();
+        updateStats(globalProposals);
+        loadProducers(); // Load producers for the edit modal dropdown
+
+        // Define View More Global Handler
+        window.viewMore = (type) => {
+            if (limits[type]) {
+                limits[type] += 10;
+                renderProposals(globalProposals, window.auth.isAdmin(user));
+            }
+        };
+
+        // Populate Navigation
+        const nameEl = document.getElementById('userNameDisplay');
+        const emailEl = document.getElementById('userEmailDisplay');
+        if (nameEl) nameEl.textContent = user.displayDisplayName || user.displayName || user.email;
+        if (emailEl) emailEl.textContent = user.displayEmail || user.email;
+
+        const gnavAdminBtn = document.getElementById('gnavAdminBtn');
+        if (gnavAdminBtn && (window.auth.isAdmin(user) || window.auth.isSuperAdmin(user))) {
+            gnavAdminBtn.style.display = 'flex';
+        }
+
+        // --- SEARCH LOGIC ---
+        const searchInput = document.getElementById('globalSearchInput');
+        const toggleBtn = document.getElementById('toggleFiltersBtn');
+        const advancedFilters = document.getElementById('advancedFilters');
+        const resultsContainer = document.getElementById('searchResults');
+
+        const handleSearch = async () => {
+            if (!searchInput) return;
+            const params = {
+                q: searchInput.value,
+                commNum: document.getElementById('filterCommNum')?.value || '',
+                uid: document.getElementById('filterUid')?.value || '',
+                season: document.getElementById('filterSeason')?.value || '',
+                episode: document.getElementById('filterEpisode')?.value || '',
+                user: document.getElementById('filterUser')?.value || ''
+            };
+
+            if (!params.q && !params.commNum && !params.uid && !params.season && !params.user) {
+                if (resultsContainer) resultsContainer.classList.add('hidden');
+                return;
+            }
+
+            const result = await performSearch(params);
+            if (result.success && resultsContainer) {
+                renderSearchResults(result.results, resultsContainer);
+            }
+        };
+
+        if (searchInput) {
+            searchInput.addEventListener('input', debounce(handleSearch, 500));
+            document.querySelectorAll('.filter-input').forEach(input => {
+                input.addEventListener('input', debounce(handleSearch, 500));
+            });
+
+            if (toggleBtn && advancedFilters) {
+                toggleBtn.addEventListener('click', () => {
+                    advancedFilters.classList.toggle('hidden');
+                    toggleBtn.classList.toggle('active');
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (resultsContainer && !e.target.closest('.search-container-modern')) {
+                    resultsContainer.classList.add('hidden');
+                }
+            });
+        }
+
+        // Danger Zone Visibility (Super Admin only)
+        const dangerZone = document.getElementById('dangerZone');
+        if (dangerZone && window.auth.isSuperAdmin(user)) {
+            dangerZone.style.display = 'block';
+        }
+    } catch (err) {
+        console.error("Initialising failed:", err);
+    }
+}
+
+async function loadProposals() {
+    loadingOverlay.classList.add('active');
+    try {
+        const user = await window.auth.checkAuth();
+        const canDelete = window.auth.isAdmin(user);
+        const response = await window.auth.fetchWithAuth(`/api/admin/proposals?_cb=${Date.now()}`);
+        const result = await response.json();
+
+        if (result.success) {
+            globalProposals = result.proposals;
+            renderProposals(globalProposals, canDelete);
+            return globalProposals;
+        } else {
+            throw new Error(result.error || "Failed to fetch proposals");
+        }
+    } catch (err) {
+        console.error("Load proposals failed:", err);
+    } finally {
+        loadingOverlay.classList.remove('active');
+    }
+}
+
+async function loadProducers() {
+    try {
         const response = await fetchWithAuth('/api/list-producers');
         const data = await response.json();
         if (data.success) {
@@ -76,9 +189,6 @@ function populateEpisodesSidebar(proposals) {
         const btn = document.createElement('button');
         btn.textContent = date;
         btn.onclick = () => window.setTxDateFilter(date);
-        
-
-        
         li.appendChild(btn);
         sidebarList.appendChild(li);
     });

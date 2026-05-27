@@ -344,17 +344,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (sub._isRestrictedView) {
                         const btnFootageDec = document.getElementById('btnFootageDec');
                         const btnCallSheet = document.getElementById('btnCallSheet');
-                        const btnMusicCue = document.getElementById('btnMusicCue');
                         if (btnFootageDec) btnFootageDec.style.display = 'none';
                         if (btnCallSheet) btnCallSheet.style.display = 'none';
-                        if (btnMusicCue) btnMusicCue.style.display = 'none';
                     }
 
                     
                     const assets = result.linkedAssets || [];
                     const existingFootage = assets.find(a => a.formType === 'insert_footage');
                     const existingScript = assets.find(a => a.formType === 'final_script');
-                    const existingMusic = assets.find(a => a.formType === 'music_cue_sheet');
 
                     document.getElementById('btnFootageDec').onclick = () => {
                         if (existingFootage) {
@@ -372,15 +369,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             : `final_script.html?id=${sub.id}`;
                         window.location.href = url;
                     };
-                    const btnMusic = document.getElementById('btnMusicCue');
-                    if (btnMusic) {
-                        btnMusic.onclick = () => {
-                            const url = existingMusic
-                                ? `music_cue_sheet.html?id=${existingMusic.id}&project=${sub.id}`
-                                : `music_cue_sheet.html?project=${sub.id}`;
-                            window.location.href = url;
-                        };
-                    }
                 }
 
                 // Load existing Final Script data if it exists

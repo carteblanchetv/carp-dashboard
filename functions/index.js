@@ -1994,7 +1994,7 @@ app.get('/api/proposals', async (req, res) => {
  */
 app.get('/api/search', async (req, res) => {
   try {
-    const { q, season, episode, uid: searchUid, user: userName } = req.query;
+    const { q, commNum, season, episode, uid: searchUid, user: userName } = req.query;
     const isAdmin = hasAdminAccess(req.user);
     const canSearchAll = true; // Everyone authenticated can use these filters
 
@@ -2081,6 +2081,14 @@ app.get('/api/search', async (req, res) => {
                     const cases = JSON.parse(decrypt(p.caseStudies));
                     if (JSON.stringify(cases).toLowerCase().includes(query)) isMatch = true;
                 } catch (e) {}
+            }
+        }
+
+        // A2. Commission Number Search (Admin & Editorial only)
+        if (commNum && isAdmin) {
+            const commQuery = commNum.trim().toLowerCase();
+            if (p.commissionNumber && String(p.commissionNumber).toLowerCase().includes(commQuery)) {
+                isMatch = true;
             }
         }
 
