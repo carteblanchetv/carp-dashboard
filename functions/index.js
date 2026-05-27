@@ -685,15 +685,31 @@ app.get('/api/list-producers', async (req, res) => {
     const snapshot = await admin.firestore().collection('users')
       .where('isEnabled', '==', true)
       .get();
-    
-    const producers = snapshot.docs.map(doc => {
+
+    // Deduplicate: legacy docs use email as key, new docs use UID.
+    // Prefer the UID-keyed doc (does not look like an email address).
+    const seenEmails = new Map(); // email -> best doc entry
+    snapshot.docs.forEach(doc => {
       const d = doc.data();
-      return {
-        id: doc.id,
-        name: decrypt(d.name) || 'N/A',
-        surname: decrypt(d.surname) || ''
-      };
-    }).sort((a, b) => a.name.localeCompare(b.name));
+      const email = decrypt(d.email) || '';
+      const name = decrypt(d.name) || 'N/A';
+      const surname = decrypt(d.surname) || '';
+      const isLegacyKey = doc.id.includes('@'); // old format: doc ID was the email
+
+      if (!seenEmails.has(email)) {
+        seenEmails.set(email, { id: doc.id, name, surname, isLegacyKey });
+      } else {
+        // Prefer the non-legacy (UID-based) document
+        const existing = seenEmails.get(email);
+        if (existing.isLegacyKey && !isLegacyKey) {
+          seenEmails.set(email, { id: doc.id, name, surname, isLegacyKey });
+        }
+      }
+    });
+
+    const producers = Array.from(seenEmails.values())
+      .map(({ id, name, surname }) => ({ id, name, surname }))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     res.json({ success: true, producers });
   } catch (error) {
