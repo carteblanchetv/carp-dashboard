@@ -424,15 +424,22 @@ app.get('/api/insert-footage-stories', async (req, res) => {
     
     const snapshot = await query.orderBy('submittedAt', 'desc').get();
       
-    const stories = snapshot.docs.map(doc => {
+    const uniqueMap = new Map();
+    snapshot.docs.forEach(doc => {
       const data = doc.data();
-      return {
-        id: doc.id,
-        storyName: data.storyName,
-        submittedAt: data.submittedAt,
-        footage: data.footage || []
-      };
+      const name = data.storyName || data.story_name || data.story_title || data.storyTitle || 'Unnamed Story';
+      const key = `${name}_${data.commissionNumber || ''}`;
+      if (!uniqueMap.has(key)) {
+        uniqueMap.set(key, {
+          id: doc.id,
+          storyName: name,
+          submittedAt: data.submittedAt,
+          footage: data.footage || []
+        });
+      }
     });
+    
+    const stories = Array.from(uniqueMap.values());
     
     res.json({ success: true, stories });
   } catch (error) {

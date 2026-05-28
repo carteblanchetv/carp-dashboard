@@ -712,9 +712,14 @@ app.get('/api/insert-footage-stories', async (req, res) => {
     const uniqueMap = new Map();
     snapshot.docs.forEach(doc => {
       const data = doc.data();
-      const key = `${data.storyName}_${data.commissionNumber}`;
+      const name = data.storyName || data.story_name || data.story_title || data.storyTitle || 'Unnamed Story';
+      const key = `${name}_${data.commissionNumber || ''}`;
       if (!uniqueMap.has(key)) {
-        uniqueMap.set(key, { id: doc.id, ...data });
+        uniqueMap.set(key, { 
+          id: doc.id, 
+          ...data,
+          storyName: name
+        });
       }
     });
 
