@@ -62,10 +62,7 @@ const turnstileAppCheckProvider = new CustomProvider({
 initializeAppCheck(app, { provider: turnstileAppCheckProvider, isTokenAutoRefreshEnabled: true });
 */
 
-// Explicitly set persistence for Safari resilience
-setPersistence(auth, browserLocalPersistence).catch(err => {
-    console.warn("[Auth] Persistence initialization failed:", err);
-});
+// Explicitly setting persistence during login flows instead of global initialization to avoid multi-tab logout races
 
 // Initialize Firestore with robust connection settings
 // Note: Persistence is temporarily disabled to resolve 'Backend unreachable' errors in Firefox/Safari partitioned environments.
@@ -93,6 +90,7 @@ const DB_LOOKUP_TIMEOUT = 1500; // Reduced from 5000 for Safari performance resi
  */
 export async function signIn() {
     try {
+        await setPersistence(auth, browserLocalPersistence);
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
         
@@ -126,6 +124,7 @@ export async function signInWithEmail(email, password) {
     }
 
     try {
+        await setPersistence(auth, browserLocalPersistence);
         let userCredential;
         try {
             userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -200,8 +199,9 @@ export function getCurrentUser() {
  */
 export function checkAuth(redirectIfNotLogged = true) {
     return new Promise((resolve) => {
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
+        const executeCheck = () => {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
                 // 1. Check for cached profile to resolve instantly
                 const cachedProfile = localStorage.getItem(`user_profile_${user.email.toLowerCase()}`);
                 if (cachedProfile) {
@@ -435,6 +435,16 @@ export function checkAuth(redirectIfNotLogged = true) {
                 resolve(null);
             }
         });
+    };
+
+    if (auth.authStateReady) {
+        auth.authStateReady().then(executeCheck).catch(err => {
+            console.warn("[Auth] authStateReady failed:", err);
+            executeCheck();
+        });
+    } else {
+        executeCheck();
+    }
     });
 }
 
