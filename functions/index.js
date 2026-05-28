@@ -7,7 +7,9 @@ const busboy = require('busboy');
 const crypto = require('crypto');
 require('dotenv').config();
 
-const ENCRYPTION_KEY = Buffer.from(process.env.ENCRYPTION_KEY, 'hex');
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
+  ? Buffer.from(process.env.ENCRYPTION_KEY, 'hex')
+  : Buffer.alloc(32); // Fallback prevents crash during deploy analysis — real key must be set in prod
 const ALGORITHM = 'aes-256-gcm';
 const IV_LENGTH = 16;
 const TAG_LENGTH = 16;
