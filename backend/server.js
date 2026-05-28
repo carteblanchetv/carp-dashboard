@@ -413,28 +413,56 @@ app.post('/api/send-insert-footage', async (req, res, next) => {
 app.get('/api/insert-footage-stories', async (req, res) => {
   try {
     const all = req.query.all === 'true';
-    let query = admin.firestore().collection('submissions')
+    
+    // 1. Fetch insert_footage submissions
+    let subQuery = admin.firestore().collection('submissions')
       .where('formType', '==', 'insert_footage');
       
     if (!all) {
       const ninetyDaysAgo = new Date();
       ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-      query = query.where('submittedAt', '>=', ninetyDaysAgo);
+      subQuery = subQuery.where('submittedAt', '>=', ninetyDaysAgo);
     }
     
-    const snapshot = await query.orderBy('submittedAt', 'desc').get();
-      
+    const subSnapshot = await subQuery.orderBy('submittedAt', 'desc').get();
+
+    // 2. Fetch accepted proposals
+    let propQuery = admin.firestore().collection('proposals')
+      .where('status', '==', 'accepted');
+
+    if (!all) {
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      propQuery = propQuery.where('submittedAt', '>=', ninetyDaysAgo);
+    }
+
+    const propSnapshot = await propQuery.get();
+
+    // 3. Combine and deduplicate
     const uniqueMap = new Map();
-    snapshot.docs.forEach(doc => {
+    
+    subSnapshot.docs.forEach(doc => {
       const data = doc.data();
       const name = data.storyName || data.story_name || data.story_title || data.storyTitle || 'Unnamed Story';
-      const key = `${name}_${data.commissionNumber || ''}`;
+      const key = `${name.toLowerCase().trim()}_${data.commissionNumber || ''}`;
+      uniqueMap.set(key, {
+        id: doc.id,
+        storyName: name,
+        submittedAt: data.submittedAt,
+        footage: data.footage || []
+      });
+    });
+
+    propSnapshot.docs.forEach(doc => {
+      const data = doc.data();
+      const name = data.story_title || data.storyName || data.story_name || data.storyTitle || 'Unnamed Story';
+      const key = `${name.toLowerCase().trim()}_${data.commissionNumber || ''}`;
       if (!uniqueMap.has(key)) {
         uniqueMap.set(key, {
           id: doc.id,
           storyName: name,
           submittedAt: data.submittedAt,
-          footage: data.footage || []
+          footage: []
         });
       }
     });

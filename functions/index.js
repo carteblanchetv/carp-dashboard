@@ -426,23 +426,8 @@ async function validateFirebaseIdToken(req, res, next) {
 
 app.get('/api/temp-debug-search', async (req, res) => {
   try {
-    const results = [];
-    
-    const subSnapshot = await admin.firestore().collection('submissions')
-      .where('formType', '==', 'insert_footage')
-      .get();
-      
-    subSnapshot.forEach(doc => {
-      const data = doc.data();
-      results.push({
-        id: doc.id,
-        storyName: data.storyName || data.story_name || data.story_title || data.storyTitle || 'Unnamed Story',
-        commissionNumber: data.commissionNumber,
-        submittedAt: data.submittedAt ? (data.submittedAt._seconds ? new Date(data.submittedAt._seconds * 1000) : data.submittedAt) : 'N/A'
-      });
-    });
-
-    res.json({ results });
+    const doc = await admin.firestore().collection('submissions').doc('CyRQKw2haW42KWShBdBP').get();
+    res.json({ id: doc.id, data: doc.data() });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -717,32 +702,64 @@ app.get('/api/insert-footage-stories', async (req, res) => {
   try {
     const all = req.query.all === 'true';
     const isAdmin = AUTHORIZED_ADMIN_ROLES.includes(req.user.role);
-    let query = admin.firestore().collection('submissions')
+    
+    // 1. Fetch insert_footage submissions
+    let subQuery = admin.firestore().collection('submissions')
       .where('formType', '==', 'insert_footage');
 
     if (!all) {
       const ninetyDaysAgo = new Date();
       ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-      query = query.where('submittedAt', '>=', ninetyDaysAgo);
+      subQuery = subQuery.where('submittedAt', '>=', ninetyDaysAgo);
     }
 
     if (!isAdmin) {
-      query = query.where('submittedBy', '==', req.user.uid);
+      subQuery = subQuery.where('submittedBy', '==', req.user.uid);
     }
 
-    const snapshot = await query.orderBy('submittedAt', 'desc').get();
+    const subSnapshot = await subQuery.orderBy('submittedAt', 'desc').get();
 
-    // Deduplicate by storyName + commissionNumber
+    // 2. Fetch accepted proposals
+    let propQuery = admin.firestore().collection('proposals')
+      .where('status', '==', 'accepted');
+
+    if (!all) {
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      propQuery = propQuery.where('submittedAt', '>=', ninetyDaysAgo);
+    }
+
+    const propSnapshot = await propQuery.get();
+
+    // 3. Combine and deduplicate (prioritizing submissions with footage)
     const uniqueMap = new Map();
-    snapshot.docs.forEach(doc => {
+    
+    subSnapshot.docs.forEach(doc => {
       const data = doc.data();
       const name = data.storyName || data.story_name || data.story_title || data.storyTitle || 'Unnamed Story';
-      const key = `${name}_${data.commissionNumber || ''}`;
+      const key = `${name.toLowerCase().trim()}_${data.commissionNumber || ''}`;
+      uniqueMap.set(key, { 
+        id: doc.id, 
+        storyName: name,
+        commissionNumber: data.commissionNumber || '',
+        submittedAt: data.submittedAt,
+        footage: data.footage || [],
+        isProposal: false
+      });
+    });
+
+    propSnapshot.docs.forEach(doc => {
+      const data = doc.data();
+      const name = data.story_title || data.storyName || data.story_name || data.storyTitle || 'Unnamed Story';
+      const key = `${name.toLowerCase().trim()}_${data.commissionNumber || ''}`;
       if (!uniqueMap.has(key)) {
-        uniqueMap.set(key, { 
-          id: doc.id, 
-          ...data,
-          storyName: name
+        uniqueMap.set(key, {
+          id: doc.id,
+          storyName: name,
+          commissionNumber: data.commissionNumber || '',
+          submittedAt: data.submittedAt,
+          footage: [],
+          isProposal: true
         });
       }
     });
