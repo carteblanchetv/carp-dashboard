@@ -2797,7 +2797,19 @@ mailgunApp.post('/mailgun-inbound', async (req, res) => {
     const signingKey = process.env.MAILGUN_SIGNING_KEY;
     if (signingKey) {
       const { timestamp, token, signature } = fields;
-      if (!verifyMailgunSignature(signingKey, timestamp, token, signature)) {
+      console.log('[MAILGUN] Webhook signature inputs:', {
+        timestamp,
+        token,
+        signature,
+        signingKeyLength: signingKey ? signingKey.length : 0
+      });
+      const computed = crypto
+        .createHmac('sha256', signingKey)
+        .update((timestamp || '') + (token || ''))
+        .digest('hex');
+      console.log('[MAILGUN] Computed vs Received:', { computed, signature });
+      const isValid = computed === signature;
+      if (!isValid) {
         console.warn('[MAILGUN] Signature verification failed — rejecting request.');
         return res.status(403).json({ error: 'Invalid signature' });
       }
