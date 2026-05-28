@@ -1,107 +1,3 @@
-[2026-05-24 17:08:44] [main 8a0e101] auto-sync: 2026-05-24 17:08
-[2026-05-24 17:08:44]  1 file changed, 6 insertions(+)
-[2026-05-24 17:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-24 17:08:44]    a42c52b..8a0e101  main -> main
-[2026-05-24 17:08:44] Sync complete.
-[2026-05-24 17:38:44] Changes detected. Syncing...
-[2026-05-24 17:38:44] [main 59f70e3] auto-sync: 2026-05-24 17:38
-[2026-05-24 17:38:44]  1 file changed, 6 insertions(+)
-[2026-05-24 17:38:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-24 17:38:44]    8a0e101..59f70e3  main -> main
-[2026-05-24 17:38:44] Sync complete.
-[2026-05-24 18:08:45] Changes detected. Syncing...
-[2026-05-24 18:08:45] [main 42d7bda] auto-sync: 2026-05-24 18:08
-[2026-05-24 18:08:45]  1 file changed, 6 insertions(+)
-[2026-05-24 18:08:45] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-24 18:08:45]    59f70e3..42d7bda  main -> main
-[2026-05-24 18:08:45] Sync complete.
-[2026-05-24 18:38:44] Changes detected. Syncing...
-[2026-05-24 18:38:44] [main 780d7de] auto-sync: 2026-05-24 18:38
-[2026-05-24 18:38:44]  1 file changed, 6 insertions(+)
-[2026-05-24 18:38:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-24 18:38:44]    42d7bda..780d7de  main -> main
-[2026-05-24 18:38:44] Sync complete.
-[2026-05-24 19:08:44] Changes detected. Syncing...
-[2026-05-24 19:08:44] [main e14726b] auto-sync: 2026-05-24 19:08
-[2026-05-24 19:08:44]  1 file changed, 6 insertions(+)
-[2026-05-24 19:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-24 19:08:44]    780d7de..e14726b  main -> main
-[2026-05-24 19:08:44] Sync complete.
-[2026-05-24 19:38:44] Changes detected. Syncing...
-[2026-05-24 19:38:44] warning: in the working copy of 'functions/test_email.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-24 19:38:44] warning: in the working copy of 'functions/test_email_real.js', LF will be replaced by CRLF the next time Git touches it
-[2026-05-24 19:38:44] [main 9dddebf] auto-sync: 2026-05-24 19:38
-[2026-05-24 19:38:44]  4 files changed, 106 insertions(+), 1 deletion(-)
-[2026-05-24 19:38:44]  create mode 100644 functions/test_email.js
-[2026-05-24 19:38:44]  create mode 100644 functions/test_email_real.js
-[2026-05-24 19:38:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-24 19:38:44]    e14726b..9dddebf  main -> main
-[2026-05-24 19:38:44] Sync complete.
-[2026-05-24 20:08:44] Changes detected. Syncing...
-[2026-05-24 20:08:44] [main 07110f6] auto-sync: 2026-05-24 20:08
-[2026-05-24 20:08:44]  1 file changed, 10 insertions(+)
-[2026-05-24 20:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-24 20:08:44]    9dddebf..07110f6  main -> main
-[2026-05-24 20:08:44] Sync complete.
-[2026-05-25 10:38:44] Changes detected. Syncing...
-[2026-05-25 10:38:44] [main 988264d] auto-sync: 2026-05-25 10:38
-[2026-05-25 10:38:44]  4 files changed, 34 insertions(+)
-[2026-05-25 10:38:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-25 10:38:44]    07110f6..988264d  main -> main
-[2026-05-25 10:38:44] Sync complete.
-[2026-05-25 11:08:44] Changes detected. Syncing...
-[2026-05-25 11:08:44] [main eeecd39] auto-sync: 2026-05-25 11:08
-[2026-05-25 11:08:44]  1 file changed, 6 insertions(+)
-[2026-05-25 11:08:44] remote: Internal Server Error        
-[2026-05-25 11:08:44] remote: Request ID FCD2:132944:366252:5AE305:6A14119D        
-[2026-05-25 11:08:44] remote: Time 2026-05-25T09:08:46Z
-[2026-05-25 11:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-25 11:08:44]  ! [remote rejected] main -> main (Internal Server Error)
-[2026-05-25 11:08:44] error: failed to push some refs to 'https://github.com/OwlArcana/cb-deliverables'
-[2026-05-25 11:08:44] Sync complete.
-[2026-05-25 11:38:43] Changes detected. Syncing...
-[2026-05-25 11:38:43] [main e54e081] auto-sync: 2026-05-25 11:38
-[2026-05-25 11:38:43]  1 file changed, 10 insertions(+)
-[2026-05-25 11:38:43] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-25 11:38:43]    988264d..e54e081  main -> main
-[2026-05-25 11:38:43] Sync complete.
-[2026-05-25 12:08:44] Changes detected. Syncing...
-[2026-05-25 12:08:44] [main 257074f] auto-sync: 2026-05-25 12:08
-[2026-05-25 12:08:44]  1 file changed, 6 insertions(+)
-[2026-05-25 12:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-25 12:08:44]    e54e081..257074f  main -> main
-[2026-05-25 12:08:44] Sync complete.
-[2026-05-25 12:38:44] Changes detected. Syncing...
-[2026-05-25 12:38:44] [main 5d70699] auto-sync: 2026-05-25 12:38
-[2026-05-25 12:38:44]  1 file changed, 6 insertions(+)
-[2026-05-25 12:38:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-25 12:38:44]    257074f..5d70699  main -> main
-[2026-05-25 12:38:44] Sync complete.
-[2026-05-25 13:08:44] Changes detected. Syncing...
-[2026-05-25 13:08:44] [main 0eddeed] auto-sync: 2026-05-25 13:08
-[2026-05-25 13:08:44]  1 file changed, 6 insertions(+)
-[2026-05-25 13:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-25 13:08:44]    5d70699..0eddeed  main -> main
-[2026-05-25 13:08:44] Sync complete.
-[2026-05-25 13:38:44] Changes detected. Syncing...
-[2026-05-25 13:38:44] [main f73db38] auto-sync: 2026-05-25 13:38
-[2026-05-25 13:38:44]  1 file changed, 6 insertions(+)
-[2026-05-25 13:38:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-25 13:38:44]    0eddeed..f73db38  main -> main
-[2026-05-25 13:38:44] Sync complete.
-[2026-05-25 14:08:44] Changes detected. Syncing...
-[2026-05-25 14:08:44] [main 642b491] auto-sync: 2026-05-25 14:08
-[2026-05-25 14:08:44]  1 file changed, 6 insertions(+), 103 deletions(-)
-[2026-05-25 14:08:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-25 14:08:44]    f73db38..642b491  main -> main
-[2026-05-25 14:08:44] Sync complete.
-[2026-05-25 14:38:44] Changes detected. Syncing...
-[2026-05-25 14:38:44] [main c4d0ec7] auto-sync: 2026-05-25 14:38
-[2026-05-25 14:38:44]  1 file changed, 6 insertions(+)
-[2026-05-25 14:38:44] To https://github.com/OwlArcana/cb-deliverables
-[2026-05-25 14:38:44]    642b491..c4d0ec7  main -> main
-[2026-05-25 14:38:44] Sync complete.
-[2026-05-25 15:08:48] Changes detected. Syncing...
 [2026-05-25 15:08:48] [main ecab3d4] auto-sync: 2026-05-25 15:08
 [2026-05-25 15:08:48]  1 file changed, 6 insertions(+)
 [2026-05-25 15:08:48] To https://github.com/OwlArcana/cb-deliverables
@@ -497,3 +393,9 @@
 [2026-05-28 15:08:44]    c16a988..1009506  main -> main
 [2026-05-28 15:08:44] Sync complete.
 [2026-05-28 15:38:44] Changes detected. Syncing...
+[2026-05-28 15:38:44] [main 05baf13] auto-sync: 2026-05-28 15:38
+[2026-05-28 15:38:44]  2 files changed, 10 insertions(+), 1 deletion(-)
+[2026-05-28 15:38:44] To https://github.com/OwlArcana/cb-deliverables
+[2026-05-28 15:38:44]    1009506..05baf13  main -> main
+[2026-05-28 15:38:44] Sync complete.
+[2026-05-28 16:08:44] Changes detected. Syncing...
