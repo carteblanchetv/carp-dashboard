@@ -774,6 +774,13 @@ app.get('/api/insert-footage-stories', async (req, res) => {
 
     const stories = Array.from(uniqueMap.values());
 
+    // Sort by submittedAt descending (newest first)
+    stories.sort((a, b) => {
+      const timeA = a.submittedAt ? (a.submittedAt._seconds ? a.submittedAt._seconds * 1000 : new Date(a.submittedAt).getTime()) : 0;
+      const timeB = b.submittedAt ? (b.submittedAt._seconds ? b.submittedAt._seconds * 1000 : new Date(b.submittedAt).getTime()) : 0;
+      return timeB - timeA;
+    });
+
     res.json({ success: true, stories });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
