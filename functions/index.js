@@ -424,6 +424,30 @@ async function validateFirebaseIdToken(req, res, next) {
   }
 }
 
+app.get('/api/temp-debug-search', async (req, res) => {
+  try {
+    const results = [];
+    
+    const subSnapshot = await admin.firestore().collection('submissions')
+      .where('formType', '==', 'insert_footage')
+      .get();
+      
+    subSnapshot.forEach(doc => {
+      const data = doc.data();
+      results.push({
+        id: doc.id,
+        storyName: data.storyName || data.story_name || data.story_title || data.storyTitle || 'Unnamed Story',
+        commissionNumber: data.commissionNumber,
+        submittedAt: data.submittedAt ? (data.submittedAt._seconds ? new Date(data.submittedAt._seconds * 1000) : data.submittedAt) : 'N/A'
+      });
+    });
+
+    res.json({ results });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.use(validateFirebaseIdToken);
 
 /**
