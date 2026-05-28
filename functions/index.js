@@ -2731,6 +2731,171 @@ app.use((err, req, res, next) => {
 
 // Removed temporary DELIVERED UPDATE endpoint
 
+// -----------------------------------------------------------------------
+// MAILGUN INBOUND EMAIL WEBHOOK
+// Public endpoint — verified using Mailgun's HMAC signing key.
+// Mailgun will POST here whenever an email arrives at your routing address.
+// -----------------------------------------------------------------------
+const mailgunApp = express();
+mailgunApp.use(cors({ origin: true }));
+
+/**
+ * Verifies the Mailgun webhook signature to prevent spoofing.
+ * https://documentation.mailgun.com/en/latest/user_manual.html#securing-webhooks
+ */
+function verifyMailgunSignature(signingKey, timestamp, token, signature) {
+  const encodedToken = crypto
+    .createHmac('sha256', signingKey)
+    .update(timestamp.concat(token))
+    .digest('hex');
+  return encodedToken === signature;
+}
+
+/**
+ * Extracts structured fields from a DStv tip-off notification email body.
+ * Returns null if the email doesn't look like a DStv tip-off.
+ */
+function parseDstvTipOff(subject, bodyText) {
+  const lowerSubject = (subject || '').toLowerCase();
+  const lowerBody = (bodyText || '').toLowerCase();
+  const isDstv =
+    lowerSubject.includes('tip us off') ||
+    lowerSubject.includes('tip-us-off') ||
+    lowerBody.includes('tip us off') ||
+    lowerBody.includes('dstv.com') ||
+    lowerBody.includes('carte blanche tip');
+
+  if (!isDstv) return null;
+
+  const extract = (labels, text) => {
+    for (const label of labels) {
+      const regex = new RegExp(`(?:${label})\\s*[:\\-]\\s*(.+)`, 'i');
+      const match = text.match(regex);
+      if (match && match[1]) return match[1].trim();
+    }
+    return '';
+  };
+
+  return {
+    name:     extract(['first name', 'full name', 'name'], bodyText),
+    lastName: extract(['last name', 'surname'], bodyText),
+    email:    extract(['email address', 'email'], bodyText),
+    phone:    extract(['contact number', 'phone number', 'phone', 'cell'], bodyText),
+    location: extract(['location', 'city', 'province', 'area'], bodyText),
+    story:    extract(['your tip', 'tip', 'story idea', 'message', 'comments', 'description'], bodyText),
+  };
+}
+
+mailgunApp.post('/mailgun-inbound', async (req, res) => {
+  try {
+    // 1. Parse the multipart form-data Mailgun sends
+    const { fields, files } = await parseMultipart(req);
+
+    // 2. Verify Mailgun signature (skip in dev if key not configured)
+    const signingKey = process.env.MAILGUN_SIGNING_KEY;
+    if (signingKey) {
+      const { timestamp, token, signature } = fields;
+      if (!verifyMailgunSignature(signingKey, timestamp, token, signature)) {
+        console.warn('[MAILGUN] Signature verification failed — rejecting request.');
+        return res.status(403).json({ error: 'Invalid signature' });
+      }
+    } else {
+      console.warn('[MAILGUN] MAILGUN_SIGNING_KEY not set — skipping signature check.');
+    }
+
+    // 3. Extract email fields from Mailgun payload
+    const subject     = fields['subject']       || '(No Subject)';
+    const sender      = fields['sender']        || fields['from'] || 'unknown@sender.com';
+    const fromName    = (fields['from'] || '').replace(/<.*>/, '').trim() || sender;
+    const bodyText    = fields['body-plain']    || fields['stripped-text'] || '';
+    const bodyHtml    = fields['body-html']     || '';
+    const recipient   = fields['recipient']     || '';
+    const messageDate = fields['Date']          || new Date().toISOString();
+    const attachCount = parseInt(fields['attachment-count'] || '0', 10);
+
+    console.log(`[MAILGUN] Received email: "${subject}" from ${sender} (${attachCount} attachment(s))`);
+
+    // 4. Detect DStv tip-off vs general email submission
+    const tipoffData = parseDstvTipOff(subject, bodyText);
+    const formType   = tipoffData ? 'dstv_tipoff' : 'email_submission';
+    console.log(`[MAILGUN] Identified formType: ${formType}`);
+
+    // 5. Upload any attachments to Firebase Storage
+    const storedAttachments = [];
+    for (const file of files) {
+      if (!file.buffer || file.buffer.length === 0) continue;
+      const safeName     = file.filename.replace(/[^a-zA-Z0-9_\-.]/g, '');
+      const storagePath  = `submissions/${formType}/${Date.now()}_${safeName}`;
+      const encryptedBuf = encryptBuffer(file.buffer);
+      await defaultBucket.file(storagePath).save(encryptedBuf, {
+        contentType: file.mimeType || 'application/octet-stream',
+      });
+      storedAttachments.push({ filename: file.filename, contentType: file.mimeType, storagePath });
+      console.log(`[MAILGUN] Stored attachment: ${storagePath}`);
+    }
+
+    // 6. Build Firestore document
+    const submissionDoc = {
+      formType,
+      submittedAt:     admin.firestore.Timestamp.fromDate(new Date(messageDate)),
+      importedAt:      admin.firestore.FieldValue.serverTimestamp(),
+      submittedByEmail: sender,
+      submittedByName:  fromName,
+      recipient,
+      subject,
+      body:            bodyText,
+      bodyHtml,
+      attachments:     storedAttachments,
+      isEmailImport:   true,
+      source:          'mailgun',
+    };
+
+    if (formType === 'dstv_tipoff' && tipoffData) {
+      submissionDoc.tipoffDetails = tipoffData;
+    }
+
+    const docRef = await admin.firestore().collection('submissions').add(submissionDoc);
+    console.log(`[MAILGUN] Saved to Firestore: submissions/${docRef.id}`);
+
+    // 7. Notify relevant admins (reuse existing notification helper)
+    const notifyType = formType === 'dstv_tipoff' ? 'dstv_tipoff' : 'email_submission';
+    const notifySubject = formType === 'dstv_tipoff'
+      ? `New DStv Tip-Off received from ${fromName}`
+      : `New Email Submission: ${subject}`;
+    const notifyHtml = `
+      <div style="font-family:sans-serif;line-height:1.6;color:#333">
+        <h2 style="color:#c00">📩 ${formType === 'dstv_tipoff' ? 'DStv Tip-Off' : 'Email Submission'}</h2>
+        <ul>
+          <li><b>From:</b> ${fromName} &lt;${sender}&gt;</li>
+          <li><b>Subject:</b> ${subject}</li>
+          <li><b>Received:</b> ${new Date(messageDate).toLocaleString('en-ZA')}</li>
+          ${storedAttachments.length > 0 ? `<li><b>Attachments:</b> ${storedAttachments.map(a => a.filename).join(', ')}</li>` : ''}
+        </ul>
+        ${tipoffData ? `
+        <h3>Tip Details</h3>
+        <ul>
+          <li><b>Name:</b> ${tipoffData.name} ${tipoffData.lastName}</li>
+          <li><b>Email:</b> ${tipoffData.email}</li>
+          <li><b>Phone:</b> ${tipoffData.phone}</li>
+          <li><b>Location:</b> ${tipoffData.location}</li>
+          <li><b>Story:</b> ${tipoffData.story}</li>
+        </ul>` : `<blockquote style="background:#f4f4f4;padding:10px;border-left:4px solid #ccc">${bodyText.substring(0, 800)}</blockquote>`}
+        <p style="font-size:0.8rem;color:#999">View full submission in the CARP Dashboard.</p>
+      </div>
+    `;
+    await notifyRelevantUsers(notifyType, notifySubject, notifyHtml);
+
+    // Mailgun expects a 200 response to acknowledge receipt
+    res.status(200).json({ success: true, firestoreDocId: docRef.id });
+  } catch (error) {
+    console.error('[MAILGUN] Webhook processing error:', error);
+    // Still return 200 so Mailgun doesn't retry endlessly on a persistent error
+    res.status(200).json({ success: false, error: error.message });
+  }
+});
+
+exports.mailgunInbound = functions.runWith({ timeoutSeconds: 120, memory: '512MB' }).https.onRequest(mailgunApp);
+
 exports.submissionServer = functions.runWith({ timeoutSeconds: 300, memory: '1GB' }).https.onRequest(app);
 
 exports.verifyTurnstileToken = functions.https.onCall(async (data, context) => {
