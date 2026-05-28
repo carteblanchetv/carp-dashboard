@@ -661,35 +661,32 @@ document.addEventListener('DOMContentLoaded', () => {
         // Use landscape orientation to fit all 12 columns
         const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4', compress: true });
         const pageWidth = doc.internal.pageSize.getWidth();
-        let currentY = 25;
+        const margin = 15;
+        const y = 15;
         
         // 1. BRANDING LOGOS
         if (typeof getBlackLogo === 'function') {
             const blackLogo = getBlackLogo();
             const props = doc.getImageProperties(blackLogo);
-            const width = 50;
-            const height = width * (props.height / props.width);
-            doc.addImage(blackLogo, 'PNG', 14, currentY, width, height);
-            currentY += height + 15;
-        } else {
-            currentY += 20;
+            const caWidth = 40;
+            const caHeight = caWidth * (props.height / props.width);
+            doc.addImage(blackLogo, 'PNG', margin, y, caWidth, caHeight);
         }
         if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
             const props = doc.getImageProperties(CB_LOGO_B64);
-            const ratio = props.height / props.width;
-            const width = 40;
-            const height = width * ratio;
-            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - 14 - width, 25, width, height);
+            const cbWidth = 25;
+            const cbHeight = cbWidth * (props.height / props.width);
+            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, y, cbWidth, cbHeight);
         }
 
         doc.setFontSize(22);
         doc.setTextColor(0, 143, 190);
         doc.setFont('helvetica', 'bold');
-        doc.text('FOOTAGE DECLARATION', pageWidth / 2, 60, { align: 'center' });
+        doc.text('FOOTAGE DECLARATION', pageWidth / 2, 42, { align: 'center' });
         
         // Header Info
         doc.autoTable({
-            startY: 68, theme: 'plain', styles: { fontSize: 10, cellPadding: 2 },
+            startY: 50, theme: 'plain', styles: { fontSize: 10, cellPadding: 2 },
             body: [['Commission No:', form.commission_number.value, 'Story Name:', form.story_name.value], ['Producer:', form.producer_name.value, 'Delivery Date:', form.delivery_date.value]]
         });
 

@@ -314,66 +314,6 @@ app.post('/api/send-footage-agreement', async (req, res, next) => {
   }
 });
 
-app.post('/api/send-music-cue-sheet', async (req, res, next) => {
-  try {
-    const { fields, file } = await parseMultipart(req);
-    
-    if (!file) {
-      return res.status(400).json({ success: false, error: 'No PDF file provided.' });
-    }
-
-    const { commission_number, story_name, producer_name, afm_operator, delivery_date } = fields;
-    const pdfBuffer = file;
-    console.log(`Received Music Cue Sheet for ${story_name}. Size: ${(pdfBuffer.length / 1024 / 1024).toFixed(2)} MB`);
-
-    const subject = `MCS #${commission_number || 'UNKNOWN'} ${story_name || 'UNKNOWN'} ${producer_name || 'UNKNOWN'} - Carte Blanche`;
-
-    const htmlBody = `
-      <h2>INSERT MUSIC CUE SHEET</h2>
-      <ul>
-        <li><strong>Commission Number:</strong> ${commission_number || 'N/A'}</li>
-        <li><strong>Story Name:</strong> ${story_name || 'N/A'}</li>
-        <li><strong>Producer:</strong> ${producer_name || 'N/A'}</li>
-        <li><strong>AFM Operator:</strong> ${afm_operator || 'N/A'}</li>
-        <li><strong>Delivery Date:</strong> ${formatDisplayDate(delivery_date)}</li>
-      </ul>
-      <p>Please find the Insert Music Cue Sheet PDF attached.</p>
-    `;
-
-    const mailOptions = {
-        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
-        to: process.env.TARGET_EMAIL,
-        subject,
-        html: htmlBody,
-        attachments: [
-            {
-                filename: `MusicCueSheet_${(story_name || 'Story').replace(/\s+/g, '_')}.pdf`,
-                content: pdfBuffer,
-                contentType: 'application/pdf'
-            }
-        ]
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Music Cue Sheet Email sent: ' + info.response);
-
-    // Save to Firebase
-    await saveSubmission(req, 'music_cue_sheet', `MusicCueSheet_${(story_name || 'Story').replace(/\s+/g, '_')}.pdf`, pdfBuffer, {
-      commissionNumber: commission_number,
-      storyName: story_name,
-      producerName: producer_name,
-      afmOperator: afm_operator,
-      deliveryDate: delivery_date
-    });
-
-    res.status(200).json({ success: true, message: 'Music cue sheet sent successfully!' });
-
-  } catch (error) {
-    console.error('Error sending music cue sheet:', error);
-    res.status(500).json({ success: false, error: 'Failed to send music cue sheet.', details: error.message });
-  }
-});
-
 app.post('/api/send-insert-footage', async (req, res, next) => {
   try {
     const { fields, file } = await parseMultipart(req);
@@ -472,15 +412,17 @@ app.post('/api/send-insert-footage', async (req, res, next) => {
 
 app.get('/api/insert-footage-stories', async (req, res) => {
   try {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const all = req.query.all === 'true';
+    let query = admin.firestore().collection('submissions')
+      .where('formType', '==', 'insert_footage');
+      
+    if (!all) {
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      query = query.where('submittedAt', '>=', ninetyDaysAgo);
+    }
     
-    // We fetch all insert_footage submissions from the last 30 days
-    const snapshot = await admin.firestore().collection('submissions')
-      .where('formType', '==', 'insert_footage')
-      .where('submittedAt', '>=', thirtyDaysAgo)
-      .orderBy('submittedAt', 'desc')
-      .get();
+    const snapshot = await query.orderBy('submittedAt', 'desc').get();
       
     const stories = snapshot.docs.map(doc => {
       const data = doc.data();

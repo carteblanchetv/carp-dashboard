@@ -259,6 +259,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const showOlderStoriesCheckbox = document.getElementById('showOlderStories');
+    if (showOlderStoriesCheckbox) {
+        showOlderStoriesCheckbox.addEventListener('change', () => {
+            fetchStories();
+        });
+    }
+
     totalDurationInput.addEventListener('input', (e) => formatTimecode(e.target));
 
     // --- IMPORT LOGIC ---
@@ -267,7 +274,9 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             importSelect.innerHTML = '<option value="">-- Loading stories... --</option>';
             const token = await window.auth.getIdToken();
-            const response = await fetch('/api/insert-footage-stories', {
+            const showOlder = showOlderStoriesCheckbox && showOlderStoriesCheckbox.checked;
+            const url = showOlder ? '/api/insert-footage-stories?all=true' : '/api/insert-footage-stories';
+            const response = await fetch(url, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const result = await response.json();
@@ -276,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 availableStories = result.stories;
                 importSelect.innerHTML = '<option value="">-- Select a story --</option>';
                 if (availableStories.length === 0) {
-                    importSelect.innerHTML = '<option value="">No stories found in last 30 days</option>';
+                    importSelect.innerHTML = showOlder ? '<option value="">No stories found</option>' : '<option value="">No stories found in last 90 days</option>';
                 } else {
                     availableStories.forEach(s => {
                         const opt = document.createElement('option');
@@ -402,32 +411,32 @@ document.addEventListener('DOMContentLoaded', () => {
         // Use landscape orientation to fit all 12 columns
         const doc = new jsPDF({ orientation: 'l', unit: 'mm', format: 'a4', compress: true });
         const pageWidth = doc.internal.pageSize.getWidth();
+        const margin = 15;
+        const y = 15;
         
         // 1. BRANDING LOGOS
         if (typeof getBlackLogo === 'function') {
             const blackLogo = getBlackLogo();
             const props = doc.getImageProperties(blackLogo);
-            const ratio = props.height / props.width;
-            const width = 45;
-            const height = width * ratio;
-            doc.addImage(blackLogo, 'PNG', 14, 25, width, height);
+            const caWidth = 40;
+            const caHeight = caWidth * (props.height / props.width);
+            doc.addImage(blackLogo, 'PNG', margin, y, caWidth, caHeight);
         }
         if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
             const props = doc.getImageProperties(CB_LOGO_B64);
-            const ratio = props.height / props.width;
-            const width = 40;
-            const height = width * ratio;
-            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - 14 - width, 25, width, height);
+            const cbWidth = 25;
+            const cbHeight = cbWidth * (props.height / props.width);
+            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, y, cbWidth, cbHeight);
         }
 
         doc.setFontSize(22);
         doc.setTextColor(0, 143, 190);
         doc.setFont('helvetica', 'bold');
-        doc.text('MASTER FOOTAGE DECLARATION (FDL)', pageWidth / 2, 60, { align: 'center' });
+        doc.text('MASTER FOOTAGE DECLARATION (FDL)', pageWidth / 2, 42, { align: 'center' });
         
         // Header Info
         doc.autoTable({
-            startY: 68, theme: 'plain', styles: { fontSize: 9, cellPadding: 1, overflow: 'linebreak' },
+            startY: 50, theme: 'plain', styles: { fontSize: 9, cellPadding: 1, overflow: 'linebreak' },
             body: [
                 ['TX Date:', form.tx_date.value, 'Season:', form.season.value, 'Episode:', form.episode.value],
                 ['UID Number:', form.uid_number.value, 'Duration:', form.total_duration.value, '', '']

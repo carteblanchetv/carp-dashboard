@@ -2856,6 +2856,7 @@ function renderProjectAssets(assets, proposal) {
     assets.forEach(asset => {
         // Restricted View: Only show final_script
         if (proposal._isRestrictedView && asset.formType !== 'final_script') return;
+        if (asset.formType === 'music_cue_sheet') return;
         
         const card = document.createElement('div');
         card.style.cssText = `background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; transition: all 0.2s; box-shadow: var(--shadow-sm);`;
@@ -2872,10 +2873,9 @@ function renderProjectAssets(assets, proposal) {
         let typeColor = 'var(--primary)';
         if (asset.formType === 'insert_footage') typeColor = '#f59e0b';
         if (asset.formType === 'final_script') typeColor = '#7c3aed';
-        if (asset.formType === 'music_cue_sheet') typeColor = '#ec4899';
         const mainFile = asset.files && asset.files[0];
         const downloadBtn = proposal._isRestrictedView ? '' : `<button onclick="window.downloadAsset('${asset.id}', '${mainFile?.storagePath || ''}', '${finalName.replace(/'/g, "\\'")}.pdf')" class="btn-soft" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; flex: 1; border: 1px solid ${typeColor} !important; color: ${typeColor};">Download PDF</button>`;
-        card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: flex-start;"><span style="font-size: 0.7rem; font-weight: 800; color: ${typeColor}; letter-spacing: 0.05em;">${displayType.toUpperCase()}</span><span style="font-size: 0.7rem; color: var(--text-muted);">${date}</span></div><div style="font-weight: 700; color: var(--text-main); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${finalName}">${finalName}</div><div style="display: flex; gap: 0.5rem; margin-top: auto; padding-top: 0.5rem;">${downloadBtn}<a href="${asset.formType === 'insert_footage' ? 'insert_footage_declaration.html' : (asset.formType === 'final_script' ? 'final_script.html' : 'music_cue_sheet.html')}?id=${asset.id}&project=${proposal.id}" class="btn-soft" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; text-decoration: none; text-align: center; border: 1px solid var(--border) !important;">View Details</a></div>`;
+        card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: flex-start;"><span style="font-size: 0.7rem; font-weight: 800; color: ${typeColor}; letter-spacing: 0.05em;">${displayType.toUpperCase()}</span><span style="font-size: 0.7rem; color: var(--text-muted);">${date}</span></div><div style="font-weight: 700; color: var(--text-main); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${finalName}">${finalName}</div><div style="display: flex; gap: 0.5rem; margin-top: auto; padding-top: 0.5rem;">${downloadBtn}<a href="${asset.formType === 'insert_footage' ? 'insert_footage_declaration.html' : 'final_script.html'}?id=${asset.id}&project=${proposal.id}" class="btn-soft" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; text-decoration: none; text-align: center; border: 1px solid var(--border) !important;">View Details</a></div>`;
         list.appendChild(card);
     });
 }
@@ -2952,27 +2952,27 @@ window.downloadFinalScriptPDF = async (id) => {
     };
 
     try {
-        let currentY = 20;
-        const margin = 20;
+        const margin = 15;
+        let currentY = 15;
 
         // 1. BRANDING LOGOS
         // Top Left: CAP Logo BLACK
         if (typeof CAP_LOGO_B64 !== 'undefined' && CAP_LOGO_B64) {
             const props = doc.getImageProperties(CAP_LOGO_B64);
-            const width = 45;
-            const height = width * (props.height / props.width);
-            doc.addImage(CAP_LOGO_B64, 'PNG', margin, currentY, width, height);
+            const caWidth = 40;
+            const caHeight = caWidth * (props.height / props.width);
+            doc.addImage(CAP_LOGO_B64, 'PNG', margin, currentY, caWidth, caHeight);
         }
 
         // Top Right: CB Logo NEW
         if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
             const props = doc.getImageProperties(CB_LOGO_B64);
-            const width = 35;
-            const height = width * (props.height / props.width);
-            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - width, currentY, width, height);
+            const cbWidth = 25;
+            const cbHeight = cbWidth * (props.height / props.width);
+            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, currentY, cbWidth, cbHeight);
         }
         
-        currentY += 25;
+        currentY = 42;
 
         doc.setFontSize(22);
         doc.setTextColor(0, 143, 190);
@@ -3431,23 +3431,23 @@ window.downloadCallSheetPDF = async () => {
     }
 
     try {
-        let currentY = 20;
-        const margin = 20;
+        const margin = 15;
+        let currentY = 15;
 
         // Branding Logos
         if (typeof CAP_LOGO_B64 !== 'undefined' && CAP_LOGO_B64) {
             const props = doc.getImageProperties(CAP_LOGO_B64);
-            const width = 45;
-            const height = width * (props.height / props.width);
-            doc.addImage(CAP_LOGO_B64, 'PNG', margin, currentY, width, height);
+            const caWidth = 40;
+            const caHeight = caWidth * (props.height / props.width);
+            doc.addImage(CAP_LOGO_B64, 'PNG', margin, currentY, caWidth, caHeight);
         }
         if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
             const props = doc.getImageProperties(CB_LOGO_B64);
-            const width = 35;
-            const height = width * (props.height / props.width);
-            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - width, currentY, width, height);
+            const cbWidth = 25;
+            const cbHeight = cbWidth * (props.height / props.width);
+            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, currentY, cbWidth, cbHeight);
         }
-        currentY += 25;
+        currentY = 42;
 
         doc.setFontSize(22);
         doc.setTextColor(16, 185, 129); // Green accent
@@ -3700,27 +3700,27 @@ window.downloadProposalPDF = async () => {
     };
 
     try {
-        let currentY = 20;
-        const margin = 20;
+        const margin = 15;
+        let currentY = 15;
 
         // 1. BRANDING LOGOS
         // Top Left: CAP Logo BLACK
         if (typeof CAP_LOGO_B64 !== 'undefined' && CAP_LOGO_B64) {
             const props = doc.getImageProperties(CAP_LOGO_B64);
-            const width = 45;
-            const height = width * (props.height / props.width);
-            doc.addImage(CAP_LOGO_B64, 'PNG', margin, currentY, width, height);
+            const caWidth = 40;
+            const caHeight = caWidth * (props.height / props.width);
+            doc.addImage(CAP_LOGO_B64, 'PNG', margin, currentY, caWidth, caHeight);
         }
 
         // Top Right: CB Logo NEW
         if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
             const props = doc.getImageProperties(CB_LOGO_B64);
-            const width = 35;
-            const height = width * (props.height / props.width);
-            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - width, currentY, width, height);
+            const cbWidth = 25;
+            const cbHeight = cbWidth * (props.height / props.width);
+            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, currentY, cbWidth, cbHeight);
         }
         
-        currentY += 25;
+        currentY = 42;
 
         doc.setFontSize(22);
         doc.setTextColor(0, 143, 190);

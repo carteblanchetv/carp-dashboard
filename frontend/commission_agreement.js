@@ -87,26 +87,31 @@ async function generatePDF(sub, currentUser, commNum, commDate) {
 
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
-    const margin = 20;
+    const margin = 15;
     const contentWidth = pageWidth - (margin * 2);
     let y = 15;
 
     // --- Header with Logos ---
     try {
-        // Combined Artists Logo (Left)
+        // Combined Artists Logo (Left) - Always use the black/dark logo for printing
         if (typeof CAP_LOGO_B64 !== 'undefined') {
-            doc.addImage(CAP_LOGO_B64, 'PNG', margin, y, 45, 12);
+            const props = doc.getImageProperties(CAP_LOGO_B64);
+            const caWidth = 40;
+            const caHeight = caWidth * (props.height / props.width);
+            doc.addImage(CAP_LOGO_B64, 'PNG', margin, y, caWidth, caHeight);
         }
-        // Carte Blanche Logo (Right)
+        // Carte Blanche Logo (Right) - Smaller (25mm width)
         if (typeof CB_LOGO_B64 !== 'undefined') {
-            const cbWidth = 40;
-            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, y - 2, cbWidth, 16);
+            const cbWidth = 25;
+            const props = doc.getImageProperties(CB_LOGO_B64);
+            const cbHeight = cbWidth * (props.height / props.width);
+            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, y, cbWidth, cbHeight);
         }
     } catch (e) {
         console.warn("Logo loading failed:", e);
     }
 
-    y += 25;
+    y = 42;
 
     // Title
     doc.setFont('helvetica', 'bold');

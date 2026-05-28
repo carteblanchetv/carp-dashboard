@@ -412,27 +412,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-        let currentY = 45;
+        const margin = 15;
+        let currentY = 15;
 
         // 1. BRANDING LOGOS
-        if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
-            const props = doc.getImageProperties(CB_LOGO_B64);
-            const width = 40;
-            const height = width * (props.height / props.width);
-            // Top Right
-            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - 14 - width, 25, width, height);
-        }
-
         if (typeof getBlackLogo === 'function') {
             const blackLogo = getBlackLogo();
             const props = doc.getImageProperties(blackLogo);
-            const width = 50;
-            const height = width * (props.height / props.width);
-            doc.addImage(blackLogo, 'PNG', 14, currentY, width, height);
-            currentY += height + 15;
-        } else {
-            currentY += 20;
+            const caWidth = 40;
+            const caHeight = caWidth * (props.height / props.width);
+            doc.addImage(blackLogo, 'PNG', margin, currentY, caWidth, caHeight);
         }
+
+        if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
+            const props = doc.getImageProperties(CB_LOGO_B64);
+            const cbWidth = 25;
+            const cbHeight = cbWidth * (props.height / props.width);
+            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, currentY, cbWidth, cbHeight);
+        }
+
+        currentY = 42;
 
         doc.setFontSize(22);
         doc.setTextColor(0, 143, 190);
@@ -442,15 +441,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         doc.setFontSize(9);
         doc.setTextColor(80, 80, 80);
-        doc.text('CONTACT DETAILS: Nombuso Nkosi | 083 700 3479', 14, currentY);
+        doc.text('CONTACT DETAILS: Nombuso Nkosi | 083 700 3479', margin, currentY);
         currentY += 6;
 
         doc.setFont('helvetica', 'bold');
         const txDateVal = document.getElementById('txDate').value;
         const formattedTxDate = formatDate(txDateVal);
-        doc.text(`TX Date: ${formattedTxDate}`, 14, currentY);
-        doc.text('Show Name: Carte Blanche', 14, currentY + 5);
-        doc.text('Channel: 101', 14, currentY + 10);
+        doc.text(`TX Date: ${formattedTxDate}`, margin, currentY);
+        doc.text('Show Name: Carte Blanche', margin, currentY + 5);
+        doc.text('Channel: 101', margin, currentY + 10);
         doc.setFont('helvetica', 'normal');
         currentY += 15;
         
@@ -471,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
             theme: 'striped',
             headStyles: commonHeadStyles,
             styles: commonStyles,
-            margin: { left: 14, right: 14 }
+            margin: { left: margin, right: margin }
         });
 
         // Stories Table
@@ -493,7 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 theme: 'striped',
                 headStyles: commonHeadStyles,
                 styles: commonStyles,
-                margin: { left: 14, right: 14 }
+                margin: { left: margin, right: margin }
             });
         }
 
@@ -510,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 theme: 'striped',
                 headStyles: commonHeadStyles,
                 styles: commonStyles,
-                margin: { left: 14, right: 14 }
+                margin: { left: margin, right: margin }
             });
         }
 
@@ -526,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 theme: 'striped',
                 headStyles: commonHeadStyles,
                 styles: commonStyles,
-                margin: { left: 14, right: 14 }
+                margin: { left: margin, right: margin }
             });
         }
 

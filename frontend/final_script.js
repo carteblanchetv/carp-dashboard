@@ -63,27 +63,25 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            let currentY = 20;
-            const margin = 20;
+            const margin = 15;
+            let currentY = 15;
 
             // 1. BRANDING LOGOS
-            if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
-                const props = doc.getImageProperties(CB_LOGO_B64);
-                const width = 40;
-                const height = width * (props.height / props.width);
-                doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - width, currentY, width, height);
-            }
-
             if (typeof getBlackLogo === 'function') {
                 const blackLogo = getBlackLogo();
                 const props = doc.getImageProperties(blackLogo);
-                const width = 50;
-                const height = width * (props.height / props.width);
-                doc.addImage(blackLogo, 'PNG', margin, 25, width, height);
-                currentY += height + 15;
-            } else {
-                currentY += 20;
-            }    
+                const caWidth = 40;
+                const caHeight = caWidth * (props.height / props.width);
+                doc.addImage(blackLogo, 'PNG', margin, currentY, caWidth, caHeight);
+            }
+            if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
+                const props = doc.getImageProperties(CB_LOGO_B64);
+                const cbWidth = 25;
+                const cbHeight = cbWidth * (props.height / props.width);
+                doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, currentY, cbWidth, cbHeight);
+            }
+
+            currentY = 42;
 
             doc.setFontSize(22);
             doc.setTextColor(0, 143, 190);

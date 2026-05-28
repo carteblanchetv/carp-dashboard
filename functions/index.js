@@ -652,34 +652,6 @@ app.post('/api/send-footage-agreement', async (req, res) => {
   }
 });
 
-app.post('/api/send-music-cue-sheet', async (req, res) => {
-  try {
-    const { fields, file } = await parseMultipart(req);
-    if (!file) return res.status(400).json({ success: false, error: 'No PDF provided' });
-
-    const { story_name, commission_number } = fields;
-    const filename = `MusicCueSheet_${story_name.replace(/\s+/g, '_')}.pdf`;
-
-    const { firestoreDocId, storagePath } = await processStorageAndFirestore(
-      req, 'music_cue_sheet', 'music_cue_sheet', filename, file,
-      { storyName: story_name, commissionNumber: commission_number }
-    );
-
-    const mailOptions = {
-      from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
-      to: process.env.TARGET_EMAIL,
-      subject: `MCS #${commission_number} ${story_name}`,
-      html: `<p>Music cue sheet attached for ${story_name}.</p>`,
-      attachments: [{ filename, content: file.buffer, contentType: 'application/pdf' }]
-    };
-    await transporter.sendMail(mailOptions);
-
-    res.status(200).json({ success: true, firestoreDocId, storagePath });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
 app.get('/api/list-producers', async (req, res) => {
   try {
     const snapshot = await admin.firestore().collection('users')
@@ -719,13 +691,16 @@ app.get('/api/list-producers', async (req, res) => {
 
 app.get('/api/insert-footage-stories', async (req, res) => {
   try {
-    const ninetyDaysAgo = new Date();
-    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-
+    const all = req.query.all === 'true';
     const isAdmin = AUTHORIZED_ADMIN_ROLES.includes(req.user.role);
     let query = admin.firestore().collection('submissions')
-      .where('formType', '==', 'insert_footage')
-      .where('submittedAt', '>=', ninetyDaysAgo);
+      .where('formType', '==', 'insert_footage');
+
+    if (!all) {
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      query = query.where('submittedAt', '>=', ninetyDaysAgo);
+    }
 
     if (!isAdmin) {
       query = query.where('submittedBy', '==', req.user.uid);
@@ -1104,45 +1079,6 @@ app.post('/api/update-submission', async (req, res) => {
       updateData.episode = fields.episode;
       updateData.uid = fields.uid_number;
       updateData.duration = fields.total_duration;
-    } else if (formType === 'music_cue_sheet') {
-      const cues = [];
-      const cueNums = Array.isArray(fields['cue[]']) ? fields['cue[]'] : [fields['cue[]'] || '1'];
-      const songTitles = Array.isArray(fields['song_title[]']) ? fields['song_title[]'] : [fields['song_title[]'] || ''];
-      const composers = Array.isArray(fields['composer[]']) ? fields['composer[]'] : [fields['composer[]'] || ''];
-      const publishers = Array.isArray(fields['publisher[]']) ? fields['publisher[]'] : [fields['publisher[]'] || ''];
-      const albums = Array.isArray(fields['album_title[]']) ? fields['album_title[]'] : [fields['album_title[]'] || ''];
-      const trackNums = Array.isArray(fields['track_number[]']) ? fields['track_number[]'] : [fields['track_number[]'] || ''];
-      const tcInList = Array.isArray(fields['tc_in[]']) ? fields['tc_in[]'] : [fields['tc_in[]'] || ''];
-      const tcOutList = Array.isArray(fields['tc_out[]']) ? fields['tc_out[]'] : [fields['tc_out[]'] || ''];
-      const durations = Array.isArray(fields['duration[]']) ? fields['duration[]'] : [fields['duration[]'] || ''];
-      const isrcs = Array.isArray(fields['isrc[]']) ? fields['isrc[]'] : [fields['isrc[]'] || ''];
-      const iswcs = Array.isArray(fields['iswc[]']) ? fields['iswc[]'] : [fields['iswc[]'] || ''];
-      const musicTypes = Array.isArray(fields['music_type[]']) ? fields['music_type[]'] : [fields['music_type[]'] || ''];
-
-      for (let i = 0; i < songTitles.length; i++) {
-        if (songTitles[i]) {
-          cues.push({
-            cue: cueNums[i],
-            song_title: songTitles[i],
-            composer: composers[i],
-            publisher: publishers[i],
-            album_title: albums[i],
-            track_number: trackNums[i],
-            tc_in: tcInList[i],
-            tc_out: tcOutList[i],
-            duration: durations[i],
-            isrc: isrcs[i],
-            iswc: iswcs[i],
-            music_type: musicTypes[i]
-          });
-        }
-      }
-      updateData.storyName = fields.story_name;
-      updateData.commissionNumber = fields.commission_number;
-      updateData.producerName = fields.producer_name;
-      updateData.afmOperator = fields.afm_operator;
-      updateData.deliveryDate = fields.delivery_date;
-      updateData.cues = cues;
     } else if (formType === 'control_sheet') {
       updateData.txDate = fields.txDate;
       updateData.season = fields.season;
@@ -1162,8 +1098,7 @@ app.post('/api/update-submission', async (req, res) => {
         const mailOptions = {
           from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
           to: process.env.TARGET_EMAIL,
-          subject: `Update: ${formType === 'music_cue_sheet' ? `Music Cue Sheet #${updateData.commissionNumber} ${updateData.storyName}` : 
-                     `S${updateData.season}E${updateData.episode} Episode Footage`}`,
+          subject: `Update: S${updateData.season}E${updateData.episode} Episode Footage`,
           html: `<p>A submission has been updated.</p>`,
           attachments: files.filter(f => formType === 'episode_footage' || f.fieldname === 'pdf').map(f => ({ filename: f.filename, content: f.buffer }))
         };
