@@ -36,6 +36,15 @@
                     // FILTER ONLY FDL
                     const fdlSubs = result.submissions.filter(s => s.formType === 'episode_footage');
                     
+                    // Sort by txDate or submittedAt descending (newest to oldest)
+                    fdlSubs.sort((a, b) => {
+                        const rawDateA = a.txDate || a.submittedAt;
+                        const dateA = rawDateA ? (rawDateA._seconds ? rawDateA._seconds * 1000 : new Date(rawDateA).getTime()) : 0;
+                        const rawDateB = b.txDate || b.submittedAt;
+                        const dateB = rawDateB ? (rawDateB._seconds ? rawDateB._seconds * 1000 : new Date(rawDateB).getTime()) : 0;
+                        return dateB - dateA;
+                    });
+                    
                     if (fdlSubs.length === 0) {
                         tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">No past FDLs found.</td></tr>';
                     } else {

@@ -19,7 +19,12 @@ Write-Host ""
 # --- 1. Check git is available ---
 if (-not (Test-Path $GIT)) {
     # Fallback: check PATH
-    $GIT = (Get-Command git -ErrorAction SilentlyContinue)?.Source
+    $gitCmd = Get-Command git -ErrorAction SilentlyContinue
+    if ($gitCmd) {
+        $GIT = $gitCmd.Source
+    } else {
+        $GIT = $null
+    }
     if (-not $GIT) {
         Write-Host "ERROR: git not found. Please install Git from https://git-scm.com/download/win" -ForegroundColor Red
         exit 1
