@@ -424,9 +424,18 @@ async function validateFirebaseIdToken(req, res, next) {
   }
 }
 
-app.get('/api/temp-debug-search', async (req, res) => {
+app.get('/api/temp-debug-search-sub', async (req, res) => {
   try {
     const doc = await admin.firestore().collection('submissions').doc('CyRQKw2haW42KWShBdBP').get();
+    res.json({ id: doc.id, data: doc.data() });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/temp-debug-search', async (req, res) => {
+  try {
+    const doc = await admin.firestore().collection('proposals').doc('8mgGIrGliAnRgN0kLe0i').get();
     res.json({ id: doc.id, data: doc.data() });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -719,9 +728,9 @@ app.get('/api/insert-footage-stories', async (req, res) => {
 
     const subSnapshot = await subQuery.orderBy('submittedAt', 'desc').get();
 
-    // 2. Fetch accepted proposals (filter date in-memory to avoid composite index requirement)
+    // 2. Fetch accepted and paid proposals (filter date in-memory to avoid composite index requirement)
     const propQuery = admin.firestore().collection('proposals')
-      .where('status', '==', 'accepted');
+      .where('status', 'in', ['accepted', 'paid']);
 
     const propSnapshot = await propQuery.get();
 

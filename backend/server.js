@@ -426,9 +426,9 @@ app.get('/api/insert-footage-stories', async (req, res) => {
     
     const subSnapshot = await subQuery.orderBy('submittedAt', 'desc').get();
 
-    // 2. Fetch accepted proposals (filter date in-memory to avoid composite index requirement)
+    // 2. Fetch accepted and paid proposals (filter date in-memory to avoid composite index requirement)
     const propQuery = admin.firestore().collection('proposals')
-      .where('status', '==', 'accepted');
+      .where('status', 'in', ['accepted', 'paid']);
 
     const propSnapshot = await propQuery.get();
 
