@@ -719,15 +719,9 @@ app.get('/api/insert-footage-stories', async (req, res) => {
 
     const subSnapshot = await subQuery.orderBy('submittedAt', 'desc').get();
 
-    // 2. Fetch accepted proposals
-    let propQuery = admin.firestore().collection('proposals')
+    // 2. Fetch accepted proposals (filter date in-memory to avoid composite index requirement)
+    const propQuery = admin.firestore().collection('proposals')
       .where('status', '==', 'accepted');
-
-    if (!all) {
-      const ninetyDaysAgo = new Date();
-      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-      propQuery = propQuery.where('submittedAt', '>=', ninetyDaysAgo);
-    }
 
     const propSnapshot = await propQuery.get();
 
@@ -748,8 +742,22 @@ app.get('/api/insert-footage-stories', async (req, res) => {
       });
     });
 
+    const ninetyDaysAgo = new Date();
+    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+
     propSnapshot.docs.forEach(doc => {
       const data = doc.data();
+      
+      // Filter by date in memory if not requesting all
+      if (!all && data.submittedAt) {
+        const submittedDate = data.submittedAt._seconds 
+          ? new Date(data.submittedAt._seconds * 1000) 
+          : new Date(data.submittedAt);
+        if (submittedDate < ninetyDaysAgo) {
+          return; // Skip
+        }
+      }
+
       const name = data.story_title || data.storyName || data.story_name || data.storyTitle || 'Unnamed Story';
       const key = `${name.toLowerCase().trim()}_${data.commissionNumber || ''}`;
       if (!uniqueMap.has(key)) {
