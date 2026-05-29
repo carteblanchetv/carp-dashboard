@@ -405,3 +405,33 @@
 [2026-05-29 16:08:44]    e453327..dba2e1c  main -> main
 [2026-05-29 16:08:44] Sync complete.
 [2026-05-29 16:38:44] Changes detected. Syncing...
+[2026-05-29 16:38:44] warning: in the working copy of 'migrate_cb_deliverables.ps1', LF will be replaced by CRLF the next time Git touches it
+[2026-05-29 16:38:44] warning: in the working copy of 'repo_workflow/add_firebase_workflow.ps1', LF will be replaced by CRLF the next time Git touches it
+[2026-05-29 16:38:44] warning: adding embedded git repository: repo_workflow/carp-dashboard
+[2026-05-29 16:38:44] hint: You've added another git repository inside your current repository.
+[2026-05-29 16:38:44] hint: Clones of the outer repository will not contain the contents of
+[2026-05-29 16:38:44] hint: the embedded repository and will not know how to obtain it.
+[2026-05-29 16:38:44] hint: If you meant to add a submodule, use:
+[2026-05-29 16:38:44] hint:
+[2026-05-29 16:38:44] hint: 	git submodule add <url> repo_workflow/carp-dashboard
+[2026-05-29 16:38:44] hint:
+[2026-05-29 16:38:44] hint: If you added this path by mistake, you can remove it from the
+[2026-05-29 16:38:44] hint: index with:
+[2026-05-29 16:38:44] hint:
+[2026-05-29 16:38:44] hint: 	git rm --cached repo_workflow/carp-dashboard
+[2026-05-29 16:38:44] hint:
+[2026-05-29 16:38:44] hint: See "git help submodule" for more information.
+[2026-05-29 16:38:44] hint: Disable this message with "git config set advice.addEmbeddedRepo false"
+[2026-05-29 16:38:44] warning: in the working copy of 'repo_workflow/push_firebase_workflow.ps1', LF will be replaced by CRLF the next time Git touches it
+[2026-05-29 16:38:44] warning: in the working copy of 'update_firebase_workflow.ps1', LF will be replaced by CRLF the next time Git touches it
+[2026-05-29 16:38:44] [main 0d688cc] auto-sync: 2026-05-29 16:38
+[2026-05-29 16:38:44]  6 files changed, 312 insertions(+)
+[2026-05-29 16:38:44]  create mode 100644 migrate_cb_deliverables.ps1
+[2026-05-29 16:38:44]  create mode 100644 repo_workflow/add_firebase_workflow.ps1
+[2026-05-29 16:38:44]  create mode 160000 repo_workflow/carp-dashboard
+[2026-05-29 16:38:44]  create mode 100644 repo_workflow/push_firebase_workflow.ps1
+[2026-05-29 16:38:44]  create mode 100644 update_firebase_workflow.ps1
+[2026-05-29 16:38:44] To https://github.com/OwlArcana/cb-deliverables
+[2026-05-29 16:38:44]    dba2e1c..0d688cc  main -> main
+[2026-05-29 16:38:44] Sync complete.
+[2026-05-29 17:08:44] Changes detected. Syncing...
