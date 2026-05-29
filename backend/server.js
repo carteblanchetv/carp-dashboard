@@ -113,13 +113,8 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Helper to format TX date as YYYY-MM-DD → DD/MM/YYYY for display
-function formatDisplayDate(dateStr) {
-  if (!dateStr) return 'Unknown Date';
-  const parts = dateStr.split('-');
-  if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
-  return dateStr;
-}
+const { formatDisplayDate } = require('./utils');
+
 
 // Helper to save submission to Storage and Firestore
 async function saveSubmission(req, formType, filename, pdfBuffer, metadata) {
