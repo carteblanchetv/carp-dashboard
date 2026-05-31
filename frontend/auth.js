@@ -698,8 +698,10 @@ export function initNavBar(user) {
         const backBtn = document.getElementById('gnavBackBtn');
         if (backBtn) backBtn.remove();
 
-        // B. Remove redundant navigation buttons (User request: Remove Dashboard/Home)
-        const isDashboardPage = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/') || window.location.pathname === '';
+        // B. Inject/Manage Dashboard Button
+        const path = window.location.pathname.toLowerCase();
+        const isDashboardPage = path === '/' || path.endsWith('/index.html') || path.endsWith('/index') || path === '';
+        
         const allBtns = actionsContainer.querySelectorAll('.gnav-btn');
         allBtns.forEach(btn => {
             const text = btn.textContent.trim().toUpperCase();
@@ -707,6 +709,29 @@ export function initNavBar(user) {
                 btn.remove();
             }
         });
+
+        if (!isDashboardPage) {
+            let dashBtn = actionsContainer.querySelector('#gnavDynamicDashBtn');
+            if (!dashBtn) {
+                const hasExistingDash = Array.from(allBtns).some(btn => {
+                    const text = btn.textContent.trim().toUpperCase();
+                    return text === 'DASHBOARD' || text === 'HOME';
+                });
+                
+                if (!hasExistingDash) {
+                    dashBtn = document.createElement('a');
+                    dashBtn.id = 'gnavDynamicDashBtn';
+                    dashBtn.href = 'index.html';
+                    dashBtn.className = 'gnav-btn';
+                    dashBtn.title = "Back to Dashboard";
+                    dashBtn.innerHTML = `
+                        <span>🏠</span>
+                        <span>DASHBOARD</span>
+                    `;
+                    actionsContainer.insertBefore(dashBtn, actionsContainer.firstChild);
+                }
+            }
+        }
 
         // C. Inject HELP GUIDE button dynamically
         let helpBtn = actionsContainer.querySelector('#gnavHelpBtn');

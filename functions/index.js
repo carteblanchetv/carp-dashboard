@@ -2242,24 +2242,38 @@ app.get('/api/list-reviewers', async (req, res) => {
       .where('isEnabled', '==', true)
       .get();
     
-    // Only allow specific reviewers: Stenette and Rudi
+    // Map documents to parse their fields
+    const allDocs = snapshot.docs.map(doc => {
+      const data = doc.data();
+      const email = (decrypt(data.email) || doc.id).toLowerCase().trim();
+      const isEmailKey = doc.id.includes('@');
+      return {
+        id: doc.id,
+        email,
+        name: decrypt(data.name) || 'Unknown',
+        surname: decrypt(data.surname) || '',
+        role: data.role,
+        isEmailKey
+      };
+    });
+
+    // Deduplicate: find if there is a UID-keyed doc for each email
+    const emailsWithUidDoc = new Set(
+      allDocs.filter(u => !u.isEmailKey).map(u => u.email)
+    );
+
     const permittedEmails = ['stenette@carteblanche.co.za', 'rudi@combinedartists.co.za'];
 
-    const reviewers = snapshot.docs
-      .map(doc => {
-        const data = doc.data();
-        const email = decrypt(data.email) || '';
-        
-        if (!permittedEmails.includes(email.toLowerCase())) return null;
-        
-        return {
-          uid: doc.id,
-          name: decrypt(data.name) || 'Unknown',
-          surname: decrypt(data.surname) || '',
-          role: data.role
-        };
-      })
-      .filter(u => u !== null);
+    // Filter duplicates and select only permitted reviewer emails
+    const reviewers = allDocs
+      .filter(u => !u.isEmailKey || !emailsWithUidDoc.has(u.email))
+      .filter(u => permittedEmails.includes(u.email))
+      .map(u => ({
+        uid: u.id,
+        name: u.name,
+        surname: u.surname,
+        role: u.role
+      }));
       
     res.json({ success: true, reviewers });
   } catch (error) {

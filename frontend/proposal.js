@@ -1843,68 +1843,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Risk Assessment is a required field.");
                 return;
             }
-
-            // 4. Movement Order (at least one Movement Order Section must be completed)
-            const moSections = Array.from(document.querySelectorAll('.movement-order-section-block'));
-            let moValid = false;
-            for (const block of moSections) {
-                const shootDay = block.querySelector('.cs-mo-shoot-day')?.value || '';
-                const shootDate = block.querySelector('.cs-mo-shoot-date')?.value || '';
-                const items = Array.from(block.querySelectorAll('.mo-items-tbody tr')).map(row => {
-                    return {
-                        time: row.querySelector('.mo-time-input')?.value || '',
-                        what: row.querySelector('.mo-what-input')?.value || '',
-                        location: row.querySelector('.mo-location-input')?.value || ''
-                    };
-                }).filter(item => item.time && item.what && item.location);
-                
-                if (shootDay && shootDate && items.length > 0) {
-                    moValid = true;
-                    break;
-                }
-            }
-            if (!moValid) {
-                alert("At least one Movement Order Section must be completed (with Shoot Day, Shoot Date, and at least one complete row).");
-                return;
-            }
-
-            // 5. Equipment: Camera & Audio equipment
-            const cameraRows = Array.from(document.querySelectorAll('#cs_cameras_table_body tr'));
-            const hasValidCamera = cameraRows.some(row => {
-                const type = row.querySelector('.eq-camera-type')?.value || '';
-                const desc = row.querySelector('.eq-camera-desc')?.value.trim() || '';
-                return type && desc;
-            });
-            if (!hasValidCamera) {
-                alert("Please complete at least one Camera Equipment item (select a device and describe it).");
-                return;
-            }
-
-            const audioRows = Array.from(document.querySelectorAll('#cs_audios_table_body tr'));
-            const hasValidAudio = audioRows.some(row => {
-                const type = row.querySelector('.eq-audio-type')?.value || '';
-                const desc = row.querySelector('.eq-audio-desc')?.value.trim() || '';
-                return type && desc;
-            });
-            if (!hasValidAudio) {
-                alert("Please complete at least one Audio Equipment item (select a device and describe it).");
-                return;
-            }
-
-            // 6. Transport Details (at least one transport section must be completed)
-            const transBlocks = Array.from(document.querySelectorAll('.transport-row-block'));
-            const hasValidTrans = transBlocks.some(block => {
-                const name = block.querySelector('.trans-name-input')?.value.trim() || '';
-                const surname = block.querySelector('.trans-surname-input')?.value.trim() || '';
-                const driver = block.querySelector('.trans-driver-input')?.value.trim() || '';
-                const fromLoc = block.querySelector('.trans-from-loc-input')?.value.trim() || '';
-                const toLoc = block.querySelector('.trans-to-loc-input')?.value.trim() || '';
-                return name && surname && driver && fromLoc && toLoc;
-            });
-            if (!hasValidTrans) {
-                alert("Please complete at least one Transport Section under Travel & Vehicles (including Passenger Name, Surname, Driver, and Departure/Destination locations).");
-                return;
-            }
         }
 
         loadingOverlay.classList.add('active');

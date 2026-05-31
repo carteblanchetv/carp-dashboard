@@ -39,9 +39,9 @@ function renderDashboardUI(user) {
         if (document.getElementById('footageAgreementCard')) document.getElementById('footageAgreementCard').classList.add('hidden');
     }
 
-    // Show Producer-specific actions
-    if (user.role === 'producer' || window.auth.isEditorialProduction(user)) {
-        if (document.getElementById('invoiceActionCard')) document.getElementById('invoiceActionCard').classList.remove('hidden');
+    // Show Submit Invoice card for all roles
+    if (document.getElementById('invoiceActionCard')) {
+        document.getElementById('invoiceActionCard').classList.remove('hidden');
     }
 
     // Reveal Grid smoothly
