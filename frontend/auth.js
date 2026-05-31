@@ -170,7 +170,13 @@ export async function signInWithEmail(email, password) {
  */
 export async function logout(reason = "User initiated") {
     console.log(`[Auth] Logging out. Reason: ${reason}`);
+    sessionStorage.clear();
     localStorage.removeItem('login_timestamp');
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('user_profile_')) {
+            localStorage.removeItem(key);
+        }
+    });
     await signOut(auth);
     window.location.href = 'login.html';
 }
@@ -472,32 +478,25 @@ export async function getIdToken() {
     });
 }
 
-/**
- * Check if the user is an administrator
- */
 export function isAdmin(user) {
     if (!user) return false;
-    // Check both displayRole (perspective) and original role
     const currentRole = (user.displayRole || user.role || '').toLowerCase();
-    const realRole = (user.role || '').toLowerCase();
     const adminRoles = ['admin', 'super-admin'];
-    return adminRoles.includes(currentRole) || adminRoles.includes(realRole);
+    return adminRoles.includes(currentRole);
 }
 
 export function isEditorialProduction(user) {
     if (!user) return false;
     const currentRole = (user.displayRole || user.role || '').toLowerCase();
-    const realRole = (user.role || '').toLowerCase();
     const editorialRoles = ['editorial-production', 'admin', 'super-admin'];
-    return editorialRoles.includes(currentRole) || editorialRoles.includes(realRole);
+    return editorialRoles.includes(currentRole);
 }
 
 export function isSuperAdmin(user) {
     if (!user) return false;
     const currentRole = (user.displayRole || user.role || '').toLowerCase();
-    const realRole = (user.role || '').toLowerCase();
     const superAdminRoles = ['admin', 'super-admin'];
-    return superAdminRoles.includes(currentRole) || superAdminRoles.includes(realRole);
+    return superAdminRoles.includes(currentRole);
 }
 
 /**
@@ -700,14 +699,35 @@ export function initNavBar(user) {
         if (backBtn) backBtn.remove();
 
         // B. Remove redundant navigation buttons (User request: Remove Dashboard/Home)
+        const isDashboardPage = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/') || window.location.pathname === '';
         const allBtns = actionsContainer.querySelectorAll('.gnav-btn');
         allBtns.forEach(btn => {
             const text = btn.textContent.trim().toUpperCase();
-            // Remove if text is DASHBOARD or HOME, or if it matches the legacy admin dashboard ID
-            if (text === 'DASHBOARD' || text === 'HOME' || btn.id === 'gnavAdminDashboardBtn') {
+            if (((text === 'DASHBOARD' || text === 'HOME') && isDashboardPage) || btn.id === 'gnavAdminDashboardBtn') {
                 btn.remove();
             }
         });
+
+        // C. Inject HELP GUIDE button dynamically
+        let helpBtn = actionsContainer.querySelector('#gnavHelpBtn');
+        if (!helpBtn) {
+            helpBtn = document.createElement('a');
+            helpBtn.id = 'gnavHelpBtn';
+            helpBtn.href = 'guide.html';
+            helpBtn.className = 'gnav-btn';
+            helpBtn.title = "Help Guide";
+            helpBtn.style.border = '1px solid var(--border)';
+            helpBtn.innerHTML = `
+                <span>📖</span>
+                <span>HELP GUIDE</span>
+            `;
+            const themeBtn = actionsContainer.querySelector('button[onclick="window.toggleTheme()"]');
+            if (themeBtn) {
+                actionsContainer.insertBefore(helpBtn, themeBtn);
+            } else {
+                actionsContainer.appendChild(helpBtn);
+            }
+        }
     }
 
     // 3. Update Home Link (Always point to the new deliverables hub)
