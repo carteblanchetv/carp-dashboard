@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 reviewerList.innerHTML = result.reviewers.map(r => `
                     <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; cursor: pointer;">
                         <input type="checkbox" name="permittedReviewers" value="${r.uid}">
-                        <span>${r.name} ${r.surname} <small style="color:var(--text-muted);">(${r.role})</small></span>
+                        <span>${r.name} ${r.surname}</span>
                     </label>
                 `).join('');
             }
@@ -2000,6 +2000,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 proposalPdfBtn.style.display = 'inline-block';
             }
         }
+        const topEditProposalBtn = document.getElementById('topEditProposalBtn');
+        if (topEditProposalBtn) {
+            if (sub._isRestrictedView) {
+                topEditProposalBtn.classList.add('hidden');
+                topEditProposalBtn.style.display = 'none';
+            } else {
+                topEditProposalBtn.href = `proposal.html?id=${sub.id}`;
+                topEditProposalBtn.classList.remove('hidden');
+                topEditProposalBtn.style.display = 'inline-flex';
+            }
+        }
 
         // Setup Story Deliverables Bar (Visible in Preview too)
         setupDeliverablesBar(sub, linkedAssets, isReadOnly);
@@ -2076,6 +2087,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const topPdfBtn = document.getElementById('topDownloadProposalBtn');
             if (topPdfBtn) topPdfBtn.style.display = 'none';
+            const topEditBtn = document.getElementById('topEditProposalBtn');
+            if (topEditBtn) topEditBtn.style.display = 'none';
         } else {
             if (bannerLabel) bannerLabel.innerHTML = `<span style="letter-spacing: 0.05em;">PROPOSAL PREVIEW</span> <small>(READ-ONLY)</small> <span class="status-badge-modern ${sub.status}" style="margin-left: 1rem; transform: scale(0.9);">${sub.status.toUpperCase()}</span>`;
             if (backBtn) {
@@ -2360,9 +2373,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${(deliveryDate && !sub._isRestrictedView) ? `<div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Delivery Date</span><span style="font-weight: 700;">${deliveryDate}</span></div>` : ''}
                 </div>
                 
-                <div style="margin-bottom: 3rem; text-align: center;" class="no-print">
-                    ${sub._isRestrictedView ? '' : `<a href="proposal.html?id=${sub.id}" class="submit-btn" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center; padding: 1rem 3.5rem; font-weight: 700; border-radius: 50px; font-size: 1rem; box-shadow: var(--shadow-md); transition: transform 0.2s;">Edit Proposal</a>`}
-                </div>
+                <!-- Edit Proposal button moved to top header -->
 
                 ${sub.one_liner ? `
                 <div style="margin-bottom: 3rem;">
@@ -3168,6 +3179,11 @@ function showCallSheetPreview(sub, assets) {
     if (proposalPdfBtn) {
         proposalPdfBtn.classList.add('hidden');
         proposalPdfBtn.style.display = 'none';
+    }
+    const topEditProposalBtn = document.getElementById('topEditProposalBtn');
+    if (topEditProposalBtn) {
+        topEditProposalBtn.classList.add('hidden');
+        topEditProposalBtn.style.display = 'none';
     }
     const csPdfBtn = document.getElementById('topDownloadCallSheetBtn');
     if (csPdfBtn) {
