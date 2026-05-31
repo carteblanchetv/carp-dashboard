@@ -183,14 +183,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleCallSheetRequired(required) {
         const container = document.getElementById('callSheetSection');
         if (!container) return;
-        const inputs = container.querySelectorAll('input[name="cs_crew_name[]"], input[name="cs_crew_surname[]"], input[name="cs_crew_phone[]"]');
+        const inputs = container.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
-            if (required) {
-                input.setAttribute('required', 'required');
-            } else {
-                input.removeAttribute('required');
-            }
+            input.removeAttribute('required');
         });
+
+        if (required) {
+            const rows = container.querySelectorAll('#csCrewTableBody tr');
+            rows.forEach(row => {
+                const roleInp = row.querySelector('input[name="cs_crew_role[]"]');
+                if (roleInp) {
+                    const roleVal = (roleInp.value || '').toLowerCase();
+                    if (roleVal !== 'camera assistant') {
+                        const rowInputs = row.querySelectorAll('input[name="cs_crew_name[]"], input[name="cs_crew_surname[]"], input[name="cs_crew_phone[]"]');
+                        rowInputs.forEach(inp => inp.setAttribute('required', 'required'));
+                    }
+                }
+            });
+        }
     }
 
     // --- STANDALONE CALL SHEET MODE ---
@@ -459,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
         div.className = 'cs-shoot-date-row';
         div.style.cssText = 'display: flex; gap: 0.5rem; align-items: center; min-width: 180px; max-width: 250px; flex: 1;';
         div.innerHTML = `
-            <input type="date" class="cs-shoot-date-item" name="cs_shoot_dates[]" value="${dateVal}" required style="flex: 1; min-width: 0;">
+            <input type="date" class="cs-shoot-date-item" name="cs_shoot_dates[]" value="${dateVal}" style="flex: 1; min-width: 0;">
             <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove(); updateAllMovementOrderDateOptions();" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px; height: 38px;">✖</button>
         `;
         container.appendChild(div);
@@ -499,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tr.id = rowId;
         tr.innerHTML = `
             <td>
-                <select class="table-input eq-camera-type" name="eq_camera_type[]" required>
+                <select class="table-input eq-camera-type" name="eq_camera_type[]">
                     <option value="">-- Select Camera Device --</option>
                     <option value="Cam A">Cam A</option>
                     <option value="Cam B">Cam B</option>
@@ -509,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <option value="Cam F">Cam F</option>
                 </select>
             </td>
-            <td><input type="text" class="table-input eq-camera-desc" name="eq_camera_desc[]" value="${desc}" placeholder="Describe camera equipment..." required></td>
+            <td><input type="text" class="table-input eq-camera-desc" name="eq_camera_desc[]" value="${desc}" placeholder="Describe camera equipment..."></td>
             <td style="text-align: center;"><button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px; height: 38px;">✖</button></td>
         `;
         tbody.appendChild(tr);
@@ -524,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tr.id = rowId;
         tr.innerHTML = `
             <td>
-                <select class="table-input eq-audio-type" name="eq_audio_type[]" required>
+                <select class="table-input eq-audio-type" name="eq_audio_type[]">
                     <option value="">-- Select Audio Device --</option>
                     <option value="Mic 1">Mic 1</option>
                     <option value="Mic 2">Mic 2</option>
@@ -534,7 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <option value="Mic 6">Mic 6</option>
                 </select>
             </td>
-            <td><input type="text" class="table-input eq-audio-desc" name="eq_audio_desc[]" value="${desc}" placeholder="Describe audio equipment..." required></td>
+            <td><input type="text" class="table-input eq-audio-desc" name="eq_audio_desc[]" value="${desc}" placeholder="Describe audio equipment..."></td>
             <td style="text-align: center;"><button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px; height: 38px;">✖</button></td>
         `;
         tbody.appendChild(tr);
@@ -554,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="form-grid">
                 <div class="form-group">
                     <label>Shoot Day</label>
-                    <select class="cs-mo-shoot-day" name="cs_mo_shoot_day[]" required>
+                    <select class="cs-mo-shoot-day" name="cs_mo_shoot_day[]">
                         <option value="">-- Choose Shoot Day --</option>
                         <option value="0.5">0.5</option>
                         <option value="1">1</option>
@@ -570,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="form-group">
                     <label>Shoot Date</label>
-                    <select class="cs-mo-shoot-date" name="cs_mo_shoot_date[]" required>
+                    <select class="cs-mo-shoot-date" name="cs_mo_shoot_date[]">
                         <option value="">-- Select Date --</option>
                     </select>
                 </div>
@@ -626,12 +636,12 @@ document.addEventListener('DOMContentLoaded', () => {
         tr.id = rowId;
         tr.innerHTML = `
             <td>
-                <select class="mo-time-input table-input" required>
+                <select class="mo-time-input table-input">
                     ${getTimeOptionsHtml(data.time)}
                 </select>
             </td>
-            <td><input type="text" class="mo-what-input table-input" value="${data.what || ''}" placeholder="What's happening?" required></td>
-            <td><input type="text" class="mo-location-input table-input" value="${data.location || ''}" placeholder="Location" required></td>
+            <td><input type="text" class="mo-what-input table-input" value="${data.what || ''}" placeholder="What's happening?"></td>
+            <td><input type="text" class="mo-location-input table-input" value="${data.location || ''}" placeholder="Location"></td>
             <td>
                 <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
             </td>
@@ -1796,6 +1806,107 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     async function updateProposalDetails(isSaveDraft = false) {
+        const isCsActive = window.location.hash === '#CallSheet' || window.location.hash === '#CallSheetEdit';
+        if (!isSaveDraft && isCsActive) {
+            // 1. Shoot Dates
+            const dateInputs = Array.from(document.querySelectorAll('#cs_shoot_dates_container input[name="cs_shoot_dates[]"]'));
+            if (dateInputs.length === 0 || dateInputs.some(inp => !inp.value)) {
+                alert("Please fill in all Shoot Dates.");
+                return;
+            }
+
+            // 2. Presenter, Producer, DOP
+            const crewRows = Array.from(document.querySelectorAll('#csCrewTableBody tr'));
+            let crewValid = true;
+            let missingRole = '';
+            for (const row of crewRows) {
+                const roleVal = (row.querySelector('input[name="cs_crew_role[]"]')?.value || '').toLowerCase();
+                if (['presenter', 'producer', 'dop'].includes(roleVal)) {
+                    const name = row.querySelector('input[name="cs_crew_name[]"]')?.value.trim() || '';
+                    const surname = row.querySelector('input[name="cs_crew_surname[]"]')?.value.trim() || '';
+                    const phone = row.querySelector('input[name="cs_crew_phone[]"]')?.value.trim() || '';
+                    if (!name || !surname || !phone) {
+                        crewValid = false;
+                        missingRole = row.querySelector('input[name="cs_crew_role[]"]')?.value || roleVal;
+                        break;
+                    }
+                }
+            }
+            if (!crewValid) {
+                alert(`Please complete the Name, Surname, and Phone details for the ${missingRole}.`);
+                return;
+            }
+
+            // 3. Risk Assessment
+            const riskAssessment = document.getElementById('cs_risk_assessment')?.value.trim() || '';
+            if (!riskAssessment) {
+                alert("Risk Assessment is a required field.");
+                return;
+            }
+
+            // 4. Movement Order (at least one Movement Order Section must be completed)
+            const moSections = Array.from(document.querySelectorAll('.movement-order-section-block'));
+            let moValid = false;
+            for (const block of moSections) {
+                const shootDay = block.querySelector('.cs-mo-shoot-day')?.value || '';
+                const shootDate = block.querySelector('.cs-mo-shoot-date')?.value || '';
+                const items = Array.from(block.querySelectorAll('.mo-items-tbody tr')).map(row => {
+                    return {
+                        time: row.querySelector('.mo-time-input')?.value || '',
+                        what: row.querySelector('.mo-what-input')?.value || '',
+                        location: row.querySelector('.mo-location-input')?.value || ''
+                    };
+                }).filter(item => item.time && item.what && item.location);
+                
+                if (shootDay && shootDate && items.length > 0) {
+                    moValid = true;
+                    break;
+                }
+            }
+            if (!moValid) {
+                alert("At least one Movement Order Section must be completed (with Shoot Day, Shoot Date, and at least one complete row).");
+                return;
+            }
+
+            // 5. Equipment: Camera & Audio equipment
+            const cameraRows = Array.from(document.querySelectorAll('#cs_cameras_table_body tr'));
+            const hasValidCamera = cameraRows.some(row => {
+                const type = row.querySelector('.eq-camera-type')?.value || '';
+                const desc = row.querySelector('.eq-camera-desc')?.value.trim() || '';
+                return type && desc;
+            });
+            if (!hasValidCamera) {
+                alert("Please complete at least one Camera Equipment item (select a device and describe it).");
+                return;
+            }
+
+            const audioRows = Array.from(document.querySelectorAll('#cs_audios_table_body tr'));
+            const hasValidAudio = audioRows.some(row => {
+                const type = row.querySelector('.eq-audio-type')?.value || '';
+                const desc = row.querySelector('.eq-audio-desc')?.value.trim() || '';
+                return type && desc;
+            });
+            if (!hasValidAudio) {
+                alert("Please complete at least one Audio Equipment item (select a device and describe it).");
+                return;
+            }
+
+            // 6. Transport Details (at least one transport section must be completed)
+            const transBlocks = Array.from(document.querySelectorAll('.transport-row-block'));
+            const hasValidTrans = transBlocks.some(block => {
+                const name = block.querySelector('.trans-name-input')?.value.trim() || '';
+                const surname = block.querySelector('.trans-surname-input')?.value.trim() || '';
+                const driver = block.querySelector('.trans-driver-input')?.value.trim() || '';
+                const fromLoc = block.querySelector('.trans-from-loc-input')?.value.trim() || '';
+                const toLoc = block.querySelector('.trans-to-loc-input')?.value.trim() || '';
+                return name && surname && driver && fromLoc && toLoc;
+            });
+            if (!hasValidTrans) {
+                alert("Please complete at least one Transport Section under Travel & Vehicles (including Passenger Name, Surname, Driver, and Departure/Destination locations).");
+                return;
+            }
+        }
+
         loadingOverlay.classList.add('active');
         const heading = document.getElementById('loadingHeading');
         const subtext = document.getElementById('loadingSubtext');
