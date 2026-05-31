@@ -85,6 +85,16 @@
             margin-bottom: 0.5rem;
             list-style-position: outside;
         }
+
+        /* Force correct font in preview — overrides pasted-in Word/browser fonts */
+        .story-summary-content,
+        .story-summary-content * {
+            font-family: 'Inter', sans-serif !important;
+        }
+        .story-summary-content p {
+            margin-top: 0;
+            margin-bottom: 0.75em;
+        }
     </style>
 </head>
 <body class="admin-body">

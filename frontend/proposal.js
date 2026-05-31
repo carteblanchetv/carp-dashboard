@@ -2324,7 +2324,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${sub.summary ? `
                 <div style="margin-bottom: 3rem;">
                     <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Story Summary</h3>
-                    <div class="story-summary-content" style="color: var(--text-main); line-height: 1.6; font-size: 1.05rem; text-align: left; white-space: pre-wrap;">${sub.summary}</div>
+                    <div class="story-summary-content" style="color: var(--text-main); line-height: 1.6; font-size: 1.05rem; text-align: left; font-family: inherit;">${sub.summary}</div>
                 </div>` : ''}
 
                 ${detailsHtml}
