@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css?v=5.1.1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
     <script src="js/branding.js?v=5.1.1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -49,6 +49,7 @@
         .parties-section {
             margin-bottom: 2.5rem;
             font-weight: 500;
+            text-align: center;
         }
         .parties-section p {
             margin: 0.5rem 0;
@@ -121,10 +122,18 @@
             margin: 0.25rem 0;
             font-size: 0.9rem;
         }
+        .sig-name {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-top: 1.5rem !important;
+            margin-bottom: 0 !important;
+            line-height: 1.2;
+        }
         .sig-line {
-            margin-top: 2rem;
+            margin-top: 0.25rem;
             border-bottom: 1px solid #1e293b;
-            height: 20px;
             margin-bottom: 0.5rem;
         }
         .sig-bold {
@@ -273,14 +282,14 @@
             <div class="sig-block">
                 <p>Signed at Combined Artists on <span class="sig-date">...</span></p>
                 <p>Randburg</p>
+                <p id="sigAdminName" class="sig-name">...</p>
                 <div class="sig-line"></div>
-                <p id="sigAdminName">...</p>
                 <p class="sig-bold">COMBINED ARTISTS</p>
             </div>
             <div class="sig-block">
                 <p>Signed at Combined Artists on <span class="sig-date">...</span></p>
+                <p id="sigProducerName" class="sig-name">...</p>
                 <div class="sig-line"></div>
-                <p id="sigProducerName">...</p>
                 <p class="sig-bold">PRODUCER</p>
             </div>
         </div>

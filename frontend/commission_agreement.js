@@ -28,6 +28,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+function getAdminSignatoryName(acc, currentUser) {
+    let adminName = 'Lezanne Janse van Rensburg'; // Default fallback
+    const acceptedByEmail = acc.acceptedBy;
+    if (acceptedByEmail) {
+        const emailLower = acceptedByEmail.toLowerCase().trim();
+        if (emailLower.includes('stenette')) {
+            return 'Stenette Grosskopf';
+        } else if (emailLower.includes('lezanne')) {
+            return 'Lezanne Janse van Rensburg';
+        } else if (emailLower.includes('bryan')) {
+            return 'Bryan Bartle';
+        } else if (emailLower.includes('kevin')) {
+            return 'Kevin Freese';
+        } else if (emailLower.includes('rudi')) {
+            return 'Rudi Botha';
+        } else if (emailLower.includes('nombuso')) {
+            return 'Nombuso Nkosi';
+        } else if (emailLower.includes('john')) {
+            return 'John Webb';
+        } else if (emailLower.includes('laura')) {
+            return 'Laura Byrne';
+        } else if (currentUser && currentUser.email && currentUser.email.toLowerCase().trim() === emailLower) {
+            return (currentUser.firstName || currentUser.lastName) ? `${currentUser.firstName || ''} ${currentUser.lastName || ''}`.trim() : (currentUser.displayName || acceptedByEmail);
+        } else {
+            // Format from email (first.last@...)
+            const parts = emailLower.split('@')[0].split('.');
+            return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+        }
+    } else {
+        // If not accepted yet, fall back to current user
+        return (currentUser.firstName && currentUser.lastName) ? `${currentUser.firstName} ${currentUser.lastName}` : (currentUser.displayName || 'Administrator');
+    }
+}
+
 function populateAgreement(sub, currentUser) {
     const urlParams = new URLSearchParams(window.location.search);
     const isPreview = urlParams.get('preview') === 'true';
@@ -53,7 +87,7 @@ function populateAgreement(sub, currentUser) {
     document.getElementById('producerNameDisplay').textContent = producerName;
     document.getElementById('sigProducerName').textContent = producerName;
     
-    const adminName = (currentUser.firstName && currentUser.lastName) ? `${currentUser.firstName} ${currentUser.lastName}` : currentUser.displayName;
+    const adminName = getAdminSignatoryName(acc, currentUser);
     document.getElementById('sigAdminName').textContent = adminName;
     
     document.querySelectorAll('.sig-date').forEach(el => el.textContent = commDate);
@@ -124,18 +158,18 @@ async function generatePDF(sub, currentUser, commNum, commDate) {
     doc.line(margin, y, pageWidth - margin, y);
     y += 12;
 
-    // Parties
+    // Parties (Centred)
     const producerName = `${sub.submittedByName || ''} ${sub.submittedBySurname || ''}`.trim() || sub.submittedByEmail;
     
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text("Between COMBINED ARTISTIC PRODUCTIONS cc. (hereinafter referred to as the 'company')", margin, y);
+    doc.text("Between COMBINED ARTISTIC PRODUCTIONS cc. (hereinafter referred to as the 'company')", pageWidth / 2, y, { align: 'center' });
     y += 6;
     doc.setFont('helvetica', 'italic');
-    doc.text("and", margin, y);
+    doc.text("and", pageWidth / 2, y, { align: 'center' });
     y += 6;
     doc.setFont('helvetica', 'bold');
-    doc.text(`${producerName} (hereinafter referred to as the 'producer')`, margin, y);
+    doc.text(`${producerName} (hereinafter referred to as the 'producer')`, pageWidth / 2, y, { align: 'center' });
     y += 10;
 
     // Data Table
@@ -212,24 +246,28 @@ async function generatePDF(sub, currentUser, commNum, commDate) {
         y = 25;
     }
 
-    const adminName = (currentUser.firstName && currentUser.lastName) ? `${currentUser.firstName} ${currentUser.lastName}` : (currentUser.displayName || 'Administrator');
+    const adminName = getAdminSignatoryName(acc, currentUser);
     
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     doc.text(`Signed at Combined Artists on ${commDate}`, margin, y);
     doc.text(`Signed at Combined Artists on ${commDate}`, margin + (contentWidth / 2) + 5, y);
-    y += 15;
+    y += 12;
+    
+    // Signatory names (above the line) - using Times Italic for signature look
+    doc.setFont('times', 'italic');
+    doc.setFontSize(12);
+    doc.text(adminName, margin, y);
+    doc.text(producerName, margin + (contentWidth / 2) + 5, y);
+    y += 2;
     
     doc.setLineWidth(0.3);
     doc.line(margin, y, margin + (contentWidth / 2) - 5, y);
     doc.line(margin + (contentWidth / 2) + 5, y, pageWidth - margin, y);
     y += 5;
     
-    doc.text(adminName, margin, y);
-    doc.text(producerName, margin + (contentWidth / 2) + 5, y);
-    y += 4;
-    
     doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
     doc.text("COMBINED ARTISTS", margin, y);
     doc.text("PRODUCER", margin + (contentWidth / 2) + 5, y);
 
