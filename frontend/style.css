@@ -3352,3 +3352,14 @@ body.is-masquerading .global-top-nav {
         grid-template-columns: 1fr;
     }
 }
+
+/* Outlined in red for required/invalid fields when checked or submitted */
+.show-invalid input:invalid,
+.show-invalid select:invalid,
+.show-invalid textarea:invalid,
+input:user-invalid,
+select:user-invalid,
+textarea:user-invalid {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+}

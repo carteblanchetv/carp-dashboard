@@ -1964,6 +1964,13 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    const submitBtn = document.getElementById('submitBtn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+            form.classList.add('show-invalid');
+        });
+    }
+
     // --- SUBMISSION ---
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
