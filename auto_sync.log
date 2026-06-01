@@ -477,3 +477,12 @@
 [2026-06-01 15:08:44]    bbcb93f..3d78c10  main -> main
 [2026-06-01 15:08:44] Sync complete.
 [2026-06-01 15:38:44] Changes detected. Syncing...
+[2026-06-01 15:38:44] warning: in the working copy of 'scraper/proposals_export.json', LF will be replaced by CRLF the next time Git touches it
+[2026-06-01 15:38:44] warning: in the working copy of 'functions/mark_imported_as_delivered.js', LF will be replaced by CRLF the next time Git touches it
+[2026-06-01 15:38:44] [main c7e8e51] auto-sync: 2026-06-01 15:38
+[2026-06-01 15:38:44]  5 files changed, 9259 insertions(+), 3870 deletions(-)
+[2026-06-01 15:38:44]  create mode 100644 functions/mark_imported_as_delivered.js
+[2026-06-01 15:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-01 15:38:44]    3d78c10..c7e8e51  main -> main
+[2026-06-01 15:38:44] Sync complete.
+[2026-06-01 16:08:44] Changes detected. Syncing...
