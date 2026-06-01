@@ -260,6 +260,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 callSheetSec.style.borderTop = 'none';
                 callSheetSec.style.marginTop = '0';
             }
+
+            // Ensure Call Sheet inputs are populated (saved data or defaults)
+            const datesContainer = document.getElementById('cs_shoot_dates_container');
+            if (datesContainer && datesContainer.children.length === 0) {
+                console.log("[DEBUG] Call Sheet empty in DOM, populating...");
+                populateCallSheetData(window.currentProposal);
+            }
+
             if (mainTitle) mainTitle.classList.add('hidden');
             if (csTitle) csTitle.classList.remove('hidden');
             if (backBtn) {
@@ -1067,6 +1075,175 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
+    function populateCallSheetData(sub = null) {
+        const cs = (sub && sub.details && sub.details.callSheet) || {};
+        const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ''; };
+
+        // Pop Shoot Dates
+        const datesContainer = document.getElementById('cs_shoot_dates_container');
+        if (datesContainer) {
+            datesContainer.innerHTML = '';
+            const shootDates = cs.shoot_dates || [];
+            if (shootDates.length > 0) {
+                shootDates.forEach(d => addCsShootDate(d));
+            } else {
+                addCsShootDate();
+                addCsShootDate();
+                addCsShootDate();
+            }
+        }
+
+        // Reset and Pop Crew List (presenter, producer, dop, camera assistant, others)
+        const crewList = cs.crew || [];
+        const staticRoles = ['presenter', 'producer', 'dop', 'camera assistant'];
+        const staticRows = document.querySelectorAll('#csCrewTableBody tr');
+        staticRows.forEach(row => {
+            const roleVal = row.querySelector('input[name="cs_crew_role[]"]')?.value || '';
+            const nameInp = row.querySelector('input[name="cs_crew_name[]"]');
+            const surnameInp = row.querySelector('input[name="cs_crew_surname[]"]');
+            const phoneInp = row.querySelector('input[name="cs_crew_phone[]"]');
+            if (nameInp) nameInp.value = '';
+            if (surnameInp) surnameInp.value = '';
+            if (phoneInp) phoneInp.value = '';
+
+            const match = crewList.find(m => (m.role || '').toLowerCase() === roleVal.toLowerCase());
+            if (match) {
+                if (nameInp) nameInp.value = match.name || '';
+                if (surnameInp) surnameInp.value = match.surname || '';
+                if (phoneInp) phoneInp.value = match.phone || '';
+            }
+        });
+
+        // Remove dynamic rows before adding new ones
+        const oldCrewRows = Array.from(document.querySelectorAll('#csCrewTableBody tr')).slice(4);
+        oldCrewRows.forEach(row => row.remove());
+
+        crewList.forEach(m => {
+            if (!staticRoles.includes((m.role || '').toLowerCase())) {
+                addCsOtherCrewRow(m.role, m.name, m.surname || '', m.phone);
+            }
+        });
+
+        // Security
+        const sec = cs.security || {};
+        setVal('cs_security_name', sec.name);
+        setVal('cs_security_surname', sec.surname);
+        setVal('cs_security_company', sec.company);
+        setVal('cs_security_phone', sec.phone);
+
+        // Risk Assessment
+        setVal('cs_risk_assessment', cs.risk_assessment);
+
+        // Movement Orders
+        const moContainer = document.getElementById('movement_orders_container');
+        if (moContainer) {
+            moContainer.innerHTML = '';
+            const sections = cs.movement_orders || [];
+            if (sections.length > 0) {
+                sections.forEach(s => addCsMovementOrderSection(s));
+            } else {
+                addCsMovementOrderSection();
+                addCsMovementOrderSection();
+                addCsMovementOrderSection();
+            }
+        }
+
+        // Equipment
+        const eq = cs.equipment || {};
+        const camerasContainer = document.getElementById('cs_cameras_table_body');
+        if (camerasContainer) {
+            camerasContainer.innerHTML = '';
+            const cameras = eq.cameras || [];
+            if (cameras.length > 0) {
+                cameras.forEach(c => addEqCamera(c.type, c.desc));
+            } else {
+                if (eq.camera_type || eq.camera_desc) {
+                    addEqCamera(eq.camera_type, eq.camera_desc);
+                    addEqCamera();
+                } else {
+                    addEqCamera();
+                    addEqCamera();
+                }
+            }
+        }
+
+        const audiosContainer = document.getElementById('cs_audios_table_body');
+        if (audiosContainer) {
+            audiosContainer.innerHTML = '';
+            const audios = eq.audios || [];
+            if (audios.length > 0) {
+                audios.forEach(a => addEqAudio(a.type, a.desc));
+            } else {
+                if (eq.audio_type || eq.audio_desc) {
+                    addEqAudio(eq.audio_type, eq.audio_desc);
+                    addEqAudio();
+                } else {
+                    addEqAudio();
+                    addEqAudio();
+                }
+            }
+        }
+        setVal('eq_lenses_desc', eq.lenses_desc);
+        setVal('eq_lighting_desc', eq.lighting_desc);
+        setVal('eq_rigs_desc', eq.rigs_desc);
+        setVal('eq_other_desc', eq.other_desc);
+
+        // Travel
+        const travel = cs.travel || {};
+
+        // Flights
+        const flightsContainer = document.getElementById('travel_flights_container');
+        if (flightsContainer) {
+            flightsContainer.innerHTML = '';
+            const flights = travel.flights || [];
+            if (flights.length > 0) {
+                flights.forEach(f => addTravelFlightRow(f));
+            } else {
+                addTravelFlightRow();
+            }
+        }
+        setVal('travel_flight_file_path', travel.flight_file_path);
+        setVal('travel_flight_filename', travel.flight_filename);
+        if (document.getElementById('travel_flight_file_name_display')) {
+            document.getElementById('travel_flight_file_name_display').textContent = travel.flight_filename ? `✓ ${travel.flight_filename}` : '';
+        }
+
+        // Accommodation
+        const accomsContainer = document.getElementById('travel_accoms_container');
+        if (accomsContainer) {
+            accomsContainer.innerHTML = '';
+            const accoms = travel.accoms || [];
+            if (accoms.length > 0) {
+                accoms.forEach(a => addTravelAccomRow(a));
+            } else {
+                addTravelAccomRow();
+            }
+        }
+        setVal('travel_accom_file_path', travel.accom_file_path);
+        setVal('travel_accom_filename', travel.accom_filename);
+        if (document.getElementById('travel_accom_file_name_display')) {
+            document.getElementById('travel_accom_file_name_display').textContent = travel.accom_filename ? `✓ ${travel.accom_filename}` : '';
+        }
+
+        // Transports
+        const transportsContainer = document.getElementById('travel_transports_container');
+        if (transportsContainer) {
+            transportsContainer.innerHTML = '';
+            const transports = travel.transports || [];
+            if (transports.length > 0) {
+                transports.forEach(t => addTravelTransportBlock(t));
+            } else {
+                addTravelTransportBlock();
+            }
+        }
+        setVal('travel_trans_file_path', travel.trans_file_path);
+        setVal('travel_trans_filename', travel.trans_filename);
+        if (document.getElementById('travel_trans_file_name_display')) {
+            document.getElementById('travel_trans_file_name_display').textContent = travel.trans_filename ? `✓ ${travel.trans_filename}` : '';
+        }
+    }
+
+
     // Initial rows
     if (!isEditMode) {
         addCaseStudyRow();
@@ -1337,171 +1514,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     // --- CALL SHEET POPULATION ---
-                    const cs = (sub.details && sub.details.callSheet) || {};
-                    const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ''; };
-
-                    // Pop Shoot Dates
-                    const datesContainer = document.getElementById('cs_shoot_dates_container');
-                    if (datesContainer) {
-                        datesContainer.innerHTML = '';
-                        const shootDates = cs.shoot_dates || [];
-                        if (shootDates.length > 0) {
-                            shootDates.forEach(d => addCsShootDate(d));
-                        } else {
-                            addCsShootDate();
-                            addCsShootDate();
-                            addCsShootDate();
-                        }
-                    }
-
-                    // Reset and Pop Crew List (presenter, producer, dop, camera assistant, others)
-                    const crewList = cs.crew || [];
-                    const staticRoles = ['presenter', 'producer', 'dop', 'camera assistant'];
-                    const staticRows = document.querySelectorAll('#csCrewTableBody tr');
-                    staticRows.forEach(row => {
-                        const roleVal = row.querySelector('input[name="cs_crew_role[]"]')?.value || '';
-                        const nameInp = row.querySelector('input[name="cs_crew_name[]"]');
-                        const surnameInp = row.querySelector('input[name="cs_crew_surname[]"]');
-                        const phoneInp = row.querySelector('input[name="cs_crew_phone[]"]');
-                        if (nameInp) nameInp.value = '';
-                        if (surnameInp) surnameInp.value = '';
-                        if (phoneInp) phoneInp.value = '';
-
-                        const match = crewList.find(m => (m.role || '').toLowerCase() === roleVal.toLowerCase());
-                        if (match) {
-                            if (nameInp) nameInp.value = match.name || '';
-                            if (surnameInp) surnameInp.value = match.surname || '';
-                            if (phoneInp) phoneInp.value = match.phone || '';
-                        }
-                    });
-
-                    // Remove dynamic rows before adding new ones
-                    const oldCrewRows = Array.from(document.querySelectorAll('#csCrewTableBody tr')).slice(4);
-                    oldCrewRows.forEach(row => row.remove());
-
-                    crewList.forEach(m => {
-                        if (!staticRoles.includes((m.role || '').toLowerCase())) {
-                            addCsOtherCrewRow(m.role, m.name, m.surname || '', m.phone);
-                        }
-                    });
-
-                    // Security
-                    const sec = cs.security || {};
-                    setVal('cs_security_name', sec.name);
-                    setVal('cs_security_surname', sec.surname);
-                    setVal('cs_security_company', sec.company);
-                    setVal('cs_security_phone', sec.phone);
-
-                    // Risk Assessment
-                    setVal('cs_risk_assessment', cs.risk_assessment);
-
-                    // Movement Orders
-                    const moContainer = document.getElementById('movement_orders_container');
-                    if (moContainer) {
-                        moContainer.innerHTML = '';
-                        const sections = cs.movement_orders || [];
-                        if (sections.length > 0) {
-                            sections.forEach(s => addCsMovementOrderSection(s));
-                        } else {
-                            addCsMovementOrderSection();
-                            addCsMovementOrderSection();
-                            addCsMovementOrderSection();
-                        }
-                    }
-
-                    // Equipment
-                    const eq = cs.equipment || {};
-                    const camerasContainer = document.getElementById('cs_cameras_table_body');
-                    if (camerasContainer) {
-                        camerasContainer.innerHTML = '';
-                        const cameras = eq.cameras || [];
-                        if (cameras.length > 0) {
-                            cameras.forEach(c => addEqCamera(c.type, c.desc));
-                        } else {
-                            if (eq.camera_type || eq.camera_desc) {
-                                addEqCamera(eq.camera_type, eq.camera_desc);
-                                addEqCamera();
-                            } else {
-                                addEqCamera();
-                                addEqCamera();
-                            }
-                        }
-                    }
-
-                    const audiosContainer = document.getElementById('cs_audios_table_body');
-                    if (audiosContainer) {
-                        audiosContainer.innerHTML = '';
-                        const audios = eq.audios || [];
-                        if (audios.length > 0) {
-                            audios.forEach(a => addEqAudio(a.type, a.desc));
-                        } else {
-                            if (eq.audio_type || eq.audio_desc) {
-                                addEqAudio(eq.audio_type, eq.audio_desc);
-                                addEqAudio();
-                            } else {
-                                addEqAudio();
-                                addEqAudio();
-                            }
-                        }
-                    }
-                    setVal('eq_lenses_desc', eq.lenses_desc);
-                    setVal('eq_lighting_desc', eq.lighting_desc);
-                    setVal('eq_rigs_desc', eq.rigs_desc);
-                    setVal('eq_other_desc', eq.other_desc);
-
-                    // Travel
-                    const travel = cs.travel || {};
-
-                    // Flights
-                    const flightsContainer = document.getElementById('travel_flights_container');
-                    if (flightsContainer) {
-                        flightsContainer.innerHTML = '';
-                        const flights = travel.flights || [];
-                        if (flights.length > 0) {
-                            flights.forEach(f => addTravelFlightRow(f));
-                        } else {
-                            addTravelFlightRow();
-                        }
-                    }
-                    setVal('travel_flight_file_path', travel.flight_file_path);
-                    setVal('travel_flight_filename', travel.flight_filename);
-                    if (document.getElementById('travel_flight_file_name_display')) {
-                        document.getElementById('travel_flight_file_name_display').textContent = travel.flight_filename ? `✓ ${travel.flight_filename}` : '';
-                    }
-
-                    // Accommodation
-                    const accomsContainer = document.getElementById('travel_accoms_container');
-                    if (accomsContainer) {
-                        accomsContainer.innerHTML = '';
-                        const accoms = travel.accoms || [];
-                        if (accoms.length > 0) {
-                            accoms.forEach(a => addTravelAccomRow(a));
-                        } else {
-                            addTravelAccomRow();
-                        }
-                    }
-                    setVal('travel_accom_file_path', travel.accom_file_path);
-                    setVal('travel_accom_filename', travel.accom_filename);
-                    if (document.getElementById('travel_accom_file_name_display')) {
-                        document.getElementById('travel_accom_file_name_display').textContent = travel.accom_filename ? `✓ ${travel.accom_filename}` : '';
-                    }
-
-                    // Transports
-                    const transportsContainer = document.getElementById('travel_transports_container');
-                    if (transportsContainer) {
-                        transportsContainer.innerHTML = '';
-                        const transports = travel.transports || [];
-                        if (transports.length > 0) {
-                            transports.forEach(t => addTravelTransportBlock(t));
-                        } else {
-                            addTravelTransportBlock();
-                        }
-                    }
-                    setVal('travel_trans_file_path', travel.trans_file_path);
-                    setVal('travel_trans_filename', travel.trans_filename);
-                    if (document.getElementById('travel_trans_file_name_display')) {
-                        document.getElementById('travel_trans_file_name_display').textContent = travel.trans_filename ? `✓ ${travel.trans_filename}` : '';
-                    }
+                    populateCallSheetData(sub);
 
                     // Always ensure at least one row exists if empty after loading
                     if (document.getElementById('researcherList').children.length === 0) addResearcherRow();
