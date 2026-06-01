@@ -702,20 +702,24 @@ export function initNavBar(user) {
         const path = window.location.pathname.toLowerCase();
         const isDashboardPage = path === '/' || path.endsWith('/index.html') || path.endsWith('/index') || path === '';
         
-        const allBtns = actionsContainer.querySelectorAll('.gnav-btn');
+        let allBtns = actionsContainer.querySelectorAll('.gnav-btn');
         allBtns.forEach(btn => {
             const text = btn.textContent.trim().toUpperCase();
-            if (((text === 'DASHBOARD' || text === 'HOME') && isDashboardPage) || btn.id === 'gnavAdminDashboardBtn') {
+            if (text === 'HOME') {
+                btn.remove();
+            } else if ((text === 'DASHBOARD' && isDashboardPage) || btn.id === 'gnavAdminDashboardBtn') {
                 btn.remove();
             }
         });
 
+        const remainingBtns = actionsContainer.querySelectorAll('.gnav-btn');
+
         if (!isDashboardPage) {
             let dashBtn = actionsContainer.querySelector('#gnavDynamicDashBtn');
             if (!dashBtn) {
-                const hasExistingDash = Array.from(allBtns).some(btn => {
+                const hasExistingDash = Array.from(remainingBtns).some(btn => {
                     const text = btn.textContent.trim().toUpperCase();
-                    return text === 'DASHBOARD' || text === 'HOME';
+                    return text === 'DASHBOARD';
                 });
                 
                 if (!hasExistingDash) {
