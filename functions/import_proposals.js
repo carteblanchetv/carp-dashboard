@@ -57,11 +57,12 @@ function parseDateString(dateStr) {
                 acceptedAt: parseDateString(p.acceptedDate),
                 
                 // Set metadata to indicate it's an imported historical record
-                status: 'accepted',
+                status: 'paid',
                 isImported: true,
                 historicalSubmitterName: p.submitterName || 'Unknown',
                 submittedBy: 'HISTORICAL_IMPORT',
                 submittedByEmail: 'imported@carteblanche.co.za',
+                paidAt: parseDateString(p.acceptedDate) || parseDateString(p.proposalDate) || admin.firestore.FieldValue.serverTimestamp(),
                 
                 // Insert Details (grouped)
                 details: {

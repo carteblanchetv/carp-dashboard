@@ -705,9 +705,9 @@ export function initNavBar(user) {
         let allBtns = actionsContainer.querySelectorAll('.gnav-btn');
         allBtns.forEach(btn => {
             const text = btn.textContent.trim().toUpperCase();
-            if (text === 'HOME') {
+            if (text.includes('HOME')) {
                 btn.remove();
-            } else if ((text === 'DASHBOARD' && isDashboardPage) || btn.id === 'gnavAdminDashboardBtn') {
+            } else if ((text.includes('DASHBOARD') && isDashboardPage) || btn.id === 'gnavAdminDashboardBtn') {
                 btn.remove();
             }
         });
@@ -719,7 +719,7 @@ export function initNavBar(user) {
             if (!dashBtn) {
                 const hasExistingDash = Array.from(remainingBtns).some(btn => {
                     const text = btn.textContent.trim().toUpperCase();
-                    return text === 'DASHBOARD';
+                    return text.includes('DASHBOARD');
                 });
                 
                 if (!hasExistingDash) {
