@@ -102,7 +102,7 @@
                 <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="login-logo">
             </div>
             <h1 class="login-title">Deliverables Portal</h1>
-            <p class="login-subtitle">Please sign in with your work account to continue.</p>
+            <p class="login-subtitle" id="loginSubtitle">Please sign in with your work account to continue.</p>
             
             <form id="emailLoginForm" style="text-align: left;">
                 <div class="form-group">
@@ -110,7 +110,10 @@
                     <input type="email" id="emailInput" class="table-input" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border);" placeholder="email@address.com" required>
                 </div>
                 <div class="form-group" style="margin-top: 1rem;">
-                    <label style="font-size: 0.85rem; margin-bottom: 0.4rem; display: block;">Password</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                        <label style="font-size: 0.85rem; margin: 0; display: block;">Password</label>
+                        <a href="#" id="forgotPasswordLink" style="font-size: 0.8rem; color: var(--primary); text-decoration: none;">Forgot Password?</a>
+                    </div>
                     <input type="password" id="passwordInput" class="table-input" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border);" placeholder="••••••••" required>
                 </div>
 
@@ -118,6 +121,26 @@
                     Sign In
                 </button>
             </form>
+
+            <!-- Forgot Password View (hidden by default) -->
+            <div id="forgotPasswordView" style="display: none; text-align: left;">
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label style="font-size: 0.85rem; margin-bottom: 0.4rem; display: block;">Account Email (Username)</label>
+                        <input type="email" id="resetAccountEmail" class="table-input" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border);" placeholder="username@domain.com" required>
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label style="font-size: 0.85rem; margin-bottom: 0.4rem; display: block;">Send Reset Link To (Destination Email)</label>
+                        <input type="email" id="resetDestinationEmail" class="table-input" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border);" placeholder="other-email@domain.com" required>
+                    </div>
+                    <button type="submit" class="submit-btn" id="forgotPasswordSubmitBtn" style="width: 100%; margin-top: 1.5rem; height: 42px;">
+                        Send Reset Link
+                    </button>
+                    <p style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem; margin-bottom: 0;">
+                        <a href="#" id="backToLoginLink" style="color: var(--primary); text-decoration: none;">Back to Sign In</a>
+                    </p>
+                </form>
+            </div>
             
             <div id="systemStatus" style="margin-top: 1.5rem; font-size: 0.7rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 0.5rem; opacity: 0.7;">
                 <span id="statusDot" style="width: 8px; height: 8px; border-radius: 50%; background: #94a3b8;"></span>

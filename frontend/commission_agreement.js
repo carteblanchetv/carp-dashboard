@@ -256,7 +256,7 @@ async function generatePDF(sub, currentUser, commNum, commDate) {
     
     // Signatory names (above the line) - using Times Italic for signature look
     doc.setFont('times', 'italic');
-    doc.setFontSize(12);
+    doc.setFontSize(14);
     doc.text(adminName, margin, y);
     doc.text(producerName, margin + (contentWidth / 2) + 5, y);
     y += 2;

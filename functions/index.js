@@ -444,6 +444,57 @@ app.get('/api/temp-debug-search', async (req, res) => {
   }
 });
 
+app.post('/api/forgot-password', express.json(), async (req, res) => {
+  try {
+    const { email, destinationEmail } = req.body;
+    if (!email || !destinationEmail) {
+      return res.status(400).json({ success: false, error: 'Both account email and destination email are required.' });
+    }
+
+    const accountEmail = email.toLowerCase().trim();
+    const destEmail = destinationEmail.toLowerCase().trim();
+
+    // 1. Verify user exists in Firebase Auth
+    try {
+      await admin.auth().getUserByEmail(accountEmail);
+    } catch (err) {
+      console.warn(`[FORGOT_PASSWORD] User lookup failed for ${accountEmail}:`, err.message);
+      return res.status(404).json({ success: false, error: 'Account email not found.' });
+    }
+
+    // 2. Generate password reset link
+    const resetLink = await admin.auth().generatePasswordResetLink(accountEmail);
+
+    // 3. Send email to the destination email address
+    const mailOptions = {
+      from: `"CARP Dashboard" <${process.env.EMAIL_USER}>`,
+      to: destEmail,
+      subject: 'Reset Password Link | Carte Blanche Deliverables',
+      html: `
+        <div style="font-family: sans-serif; line-height: 1.5; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 2rem; background: #ffffff;">
+          <h2 style="color: #008fbe; margin-top: 0;">Reset Your Password</h2>
+          <p>You requested a password reset for your account (<b>${accountEmail}</b>) on Carte Blanche Deliverables.</p>
+          <p>Please click the button below to reset your password:</p>
+          <p style="margin: 2rem 0; text-align: center;">
+            <a href="${resetLink}" style="background: #008fbe; color: #ffffff; text-decoration: none; padding: 0.8rem 2rem; border-radius: 6px; font-weight: bold; display: inline-block;">Reset Password</a>
+          </p>
+          <p style="font-size: 0.85rem; color: #666;">Or copy and paste this link into your browser:</p>
+          <p style="font-size: 0.8rem; word-break: break-all; color: #008fbe;"><a href="${resetLink}">${resetLink}</a></p>
+          <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 2rem 0;" />
+          <p style="font-size: 0.8rem; color: #666;">If you did not request this password reset, you can safely ignore this email.</p>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`[FORGOT_PASSWORD] Sent reset link for ${accountEmail} to ${destEmail}`);
+    res.json({ success: true, message: 'Reset email sent successfully.' });
+  } catch (error) {
+    console.error('[FORGOT_PASSWORD] Error generating/sending link:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.use(validateFirebaseIdToken);
 
 /**
