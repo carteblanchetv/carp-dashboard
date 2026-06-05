@@ -1,111 +1,3 @@
-[2026-06-03 18:08:43] hint: the same ref. If you want to integrate the remote changes, use
-[2026-06-03 18:08:43] hint: 'git pull' before pushing again.
-[2026-06-03 18:08:43] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-[2026-06-03 18:08:43] Sync complete.
-[2026-06-03 18:38:43] Changes detected. Syncing...
-[2026-06-03 18:38:43] [main 033be4c] auto-sync: 2026-06-03 18:38
-[2026-06-03 18:38:43]  1 file changed, 12 insertions(+)
-[2026-06-03 18:38:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-03 18:38:43]  ! [rejected]        main -> main (fetch first)
-[2026-06-03 18:38:43] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
-[2026-06-03 18:38:43] hint: Updates were rejected because the remote contains work that you do not
-[2026-06-03 18:38:43] hint: have locally. This is usually caused by another repository pushing to
-[2026-06-03 18:38:43] hint: the same ref. If you want to integrate the remote changes, use
-[2026-06-03 18:38:43] hint: 'git pull' before pushing again.
-[2026-06-03 18:38:43] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-[2026-06-03 18:38:43] Sync complete.
-[2026-06-03 19:08:43] Changes detected. Syncing...
-[2026-06-03 19:08:43] [main 5e352c1] auto-sync: 2026-06-03 19:08
-[2026-06-03 19:08:43]  1 file changed, 12 insertions(+)
-[2026-06-03 19:08:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-03 19:08:43]  ! [rejected]        main -> main (fetch first)
-[2026-06-03 19:08:43] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
-[2026-06-03 19:08:43] hint: Updates were rejected because the remote contains work that you do not
-[2026-06-03 19:08:43] hint: have locally. This is usually caused by another repository pushing to
-[2026-06-03 19:08:43] hint: the same ref. If you want to integrate the remote changes, use
-[2026-06-03 19:08:43] hint: 'git pull' before pushing again.
-[2026-06-03 19:08:43] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-[2026-06-03 19:08:43] Sync complete.
-[2026-06-03 19:38:44] Changes detected. Syncing...
-[2026-06-03 19:38:44] [main 7d5e8cb] auto-sync: 2026-06-03 19:38
-[2026-06-03 19:38:44]  1 file changed, 12 insertions(+)
-[2026-06-03 19:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-03 19:38:44]  ! [rejected]        main -> main (fetch first)
-[2026-06-03 19:38:44] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
-[2026-06-03 19:38:44] hint: Updates were rejected because the remote contains work that you do not
-[2026-06-03 19:38:44] hint: have locally. This is usually caused by another repository pushing to
-[2026-06-03 19:38:44] hint: the same ref. If you want to integrate the remote changes, use
-[2026-06-03 19:38:44] hint: 'git pull' before pushing again.
-[2026-06-03 19:38:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-[2026-06-03 19:38:44] Sync complete.
-[2026-06-04 08:54:29] Changes detected. Syncing...
-[2026-06-04 08:54:29] [main b7dd0c9] auto-sync: 2026-06-04 08:54
-[2026-06-04 08:54:29]  2 files changed, 19 insertions(+), 2 deletions(-)
-[2026-06-04 08:54:29] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-04 08:54:29]  ! [rejected]        main -> main (fetch first)
-[2026-06-04 08:54:29] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
-[2026-06-04 08:54:29] hint: Updates were rejected because the remote contains work that you do not
-[2026-06-04 08:54:29] hint: have locally. This is usually caused by another repository pushing to
-[2026-06-04 08:54:29] hint: the same ref. If you want to integrate the remote changes, use
-[2026-06-04 08:54:29] hint: 'git pull' before pushing again.
-[2026-06-04 08:54:29] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-[2026-06-04 08:54:29] Sync complete.
-[2026-06-04 09:08:44] Changes detected. Syncing...
-[2026-06-04 09:08:44] [main f72d7ab] auto-sync: 2026-06-04 09:08
-[2026-06-04 09:08:44]  3 files changed, 22 insertions(+)
-[2026-06-04 09:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-04 09:08:44]  ! [rejected]        main -> main (fetch first)
-[2026-06-04 09:08:44] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
-[2026-06-04 09:08:44] hint: Updates were rejected because the remote contains work that you do not
-[2026-06-04 09:08:44] hint: have locally. This is usually caused by another repository pushing to
-[2026-06-04 09:08:44] hint: the same ref. If you want to integrate the remote changes, use
-[2026-06-04 09:08:44] hint: 'git pull' before pushing again.
-[2026-06-04 09:08:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-[2026-06-04 09:08:44] Sync complete.
-[2026-06-04 09:38:44] Changes detected. Syncing...
-[2026-06-04 09:38:44] [main 740f2bf] auto-sync: 2026-06-04 09:38
-[2026-06-04 09:38:44]  1 file changed, 12 insertions(+)
-[2026-06-04 09:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-04 09:38:44]  ! [rejected]        main -> main (fetch first)
-[2026-06-04 09:38:44] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
-[2026-06-04 09:38:44] hint: Updates were rejected because the remote contains work that you do not
-[2026-06-04 09:38:44] hint: have locally. This is usually caused by another repository pushing to
-[2026-06-04 09:38:44] hint: the same ref. If you want to integrate the remote changes, use
-[2026-06-04 09:38:44] hint: 'git pull' before pushing again.
-[2026-06-04 09:38:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-[2026-06-04 09:38:44] Sync complete.
-[2026-06-04 10:08:45] Changes detected. Syncing...
-[2026-06-04 10:08:45] [main 40b5bcd] auto-sync: 2026-06-04 10:08
-[2026-06-04 10:08:45]  1 file changed, 12 insertions(+), 110 deletions(-)
-[2026-06-04 10:08:45] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-04 10:08:45]  ! [rejected]        main -> main (fetch first)
-[2026-06-04 10:08:45] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
-[2026-06-04 10:08:45] hint: Updates were rejected because the remote contains work that you do not
-[2026-06-04 10:08:45] hint: have locally. This is usually caused by another repository pushing to
-[2026-06-04 10:08:45] hint: the same ref. If you want to integrate the remote changes, use
-[2026-06-04 10:08:45] hint: 'git pull' before pushing again.
-[2026-06-04 10:08:45] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-[2026-06-04 10:08:45] Sync complete.
-[2026-06-04 10:38:44] Changes detected. Syncing...
-[2026-06-04 10:38:44] [main 55cc947] auto-sync: 2026-06-04 10:38
-[2026-06-04 10:38:44]  1 file changed, 12 insertions(+)
-[2026-06-04 10:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-04 10:38:44]  ! [rejected]        main -> main (fetch first)
-[2026-06-04 10:38:44] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
-[2026-06-04 10:38:44] hint: Updates were rejected because the remote contains work that you do not
-[2026-06-04 10:38:44] hint: have locally. This is usually caused by another repository pushing to
-[2026-06-04 10:38:44] hint: the same ref. If you want to integrate the remote changes, use
-[2026-06-04 10:38:44] hint: 'git pull' before pushing again.
-[2026-06-04 10:38:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-[2026-06-04 10:38:44] Sync complete.
-[2026-06-04 11:08:44] Changes detected. Syncing...
-[2026-06-04 11:08:44] [main 87a4824] auto-sync: 2026-06-04 11:08
-[2026-06-04 11:08:44]  1 file changed, 12 insertions(+)
-[2026-06-04 11:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-04 11:08:44]  ! [rejected]        main -> main (fetch first)
-[2026-06-04 11:08:44] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
-[2026-06-04 11:08:44] hint: Updates were rejected because the remote contains work that you do not
-[2026-06-04 11:08:44] hint: have locally. This is usually caused by another repository pushing to
 [2026-06-04 11:08:44] hint: the same ref. If you want to integrate the remote changes, use
 [2026-06-04 11:08:44] hint: 'git pull' before pushing again.
 [2026-06-04 11:08:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
@@ -495,3 +387,15 @@
 [2026-06-05 16:08:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 [2026-06-05 16:08:44] Sync complete.
 [2026-06-05 16:38:44] Changes detected. Syncing...
+[2026-06-05 16:38:44] [main 38df3a0] auto-sync: 2026-06-05 16:38
+[2026-06-05 16:38:44]  1 file changed, 12 insertions(+)
+[2026-06-05 16:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-05 16:38:44]  ! [rejected]        main -> main (fetch first)
+[2026-06-05 16:38:44] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
+[2026-06-05 16:38:44] hint: Updates were rejected because the remote contains work that you do not
+[2026-06-05 16:38:44] hint: have locally. This is usually caused by another repository pushing to
+[2026-06-05 16:38:44] hint: the same ref. If you want to integrate the remote changes, use
+[2026-06-05 16:38:44] hint: 'git pull' before pushing again.
+[2026-06-05 16:38:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[2026-06-05 16:38:44] Sync complete.
+[2026-06-05 20:08:43] Changes detected. Syncing...
