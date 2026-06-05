@@ -4,7 +4,7 @@
 # ============================================================
 
 param(
-    [string]$Message = "chore: update $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
+    [string]$Message = "chore: update"
 )
 
 $ErrorActionPreference = "Stop"
@@ -37,18 +37,28 @@ Write-Host "Staging changes..." -ForegroundColor Yellow
 
 # Check if there's anything to commit
 $status = & $GIT status --porcelain
-if (-not $status) {
+if ($null -eq $status -or $status -eq "") {
     Write-Host "Nothing to commit — working tree is clean." -ForegroundColor Green
-} else {
-    # --- 3. Commit ---
-    Write-Host "Committing: $Message" -ForegroundColor Yellow
-    & $GIT commit -m $Message
-
-    # --- 4. Push to GitHub ---
-    Write-Host "Pushing to GitHub..." -ForegroundColor Yellow
-    & $GIT push origin main
-    Write-Host "GitHub updated." -ForegroundColor Green
+    
+    # Deploy directly and exit
+    Write-Host ""
+    Write-Host "Deploying to Firebase..." -ForegroundColor Yellow
+    firebase deploy
+    
+    Write-Host ""
+    Write-Host "All done! Site is live at https://cb-deliverables.web.app" -ForegroundColor Green
+    Write-Host ""
+    exit 0
 }
+
+# --- 3. Commit ---
+Write-Host "Committing: $Message" -ForegroundColor Yellow
+& $GIT commit -m $Message
+
+# --- 4. Push to GitHub ---
+Write-Host "Pushing to GitHub..." -ForegroundColor Yellow
+& $GIT push origin main
+Write-Host "GitHub updated." -ForegroundColor Green
 
 # --- 5. Deploy to Firebase ---
 Write-Host ""

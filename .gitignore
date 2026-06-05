@@ -10,6 +10,9 @@ functions/node_modules/
 users.json
 users_credentials.json
 *.xlsx
+serviceAccountKey.json
+functions/serviceAccountKey.json
+
 
 # Deploy logs
 deploy_log*.txt

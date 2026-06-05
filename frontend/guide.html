@@ -686,6 +686,16 @@
                         </div>
                     </div>
 
+                    <div class="screenshot-frame">
+                        <div class="screenshot-bar">
+                            <span class="bar-dot dot-red"></span>
+                            <span class="bar-dot dot-yellow"></span>
+                            <span class="bar-dot dot-green"></span>
+                            <span class="screenshot-url">cb-deliverables.web.app/proposal?id=...#CallSheet</span>
+                        </div>
+                        <img src="assets/Call_Sheet2.png" alt="Call Sheet Form Overview Screenshot">
+                    </div>
+
                     <div class="step-list">
                         <div class="step-item">
                             <div class="step-badge">1</div>
@@ -709,10 +719,38 @@
                             <strong>Required Fields for Submission:</strong> When submitting the Call Sheet, the following fields are strictly required:
                             <ul style="margin-top: 0.5rem; margin-bottom: 0px; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;">
                                 <li><strong>Shoot Dates:</strong> You must enter and specify your shoot dates.</li>
-                                <li><strong>Key Crew:</strong> You must complete the Name, Surname, and Phone details for the <strong>Presenter</strong>, <strong>Producer</strong>, and <strong>DOP</strong>.</li>
+                                <li><strong>Crew Details:</strong> All crew members added/listed in the Crew table must have their complete **First Name**, **Surname**, and **Phone Number** filled in.</li>
+                                <li><strong>Physical Address:</strong> You must specify the physical address for all locations you are shooting in (located under the Movement Orders / Location section).</li>
                                 <li><strong>Risk Assessment:</strong> The Risk Assessment description field must be filled in.</li>
                             </ul>
                         </div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1.25rem;">Equipment - As Per Dop Button</h3>
+                    <p class="guide-paragraph">
+                        Under the <strong>Equipment</strong> section, you can check the box for <strong>As Per the DOP</strong>. 
+                        Selecting this option merges all separate equipment sub-sections (Camera, Audio, Lenses, Lighting, Rigs, and Other Equipment) into a single unified section labeled <strong>"As Per the DOP and supporting crew"</strong>. 
+                        This simplifies entry and indicates that details are managed directly by the DOP and crew.
+                    </p>
+
+                    <div class="screenshot-frame">
+                        <div class="screenshot-bar">
+                            <span class="bar-dot dot-red"></span>
+                            <span class="bar-dot dot-yellow"></span>
+                            <span class="bar-dot dot-green"></span>
+                            <span class="screenshot-url">As Per DOP Button: Off (Default detailed list view)</span>
+                        </div>
+                        <img src="assets/DOP_Off.png" alt="DOP Equipment Toggle Off Screenshot">
+                    </div>
+
+                    <div class="screenshot-frame">
+                        <div class="screenshot-bar">
+                            <span class="bar-dot dot-red"></span>
+                            <span class="bar-dot dot-yellow"></span>
+                            <span class="bar-dot dot-green"></span>
+                            <span class="screenshot-url">As Per DOP Button: On (Equipment merged and collapsed)</span>
+                        </div>
+                        <img src="assets/DOP_On.png" alt="DOP Equipment Toggle On Screenshot">
                     </div>
                 </section>
 
@@ -840,6 +878,6 @@
     </div>
 
     <!-- Script imports -->
-    <script type="module" src="js/guide.js?v=5.1.1"></script>
+    <script type="module" src="js/guide.js?v=5.1.2"></script>
 </body>
 </html>

@@ -1,9 +1,20 @@
 const admin = require('firebase-admin');
 
+const fs = require('fs');
+
 if (!admin.apps.length) {
-    admin.initializeApp({
-        projectId: 'cb-deliverables'
-    });
+    if (fs.existsSync('./serviceAccountKey.json')) {
+        const serviceAccount = require('./serviceAccountKey.json');
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount)
+        });
+        console.log('Initialized Firebase Admin using serviceAccountKey.json');
+    } else {
+        admin.initializeApp({
+            projectId: 'cb-deliverables'
+        });
+        console.log('Initialized Firebase Admin using default environment credentials');
+    }
 }
 
 const db = admin.firestore();

@@ -198,7 +198,7 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
         const recipientList = Array.from(recipients).join(', ');
         console.log(`[NOTIFY] Sending to: ${recipientList}`);
 
-        const fromName = type === 'editorial_leave' ? "Editorial Leave Calendar" : "CARP Dashboard";
+        const fromName = type === 'call_sheet' ? "Call Sheets" : (type === 'editorial_leave' ? "Editorial Leave Calendar" : "CARP Dashboard");
         
         const mailOptions = {
             from: `"${fromName}" <${process.env.EMAIL_USER}>`,
@@ -1941,7 +1941,7 @@ app.post('/api/update-proposal-details', express.json(), async (req, res) => {
     if (extra_budget !== undefined) updateData.extra_budget = extra_budget;
     if (locations !== undefined) updateData.locations = locations;
     
-    const topLevelFields = ['third_party', 'hidden_camera', 'legal_req', 'isSensitive', 'permittedUids'];
+    const topLevelFields = ['third_party', 'hidden_camera', 'legal_req', 'isSensitive', 'permittedUids', 'caseStudies', 'experts', 'budgetItems'];
     topLevelFields.forEach(f => {
         if (req.body[f] !== undefined) updateData[f] = req.body[f];
     });
@@ -1950,6 +1950,29 @@ app.post('/api/update-proposal-details', express.json(), async (req, res) => {
         ...updateData,
         lastUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
+
+    if (req.body.isSubmitCallSheet && req.body.callSheetPdfB64) {
+        try {
+            const pdfBuffer = Buffer.from(req.body.callSheetPdfB64, 'base64');
+            const proposalData = doc.data() || {};
+            const commNum = proposalData.commissionNumber || req.body.commissionNumber || 'N/A';
+            const storyTitle = req.body.story_title || proposalData.story_title || 'Untitled';
+            const userFullName = `${req.user.firstName || ''} ${req.user.lastName || ''}`.trim() || 'A user';
+            
+            const emailSubject = `CALL SHEET for ${commNum} ${storyTitle}`;
+            const emailHtml = `<p>${userFullName} has submitted a call sheet for ${commNum} ${storyTitle}.</p>\n<p><i>This is an automated notification from the CARP Dashboard.</i></p>`;
+            
+            const attachments = [{
+                filename: `Call_Sheet_${commNum}.pdf`,
+                content: pdfBuffer
+            }];
+            
+            notifyRelevantUsers('call_sheet', emailSubject, emailHtml, attachments);
+        } catch (err) {
+            console.error('[NOTIFY] Error preparing Call Sheet notification:', err);
+        }
+    }
+
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -2572,7 +2595,8 @@ app.post('/api/admin/create-user', express.json(), async (req, res) => {
         insert_footage: false,
         episode_footage: false,
         control_sheet: false,
-        proposal: false
+        proposal: false,
+        call_sheet: false
       }
     });
     
@@ -2769,7 +2793,8 @@ app.post('/api/admin/reset-all-notifications', async (req, res) => {
         insert_footage: false,
         episode_footage: false,
         control_sheet: false,
-        proposal: false
+        proposal: false,
+        call_sheet: false
     };
     
     snapshot.docs.forEach(doc => {

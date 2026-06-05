@@ -1,11 +1,21 @@
 const admin = require('firebase-admin');
 const fs = require('fs');
 
-// Initialize Firebase Admin (using default credentials from environment)
-admin.initializeApp({
-  projectId: "cb-deliverables",
-  storageBucket: "cb-deliverables.appspot.com"
-});
+// Initialize Firebase Admin (using service account if present, otherwise default credentials)
+if (fs.existsSync('./serviceAccountKey.json')) {
+  const serviceAccount = require('./serviceAccountKey.json');
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    storageBucket: "cb-deliverables.appspot.com"
+  });
+  console.log('Initialized Firebase Admin using serviceAccountKey.json');
+} else {
+  admin.initializeApp({
+    projectId: "cb-deliverables",
+    storageBucket: "cb-deliverables.appspot.com"
+  });
+  console.log('Initialized Firebase Admin using default environment credentials');
+}
 const db = admin.firestore();
 
 // Helper to convert "Wednesday, 20 May 2026" to a Firestore Timestamp

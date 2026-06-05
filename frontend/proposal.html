@@ -6,6 +6,8 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Proposals - Carte Blanche</title>
     <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -227,10 +229,10 @@
                 <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
                 <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
             </div>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 1.5rem;">
-                <h1 id="pageMainTitle">Story Proposal</h1>
-                <h1 id="pageCallSheetTitle" class="hidden">Call Sheet</h1>
-                <div style="display: flex; gap: 0.75rem;">
+            <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 50px;">
+                <h1 id="pageMainTitle" style="margin: 0; text-align: center;">Story Proposal</h1>
+                <h1 id="pageCallSheetTitle" class="hidden" style="margin: 0; text-align: center;">Call Sheet</h1>
+                <div style="position: absolute; right: 0; display: flex; gap: 0.75rem;">
                     <button type="button" id="topEditCallSheetBtn" class="submit-btn hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0; background: var(--success) !important; border: 1px solid var(--success) !important;">Edit Call Sheet</button>
                     <button type="button" id="topDownloadCallSheetBtn" onclick="downloadCallSheetPDF()" class="submit-btn hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0; background: var(--success) !important; border: 1px solid var(--success) !important;">Download Call Sheet PDF</button>
                     <button type="button" id="topDownloadProposalBtn" onclick="downloadProposalPDF()" class="submit-btn" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0;">Download Proposal as PDF</button>
@@ -467,24 +469,12 @@
             <div id="phase2Container" class="hidden">
                  <section class="form-section" style="border-top: 2px solid var(--primary); padding-top: 2rem; margin-top: 3rem;">
                     <h2 class="section-title">Insert Details</h2>
-                    <div class="phase2-grid">
                         <div class="form-group">
-                            <label for="presenter">Presenter</label>
-                            <select id="presenter" name="presenter">
-                                <option value="">-- Select --</option>
-                                <option value="Catherine Rice">Catherine Rice</option>
-                                <option value="Claire Mawisa">Claire Mawisa</option>
-                                <option value="Erin Bates">Erin Bates</option>
-                                <option value="Govan Whittles">Govan Whittles</option>
-                                <option value="Lourensa Eckard">Lourensa Eckard</option>
-                                <option value="Macfarlane Moleli">Macfarlane Moleli</option>
-                                <option value="Masa Kekana">Masa Kekana</option>
-                                <option value="Nickolaus Bauer">Nickolaus Bauer</option>
-                                <option value="Other">Other</option>
-                            </select>
-                            <div id="otherPresenterWrapper" class="hidden" style="margin-top: 0.75rem;">
-                                <input type="text" id="otherPresenter" name="otherPresenter" placeholder="Specify presenter name...">
+                            <label>Presenter(s)</label>
+                            <div id="presenterList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <!-- Dynamic rows go here -->
                             </div>
+                            <button type="button" id="addPresenterBtn" class="add-btn" style="margin-top: 0.5rem; width: fit-content;">+ Add Presenter</button>
                         </div>
                         
                         <!-- Researchers Dynamic List -->
@@ -506,26 +496,26 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Camera Assistant</label>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <input type="text" id="camera_assistant_name" name="camera_assistant_name" placeholder="Name" style="flex: 1;">
-                                <input type="text" id="camera_assistant_surname" name="camera_assistant_surname" placeholder="Surname" style="flex: 1;">
+                            <label>Camera Assistant(s)</label>
+                            <div id="cameraAssistantList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <!-- Dynamic rows go here -->
                             </div>
+                            <button type="button" id="addCameraAssistantBtn" class="add-btn" style="margin-top: 0.5rem; width: fit-content;">+ Add Camera Assistant</button>
                         </div>
 
                         <div class="form-group">
-                            <label>DOP</label>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <input type="text" id="dop_name" name="dop_name" placeholder="Name" style="flex: 1;">
-                                <input type="text" id="dop_surname" name="dop_surname" placeholder="Surname" style="flex: 1;">
+                            <label>DOP(s)</label>
+                            <div id="dopList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <!-- Dynamic rows go here -->
                             </div>
+                            <button type="button" id="addDopBtn" class="add-btn" style="margin-top: 0.5rem; width: fit-content;">+ Add DOP</button>
                         </div>
                         <div class="form-group">
                             <label>Sound</label>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <input type="text" id="sound_name" name="sound_name" placeholder="Name" style="flex: 1;">
-                                <input type="text" id="sound_surname" name="sound_surname" placeholder="Surname" style="flex: 1;">
+                            <div id="soundList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <!-- Dynamic rows go here -->
                             </div>
+                            <button type="button" id="addSoundBtn" class="add-btn" style="margin-top: 0.5rem; width: fit-content;">+ Add Sound</button>
                         </div>
                         <div class="form-group">
                             <label>Offline Editor</label>
@@ -551,11 +541,11 @@
 
                         <!-- Additional Crew Dynamic List -->
                         <div class="form-group">
-                            <label>Additional Crew</label>
+                            <label>Other Crew not Stipulated Above</label>
                             <div id="crewList" style="display: flex; flex-direction: column; gap: 0.5rem;">
                                 <!-- Dynamic rows go here -->
                             </div>
-                            <button type="button" id="addCrewBtn" class="add-btn" style="margin-top: 0.5rem; width: fit-content;">+ Add Additional Crew</button>
+                            <button type="button" id="addCrewBtn" class="add-btn" style="margin-top: 0.5rem; width: fit-content;">+ Add Other Crew</button>
                         </div>
                     </div>
                 </section>
@@ -587,6 +577,9 @@
                 <!-- SECTION 1: CREW DETAILS -->
                 <div style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
                     <h3 class="cs-section-header">Crew Details</h3>
+                    <p style="color: var(--danger); font-weight: 700; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                        Include the full names, surnames and contact info for all crew. Any missing crew details will result in an invalid Call Sheet.
+                    </p>
                     <div class="table-container">
                         <table class="data-table equal-width-cols">
                             <thead>
@@ -601,31 +594,31 @@
                             <tbody id="csCrewTableBody">
                                 <!-- 4 Required Rows Pre-populated in UI -->
                                 <tr>
-                                    <td><input type="text" name="cs_crew_role[]" value="Presenter" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
-                                    <td><input type="text" name="cs_crew_name[]" placeholder="Presenter Name"></td>
-                                    <td><input type="text" name="cs_crew_surname[]" placeholder="Presenter Surname"></td>
-                                    <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." oninput="this.value = formatSA(this.value)"></td>
+                                    <td><input type="text" name="cs_crew_role[]" value="Presenter" readonly class="table-input" style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
+                                    <td><input type="text" name="cs_crew_name[]" class="table-input" placeholder="Presenter Name"></td>
+                                    <td><input type="text" name="cs_crew_surname[]" class="table-input" placeholder="Presenter Surname"></td>
+                                    <td><input type="text" name="cs_crew_phone[]" class="table-input" placeholder="+27 ..." oninput="this.value = formatSA(this.value)"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><input type="text" name="cs_crew_role[]" value="Producer" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
-                                    <td><input type="text" name="cs_crew_name[]" placeholder="Producer Name"></td>
-                                    <td><input type="text" name="cs_crew_surname[]" placeholder="Producer Surname"></td>
-                                    <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." oninput="this.value = formatSA(this.value)"></td>
+                                    <td><input type="text" name="cs_crew_role[]" value="Producer" readonly class="table-input" style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
+                                    <td><input type="text" name="cs_crew_name[]" class="table-input" placeholder="Producer Name"></td>
+                                    <td><input type="text" name="cs_crew_surname[]" class="table-input" placeholder="Producer Surname"></td>
+                                    <td><input type="text" name="cs_crew_phone[]" class="table-input" placeholder="+27 ..." oninput="this.value = formatSA(this.value)"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><input type="text" name="cs_crew_role[]" value="DOP" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
-                                    <td><input type="text" name="cs_crew_name[]" placeholder="DOP Name"></td>
-                                    <td><input type="text" name="cs_crew_surname[]" placeholder="DOP Surname"></td>
-                                    <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." oninput="this.value = formatSA(this.value)"></td>
+                                    <td><input type="text" name="cs_crew_role[]" value="DOP" readonly class="table-input" style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
+                                    <td><input type="text" name="cs_crew_name[]" class="table-input" placeholder="DOP Name"></td>
+                                    <td><input type="text" name="cs_crew_surname[]" class="table-input" placeholder="DOP Surname"></td>
+                                    <td><input type="text" name="cs_crew_phone[]" class="table-input" placeholder="+27 ..." oninput="this.value = formatSA(this.value)"></td>
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td><input type="text" name="cs_crew_role[]" value="Camera Assistant" readonly style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
-                                    <td><input type="text" name="cs_crew_name[]" placeholder="Camera Assistant Name"></td>
-                                    <td><input type="text" name="cs_crew_surname[]" placeholder="Camera Assistant Surname"></td>
-                                    <td><input type="text" name="cs_crew_phone[]" placeholder="+27 ..." oninput="this.value = formatSA(this.value)"></td>
+                                    <td><input type="text" name="cs_crew_role[]" value="Camera Assistant" readonly class="table-input" style="background: var(--bg-light); cursor: not-allowed; font-weight: 600;"></td>
+                                    <td><input type="text" name="cs_crew_name[]" class="table-input" placeholder="Camera Assistant Name"></td>
+                                    <td><input type="text" name="cs_crew_surname[]" class="table-input" placeholder="Camera Assistant Surname"></td>
+                                    <td><input type="text" name="cs_crew_phone[]" class="table-input" placeholder="+27 ..." oninput="this.value = formatSA(this.value)"></td>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -677,67 +670,81 @@
 
                 <!-- SECTION 4: EQUIPMENT -->
                 <div style="margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;">
-                    <h3 class="cs-section-header">Equipment</h3>
-                    
-                    <!-- Camera Equipment Table -->
-                    <div style="margin-bottom: 2rem;">
-                        <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Camera Equipment</h4>
-                        <div class="table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 30%;">Camera Device</th>
-                                        <th>Description</th>
-                                        <th style="width: 50px;"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cs_cameras_table_body">
-                                    <!-- Dynamic rows -->
-                                </tbody>
-                            </table>
-                        </div>
-                        <button type="button" id="addEqCameraBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Camera Device</button>
+                    <h3 class="cs-section-header" style="margin-bottom: 1.5rem;">Equipment</h3>
+                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 2rem; width: 100%;">
+                        <label style="display: inline-flex; align-items: center; gap: 0.85rem; cursor: pointer; user-select: none; font-weight: 700; color: var(--success); font-size: 1.15rem; background: rgba(16, 185, 129, 0.08); border: 2px solid rgba(16, 185, 129, 0.4); padding: 0.85rem 1.75rem; border-radius: 25px; transition: all 0.2s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.25);" onmouseover="this.style.background='rgba(16, 185, 129, 0.15)'; this.style.borderColor='rgba(16, 185, 129, 0.6)'; this.style.transform='scale(1.02)';" onmouseout="this.style.background='rgba(16, 185, 129, 0.08)'; this.style.borderColor='rgba(16, 185, 129, 0.4)'; this.style.transform='none';">
+                            <input type="checkbox" id="eq_as_per_dop" name="eq_as_per_dop" style="width: 22px; height: 22px; cursor: pointer; accent-color: var(--success);">
+                            As Per the DOP
+                        </label>
                     </div>
 
-                    <!-- Audio Equipment Table -->
-                    <div style="margin-bottom: 2rem;">
-                        <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Audio Equipment</h4>
-                        <div class="table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 30%;">Audio Device</th>
-                                        <th>Description</th>
-                                        <th style="width: 50px;"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cs_audios_table_body">
-                                    <!-- Dynamic rows -->
-                                </tbody>
-                            </table>
-                        </div>
-                        <button type="button" id="addEqAudioBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Audio Device</button>
+                    <!-- As Per the DOP Block (Shown when checked) -->
+                    <div id="eq_as_per_dop_block" class="hidden" style="padding: 1.5rem; text-align: center; color: var(--success); background: rgba(16, 185, 129, 0.05); border: 1px dashed rgba(16, 185, 129, 0.3); border-radius: 8px; margin-bottom: 1rem; font-weight: 700; font-size: 1.05rem;">
+                        🎬 Equipment: As Per the DOP and supporting crew
                     </div>
 
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Lenses Description</label>
-                            <input type="text" id="eq_lenses_desc" name="eq_lenses_desc" placeholder="Describe lenses...">
+                    <!-- Detailed Equipment container (Hidden when checked) -->
+                    <div id="eq_detailed_block">
+                        <!-- Camera Equipment Table -->
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Camera Equipment</h4>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%;">Camera Device</th>
+                                            <th>Description</th>
+                                            <th style="width: 50px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cs_cameras_table_body">
+                                        <!-- Dynamic rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" id="addEqCameraBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Camera Device</button>
                         </div>
-                        <div class="form-group">
-                            <label>Lighting Kit Description</label>
-                            <input type="text" id="eq_lighting_desc" name="eq_lighting_desc" placeholder="Describe lighting kit...">
-                        </div>
-                    </div>
 
-                    <div class="form-grid" style="margin-top: 1.25rem;">
-                        <div class="form-group">
-                            <label>Rigs Description</label>
-                            <input type="text" id="eq_rigs_desc" name="eq_rigs_desc" placeholder="Describe rigs...">
+                        <!-- Audio Equipment Table -->
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text-main);">Audio Equipment</h4>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30%;">Audio Device</th>
+                                            <th>Description</th>
+                                            <th style="width: 50px;"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cs_audios_table_body">
+                                        <!-- Dynamic rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button" id="addEqAudioBtn" class="add-btn" style="margin-top: 0.75rem;">+ Add Audio Device</button>
                         </div>
-                        <div class="form-group">
-                            <label>Other Equipment Description</label>
-                            <input type="text" id="eq_other_desc" name="eq_other_desc" placeholder="Describe other equipment...">
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Lenses Description</label>
+                                <input type="text" id="eq_lenses_desc" name="eq_lenses_desc" placeholder="Describe lenses...">
+                            </div>
+                            <div class="form-group">
+                                <label>Lighting Kit Description</label>
+                                <input type="text" id="eq_lighting_desc" name="eq_lighting_desc" placeholder="Describe lighting kit...">
+                            </div>
+                        </div>
+
+                        <div class="form-grid" style="margin-top: 1.25rem;">
+                            <div class="form-group">
+                                <label>Rigs Description</label>
+                                <input type="text" id="eq_rigs_desc" name="eq_rigs_desc" placeholder="Describe rigs...">
+                            </div>
+                            <div class="form-group">
+                                <label>Other Equipment Description</label>
+                                <input type="text" id="eq_other_desc" name="eq_other_desc" placeholder="Describe other equipment...">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -829,6 +836,35 @@
         </div>
     </div>
 
-    <script type="module" src="proposal.js?v=5.2.1"></script>
+    <!-- Call Sheet Google Maps Modal -->
+    <div id="csMapModal" class="modal-backdrop">
+        <div class="modal-card" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Select Address via Map</h3>
+                <button type="button" class="close-modal" id="csMapModalCloseBtn">&times;</button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                <div class="form-group" style="margin-bottom: 0.5rem; position: relative;">
+                    <label for="csMapSearchInput" style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Search Address</label>
+                    <input type="text" id="csMapSearchInput" placeholder="Search for a location..." class="table-input" style="width: 100%; box-sizing: border-box; padding: 0.75rem;">
+                    <div id="csMapSuggestions" class="suggestions-list" style="position: absolute; top: 100%; left: 0; right: 0; z-index: 10000; background: var(--bg-light); border: 1px solid var(--border); border-top: none; border-radius: 0 0 8px 8px; max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5);"></div>
+                </div>
+                <div id="csMapContainer" style="width: 100%; height: 350px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-light); box-shadow: inset 0 0 10px rgba(0,0,0,0.1);"></div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
+                    💡 You can search for an address, drag the marker, or click anywhere on the map to select the address.
+                </div>
+                <div class="form-group">
+                    <label for="csMapSelectedAddress" style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Selected Address</label>
+                    <textarea id="csMapSelectedAddress" rows="2" class="table-input" style="width: 100%; font-size: 0.9rem; box-sizing: border-box; padding: 0.75rem; resize: vertical;" placeholder="Selected address will appear here..."></textarea>
+                </div>
+            </div>
+            <div class="modal-actions" style="margin-top: 1rem; padding-top: 1rem;">
+                <button type="button" class="btn-soft" id="csMapModalCancelBtn">Cancel</button>
+                <button type="button" class="submit-btn" id="csMapModalConfirmBtn" style="padding: 0.6rem 1.25rem; background: var(--success); border-color: var(--success);">Confirm Address</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="proposal.js?v=5.3.5"></script>
 </body>
 </html>

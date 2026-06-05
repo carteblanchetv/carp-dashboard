@@ -53,13 +53,15 @@ window.openEditModal = (userId) => {
         episode_footage: false,
         control_sheet: false,
         proposal: false,
-        proposal_commission: false
+        proposal_commission: false,
+        call_sheet: false
     };
     document.getElementById('notif_insert_footage').checked = notifs.insert_footage;
     document.getElementById('notif_episode_footage').checked = notifs.episode_footage;
     document.getElementById('notif_control_sheet').checked = notifs.control_sheet;
     document.getElementById('notif_proposal').checked = notifs.proposal;
     document.getElementById('notif_proposal_commission').checked = notifs.proposal_commission || false;
+    document.getElementById('notif_call_sheet').checked = notifs.call_sheet || false;
 
     const notifSection = document.getElementById('notifPreferences');
     const roleVal = document.getElementById('editRole').value;
@@ -290,6 +292,10 @@ function renderUsers(users, loggedInUser) {
                             <input type="checkbox" class="notif-toggle" data-id="${user.id}" data-type="control_sheet" ${user.notifications?.control_sheet ? 'checked' : ''}>
                             FCC
                         </label>
+                        <label class="notif-item">
+                            <input type="checkbox" class="notif-toggle" data-id="${user.id}" data-type="call_sheet" ${user.notifications?.call_sheet ? 'checked' : ''}>
+                            Submit Call Sheet
+                        </label>
                     </div>
                 </div>
             </td>
@@ -428,7 +434,8 @@ document.getElementById('editUserForm').onsubmit = async (e) => {
             episode_footage: document.getElementById('notif_episode_footage').checked,
             control_sheet: document.getElementById('notif_control_sheet').checked,
             proposal: document.getElementById('notif_proposal').checked,
-            proposal_commission: document.getElementById('notif_proposal_commission').checked
+            proposal_commission: document.getElementById('notif_proposal_commission').checked,
+            call_sheet: document.getElementById('notif_call_sheet').checked
         }
     };
     const btn = e.target.querySelector('button[type="submit"]');

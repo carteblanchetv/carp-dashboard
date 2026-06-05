@@ -2,6 +2,13 @@
 // VERSION: 5.2.1
 import { getIdToken, fetchWithAuth, checkAuth, isAdmin, isSuperAdmin, isEditorialProduction } from './auth.js?v=5.1.1';
 
+// Force reload if restored from Safari bfcache to prevent cached query parameters and state
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        window.location.reload();
+    }
+});
+
 function formatStoryDate(dateInput) {
     if (!dateInput) return '—';
     const date = dateInput._seconds ? new Date(dateInput._seconds * 1000) : new Date(dateInput);
@@ -70,24 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Script loaded: proposal.js');
     const form = document.getElementById('proposalForm');
     let loggedInUser = null;
-    const presenterSelect = document.getElementById('presenter');
-    const otherPresenterWrapper = document.getElementById('otherPresenterWrapper');
-    const otherPresenterInput = document.getElementById('otherPresenter');
-    const commNumBadgeTop = document.getElementById('commNumBadgeTop');
-
-    function toggleOtherPresenter() {
-        if (presenterSelect.value === 'Other') {
-            otherPresenterWrapper.classList.remove('hidden');
-            otherPresenterInput.setAttribute('required', 'true');
-        } else {
-            otherPresenterWrapper.classList.add('hidden');
-            otherPresenterInput.removeAttribute('required');
-        }
-    }
-
-    if (presenterSelect) {
-        presenterSelect.onchange = toggleOtherPresenter;
-    }
+    // Presenter dropdown elements bypassed for dynamic list
 
     const summaryEditor = document.getElementById('summaryEditor');
     const summaryHtmlEditor = document.getElementById('summaryHtmlEditor');
@@ -207,14 +197,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function checkStandaloneMode() {
         console.log("[DEBUG] checkStandaloneMode - Hash:", window.location.hash);
         
+        if (!isEditMode && window.location.hash) {
+            window.location.hash = '';
+            return;
+        }
+
         // Redirect legacy hash if needed
         if (window.location.hash === '#callSheetSection') {
             window.location.hash = '#CallSheet';
             return; // Hash change will trigger another event
         }
 
-        const isCallSheetMode = window.location.hash === '#CallSheet' || window.location.hash === '#CallSheetEdit';
-        const isCallSheetEdit = window.location.hash === '#CallSheetEdit';
+        const isCallSheetMode = (window.location.hash === '#CallSheet' || window.location.hash === '#CallSheetEdit') && isEditMode;
+        const isCallSheetEdit = window.location.hash === '#CallSheetEdit' && isEditMode;
         const proposalContent = document.getElementById('proposalFormContent');
         const callSheetSec = document.getElementById('callSheetSection');
         const mainTitle = document.getElementById('pageMainTitle');
@@ -231,6 +226,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isCallSheetMode) {
             console.log("[DEBUG] Activating Call Sheet View");
+            
+            const proposalPdfBtn = document.getElementById('topDownloadProposalBtn');
+            if (proposalPdfBtn) {
+                proposalPdfBtn.classList.add('hidden');
+                proposalPdfBtn.style.display = 'none';
+            }
+            const topEditProposalBtn = document.getElementById('topEditProposalBtn');
+            if (topEditProposalBtn) {
+                topEditProposalBtn.classList.add('hidden');
+                topEditProposalBtn.style.display = 'none';
+            }
             
             // Check if we should show read-only preview
             const csData = window.currentProposal && window.currentProposal.details && window.currentProposal.details.callSheet;
@@ -262,10 +268,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Ensure Call Sheet inputs are populated (saved data or defaults)
-            const datesContainer = document.getElementById('cs_shoot_dates_container');
-            if (datesContainer && datesContainer.children.length === 0) {
-                console.log("[DEBUG] Call Sheet empty in DOM, populating...");
+            if (window.currentProposal) {
+                console.log("[DEBUG] Populating Call Sheet with loaded proposal data");
                 populateCallSheetData(window.currentProposal);
+            } else {
+                const datesContainer = document.getElementById('cs_shoot_dates_container');
+                if (datesContainer && datesContainer.children.length === 0) {
+                    console.log("[DEBUG] Call Sheet empty in DOM, populating with empty defaults");
+                    populateCallSheetData(null);
+                }
             }
 
             if (mainTitle) mainTitle.classList.add('hidden');
@@ -495,18 +506,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const rowId = 'cs_crew_row_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
         const tr = document.createElement('tr');
         tr.id = rowId;
-        const isCsActive = window.location.hash === '#CallSheet' || window.location.hash === '#CallSheetEdit';
-        const reqAttr = isCsActive ? 'required' : '';
         tr.innerHTML = `
-            <td><input type="text" name="cs_crew_role[]" value="${role}" placeholder="Role (e.g. Sound)" ${reqAttr} class="table-input"></td>
-            <td><input type="text" name="cs_crew_name[]" value="${name}" placeholder="Name" ${reqAttr} class="table-input"></td>
-            <td><input type="text" name="cs_crew_surname[]" value="${surname}" placeholder="Surname" ${reqAttr} class="table-input"></td>
-            <td><input type="text" name="cs_crew_phone[]" value="${phone}" placeholder="+27 ..." ${reqAttr} class="table-input" oninput="this.value = formatSA(this.value)"></td>
+            <td><input type="text" name="cs_crew_role[]" value="${role}" placeholder="Role (e.g. Sound)" class="table-input"></td>
+            <td><input type="text" name="cs_crew_name[]" value="${name}" placeholder="Name" class="table-input"></td>
+            <td><input type="text" name="cs_crew_surname[]" value="${surname}" placeholder="Surname" class="table-input"></td>
+            <td><input type="text" name="cs_crew_phone[]" value="${phone}" placeholder="+27 ..." class="table-input" oninput="this.value = formatSA(this.value)"></td>
             <td>
-                <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
+                <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px; height: 38px;">✖</button>
             </td>
         `;
         tbody.appendChild(tr);
+    }
+
+    function toggleEqAsPerDop(checked) {
+        const detailedBlock = document.getElementById('eq_detailed_block');
+        const dopBlock = document.getElementById('eq_as_per_dop_block');
+        if (detailedBlock && dopBlock) {
+            if (checked) {
+                detailedBlock.classList.add('hidden');
+                dopBlock.classList.remove('hidden');
+            } else {
+                detailedBlock.classList.remove('hidden');
+                dopBlock.classList.add('hidden');
+            }
+        }
     }
 
     function addEqCamera(type = '', desc = '') {
@@ -600,6 +623,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <th style="width: 150px;">Time [24H Format]</th>
                             <th>What's Happening?</th>
                             <th>Location</th>
+                            <th>Address</th>
                             <th style="width: 50px;"></th>
                         </tr>
                     </thead>
@@ -651,10 +675,28 @@ document.addEventListener('DOMContentLoaded', () => {
             <td><input type="text" class="mo-what-input table-input" value="${data.what || ''}" placeholder="What's happening?"></td>
             <td><input type="text" class="mo-location-input table-input" value="${data.location || ''}" placeholder="Location"></td>
             <td>
+                <div style="display: flex; gap: 0.25rem; align-items: center; width: 100%;">
+                    <input type="text" class="mo-address-input table-input" value="${data.address || ''}" placeholder="Address" style="flex: 1; min-width: 0;">
+                    <button type="button" class="btn-soft map-select-btn" title="Select Address on Google Maps" style="padding: 0.5rem; min-width: 35px; height: 38px; display: flex; align-items: center; justify-content: center;">📍</button>
+                </div>
+            </td>
+            <td>
                 <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.25rem 0.5rem; color: var(--danger); border-color: var(--danger) !important;">✖</button>
             </td>
         `;
         tbody.appendChild(tr);
+
+        const mapBtn = tr.querySelector('.map-select-btn');
+        const addrInput = tr.querySelector('.mo-address-input');
+        if (mapBtn && addrInput) {
+            mapBtn.onclick = () => {
+                if (window.openMapModal) {
+                    window.openMapModal(addrInput);
+                } else {
+                    console.error("Map modal function not ready");
+                }
+            };
+        }
     }
 
     function addTravelFlightRow(data = {}) {
@@ -744,7 +786,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="form-grid-3-col" style="margin-top: 0.75rem;">
                 <div class="form-group">
                     <label>Address</label>
-                    <input type="text" class="accom-address-input" value="${data.address || ''}" placeholder="Address">
+                    <div style="display: flex; gap: 0.25rem; align-items: center; width: 100%;">
+                        <input type="text" class="accom-address-input table-input" value="${data.address || ''}" placeholder="Address" style="flex: 1; min-width: 0;">
+                        <button type="button" class="btn-soft map-select-btn" title="Select Address on Map" style="padding: 0.5rem; min-width: 35px; height: 38px; display: flex; align-items: center; justify-content: center;">📍</button>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>From Date</label>
@@ -760,6 +805,18 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         container.appendChild(div);
+
+        const mapBtn = div.querySelector('.map-select-btn');
+        const addrInput = div.querySelector('.accom-address-input');
+        if (mapBtn && addrInput) {
+            mapBtn.onclick = () => {
+                if (window.openMapModal) {
+                    window.openMapModal(addrInput);
+                } else {
+                    console.error("Map modal function not ready");
+                }
+            };
+        }
     }
 
     function addTravelTransportBlock(data = {}) {
@@ -785,7 +842,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="text" class="trans-driver-input" value="${data.driver || ''}" placeholder="Driver Name">
                 </div>
             </div>
-            <div class="form-grid-3-col" style="margin-top: 0.75rem;">
+            <div class="form-grid-4-col" style="margin-top: 0.75rem;">
                 <div class="form-group">
                     <label>From Date</label>
                     <input type="date" class="trans-from-date-input" value="${data.from_date || ''}">
@@ -800,8 +857,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <label>From Location</label>
                     <input type="text" class="trans-from-loc-input" value="${data.from_loc || ''}" placeholder="Departure">
                 </div>
+                <div class="form-group">
+                    <label>To Location</label>
+                    <input type="text" class="trans-to-loc-input" value="${data.to_loc || ''}" placeholder="Destination">
+                </div>
             </div>
-            <div class="form-grid-3-col" style="margin-top: 0.75rem;">
+            <div class="form-grid-4-col" style="margin-top: 0.75rem;">
                 <div class="form-group">
                     <label>To Date</label>
                     <input type="date" class="trans-to-date-input" value="${data.to_date || ''}">
@@ -813,9 +874,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>From Location</label>
+                    <input type="text" class="trans-return-from-loc-input" value="${data.return_from_loc || ''}" placeholder="Departure">
+                </div>
+                <div class="form-group">
                     <label>To Location</label>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
-                        <input type="text" class="trans-to-loc-input" value="${data.to_loc || ''}" placeholder="Destination" style="flex: 1;">
+                        <input type="text" class="trans-return-to-loc-input" value="${data.return_to_loc || ''}" placeholder="Destination" style="flex: 1;">
                         <button type="button" class="btn-soft" onclick="document.getElementById('${rowId}').remove()" style="padding: 0.5rem; color: var(--danger); border-color: var(--danger) !important; min-width: 35px; height: 38px;">✖</button>
                     </div>
                 </div>
@@ -1022,6 +1087,86 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(div);
     }
 
+    function addCameraAssistantRow(name = '', surname = '') {
+        const container = document.getElementById('cameraAssistantList');
+        if (!container) return;
+        const div = document.createElement('div');
+        div.style.cssText = 'display: flex; gap: 0.5rem; width: 100%;';
+        div.innerHTML = `
+            <input type="text" name="cam_ass_name[]" value="${name}" placeholder="Name" style="flex: 1;">
+            <input type="text" name="cam_ass_surname[]" value="${surname}" placeholder="Surname" style="flex: 1;">
+            <button type="button" class="remove-btn" style="margin-top: 0; padding: 0.2rem 0.5rem; min-width: 30px;">&times;</button>
+        `;
+        div.querySelector('.remove-btn').onclick = () => div.remove();
+        container.appendChild(div);
+    }
+
+    function addPresenterRow(name = '') {
+        const container = document.getElementById('presenterList');
+        if (!container) return;
+        const div = document.createElement('div');
+        div.style.cssText = 'display: flex; flex-direction: column; gap: 0.5rem; width: 100%; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 0.5rem;';
+        
+        const standardPresenters = ['Catherine Rice', 'Claire Mawisa', 'Erin Bates', 'Govan Whittles', 'Lourensa Eckard', 'Macfarlane Moleli', 'Masa Kekana', 'Nickolaus Bauer'];
+        const isStandard = standardPresenters.includes(name);
+        const isOther = name && !isStandard;
+        
+        div.innerHTML = `
+            <div style="display: flex; gap: 0.5rem; align-items: center; width: 100%;">
+                <select class="presenter-select" style="flex: 1;">
+                    <option value="">-- Select --</option>
+                    ${standardPresenters.map(p => `<option value="${p}" ${name === p ? 'selected' : ''}>${p}</option>`).join('')}
+                    <option value="Other" ${isOther ? 'selected' : ''}>Other</option>
+                </select>
+                <button type="button" class="remove-btn" style="margin-top: 0; padding: 0.2rem 0.5rem; min-width: 30px;">&times;</button>
+            </div>
+            <div class="other-presenter-wrapper ${isOther ? '' : 'hidden'}" style="margin-top: 0.25rem;">
+                <input type="text" class="presenter-other-input" value="${isOther ? name : ''}" placeholder="Specify presenter name..." style="width: 100%;">
+            </div>
+        `;
+        
+        const select = div.querySelector('.presenter-select');
+        const otherWrapper = div.querySelector('.other-presenter-wrapper');
+        select.onchange = () => {
+            if (select.value === 'Other') {
+                otherWrapper.classList.remove('hidden');
+            } else {
+                otherWrapper.classList.add('hidden');
+            }
+        };
+        
+        div.querySelector('.remove-btn').onclick = () => div.remove();
+        container.appendChild(div);
+    }
+
+    function addDopRow(name = '', surname = '') {
+        const container = document.getElementById('dopList');
+        if (!container) return;
+        const div = document.createElement('div');
+        div.style.cssText = 'display: flex; gap: 0.5rem; width: 100%;';
+        div.innerHTML = `
+            <input type="text" name="dop_name[]" value="${name}" placeholder="Name" style="flex: 1;">
+            <input type="text" name="dop_surname[]" value="${surname}" placeholder="Surname" style="flex: 1;">
+            <button type="button" class="remove-btn" style="margin-top: 0; padding: 0.2rem 0.5rem; min-width: 30px;">&times;</button>
+        `;
+        div.querySelector('.remove-btn').onclick = () => div.remove();
+        container.appendChild(div);
+    }
+
+    function addSoundRow(name = '', surname = '') {
+        const container = document.getElementById('soundList');
+        if (!container) return;
+        const div = document.createElement('div');
+        div.style.cssText = 'display: flex; gap: 0.5rem; width: 100%;';
+        div.innerHTML = `
+            <input type="text" name="sound_name[]" value="${name}" placeholder="Name" style="flex: 1;">
+            <input type="text" name="sound_surname[]" value="${surname}" placeholder="Surname" style="flex: 1;">
+            <button type="button" class="remove-btn" style="margin-top: 0; padding: 0.2rem 0.5rem; min-width: 30px;">&times;</button>
+        `;
+        div.querySelector('.remove-btn').onclick = () => div.remove();
+        container.appendChild(div);
+    }
+
     function addCrewRow(name = '', surname = '', role = '') {
         const container = document.getElementById('crewList');
         const div = document.createElement('div');
@@ -1042,6 +1187,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addLocationBtn').onclick = () => addLocationRow();
     document.getElementById('addResearcherBtn').onclick = () => addResearcherRow();
     document.getElementById('addCameraBtn').onclick = () => addCameraRow();
+    const addCameraAssistantBtn = document.getElementById('addCameraAssistantBtn');
+    if (addCameraAssistantBtn) addCameraAssistantBtn.onclick = () => addCameraAssistantRow();
+    const addPresenterBtn = document.getElementById('addPresenterBtn');
+    if (addPresenterBtn) addPresenterBtn.onclick = () => addPresenterRow();
+    const addDopBtn = document.getElementById('addDopBtn');
+    if (addDopBtn) addDopBtn.onclick = () => addDopRow();
+    const addSoundBtn = document.getElementById('addSoundBtn');
+    if (addSoundBtn) addSoundBtn.onclick = () => addSoundRow();
     document.getElementById('addCrewBtn').onclick = () => addCrewRow();
     
     const addCsDateBtn = document.getElementById('addCsDateBtn');
@@ -1055,6 +1208,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const addEqAudioBtn = document.getElementById('addEqAudioBtn');
     if (addEqAudioBtn) addEqAudioBtn.onclick = () => addEqAudio();
+
+    const asPerDopCheckbox = document.getElementById('eq_as_per_dop');
+    if (asPerDopCheckbox) {
+        asPerDopCheckbox.addEventListener('change', (e) => {
+            toggleEqAsPerDop(e.target.checked);
+        });
+    }
 
     const addMovementOrderSectionBtn = document.getElementById('addMovementOrderSectionBtn');
     if (addMovementOrderSectionBtn) addMovementOrderSectionBtn.onclick = () => addCsMovementOrderSection();
@@ -1095,10 +1255,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Reset and Pop Crew List (presenter, producer, dop, camera assistant, others)
         const crewList = cs.crew || [];
-        const staticRoles = ['presenter', 'producer', 'dop', 'camera assistant'];
+        const consumedIndices = new Set();
         const staticRows = document.querySelectorAll('#csCrewTableBody tr');
         staticRows.forEach(row => {
-            const roleVal = row.querySelector('input[name="cs_crew_role[]"]')?.value || '';
+            const roleVal = (row.querySelector('input[name="cs_crew_role[]"]')?.value || '').toLowerCase();
             const nameInp = row.querySelector('input[name="cs_crew_name[]"]');
             const surnameInp = row.querySelector('input[name="cs_crew_surname[]"]');
             const phoneInp = row.querySelector('input[name="cs_crew_phone[]"]');
@@ -1106,8 +1266,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (surnameInp) surnameInp.value = '';
             if (phoneInp) phoneInp.value = '';
 
-            const match = crewList.find(m => (m.role || '').toLowerCase() === roleVal.toLowerCase());
-            if (match) {
+            const matchIdx = crewList.findIndex((m, idx) => !consumedIndices.has(idx) && (m.role || '').toLowerCase() === roleVal);
+            if (matchIdx !== -1) {
+                consumedIndices.add(matchIdx);
+                const match = crewList[matchIdx];
                 if (nameInp) nameInp.value = match.name || '';
                 if (surnameInp) surnameInp.value = match.surname || '';
                 if (phoneInp) phoneInp.value = match.phone || '';
@@ -1118,8 +1280,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const oldCrewRows = Array.from(document.querySelectorAll('#csCrewTableBody tr')).slice(4);
         oldCrewRows.forEach(row => row.remove());
 
-        crewList.forEach(m => {
-            if (!staticRoles.includes((m.role || '').toLowerCase())) {
+        crewList.forEach((m, idx) => {
+            if (!consumedIndices.has(idx)) {
                 addCsOtherCrewRow(m.role, m.name, m.surname || '', m.phone);
             }
         });
@@ -1150,6 +1312,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Equipment
         const eq = cs.equipment || {};
+        const asPerDop = eq.as_per_dop || false;
+        const asPerDopCheckbox = document.getElementById('eq_as_per_dop');
+        if (asPerDopCheckbox) {
+            asPerDopCheckbox.checked = asPerDop;
+            toggleEqAsPerDop(asPerDop);
+        }
         const camerasContainer = document.getElementById('cs_cameras_table_body');
         if (camerasContainer) {
             camerasContainer.innerHTML = '';
@@ -1434,15 +1602,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     form.submitBtn.textContent = 'Update Details';
                     
                     if (sub.details) {
-                        const standardPresenters = ['Catherine Rice', 'Claire Mawisa', 'Erin Bates', 'Govan Whittles', 'Lourensa Eckard', 'Macfarlane Moleli', 'Masa Kekana', 'Nickolaus Bauer'];
-                        if (sub.details.presenter) {
-                            if (standardPresenters.includes(sub.details.presenter)) {
-                                form.presenter.value = sub.details.presenter;
-                                otherPresenterWrapper.classList.add('hidden');
+                        // Populate Presenter(s)
+                        const presenterList = document.getElementById('presenterList');
+                        if (presenterList) {
+                            presenterList.innerHTML = '';
+                            const pVal = sub.details.presenter;
+                            let pArr = [];
+                            if (Array.isArray(pVal)) {
+                                pArr = pVal;
+                            } else if (typeof pVal === 'string' && pVal.trim() !== '') {
+                                pArr = [pVal];
+                            } else if (pVal && pVal.name) {
+                                pArr = [`${pVal.name} ${pVal.surname || ''}`.trim()];
+                            }
+                            
+                            if (pArr.length === 0) {
+                                addPresenterRow();
                             } else {
-                                form.presenter.value = 'Other';
-                                otherPresenterInput.value = sub.details.presenter;
-                                otherPresenterWrapper.classList.remove('hidden');
+                                pArr.forEach(p => addPresenterRow(p));
                             }
                         }
                         
@@ -1493,9 +1670,67 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         };
 
-                        setSplitField('camera_assistant', sub.details.camera_assistant);
-                        setSplitField('dop', sub.details.dop);
-                        setSplitField('sound', sub.details.sound);
+                        // Populate Camera Assistant(s)
+                        const camAssList = document.getElementById('cameraAssistantList');
+                        if (camAssList) {
+                            camAssList.innerHTML = '';
+                            const camAssVal = sub.details.camera_assistant;
+                            let camAssArr = [];
+                            if (Array.isArray(camAssVal)) {
+                                camAssArr = camAssVal;
+                            } else if (camAssVal && (camAssVal.name || camAssVal.surname)) {
+                                camAssArr = [camAssVal];
+                            } else if (typeof camAssVal === 'string' && camAssVal.trim() !== '') {
+                                camAssArr = [{ name: camAssVal.trim(), surname: '' }];
+                            }
+                            
+                            if (camAssArr.length === 0) {
+                                addCameraAssistantRow();
+                            } else {
+                                camAssArr.forEach(ca => addCameraAssistantRow(ca.name || '', ca.surname || ''));
+                            }
+                        }
+                        // Populate DOP(s)
+                        const dopList = document.getElementById('dopList');
+                        if (dopList) {
+                            dopList.innerHTML = '';
+                            const dopVal = sub.details.dop;
+                            let dopArr = [];
+                            if (Array.isArray(dopVal)) {
+                                dopArr = dopVal;
+                            } else if (dopVal && (dopVal.name || dopVal.surname)) {
+                                dopArr = [dopVal];
+                            } else if (typeof dopVal === 'string' && dopVal.trim() !== '') {
+                                dopArr = [{ name: dopVal.trim(), surname: '' }];
+                            }
+                            
+                            if (dopArr.length === 0) {
+                                addDopRow();
+                            } else {
+                                dopArr.forEach(d => addDopRow(d.name || '', d.surname || ''));
+                            }
+                        }
+
+                        // Populate Sound
+                        const soundList = document.getElementById('soundList');
+                        if (soundList) {
+                            soundList.innerHTML = '';
+                            const soundVal = sub.details.sound;
+                            let soundArr = [];
+                            if (Array.isArray(soundVal)) {
+                                soundArr = soundVal;
+                            } else if (soundVal && (soundVal.name || soundVal.surname)) {
+                                soundArr = [soundVal];
+                            } else if (typeof soundVal === 'string' && soundVal.trim() !== '') {
+                                soundArr = [{ name: soundVal.trim(), surname: '' }];
+                            }
+                            
+                            if (soundArr.length === 0) {
+                                addSoundRow();
+                            } else {
+                                soundArr.forEach(s => addSoundRow(s.name || '', s.surname || ''));
+                            }
+                        }
                         setSplitField('offline_editor', sub.details.offline_editor);
                         setSplitField('online_editor', sub.details.online_editor);
                         setSplitField('audio_final_mix', sub.details.audio_final_mix);
@@ -1517,8 +1752,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     populateCallSheetData(sub);
 
                     // Always ensure at least one row exists if empty after loading
+                    if (document.getElementById('presenterList') && document.getElementById('presenterList').children.length === 0) addPresenterRow();
                     if (document.getElementById('researcherList').children.length === 0) addResearcherRow();
                     if (document.getElementById('cameraList').children.length === 0) addCameraRow();
+                    if (document.getElementById('cameraAssistantList') && document.getElementById('cameraAssistantList').children.length === 0) addCameraAssistantRow();
+                    if (document.getElementById('dopList') && document.getElementById('dopList').children.length === 0) addDopRow();
+                    if (document.getElementById('soundList') && document.getElementById('soundList').children.length === 0) addSoundRow();
                     if (document.getElementById('crewList').children.length === 0) addCrewRow();
                 }
             } else {
@@ -1575,12 +1814,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     return {
                         time: row.querySelector('.mo-time-input')?.value || '',
                         what: row.querySelector('.mo-what-input')?.value || '',
-                        location: row.querySelector('.mo-location-input')?.value || ''
+                        location: row.querySelector('.mo-location-input')?.value || '',
+                        address: row.querySelector('.mo-address-input')?.value || ''
                     };
-                }).filter(item => item.time || item.what || item.location);
+                }).filter(item => item.time || item.what || item.location || item.address);
                 return { shootDay, shootDate, items };
             }),
             equipment: {
+                as_per_dop: document.getElementById('eq_as_per_dop')?.checked || false,
                 cameras: Array.from(document.querySelectorAll('#cs_cameras_table_body tr')).map(row => ({
                     type: row.querySelector('.eq-camera-type')?.value || '',
                     desc: row.querySelector('.eq-camera-desc')?.value || ''
@@ -1632,8 +1873,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     from_time: block.querySelector('.trans-from-time-input')?.value || '',
                     to_time: block.querySelector('.trans-to-time-input')?.value || '',
                     from_loc: block.querySelector('.trans-from-loc-input')?.value || '',
-                    to_loc: block.querySelector('.trans-to-loc-input')?.value || ''
-                })).filter(t => t.name || t.surname || t.driver || t.from_loc || t.to_loc),
+                    to_loc: block.querySelector('.trans-to-loc-input')?.value || '',
+                    return_from_loc: block.querySelector('.trans-return-from-loc-input')?.value || '',
+                    return_to_loc: block.querySelector('.trans-return-to-loc-input')?.value || ''
+                })).filter(t => t.name || t.surname || t.driver || t.from_loc || t.to_loc || t.return_from_loc || t.return_to_loc),
                 trans_file_path: document.getElementById('travel_trans_file_path')?.value || '',
                 trans_filename: document.getElementById('travel_trans_filename')?.value || ''
             }
@@ -1866,10 +2109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const formData = new FormData(form);
-            let finalPresenter = formData.get('presenter');
-            if (finalPresenter === 'Other') {
-                finalPresenter = formData.get('otherPresenter');
-            }
+            // Presenter forms retrieved dynamically
 
             const data = getProposalData();
             
@@ -1877,7 +2117,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 ...data,
                 id: proposalId,
                 details: {
-                    presenter: finalPresenter,
+                presenter: Array.from(document.querySelectorAll('#presenterList > div')).map(div => {
+                        const select = div.querySelector('.presenter-select');
+                        if (select) {
+                            if (select.value === 'Other') {
+                                const input = div.querySelector('.presenter-other-input');
+                                return input ? input.value.trim() : '';
+                            }
+                            return select.value.trim();
+                        }
+                        return '';
+                    }).filter(p => p !== ''),
                     researcher: formData.getAll('res_name[]').map((name, i) => ({
                         name: name.trim(),
                         surname: formData.getAll('res_surname[]')[i]?.trim() || ''
@@ -1886,9 +2136,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         name: name.trim(),
                         surname: formData.getAll('cam_surname[]')[i]?.trim() || ''
                     })).filter(c => c.name !== '' || c.surname !== ''),
-                    camera_assistant: { name: formData.get('camera_assistant_name'), surname: formData.get('camera_assistant_surname') },
-                    dop: { name: formData.get('dop_name'), surname: formData.get('dop_surname') },
-                    sound: { name: formData.get('sound_name'), surname: formData.get('sound_surname') },
+                    camera_assistant: formData.getAll('cam_ass_name[]').map((name, i) => ({
+                        name: name.trim(),
+                        surname: formData.getAll('cam_ass_surname[]')[i]?.trim() || ''
+                    })).filter(ca => ca.name !== '' || ca.surname !== ''),
+                    dop: formData.getAll('dop_name[]').map((name, i) => ({
+                        name: name.trim(),
+                        surname: formData.getAll('dop_surname[]')[i]?.trim() || ''
+                    })).filter(d => d.name !== '' || d.surname !== ''),
+                    sound: formData.getAll('sound_name[]').map((name, i) => ({
+                        name: name.trim(),
+                        surname: formData.getAll('sound_surname[]')[i]?.trim() || ''
+                    })).filter(s => s.name !== '' || s.surname !== ''),
                     offline_editor: { name: formData.get('offline_editor_name'), surname: formData.get('offline_editor_surname') },
                     online_editor: { name: formData.get('online_editor_name'), surname: formData.get('online_editor_surname') },
                     audio_final_mix: { name: formData.get('audio_final_mix_name'), surname: formData.get('audio_final_mix_surname') },
@@ -1900,6 +2159,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     callSheet: gatherCallSheetData()
                 }
             };
+
+            if (!isSaveDraft && isCsActive) {
+                const tempProposal = {
+                    ...window.currentProposal,
+                    story_title: payload.story_title,
+                    details: {
+                        ...(window.currentProposal?.details || {}),
+                        ...payload.details
+                    }
+                };
+                try {
+                    const doc = await window.buildCallSheetPDFDocument(tempProposal);
+                    const pdfDataUri = doc.output('datauristring');
+                    payload.callSheetPdfB64 = pdfDataUri.split(',')[1];
+                    payload.isSubmitCallSheet = true;
+                } catch (pdfErr) {
+                    console.error("Error generating Call Sheet PDF:", pdfErr);
+                }
+            }
+
             const response = await fetchWithAuth('/api/update-proposal-details', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1907,6 +2186,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const result = await response.json();
             if (result.success) {
+                if (window.currentProposal) {
+                    window.currentProposal.details = {
+                        ...(window.currentProposal.details || {}),
+                        ...payload.details
+                    };
+                }
                 const dialog = document.getElementById('successDialog');
                 const dTitle = dialog.querySelector('.dialog-title');
                 const dMsg = dialog.querySelector('.dialog-message');
@@ -2259,11 +2544,12 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             const fields = [
-                { label: 'Presenter', value: d.presenter },
+                { label: 'Presenter(s)', value: formatArray(d.presenter) },
                 { label: 'Researcher(s)', value: formatArray(d.researcher) },
                 { label: 'Camera(s)', value: formatArray(d.camera) },
-                { label: 'DOP', value: getName(d.dop) },
-                { label: 'Sound', value: getName(d.sound) },
+                { label: 'Camera Assistant(s)', value: formatArray(d.camera_assistant) },
+                { label: 'DOP(s)', value: formatArray(d.dop) },
+                { label: 'Sound(s)', value: formatArray(d.sound) },
                 { label: 'Offline Editor', value: getName(d.offline_editor) },
                 { label: 'Online Editor', value: getName(d.online_editor) },
                 { label: 'Audio Final Mix', value: getName(d.audio_final_mix) }
@@ -3146,7 +3432,9 @@ window.downloadFinalScriptPDF = async (id) => {
         const link = document.createElement('a');
         link.href = url;
         link.download = `Final_Script_${sub.commissionNumber || id}_${Date.now()}.pdf`;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
         URL.revokeObjectURL(url);
         if (loadingOverlay) loadingOverlay.classList.remove('active');
     } catch (err) {
@@ -3171,7 +3459,9 @@ window.downloadCallSheetFile = async (id, path, filename) => {
         const a = document.createElement('a');
         a.href = url;
         a.download = filename;
+        document.body.appendChild(a);
         a.click();
+        document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
     } catch (err) {
         alert('Download failed: ' + err.message);
@@ -3286,6 +3576,7 @@ function renderCallSheetReport(sub) {
                         <th style="text-align: left; padding: 0.5rem; width: 150px;">Time</th>
                         <th style="text-align: left; padding: 0.5rem;">What's Happening?</th>
                         <th style="text-align: left; padding: 0.5rem;">Location</th>
+                        <th style="text-align: left; padding: 0.5rem;">Address</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -3294,8 +3585,9 @@ function renderCallSheetReport(sub) {
                             <td style="padding: 0.75rem 0.5rem; font-weight: 600;">${r.time}</td>
                             <td style="padding: 0.75rem 0.5rem;">${r.what}</td>
                             <td style="padding: 0.75rem 0.5rem;">${r.location}</td>
+                            <td style="padding: 0.75rem 0.5rem;">${r.address || '—'}</td>
                         </tr>
-                    `).join('') : `<tr><td colspan="3" style="padding: 1rem; text-align: center; color: var(--text-muted);">No movement items recorded.</td></tr>`}
+                    `).join('') : `<tr><td colspan="4" style="padding: 1rem; text-align: center; color: var(--text-muted);">No movement items recorded.</td></tr>`}
                 </tbody>
             </table>
         </div>
@@ -3331,15 +3623,17 @@ function renderCallSheetReport(sub) {
                 <div><span style="color: var(--text-muted); display: block;">Driver</span><b>${trBlock.driver || '—'}</b></div>
                 <div></div>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; border-top: 1px dotted var(--border); padding-top: 0.5rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1.2fr 1.2fr; gap: 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; border-top: 1px dotted var(--border); padding-top: 0.5rem;">
                 <div><span style="color: var(--text-muted); display: block;">From Date</span><b>${trBlock.from_date || '—'}</b></div>
                 <div><span style="color: var(--text-muted); display: block;">From Time</span><b>${trBlock.from_time || '—'}</b></div>
                 <div><span style="color: var(--text-muted); display: block;">From Location</span><b>${trBlock.from_loc || '—'}</b></div>
+                <div><span style="color: var(--text-muted); display: block;">To Location</span><b>${trBlock.to_loc || '—'}</b></div>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; font-size: 0.85rem; border-top: 1px dotted var(--border); padding-top: 0.5rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1.2fr 1.2fr; gap: 0.75rem; font-size: 0.85rem; border-top: 1px dotted var(--border); padding-top: 0.5rem;">
                 <div><span style="color: var(--text-muted); display: block;">To Date</span><b>${trBlock.to_date || '—'}</b></div>
                 <div><span style="color: var(--text-muted); display: block;">To Time</span><b>${trBlock.to_time || '—'}</b></div>
-                <div><span style="color: var(--text-muted); display: block;">To Location</span><b>${trBlock.to_loc || '—'}</b></div>
+                <div><span style="color: var(--text-muted); display: block;">From Location</span><b>${trBlock.return_from_loc || '—'}</b></div>
+                <div><span style="color: var(--text-muted); display: block;">To Location</span><b>${trBlock.return_to_loc || '—'}</b></div>
             </div>
         </div>
     `).join('');
@@ -3402,28 +3696,34 @@ function renderCallSheetReport(sub) {
             <!-- SECTION 4: EQUIPMENT -->
             <div style="margin-bottom: 3rem;">
                 <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Equipment</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-size: 0.9rem;">
-                    <div>
-                        <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Camera Equipment</span>
-                        <div style="font-weight: 600; line-height: 1.4;">
-                            ${(eq.cameras && eq.cameras.length > 0)
-                              ? eq.cameras.map(c => `• ${c.type || '—'}: ${c.desc || '—'}`).join('<br>')
-                              : `• ${eq.camera_type || '—'}: ${eq.camera_desc || '—'}`}
-                        </div>
+                ${eq.as_per_dop ? `
+                    <div style="font-weight: 700; font-size: 1.05rem; color: var(--success); padding: 1.25rem; border: 1px dashed rgba(16, 185, 129, 0.4); border-radius: 8px; background: rgba(16, 185, 129, 0.05); display: flex; align-items: center; gap: 0.5rem;">
+                        🎬 As Per the DOP and supporting crew
                     </div>
-                    <div>
-                        <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Audio Equipment</span>
-                        <div style="font-weight: 600; line-height: 1.4;">
-                            ${(eq.audios && eq.audios.length > 0)
-                              ? eq.audios.map(a => `• ${a.type || '—'}: ${a.desc || '—'}`).join('<br>')
-                              : `• ${eq.audio_type || '—'}: ${eq.audio_desc || '—'}`}
+                ` : `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-size: 0.9rem;">
+                        <div>
+                            <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Camera Equipment</span>
+                            <div style="font-weight: 600; line-height: 1.4;">
+                                ${(eq.cameras && eq.cameras.length > 0)
+                                  ? eq.cameras.map(c => `• ${c.type || '—'}: ${c.desc || '—'}`).join('<br>')
+                                  : `• ${eq.camera_type || '—'}: ${eq.camera_desc || '—'}`}
+                            </div>
                         </div>
+                        <div>
+                            <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Audio Equipment</span>
+                            <div style="font-weight: 600; line-height: 1.4;">
+                                ${(eq.audios && eq.audios.length > 0)
+                                  ? eq.audios.map(a => `• ${a.type || '—'}: ${a.desc || '—'}`).join('<br>')
+                                  : `• ${eq.audio_type || '—'}: ${eq.audio_desc || '—'}`}
+                            </div>
+                        </div>
+                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Lenses</span><span style="font-weight: 600;">${eq.lenses_desc || '—'}</span></div>
+                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Lighting Kit</span><span style="font-weight: 600;">${eq.lighting_desc || '—'}</span></div>
+                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Rigs</span><span style="font-weight: 600;">${eq.rigs_desc || '—'}</span></div>
+                        <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Other Equipment</span><span style="font-weight: 600;">${eq.other_desc || '—'}</span></div>
                     </div>
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Lenses</span><span style="font-weight: 600;">${eq.lenses_desc || '—'}</span></div>
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Lighting Kit</span><span style="font-weight: 600;">${eq.lighting_desc || '—'}</span></div>
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Rigs</span><span style="font-weight: 600;">${eq.rigs_desc || '—'}</span></div>
-                    <div><span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Other Equipment</span><span style="font-weight: 600;">${eq.other_desc || '—'}</span></div>
-                </div>
+                `}
             </div>
 
             <!-- SECTION 5: TRAVEL AND VEHICLES -->
@@ -3496,49 +3796,35 @@ function renderCallSheetReport(sub) {
     `;
 }
 
-window.downloadCallSheetPDF = async () => {
-    const sub = window.currentProposal;
-    if (!sub) {
-        alert("No proposal data loaded.");
-        return;
-    }
-    const cs = (sub.details && sub.details.callSheet) || {};
-
+window.buildCallSheetPDFDocument = async (sub) => {
+    try {
+        const cs = (sub.details && sub.details.callSheet) || {};
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
     const pageWidth = doc.internal.pageSize.getWidth();
-    const loadingOverlay = document.getElementById('loadingOverlay');
+    const margin = 15;
+    let currentY = 15;
 
-    if (loadingOverlay) {
-        loadingOverlay.classList.add('active');
-        document.getElementById('loadingHeading').textContent = 'Generating PDF';
-        document.getElementById('loadingSubtext').textContent = 'Please wait while we prepare your Call Sheet PDF...';
+    // Branding Logos
+    if (typeof CAP_LOGO_B64 !== 'undefined' && CAP_LOGO_B64) {
+        const props = doc.getImageProperties(CAP_LOGO_B64);
+        const caWidth = 40;
+        const caHeight = caWidth * (props.height / props.width);
+        doc.addImage(CAP_LOGO_B64, 'PNG', margin, currentY, caWidth, caHeight);
     }
+    if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
+        const props = doc.getImageProperties(CB_LOGO_B64);
+        const cbWidth = 25;
+        const cbHeight = cbWidth * (props.height / props.width);
+        doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, currentY, cbWidth, cbHeight);
+    }
+    currentY = 42;
 
-    try {
-        const margin = 15;
-        let currentY = 15;
-
-        // Branding Logos
-        if (typeof CAP_LOGO_B64 !== 'undefined' && CAP_LOGO_B64) {
-            const props = doc.getImageProperties(CAP_LOGO_B64);
-            const caWidth = 40;
-            const caHeight = caWidth * (props.height / props.width);
-            doc.addImage(CAP_LOGO_B64, 'PNG', margin, currentY, caWidth, caHeight);
-        }
-        if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
-            const props = doc.getImageProperties(CB_LOGO_B64);
-            const cbWidth = 25;
-            const cbHeight = cbWidth * (props.height / props.width);
-            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, currentY, cbWidth, cbHeight);
-        }
-        currentY = 42;
-
-        doc.setFontSize(22);
-        doc.setTextColor(16, 185, 129); // Green accent
-        doc.setFont('helvetica', 'bold');
-        doc.text('CALL SHEET', pageWidth / 2, currentY, { align: 'center' });
-        currentY += 10;
+    doc.setFontSize(22);
+    doc.setTextColor(16, 185, 129); // Green accent
+    doc.setFont('helvetica', 'bold');
+    doc.text('CALL SHEET', pageWidth / 2, currentY, { align: 'center' });
+    currentY += 10;
 
         // Core details table
         const metadata = [
@@ -3563,9 +3849,15 @@ window.downloadCallSheetPDF = async () => {
         doc.text('CREW DETAILS', margin, currentY);
         currentY += 6;
 
-        const crewData = (cs.crew || []).map(m => [m.role || '—', m.name || '—', m.phone || '—']);
-        if (cs.security && (cs.security.name || cs.security.phone)) {
-            crewData.push(['Security (Optional)', cs.security.name || '—', cs.security.phone || '—']);
+        const crewData = (cs.crew || []).map(m => [
+            m.role || '—', 
+            `${m.name || ''} ${m.surname || ''}`.trim() || '—', 
+            m.phone || '—'
+        ]);
+        if (cs.security && (cs.security.name || cs.security.surname || cs.security.phone)) {
+            const secName = `${cs.security.name || ''} ${cs.security.surname || ''}`.trim() || '—';
+            const companyText = cs.security.company ? ` (${cs.security.company})` : '';
+            crewData.push([`Security${companyText}`, secName, cs.security.phone || '—']);
         }
         doc.autoTable({
             startY: currentY,
@@ -3600,11 +3892,11 @@ window.downloadCallSheetPDF = async () => {
                 doc.setFont('helvetica', 'bold');
                 doc.text(`MOVEMENT ORDER SECTION #${idx + 1} (Shoot Day: ${sec.shootDay || '—'}, Date: ${sec.shootDate || '—'})`, margin, currentY);
                 currentY += 6;
-                const moData = (sec.items || []).map(r => [r.time || '', r.what || '', r.location || '']);
+                const moData = (sec.items || []).map(r => [r.time || '', r.what || '', r.location || '', r.address || '']);
                 doc.autoTable({
                     startY: currentY,
-                    head: [['Time', 'What\'s Happening?', 'Location']],
-                    body: moData.length > 0 ? moData : [['—', 'No movement slots scheduled.', '—']],
+                    head: [['Time', 'What\'s Happening?', 'Location', 'Address']],
+                    body: moData.length > 0 ? moData : [['—', 'No movement slots scheduled.', '—', '—']],
                     theme: 'striped',
                     headStyles: { fillColor: [16, 185, 129], textColor: 255 },
                     styles: { fontSize: 9, cellPadding: 2.5 },
@@ -3624,24 +3916,28 @@ window.downloadCallSheetPDF = async () => {
         currentY += 6;
         const eq = cs.equipment || {};
         const kitData = [];
-        if (eq.cameras && eq.cameras.length > 0) {
-            eq.cameras.forEach((c, idx) => {
-                kitData.push([idx === 0 ? 'Camera Equipment' : '', `${c.type || '—'}: ${c.desc || '—'}`]);
-            });
+        if (eq.as_per_dop) {
+            kitData.push(['Equipment details', 'As Per the DOP and supporting crew']);
         } else {
-            kitData.push([`Camera (${eq.camera_type || '—'})`, eq.camera_desc || '—']);
+            if (eq.cameras && eq.cameras.length > 0) {
+                eq.cameras.forEach((c, idx) => {
+                    kitData.push([idx === 0 ? 'Camera Equipment' : '', `${c.type || '—'}: ${c.desc || '—'}`]);
+                });
+            } else {
+                kitData.push([`Camera (${eq.camera_type || '—'})`, eq.camera_desc || '—']);
+            }
+            if (eq.audios && eq.audios.length > 0) {
+                eq.audios.forEach((a, idx) => {
+                    kitData.push([idx === 0 ? 'Audio/Sound Equipment' : '', `${a.type || '—'}: ${a.desc || '—'}`]);
+                });
+            } else {
+                kitData.push([`Audio (${eq.audio_type || '—'})`, eq.audio_desc || '—']);
+            }
+            kitData.push(['Lenses', eq.lenses_desc || '—']);
+            kitData.push(['Lighting Kit', eq.lighting_desc || '—']);
+            kitData.push(['Rigs', eq.rigs_desc || '—']);
+            kitData.push(['Other', eq.other_desc || '—']);
         }
-        if (eq.audios && eq.audios.length > 0) {
-            eq.audios.forEach((a, idx) => {
-                kitData.push([idx === 0 ? 'Audio/Sound Equipment' : '', `${a.type || '—'}: ${a.desc || '—'}`]);
-            });
-        } else {
-            kitData.push([`Audio (${eq.audio_type || '—'})`, eq.audio_desc || '—']);
-        }
-        kitData.push(['Lenses', eq.lenses_desc || '—']);
-        kitData.push(['Lighting Kit', eq.lighting_desc || '—']);
-        kitData.push(['Rigs', eq.rigs_desc || '—']);
-        kitData.push(['Other', eq.other_desc || '—']);
         doc.autoTable({
             startY: currentY,
             body: kitData,
@@ -3720,13 +4016,12 @@ window.downloadCallSheetPDF = async () => {
             const transportDataRows = travel.transports.map(t => [
                 `${t.name || ''} ${t.surname || ''}`.trim(),
                 t.driver || '—',
-                `From ${t.from_loc || '—'} to ${t.to_loc || '—'}`,
-                `${t.from_date || '—'} to ${t.to_date || '—'}`,
-                `${t.from_time || '—'} to ${t.to_time || '—'}`
+                `Outbound: ${t.from_loc || '—'} -> ${t.to_loc || '—'}\nReturn: ${t.return_from_loc || '—'} -> ${t.return_to_loc || '—'}`,
+                `Outbound: ${t.from_date || '—'} @ ${t.from_time || '—'}\nReturn: ${t.to_date || '—'} @ ${t.to_time || '—'}`
             ]);
             doc.autoTable({
                 startY: currentY,
-                head: [['Passenger', 'Driver', 'Route', 'Dates', 'Times']],
+                head: [['Passenger', 'Driver', 'Route Details', 'Schedule (Date & Time)']],
                 body: transportDataRows,
                 theme: 'striped',
                 headStyles: { fillColor: [16, 185, 129], textColor: 255 },
@@ -3736,17 +4031,40 @@ window.downloadCallSheetPDF = async () => {
             currentY = doc.lastAutoTable.finalY + 6;
         }
 
+        return doc;
+    } catch (err) {
+        console.error('Call Sheet PDF generation failed:', err);
+        throw err;
+    }
+};
+
+window.downloadCallSheetPDF = async () => {
+    const sub = window.currentProposal;
+    if (!sub) {
+        alert("No proposal data loaded.");
+        return;
+    }
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) {
+        loadingOverlay.classList.add('active');
+        document.getElementById('loadingHeading').textContent = 'Generating PDF';
+        document.getElementById('loadingSubtext').textContent = 'Please wait while we prepare your Call Sheet PDF...';
+    }
+    try {
+        const doc = await window.buildCallSheetPDFDocument(sub);
         const blob = doc.output('blob');
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
         link.download = `Call_Sheet_${sub.commissionNumber || sub.id}_${Date.now()}.pdf`;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
         URL.revokeObjectURL(url);
         if (loadingOverlay) loadingOverlay.classList.remove('active');
     } catch (err) {
-        console.error('Call Sheet PDF generation failed:', err);
-        alert('Failed to generate Call Sheet PDF.');
+        console.error('Failed to download Call Sheet PDF:', err);
+        alert('Failed to generate and download Call sheet PDF.');
         if (loadingOverlay) loadingOverlay.classList.remove('active');
     }
 };
@@ -3976,7 +4294,9 @@ window.downloadProposalPDF = async () => {
         const link = document.createElement('a');
         link.href = url;
         link.download = `Story_Proposal_${sub.commissionNumber || sub.id}_${Date.now()}.pdf`;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
         URL.revokeObjectURL(url);
         if (loadingOverlay) loadingOverlay.classList.remove('active');
     } catch (err) {
@@ -3984,5 +4304,197 @@ window.downloadProposalPDF = async () => {
         alert('Failed to generate simplified PDF. Please try again.');
         if (loadingOverlay) loadingOverlay.classList.remove('active');
     }
+};
+
+// --- GOOGLE MAPS INTEGRATION FOR CALL SHEET ADDRESS SELECT ---
+let map = null;
+let marker = null;
+let autocomplete = null;
+let geocoder = null;
+let activeAddressInput = null;
+let leafletMap = null;
+let leafletMarker = null;
+let debounceTimer = null;
+
+function initLeafletMap() {
+    if (leafletMap) return;
+    const defaultPos = [-26.2041, 28.0473]; // Johannesburg default
+    leafletMap = L.map('csMapContainer').setView(defaultPos, 12);
+    
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
+    }).addTo(leafletMap);
+    
+    leafletMarker = L.marker(defaultPos, { draggable: true }).addTo(leafletMap);
+    
+    leafletMarker.on('dragend', () => {
+        const latLng = leafletMarker.getLatLng();
+        reverseGeocodeNominatim(latLng.lat, latLng.lng);
+    });
+    
+    leafletMap.on('click', (e) => {
+        const latLng = e.latlng;
+        setLeafletMarkerPosition([latLng.lat, latLng.lng]);
+        reverseGeocodeNominatim(latLng.lat, latLng.lng);
+    });
+}
+
+function setLeafletMarkerPosition(pos) {
+    if (leafletMarker) {
+        leafletMarker.setLatLng(pos);
+    }
+}
+
+function geocodeAddressNominatim(address) {
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`)
+        .then(res => res.json())
+        .then(data => {
+            if (data && data.length > 0) {
+                const lat = parseFloat(data[0].lat);
+                const lon = parseFloat(data[0].lon);
+                const pos = [lat, lon];
+                leafletMap.setView(pos, 16);
+                setLeafletMarkerPosition(pos);
+                document.getElementById('csMapSelectedAddress').value = data[0].display_name;
+            }
+        })
+        .catch(err => {
+            console.error("Nominatim geocoding error:", err);
+        });
+}
+
+function reverseGeocodeNominatim(lat, lon) {
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data && data.display_name) {
+                document.getElementById('csMapSelectedAddress').value = data.display_name;
+                document.getElementById('csMapSearchInput').value = data.display_name;
+            } else {
+                document.getElementById('csMapSelectedAddress').value = `${lat}, ${lon}`;
+            }
+        })
+        .catch(err => {
+            console.error("Nominatim reverse geocode error:", err);
+            document.getElementById('csMapSelectedAddress').value = `${lat}, ${lon}`;
+        });
+}
+
+// Search Suggestions dropdown logic
+const searchInput = document.getElementById('csMapSearchInput');
+const suggestionsContainer = document.getElementById('csMapSuggestions');
+
+if (searchInput && suggestionsContainer) {
+    searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        const query = searchInput.value.trim();
+        if (!query) {
+            suggestionsContainer.style.display = 'none';
+            return;
+        }
+        debounceTimer = setTimeout(() => {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`)
+                .then(res => res.json())
+                .then(data => {
+                    suggestionsContainer.innerHTML = '';
+                    if (data && data.length > 0) {
+                        suggestionsContainer.style.display = 'block';
+                        data.forEach(item => {
+                            const div = document.createElement('div');
+                            div.style.padding = '0.75rem';
+                            div.style.cursor = 'pointer';
+                            div.style.borderBottom = '1px solid var(--border)';
+                            div.style.color = 'var(--text-main)';
+                            div.style.fontSize = '0.85rem';
+                            div.innerText = item.display_name;
+                            div.addEventListener('mouseenter', () => {
+                                div.style.background = 'rgba(255, 255, 255, 0.05)';
+                            });
+                            div.addEventListener('mouseleave', () => {
+                                div.style.background = 'none';
+                            });
+                            div.addEventListener('click', () => {
+                                const lat = parseFloat(item.lat);
+                                const lon = parseFloat(item.lon);
+                                const pos = [lat, lon];
+                                leafletMap.setView(pos, 16);
+                                setLeafletMarkerPosition(pos);
+                                
+                                document.getElementById('csMapSelectedAddress').value = item.display_name;
+                                searchInput.value = item.display_name;
+                                suggestionsContainer.style.display = 'none';
+                            });
+                            suggestionsContainer.appendChild(div);
+                        });
+                    } else {
+                        suggestionsContainer.style.display = 'none';
+                    }
+                })
+                .catch(err => {
+                    console.error("Nominatim search error:", err);
+                });
+        }, 300);
+    });
+
+    // Close suggestions dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (e.target !== searchInput && e.target !== suggestionsContainer) {
+            suggestionsContainer.style.display = 'none';
+        }
+    });
+}
+
+window.openMapModal = function(inputElement) {
+    activeAddressInput = inputElement;
+    const currentAddr = inputElement.value || '';
+    
+    document.getElementById('csMapSelectedAddress').value = currentAddr;
+    document.getElementById('csMapSearchInput').value = currentAddr;
+    
+    const modal = document.getElementById('csMapModal');
+    modal.classList.add('active');
+    
+    initLeafletMap();
+    
+    setTimeout(() => {
+        if (leafletMap) {
+            leafletMap.invalidateSize();
+            if (currentAddr) {
+                geocodeAddressNominatim(currentAddr);
+            } else {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition((pos) => {
+                        const userPos = [pos.coords.latitude, pos.coords.longitude];
+                        leafletMap.setView(userPos, 14);
+                        setLeafletMarkerPosition(userPos);
+                    }, () => {
+                        const defaultPos = [-26.2041, 28.0473];
+                        leafletMap.setView(defaultPos, 12);
+                        setLeafletMarkerPosition(defaultPos);
+                    });
+                } else {
+                    const defaultPos = [-26.2041, 28.0473];
+                    leafletMap.setView(defaultPos, 12);
+                    setLeafletMarkerPosition(defaultPos);
+                }
+            }
+        }
+    }, 200);
+};
+
+function closeMapModal() {
+    document.getElementById('csMapModal').classList.remove('active');
+}
+
+document.getElementById('csMapModalCloseBtn').onclick = closeMapModal;
+document.getElementById('csMapModalCancelBtn').onclick = closeMapModal;
+document.getElementById('csMapModalConfirmBtn').onclick = () => {
+    if (activeAddressInput) {
+        activeAddressInput.value = document.getElementById('csMapSelectedAddress').value;
+        activeAddressInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    closeMapModal();
 };
 });

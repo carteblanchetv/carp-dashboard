@@ -376,7 +376,7 @@ export function checkAuth(redirectIfNotLogged = true) {
                                 const currentTarget = getMasqueradeTarget();
                                 if (currentTarget && isLezanne && (currentTarget.viewMode || 'user') === 'user') {
                                     user.displayDisplayName = currentTarget.name;
-                                    user.displayRole = currentRole;
+                                    user.displayRole = currentTarget.role;
                                 } else {
                                     user.displayDisplayName = user.displayName;
                                 }

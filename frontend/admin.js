@@ -10,12 +10,13 @@ let globalProposals = [];
 let globalSubmissions = null;
 let activeProducerFilter = null;
 let activeTxDateFilter = null;
-let limits = {
-    pending: 10,
-    commissioned: 10,
-    paid: 10,
-    decommissioned: 10
+let currentPages = {
+    pending: 1,
+    commissioned: 1,
+    paid: 1,
+    decommissioned: 1
 };
+const PAGE_SIZE = 10;
 
 async function init() {
 
@@ -49,12 +50,10 @@ if (!document.getElementById('episodeModal')) {
         updateStats(globalProposals);
         loadProducers(); // Load producers for the edit modal dropdown
 
-        // Define View More Global Handler
-        window.viewMore = (type) => {
-            if (limits[type]) {
-                limits[type] += 10;
-                renderProposals(globalProposals, window.auth.isAdmin(user));
-            }
+        // Define Change Page Handler
+        window.changePage = (type, delta) => {
+            currentPages[type] += delta;
+            renderProposals(globalProposals, window.auth.isAdmin(user));
         };
 
         // Populate Navigation
@@ -220,11 +219,16 @@ function renderProposals(proposals, canDelete) {
         };
         return getSortDate(b) - getSortDate(a);
     });
+    const totalPagesPending = Math.max(1, Math.ceil(pending.length / PAGE_SIZE));
+    if (currentPages.pending > totalPagesPending) currentPages.pending = totalPagesPending;
+    if (currentPages.pending < 1) currentPages.pending = 1;
+
     if (pending.length === 0) {
         propTableBody.innerHTML = `<tr><td colspan="4" class="table-empty-msg">No pending proposals.</td></tr>`;
         document.getElementById('pendingViewMoreContainer').style.display = 'none';
     } else {
-        const toShow = pending.slice(0, limits.pending);
+        const startIndex = (currentPages.pending - 1) * PAGE_SIZE;
+        const toShow = pending.slice(startIndex, startIndex + PAGE_SIZE);
         toShow.forEach(p => {
             const tr = document.createElement('tr');
             const date = formatDate(p.submittedAt);
@@ -244,7 +248,18 @@ function renderProposals(proposals, canDelete) {
             `;
             propTableBody.appendChild(tr);
         });
-        document.getElementById('pendingViewMoreContainer').style.display = pending.length > limits.pending ? 'block' : 'none';
+        
+        const container = document.getElementById('pendingViewMoreContainer');
+        if (container) {
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin: 0 auto; gap: 1rem;">
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.pending === 1 ? 'disabled' : ''} onclick="window.changePage('pending', -1)">&larr; Previous</button>
+                    <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted); min-width: 120px; text-align: center;">Page ${currentPages.pending} of ${totalPagesPending}</span>
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.pending === totalPagesPending ? 'disabled' : ''} onclick="window.changePage('pending', 1)">Next &rarr;</button>
+                </div>
+            `;
+        }
     }
 
     // 2. Commissioned Stories (In Production)
@@ -255,11 +270,16 @@ function renderProposals(proposals, canDelete) {
         const numB = parseInt(b.commissionNumber) || 0;
         return numB - numA;
     });
+    const totalPagesComm = Math.max(1, Math.ceil(accepted.length / PAGE_SIZE));
+    if (currentPages.commissioned > totalPagesComm) currentPages.commissioned = totalPagesComm;
+    if (currentPages.commissioned < 1) currentPages.commissioned = 1;
+
     if (accepted.length === 0) {
         commTableBody.innerHTML = '<tr><td colspan="5" class="table-empty-msg">No commissioned stories.</td></tr>';
         document.getElementById('commissionedViewMoreContainer').style.display = 'none';
     } else {
-        const toShow = accepted.slice(0, limits.commissioned);
+        const startIndex = (currentPages.commissioned - 1) * PAGE_SIZE;
+        const toShow = accepted.slice(startIndex, startIndex + PAGE_SIZE);
         toShow.forEach(p => {
             const tr = document.createElement('tr');
             const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : p.submittedByEmail;
@@ -284,25 +304,53 @@ function renderProposals(proposals, canDelete) {
             `;
             commTableBody.appendChild(tr);
         });
-        document.getElementById('commissionedViewMoreContainer').style.display = accepted.length > limits.commissioned ? 'block' : 'none';
+        
+        const container = document.getElementById('commissionedViewMoreContainer');
+        if (container) {
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin: 0 auto; gap: 1rem;">
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.commissioned === 1 ? 'disabled' : ''} onclick="window.changePage('commissioned', -1)">&larr; Previous</button>
+                    <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted); min-width: 120px; text-align: center;">Page ${currentPages.commissioned} of ${totalPagesComm}</span>
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.commissioned === totalPagesComm ? 'disabled' : ''} onclick="window.changePage('commissioned', 1)">Next &rarr;</button>
+                </div>
+            `;
+        }
     }
 
     // 3. Paid Stories (Delivered)
     paidTableBody.innerHTML = '';
     const paid = filtered.filter(p => p.status && p.status.toLowerCase() === 'paid');
     paid.sort((a, b) => {
+        const hasCommA = a.commissionNumber && a.commissionNumber.toString().trim() !== '—';
+        const hasCommB = b.commissionNumber && b.commissionNumber.toString().trim() !== '—';
+        
+        if (hasCommA && !hasCommB) return -1;
+        if (!hasCommA && hasCommB) return 1;
+
         const getSortDate = (p) => {
-            if (p.txDate) return new Date(p.txDate);
-            if (p.paidAt) return p.paidAt._seconds ? new Date(p.paidAt._seconds * 1000) : new Date(p.paidAt);
+            if (p.txDate) {
+                const d = new Date(p.txDate);
+                if (!isNaN(d.getTime())) return d;
+            }
+            if (p.paidAt) {
+                const d = p.paidAt._seconds ? new Date(p.paidAt._seconds * 1000) : new Date(p.paidAt);
+                if (!isNaN(d.getTime())) return d;
+            }
             return new Date(0);
         };
         return getSortDate(b) - getSortDate(a);
     });
+    const totalPagesPaid = Math.max(1, Math.ceil(paid.length / PAGE_SIZE));
+    if (currentPages.paid > totalPagesPaid) currentPages.paid = totalPagesPaid;
+    if (currentPages.paid < 1) currentPages.paid = 1;
+
     if (paid.length === 0) {
         paidTableBody.innerHTML = '<tr><td colspan="5" class="table-empty-msg">No delivered stories.</td></tr>';
         document.getElementById('paidViewMoreContainer').style.display = 'none';
     } else {
-        const toShow = paid.slice(0, limits.paid);
+        const startIndex = (currentPages.paid - 1) * PAGE_SIZE;
+        const toShow = paid.slice(startIndex, startIndex + PAGE_SIZE);
         toShow.forEach(p => {
             const tr = document.createElement('tr');
             const paidDate = formatDate(p.paidAt);
@@ -331,7 +379,18 @@ function renderProposals(proposals, canDelete) {
             `;
             paidTableBody.appendChild(tr);
         });
-        document.getElementById('paidViewMoreContainer').style.display = paid.length > limits.paid ? 'block' : 'none';
+        
+        const container = document.getElementById('paidViewMoreContainer');
+        if (container) {
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin: 0 auto; gap: 1rem;">
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.paid === 1 ? 'disabled' : ''} onclick="window.changePage('paid', -1)">&larr; Previous</button>
+                    <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted); min-width: 120px; text-align: center;">Page ${currentPages.paid} of ${totalPagesPaid}</span>
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.paid === totalPagesPaid ? 'disabled' : ''} onclick="window.changePage('paid', 1)">Next &rarr;</button>
+                </div>
+            `;
+        }
     }
 
     // 4. Decommissioned Stories
@@ -345,11 +404,16 @@ function renderProposals(proposals, canDelete) {
             };
             return getSortDate(b) - getSortDate(a);
         });
+        const totalPagesDecomp = Math.max(1, Math.ceil(decommissioned.length / PAGE_SIZE));
+        if (currentPages.decommissioned > totalPagesDecomp) currentPages.decommissioned = totalPagesDecomp;
+        if (currentPages.decommissioned < 1) currentPages.decommissioned = 1;
+
         if (decommissioned.length === 0) {
             decompTableBody.innerHTML = '<tr><td colspan="6" class="table-empty-msg">No decommissioned stories.</td></tr>';
             document.getElementById('decommissionedViewMoreContainer').style.display = 'none';
         } else {
-            const toShow = decommissioned.slice(0, limits.decommissioned);
+            const startIndex = (currentPages.decommissioned - 1) * PAGE_SIZE;
+            const toShow = decommissioned.slice(startIndex, startIndex + PAGE_SIZE);
             toShow.forEach(p => {
                 const tr = document.createElement('tr');
                 const decDate = formatDate(p.decommissionedAt);
@@ -367,7 +431,18 @@ function renderProposals(proposals, canDelete) {
                 `;
                 decompTableBody.appendChild(tr);
             });
-            document.getElementById('decommissionedViewMoreContainer').style.display = decommissioned.length > limits.decommissioned ? 'block' : 'none';
+            
+            const container = document.getElementById('decommissionedViewMoreContainer');
+            if (container) {
+                container.style.display = 'block';
+                container.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin: 0 auto; gap: 1rem;">
+                        <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.decommissioned === 1 ? 'disabled' : ''} onclick="window.changePage('decommissioned', -1)">&larr; Previous</button>
+                        <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted); min-width: 120px; text-align: center;">Page ${currentPages.decommissioned} of ${totalPagesDecomp}</span>
+                        <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.decommissioned === totalPagesDecomp ? 'disabled' : ''} onclick="window.changePage('decommissioned', 1)">Next &rarr;</button>
+                    </div>
+                `;
+            }
         }
     }
 }
@@ -392,8 +467,8 @@ window.setProducerFilter = (uid, name) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-window.viewMore = (type) => {
-    limits[type] += 10;
+window.changePage = (type, delta) => {
+    currentPages[type] += delta;
     checkAuth().then(user => {
         renderProposals(globalProposals, window.auth.isAdmin(user));
     });

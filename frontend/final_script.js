@@ -2,6 +2,13 @@
 // VERSION: 2.7.0 (Justification & Line Height)
 import { getIdToken, fetchWithAuth, checkAuth } from './auth.js?v=5.1.1';
 
+// Force reload if restored from Safari bfcache to prevent cached state/query params
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        window.location.reload();
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Script loaded: final_script.js');
     const form = document.getElementById('finalScriptForm');
@@ -180,7 +187,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const link = document.createElement('a');
             link.href = url;
             link.download = `Final_Script_${document.getElementById('commission_number').value || 'N/A'}_${Date.now()}.pdf`;
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
             URL.revokeObjectURL(url);
             if (loadingOverlay) loadingOverlay.classList.remove('active');
         } catch (err) {
