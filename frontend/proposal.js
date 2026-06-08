@@ -3245,7 +3245,9 @@ function renderProjectAssets(assets, proposal) {
     const isAllowedView = viewMode === 'preview' || viewMode === 'admin';
     const hasFinalScript = proposal.details && proposal.details.finalScript;
     const csData = proposal.details && proposal.details.callSheet;
-    const hasCallSheetData = !!(csData && ((csData.shoot_dates && csData.shoot_dates.length > 0) || (csData.crew && csData.crew.length > 0)));
+    const statusStr = (proposal.status || '').toLowerCase();
+    const isCommissioned = statusStr === 'accepted' || statusStr === 'paid';
+    const hasCallSheetData = isCommissioned && !!(csData && ((csData.shoot_dates && csData.shoot_dates.length > 0) || (csData.crew && csData.crew.length > 0)));
     
     let hasAnyVisibleAsset = hasCallSheetData || hasFinalScript || (assets && assets.length > 0);
     
