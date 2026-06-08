@@ -837,6 +837,19 @@ window.openAcceptanceModal = (id) => {
     document.getElementById('acceptanceCommFeedback').textContent = '';
     document.getElementById('acceptanceCommNum').style.borderColor = 'var(--border)';
     
+    // Reset Live Studio Interview details
+    const liveStudioToggle = document.getElementById('acceptanceLiveStudioToggle');
+    if (liveStudioToggle) {
+        liveStudioToggle.checked = false;
+        if (typeof liveStudioToggle.dispatchEvent === 'function') {
+            liveStudioToggle.dispatchEvent(new Event('change'));
+        }
+    }
+    const seasonInput = document.getElementById('acceptanceSeasonNum');
+    if (seasonInput) seasonInput.value = '';
+    const episodeInput = document.getElementById('acceptanceEpisodeNum');
+    if (episodeInput) episodeInput.value = '';
+    
     // Default Story Type
     const storyTypeEl = document.getElementById('acceptanceStoryType');
     if (storyTypeEl) {
@@ -888,6 +901,10 @@ if (acceptanceForm) {
         const presenter = document.getElementById('acceptancePresenter').value;
         const legal_req = document.querySelector('input[name="acceptanceLegalReq"]:checked')?.value || 'no';
         
+        const liveStudioInterview = document.getElementById('acceptanceLiveStudioToggle')?.checked || false;
+        const liveStudioSeason = liveStudioInterview ? document.getElementById('acceptanceSeasonNum')?.value || null : null;
+        const liveStudioEpisode = liveStudioInterview ? document.getElementById('acceptanceEpisodeNum')?.value || null : null;
+        
         acceptanceModal.classList.remove('active');
         const res = await executeProposalAction(id, 'accept', { 
             manualCommissionNumber: storyType === 'TFU' ? null : manualCommissionNumber,
@@ -897,7 +914,10 @@ if (acceptanceForm) {
             rate, 
             contractAccepted,
             presenter,
-            legal_req
+            legal_req,
+            liveStudioInterview,
+            liveStudioSeason,
+            liveStudioEpisode
         });
 
         if (res && res.success) {
@@ -1027,6 +1047,51 @@ if (acceptanceStoryTypeEl) {
         }
     });
 }
+
+// --- LIVE STUDIO INTERVIEW LOGIC ---
+const acceptanceLiveStudioToggleEl = document.getElementById('acceptanceLiveStudioToggle');
+const acceptanceLiveStudioGroupEl = document.getElementById('acceptanceLiveStudioGroup');
+const acceptanceSeasonNumEl = document.getElementById('acceptanceSeasonNum');
+const acceptanceEpisodeNumEl = document.getElementById('acceptanceEpisodeNum');
+const acceptanceCommNumEl = document.getElementById('acceptanceCommNum');
+const acceptanceCommFeedbackEl = document.getElementById('acceptanceCommFeedback');
+
+function updateLiveStudioCommNum() {
+    if (acceptanceLiveStudioToggleEl && acceptanceLiveStudioToggleEl.checked) {
+        const season = (acceptanceSeasonNumEl ? acceptanceSeasonNumEl.value.trim() : '');
+        const episode = (acceptanceEpisodeNumEl ? acceptanceEpisodeNumEl.value.trim() : '');
+        if (season || episode) {
+            acceptanceCommNumEl.value = `CB${season}${episode}`;
+        } else {
+            acceptanceCommNumEl.value = '';
+        }
+        // Trigger validation
+        validateCommissionNumber(acceptanceCommNumEl, acceptanceCommFeedbackEl, document.getElementById('acceptanceProposalId').value);
+    }
+}
+
+if (acceptanceLiveStudioToggleEl) {
+    acceptanceLiveStudioToggleEl.addEventListener('change', (e) => {
+        const checked = e.target.checked;
+        if (acceptanceLiveStudioGroupEl) {
+            acceptanceLiveStudioGroupEl.style.display = checked ? 'grid' : 'none';
+        }
+        if (acceptanceCommNumEl) {
+            acceptanceCommNumEl.readOnly = checked;
+            if (checked) {
+                updateLiveStudioCommNum();
+            } else {
+                acceptanceCommNumEl.value = '';
+                acceptanceCommFeedbackEl.textContent = '';
+                acceptanceCommNumEl.style.borderColor = 'var(--border)';
+            }
+        }
+    });
+}
+
+if (acceptanceSeasonNumEl) acceptanceSeasonNumEl.addEventListener('input', updateLiveStudioCommNum);
+if (acceptanceEpisodeNumEl) acceptanceEpisodeNumEl.addEventListener('input', updateLiveStudioCommNum);
+
 
 // --- DECOMMISSION MODAL LOGIC ---
 const decommissionModal = document.getElementById('decommissionModal');

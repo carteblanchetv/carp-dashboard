@@ -3021,6 +3021,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pModalRate').value = (existingData && existingData.rate) ? existingData.rate : '';
         document.getElementById('pModalCommNum').value = '';
         document.getElementById('pModalContract').checked = !!(existingData && existingData.contractAccepted);
+        
+        // Reset Live Studio Interview details
+        const liveStudioToggle = document.getElementById('pModalLiveStudioToggle');
+        if (liveStudioToggle) {
+            liveStudioToggle.checked = false;
+            if (typeof liveStudioToggle.dispatchEvent === 'function') {
+                liveStudioToggle.dispatchEvent(new Event('change'));
+            }
+        }
+        const seasonInput = document.getElementById('pModalSeasonNum');
+        if (seasonInput) seasonInput.value = '';
+        const episodeInput = document.getElementById('pModalEpisodeNum');
+        if (episodeInput) episodeInput.value = '';
+        
         const backdrop = document.getElementById('pModalBackdrop');
         backdrop.style.display = 'flex';
     }
@@ -3029,22 +3043,75 @@ document.addEventListener('DOMContentLoaded', () => {
         if (backdrop) backdrop.style.display = 'none';
         const form = document.getElementById('pModalForm');
         if (form) form.reset();
+        const feedback = document.getElementById('pModalCommFeedback');
+        if (feedback) feedback.textContent = '';
     }
     document.getElementById('pModalCloseBtn').onclick = closePModal;
     document.getElementById('pModalCancelBtn').onclick = closePModal;
     document.getElementById('pModalForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('pModalProposalId').value;
+        const liveStudioInterview = document.getElementById('pModalLiveStudioToggle')?.checked || false;
+        const liveStudioSeason = liveStudioInterview ? document.getElementById('pModalSeasonNum')?.value || null : null;
+        const liveStudioEpisode = liveStudioInterview ? document.getElementById('pModalEpisodeNum')?.value || null : null;
         const metadata = {
             manualCommissionNumber: document.getElementById('pModalCommNum').value.trim() || null,
             duration: document.getElementById('pModalDuration').value,
             deliveryDate: document.getElementById('pModalDeliveryDate').value,
             rate: document.getElementById('pModalRate').value,
-            contractAccepted: document.getElementById('pModalContract').checked
+            contractAccepted: document.getElementById('pModalContract').checked,
+            liveStudioInterview,
+            liveStudioSeason,
+            liveStudioEpisode
         };
         closePModal();
         await handleAdminAction(id, 'accept', metadata);
     });
+
+    // --- LIVE STUDIO INTERVIEW LOGIC ---
+    const pModalLiveStudioToggleEl = document.getElementById('pModalLiveStudioToggle');
+    const pModalLiveStudioGroupEl = document.getElementById('pModalLiveStudioGroup');
+    const pModalSeasonNumEl = document.getElementById('pModalSeasonNum');
+    const pModalEpisodeNumEl = document.getElementById('pModalEpisodeNum');
+    const pModalCommNumEl = document.getElementById('pModalCommNum');
+    const pModalCommFeedbackEl = document.getElementById('pModalCommFeedback');
+
+    function updatePModalLiveStudioCommNum() {
+        if (pModalLiveStudioToggleEl && pModalLiveStudioToggleEl.checked) {
+            const season = (pModalSeasonNumEl ? pModalSeasonNumEl.value.trim() : '');
+            const episode = (pModalEpisodeNumEl ? pModalEpisodeNumEl.value.trim() : '');
+            if (season || episode) {
+                pModalCommNumEl.value = `CB${season}${episode}`;
+            } else {
+                pModalCommNumEl.value = '';
+            }
+            if (pModalCommFeedbackEl) {
+                pModalCommFeedbackEl.textContent = `Generated: CB${season}${episode}`;
+                pModalCommFeedbackEl.style.color = 'var(--primary)';
+            }
+        }
+    }
+
+    if (pModalLiveStudioToggleEl) {
+        pModalLiveStudioToggleEl.addEventListener('change', (e) => {
+            const checked = e.target.checked;
+            if (pModalLiveStudioGroupEl) {
+                pModalLiveStudioGroupEl.style.display = checked ? 'grid' : 'none';
+            }
+            if (pModalCommNumEl) {
+                pModalCommNumEl.readOnly = checked;
+                if (checked) {
+                    updatePModalLiveStudioCommNum();
+                } else {
+                    pModalCommNumEl.value = '';
+                    if (pModalCommFeedbackEl) pModalCommFeedbackEl.textContent = '';
+                }
+            }
+        });
+    }
+
+    if (pModalSeasonNumEl) pModalSeasonNumEl.addEventListener('input', updatePModalLiveStudioCommNum);
+    if (pModalEpisodeNumEl) pModalEpisodeNumEl.addEventListener('input', updatePModalLiveStudioCommNum);
     // --- DOWNLOAD HELPERS ---
     window.downloadFootagePDF = async (submissionId, files) => {
         const declarationFile = (files || []).find(f => f.fieldname === 'declaration');

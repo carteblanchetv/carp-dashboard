@@ -158,10 +158,27 @@
                         <div class="form-group">
                             <label for="pModalCommNum">Comm # (optional)</label>
                             <input type="text" id="pModalCommNum" placeholder="Leave blank to auto-generate">
+                            <div id="pModalCommFeedback" style="font-size: 0.75rem; margin-top: 0.25rem; min-height: 1em;"></div>
                         </div>
                         <div class="form-group">
                             <label for="pModalDeliveryDate">Delivery Date</label>
                             <input type="date" id="pModalDeliveryDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
+                            <input type="checkbox" id="pModalLiveStudioToggle">
+                            <span style="font-size: 0.9rem; font-weight: 600;">Live Studio Interview</span>
+                        </label>
+                    </div>
+                    <div id="pModalLiveStudioGroup" style="display: none; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+                        <div class="form-group">
+                            <label for="pModalSeasonNum">Season Nr</label>
+                            <input type="number" id="pModalSeasonNum" placeholder="e.g. 39" min="1" style="width: 100%; padding: 0.65rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-light); color: var(--text-main);">
+                        </div>
+                        <div class="form-group">
+                            <label for="pModalEpisodeNum">Episode Number</label>
+                            <input type="number" id="pModalEpisodeNum" placeholder="e.g. 08" min="1" style="width: 100%; padding: 0.65rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-light); color: var(--text-main);">
                         </div>
                     </div>
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem;">

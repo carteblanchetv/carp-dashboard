@@ -1633,7 +1633,7 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
       return res.status(403).json({ success: false, error: 'Unauthorized: Admin/Production access required.' });
     }
 
-    const { id, action, manualCommissionNumber, storyType, duration, deliveryDate, rate, contractAccepted, txDate, presenter, legal_req, decommissionReason } = req.body; // action: 'accept' | 'reject' | 'pay' | 'decommission'
+    const { id, action, manualCommissionNumber, storyType, duration, deliveryDate, rate, contractAccepted, txDate, presenter, legal_req, decommissionReason, liveStudioInterview, liveStudioSeason, liveStudioEpisode } = req.body; // action: 'accept' | 'reject' | 'pay' | 'decommission'
     const docRef = admin.firestore().collection('proposals').doc(id);
     
     if (action === 'accept') {
@@ -1663,7 +1663,10 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
             contractAccepted: contractAccepted || false,
             acceptedBy: req.user.email,
             presenter: presenter || null,
-            legal_req: legal_req || null
+            legal_req: legal_req || null,
+            liveStudioInterview: liveStudioInterview || false,
+            liveStudioSeason: liveStudioSeason || null,
+            liveStudioEpisode: liveStudioEpisode || null
         }
       };
 
