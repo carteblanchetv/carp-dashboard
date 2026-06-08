@@ -2415,10 +2415,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const summaryDiv = document.getElementById('proposalSummary');
         if (summaryDiv) {
             summaryDiv.classList.remove('hidden');
+            summaryDiv.style.display = 'block';
             try {
                 renderProposalReport(sub);
-                summaryDiv.classList.remove('hidden');
-                summaryDiv.style.display = 'block';
                 const loadingOverlay = document.getElementById('loadingOverlay');
                 if (loadingOverlay) loadingOverlay.classList.remove('active');
             } catch (renderErr) {
@@ -2428,6 +2427,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>${renderErr.message}</p>
                     <pre style="font-size: 0.7rem; margin-top: 1rem; white-space: pre-wrap;">${renderErr.stack}</pre>
                 </div>`;
+                const loadingOverlay = document.getElementById('loadingOverlay');
+                if (loadingOverlay) loadingOverlay.classList.remove('active');
             }
         }
 
@@ -2527,7 +2528,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let detailsHtml = '';
-        if (sub.details) {
+        if (sub.details && typeof sub.details === 'object') {
             const d = sub.details;
             const getName = (obj) => {
                 if (!obj) return null;
@@ -2539,7 +2540,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formatArray = (arr) => {
                 if (!arr) return null;
                 const a = Array.isArray(arr) ? arr : [arr];
-                const res = a.map(item => getName(item)).filter(name => name).join(', ');
+                const res = a.filter(item => item).map(item => getName(item)).filter(name => name).join(', ');
                 return res || null;
             };
 
@@ -2556,8 +2557,9 @@ document.addEventListener('DOMContentLoaded', () => {
             ];
 
             const populated = fields.filter(f => f.value && f.value !== '—');
+            const additionalCrewList = Array.isArray(d.additionalCrew) ? d.additionalCrew.filter(c => c) : [];
             
-            if (populated.length > 0 || (d.additionalCrew && d.additionalCrew.length > 0)) {
+            if (populated.length > 0 || additionalCrewList.length > 0) {
                 detailsHtml = `
                 <div style="margin-bottom: 3rem;">
                     <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; font-weight: 700;">Production Details</h3>
@@ -2568,10 +2570,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span style="font-weight: 600;">${f.value}</span>
                             </div>
                         `).join('')}
-                        ${(d.additionalCrew || []).map(c => `
+                        ${additionalCrewList.map(c => `
                             <div>
                                 <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">${c.role || 'Crew'}</span>
-                                <span style="font-weight: 600;">${c.name} ${c.surname || ''}</span>
+                                <span style="font-weight: 600;">${c.name || ''} ${c.surname || ''}</span>
                             </div>
                         `).join('')}
                     </div>
@@ -2587,7 +2589,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <tr style="border-bottom: 1px solid var(--border);"><th style="text-align: left; padding: 0.75rem 0.5rem;">Item</th><th style="text-align: left; padding: 0.75rem 0.5rem;">Reason</th></tr>
                     </thead>
                     <tbody>
-                        ${(sub.budgetItems || []).map(b => `<tr><td style="padding: 0.75rem 0.5rem;">${b.item}</td><td style="padding: 0.75rem 0.5rem;">${b.reason}</td></tr>`).join('')}
+                        ${(sub.budgetItems || []).filter(b => b).map(b => `<tr><td style="padding: 0.75rem 0.5rem;">${b.item || ''}</td><td style="padding: 0.75rem 0.5rem;">${b.reason || ''}</td></tr>`).join('')}
                     </tbody>
                 </table>
             </div>
@@ -2597,9 +2599,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <div style="margin-bottom: 3rem;">
                 <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Case Studies</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-                    ${(sub.caseStudies || []).map(cs => `
+                    ${(sub.caseStudies || []).filter(cs => cs).map(cs => `
                         <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02);">
-                            <div style="font-weight: 700; font-size: 1rem;">${cs.name} ${cs.surname || ''}</div>
+                            <div style="font-weight: 700; font-size: 1rem;">${cs.name || ''} ${cs.surname || ''}</div>
                             <div style="font-size: 0.8rem; color: var(--text-muted);">${cs.role || 'Case Study'}</div>
                         </div>
                     `).join('')}
@@ -2611,9 +2613,9 @@ document.addEventListener('DOMContentLoaded', () => {
             <div style="margin-bottom: 3rem;">
                 <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Experts</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-                    ${(sub.experts || []).map(ex => `
+                    ${(sub.experts || []).filter(ex => ex).map(ex => `
                         <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02);">
-                            <div style="font-weight: 700; font-size: 1rem;">${ex.name} ${ex.surname || ''}</div>
+                            <div style="font-weight: 700; font-size: 1rem;">${ex.name || ''} ${ex.surname || ''}</div>
                             <div style="font-size: 0.8rem; color: var(--text-muted);">${ex.role || 'Expert'}</div>
                         </div>
                     `).join('')}
@@ -3037,10 +3039,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const backdrop = document.getElementById('pModalBackdrop');
         backdrop.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
     function closePModal() {
         const backdrop = document.getElementById('pModalBackdrop');
         if (backdrop) backdrop.style.display = 'none';
+        document.body.style.overflow = '';
         const form = document.getElementById('pModalForm');
         if (form) form.reset();
         const feedback = document.getElementById('pModalCommFeedback');

@@ -144,8 +144,8 @@
 
 
     <!-- Commission Details Modal (only shown when Approve is clicked) -->
-    <div id="pModalBackdrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); align-items:center; justify-content:center; z-index:10000;">
-        <div style="background:var(--bg-card); width:100%; max-width:550px; border-radius:var(--radius-lg); box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); border:1px solid var(--border); overflow:hidden;">
+    <div id="pModalBackdrop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); backdrop-filter:blur(8px); align-items:flex-start; justify-content:center; overflow-y:auto; padding:2rem 1.5rem; z-index:1000000;">
+        <div style="background:var(--bg-card); width:100%; max-width:550px; border-radius:var(--radius-lg); box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); border:1px solid var(--border); overflow:hidden; margin:auto 0;">
             <div style="padding:1.5rem 2rem; background:rgba(255,255,255,0.03); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
                 <h3 style="margin:0; font-size:1.1rem;">Commission Details</h3>
                 <button id="pModalCloseBtn" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-muted); line-height:1;">&times;</button>
@@ -165,10 +165,13 @@
                             <input type="date" id="pModalDeliveryDate" required>
                         </div>
                     </div>
-                    <div class="form-group" style="margin-top: 1.5rem;">
-                        <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
-                            <input type="checkbox" id="pModalLiveStudioToggle">
-                            <span style="font-size: 0.9rem; font-weight: 600;">Live Studio Interview</span>
+                    <div class="form-group" style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 143, 190, 0.08); border: 1px solid rgba(0, 143, 190, 0.2); border-radius: 8px; transition: all 0.2s;">
+                        <label style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; width:100%;">
+                            <div style="display:flex; flex-direction:column; gap:0.25rem;">
+                                <span style="font-size: 0.95rem; font-weight: 700; color: var(--primary);">🎥 Live Studio Interview</span>
+                                <span style="font-size: 0.75rem; color: var(--text-muted);">Enable to auto-generate commission numbers for season/episode</span>
+                            </div>
+                            <input type="checkbox" id="pModalLiveStudioToggle" style="width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer;">
                         </label>
                     </div>
                     <div id="pModalLiveStudioGroup" style="display: none; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
