@@ -247,7 +247,7 @@ function renderProposalsData(proposals) {
                         ${title}
                     </a>
                 </td>
-                <td data-label="Comm #" style="width: 90px; text-align: center; font-weight: 700; color: var(--primary);">${p.commissionNumber || '—'}</td>
+                <td data-label="Comm #" style="width: 90px; text-align: center; font-weight: 700; color: ${p.commissionNumber && p.commissionNumber.toString().startsWith('CB') ? '#f59e0b' : 'var(--primary)'};">${p.commissionNumber || '—'}</td>
                 <td data-label="Delivery" style="width: 110px; text-align: center; font-size: 0.85rem;">${deliveryText}</td>
                 <td data-label="Date" style="width: 130px; text-align: center; color: var(--text-muted); font-size: 0.85rem;">${dateText}</td>
                 <td data-label="Actions" style="width: 180px; text-align: center;">

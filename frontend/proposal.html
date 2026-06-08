@@ -154,26 +154,23 @@
                 <p style="margin:0 0 1.5rem 0; color:var(--text-muted); font-size:0.9rem;">Please provide the final production details for this story.</p>
                 <form id="pModalForm">
                     <input type="hidden" id="pModalProposalId">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
                         <div class="form-group">
-                            <label for="pModalCommNum">Comm # (optional)</label>
+                            <label for="pModalStoryType">Story Type</label>
+                            <select id="pModalStoryType" required style="width: 100%; padding: 0.65rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-light); color: var(--text-main);">
+                                <option value="Standard">Standard</option>
+                                <option value="TFU">TFU</option>
+                                <option value="Studio">Studio</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="pModalCommNumGroup">
+                            <label for="pModalCommNum">Comm #</label>
                             <input type="text" id="pModalCommNum" placeholder="Leave blank to auto-generate">
                             <div id="pModalCommFeedback" style="font-size: 0.75rem; margin-top: 0.25rem; min-height: 1em;"></div>
                         </div>
-                        <div class="form-group">
-                            <label for="pModalDeliveryDate">Delivery Date</label>
-                            <input type="date" id="pModalDeliveryDate" required>
-                        </div>
                     </div>
-                    <div class="form-group" style="margin-top: 1.5rem; padding: 1rem; background: rgba(0, 143, 190, 0.08); border: 1px solid rgba(0, 143, 190, 0.2); border-radius: 8px; transition: all 0.2s;">
-                        <label style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; width:100%;">
-                            <div style="display:flex; flex-direction:column; gap:0.25rem;">
-                                <span style="font-size: 0.95rem; font-weight: 700; color: var(--primary);">🎥 Live Studio Interview</span>
-                                <span style="font-size: 0.75rem; color: var(--text-muted);">Enable to auto-generate commission numbers for season/episode</span>
-                            </div>
-                            <input type="checkbox" id="pModalLiveStudioToggle" style="width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer;">
-                        </label>
-                    </div>
+
                     <div id="pModalLiveStudioGroup" style="display: none; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
                         <div class="form-group">
                             <label for="pModalSeasonNum">Season Nr</label>
@@ -184,28 +181,73 @@
                             <input type="number" id="pModalEpisodeNum" placeholder="e.g. 08" min="1" style="width: 100%; padding: 0.65rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-light); color: var(--text-main);">
                         </div>
                     </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:1.5rem;">
-                        <div class="form-group">
-                            <label for="pModalDuration">Duration (MM:SS)</label>
-                            <input type="text" id="pModalDuration" placeholder="e.g. 05:00" required pattern="[0-9]{2}:[0-9]{2}">
-                        </div>
-                        <div class="form-group">
-                            <label for="pModalRate">Rate (ZAR)</label>
-                            <div style="display:flex; align-items:center; background:var(--bg-light); border:1px solid var(--border); border-radius:var(--radius-sm);">
-                                <span style="padding-left:1rem; color:var(--text-muted); font-weight:700; user-select:none;">R</span>
-                                <input type="number" id="pModalRate" placeholder="0" required step="1" style="border:none !important; background:transparent !important; width:100%; padding:0.65rem 0.75rem 0.65rem 0.5rem; color:var(--text-main); outline:none !important; box-shadow:none !important;">
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label for="pModalDeliveryDate">Delivery Date</label>
+                        <input type="date" id="pModalDeliveryDate" required>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label for="pModalDuration">Duration (MM:SS)</label>
+                                <input type="text" id="pModalDuration" placeholder="e.g. 05:00" required pattern="[0-9]{2}:[0-9]{2}">
+                            </div>
+                            <div class="form-group">
+                                <label for="pModalRate">Rate (South African Rand)</label>
+                                <div style="display: flex; align-items: center; background: var(--bg-light); border: 1px solid var(--border); border-radius: var(--radius-sm); transition: var(--transition);">
+                                    <span style="padding-left: 1rem; color: var(--text-muted); font-weight: 700; user-select: none;">R</span>
+                                    <input type="number" id="pModalRate" placeholder="0" step="1" required
+                                           style="border: none !important; background: transparent !important; width: 100%; padding: 0.65rem 0.75rem; padding-left: 0.5rem; color: var(--text-main); outline: none !important; box-shadow: none !important;"
+                                           onfocus="this.parentElement.style.borderColor='var(--primary)'; this.parentElement.style.boxShadow='0 0 0 3px var(--focus-ring)'"
+                                           onblur="this.parentElement.style.borderColor='var(--border)'; this.parentElement.style.boxShadow='none'">
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group" style="margin-top:1.5rem;">
-                        <label style="display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label for="pModalPresenter">Presenter</label>
+                                <select id="pModalPresenter" required style="width: 100%; padding: 0.65rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-light); color: var(--text-main);">
+                                    <option value="">Select Presenter...</option>
+                                    <option value="No Presenter">No Presenter</option>
+                                    <option value="Catherine Rice">Catherine Rice</option>
+                                    <option value="Claire Mawisa">Claire Mawisa</option>
+                                    <option value="Erin Bates">Erin Bates</option>
+                                    <option value="Govan Whittles">Govan Whittles</option>
+                                    <option value="Lourensa Eckard">Lourensa Eckard</option>
+                                    <option value="Macfarlane Moleli">Macfarlane Moleli</option>
+                                    <option value="Masa Kekana">Masa Kekana</option>
+                                    <option value="Nickolaus Bauer">Nickolaus Bauer</option>
+                                    <option value="Other">TBC</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Legal Required</label>
+                                <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                                    <label class="radio-container" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="radio" name="pModalLegalReq" value="yes"> Yes
+                                    </label>
+                                    <label class="radio-container" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="radio" name="pModalLegalReq" value="no" checked> No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
                             <input type="checkbox" id="pModalContract" required>
-                            <span style="font-size:0.9rem;">I agree with the CAP Contractual Agreement</span>
+                            <span style="font-size: 0.9rem; font-weight: 600;">I agree with the CAP Contractual Agreement</span>
                         </label>
                     </div>
-                    <div style="margin-top:2rem; display:flex; gap:1rem; justify-content:flex-end;">
+
+                    <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
                         <button type="button" class="btn-soft" id="pModalCancelBtn">Cancel</button>
-                        <button type="submit" class="submit-btn" style="padding:0.75rem 1.5rem;">Confirm &amp; Commission</button>
+                        <button type="submit" class="submit-btn" style="padding: 0.75rem 1.5rem;">Accept & Commission</button>
                     </div>
                 </form>
             </div>
@@ -885,6 +927,6 @@
         </div>
     </div>
 
-    <script type="module" src="proposal.js?v=5.3.5"></script>
+    <script type="module" src="proposal.js?v=5.3.6"></script>
 </body>
 </html>

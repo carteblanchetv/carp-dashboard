@@ -2666,8 +2666,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="status-badge-modern ${statusClass}" style="padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 700;">${statusLabel.toUpperCase()}</span>
                         ${(sub.commissionNumber && !sub._isRestrictedView) ? `
                     <div style="text-align: right;">
-                        <div style="font-size: 0.7rem; font-weight: 800; color: var(--primary); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem;">Commission Number</div>
-                        <div style="background: rgba(0, 143, 190, 0.1); border: 2px solid var(--primary); color: var(--primary); padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 900; font-size: 1.75rem; display: inline-block;">
+                        <div style="font-size: 0.7rem; font-weight: 800; color: ${sub.commissionNumber.toString().startsWith('CB') ? '#f59e0b' : 'var(--primary)'}; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.25rem;">Commission Number</div>
+                        <div style="background: ${sub.commissionNumber.toString().startsWith('CB') ? 'rgba(245, 158, 11, 0.1)' : 'rgba(0, 143, 190, 0.1)'}; border: 2px solid ${sub.commissionNumber.toString().startsWith('CB') ? '#f59e0b' : 'var(--primary)'}; color: ${sub.commissionNumber.toString().startsWith('CB') ? '#f59e0b' : 'var(--primary)'}; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 900; font-size: 1.75rem; display: inline-block;">
                             #${sub.commissionNumber}
                         </div>
                     </div>
@@ -3025,17 +3025,43 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pModalContract').checked = !!(existingData && existingData.contractAccepted);
         
         // Reset Live Studio Interview details
-        const liveStudioToggle = document.getElementById('pModalLiveStudioToggle');
-        if (liveStudioToggle) {
-            liveStudioToggle.checked = false;
-            if (typeof liveStudioToggle.dispatchEvent === 'function') {
-                liveStudioToggle.dispatchEvent(new Event('change'));
-            }
-        }
         const seasonInput = document.getElementById('pModalSeasonNum');
         if (seasonInput) seasonInput.value = '';
         const episodeInput = document.getElementById('pModalEpisodeNum');
         if (episodeInput) episodeInput.value = '';
+
+        // Default Story Type
+        const storyTypeEl = document.getElementById('pModalStoryType');
+        if (storyTypeEl) {
+            storyTypeEl.value = 'Standard';
+            if (typeof storyTypeEl.dispatchEvent === 'function') {
+                storyTypeEl.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Pre-populate Presenter and Legal Req
+        const presenterEl = document.getElementById('pModalPresenter');
+        if (presenterEl) {
+            const prop = window.currentProposal || {};
+            const savedPresenter = (prop.details && prop.details.presenter) || '';
+            const standardPresenters = ['Catherine Rice', 'Claire Mawisa', 'Erin Bates', 'Govan Whittles', 'Lourensa Eckard', 'Macfarlane Moleli', 'Masa Kekana', 'Nickolaus Bauer', 'No Presenter'];
+            if (savedPresenter && standardPresenters.includes(savedPresenter)) {
+                presenterEl.value = savedPresenter;
+            } else if (savedPresenter) {
+                presenterEl.value = 'Other';
+            } else {
+                presenterEl.value = '';
+            }
+        }
+
+        const legalYes = document.querySelector('input[name="pModalLegalReq"][value="yes"]');
+        const legalNo = document.querySelector('input[name="pModalLegalReq"][value="no"]');
+        const prop = window.currentProposal || {};
+        if (prop.legal_req === 'yes' || (prop.details && prop.details.legal_req === 'yes')) {
+            if (legalYes) legalYes.checked = true;
+        } else {
+            if (legalNo) legalNo.checked = true;
+        }
         
         const backdrop = document.getElementById('pModalBackdrop');
         backdrop.style.display = 'flex';
@@ -3055,15 +3081,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pModalForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('pModalProposalId').value;
-        const liveStudioInterview = document.getElementById('pModalLiveStudioToggle')?.checked || false;
+        const storyType = document.getElementById('pModalStoryType')?.value || 'Standard';
+        const liveStudioInterview = (storyType === 'Studio');
         const liveStudioSeason = liveStudioInterview ? document.getElementById('pModalSeasonNum')?.value || null : null;
         const liveStudioEpisode = liveStudioInterview ? document.getElementById('pModalEpisodeNum')?.value || null : null;
+        const presenter = document.getElementById('pModalPresenter')?.value || '';
+        const legal_req = document.querySelector('input[name="pModalLegalReq"]:checked')?.value || 'no';
+        const manualCommissionNumber = document.getElementById('pModalCommNum').value.trim();
+
         const metadata = {
-            manualCommissionNumber: document.getElementById('pModalCommNum').value.trim() || null,
+            manualCommissionNumber: storyType === 'TFU' ? null : (manualCommissionNumber || null),
+            storyType,
             duration: document.getElementById('pModalDuration').value,
             deliveryDate: document.getElementById('pModalDeliveryDate').value,
             rate: document.getElementById('pModalRate').value,
             contractAccepted: document.getElementById('pModalContract').checked,
+            presenter,
+            legal_req,
             liveStudioInterview,
             liveStudioSeason,
             liveStudioEpisode
@@ -3072,16 +3106,18 @@ document.addEventListener('DOMContentLoaded', () => {
         await handleAdminAction(id, 'accept', metadata);
     });
 
-    // --- LIVE STUDIO INTERVIEW LOGIC ---
-    const pModalLiveStudioToggleEl = document.getElementById('pModalLiveStudioToggle');
+    // --- TFU / STORY TYPE LOGIC ---
+    const pModalStoryTypeEl = document.getElementById('pModalStoryType');
+    const pModalCommNumEl = document.getElementById('pModalCommNum');
+    const pModalCommNumGroup = document.getElementById('pModalCommNumGroup');
     const pModalLiveStudioGroupEl = document.getElementById('pModalLiveStudioGroup');
     const pModalSeasonNumEl = document.getElementById('pModalSeasonNum');
     const pModalEpisodeNumEl = document.getElementById('pModalEpisodeNum');
-    const pModalCommNumEl = document.getElementById('pModalCommNum');
     const pModalCommFeedbackEl = document.getElementById('pModalCommFeedback');
 
     function updatePModalLiveStudioCommNum() {
-        if (pModalLiveStudioToggleEl && pModalLiveStudioToggleEl.checked) {
+        const isStudio = (pModalStoryTypeEl && pModalStoryTypeEl.value === 'Studio');
+        if (isStudio) {
             const season = (pModalSeasonNumEl ? pModalSeasonNumEl.value.trim() : '');
             const episode = (pModalEpisodeNumEl ? pModalEpisodeNumEl.value.trim() : '');
             if (season || episode) {
@@ -3096,17 +3132,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    if (pModalLiveStudioToggleEl) {
-        pModalLiveStudioToggleEl.addEventListener('change', (e) => {
-            const checked = e.target.checked;
-            if (pModalLiveStudioGroupEl) {
-                pModalLiveStudioGroupEl.style.display = checked ? 'grid' : 'none';
-            }
-            if (pModalCommNumEl) {
-                pModalCommNumEl.readOnly = checked;
-                if (checked) {
+    if (pModalStoryTypeEl) {
+        pModalStoryTypeEl.addEventListener('change', (e) => {
+            const type = e.target.value;
+            
+            if (type === 'TFU') {
+                if (pModalCommNumGroup) pModalCommNumGroup.style.display = 'none';
+                if (pModalLiveStudioGroupEl) pModalLiveStudioGroupEl.style.display = 'none';
+                if (pModalCommNumEl) {
+                    pModalCommNumEl.readOnly = false;
+                    pModalCommNumEl.value = '';
+                    if (pModalCommFeedbackEl) pModalCommFeedbackEl.textContent = '';
+                }
+            } else if (type === 'Studio') {
+                if (pModalCommNumGroup) pModalCommNumGroup.style.display = 'block';
+                if (pModalLiveStudioGroupEl) pModalLiveStudioGroupEl.style.display = 'grid';
+                if (pModalCommNumEl) {
+                    pModalCommNumEl.readOnly = true;
                     updatePModalLiveStudioCommNum();
-                } else {
+                }
+            } else {
+                if (pModalCommNumGroup) pModalCommNumGroup.style.display = 'block';
+                if (pModalLiveStudioGroupEl) pModalLiveStudioGroupEl.style.display = 'none';
+                if (pModalCommNumEl) {
+                    pModalCommNumEl.readOnly = false;
                     pModalCommNumEl.value = '';
                     if (pModalCommFeedbackEl) pModalCommFeedbackEl.textContent = '';
                 }

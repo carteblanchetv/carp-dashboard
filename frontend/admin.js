@@ -193,6 +193,15 @@ function populateEpisodesSidebar(proposals) {
     });
 }
 
+function renderCommNumberHtml(commNum) {
+    if (!commNum || commNum === '—') return '—';
+    const isLive = commNum.toString().startsWith('CB');
+    if (isLive) {
+        return `<strong style="color: #f59e0b;">#${commNum}</strong>`;
+    }
+    return `<strong>#${commNum}</strong>`;
+}
+
 function renderProposals(proposals, canDelete) {
     populateEpisodesSidebar(globalProposals);
     const propTableBody = document.getElementById('proposalTableBody');
@@ -266,6 +275,19 @@ function renderProposals(proposals, canDelete) {
     commTableBody.innerHTML = '';
     const accepted = filtered.filter(p => p.status && p.status.toLowerCase() === 'accepted');
     accepted.sort((a, b) => {
+        const isCbA = (a.commissionNumber || '').toString().startsWith('CB');
+        const isCbB = (b.commissionNumber || '').toString().startsWith('CB');
+        
+        if (isCbA && !isCbB) return -1;
+        if (!isCbA && isCbB) return 1;
+        
+        if (isCbA && isCbB) {
+            const numA = parseInt(a.commissionNumber.replace(/\D/g, '')) || 0;
+            const numB = parseInt(b.commissionNumber.replace(/\D/g, '')) || 0;
+            if (numA !== numB) return numB - numA;
+            return b.commissionNumber.toString().localeCompare(a.commissionNumber.toString());
+        }
+        
         const numA = parseInt(a.commissionNumber) || 0;
         const numB = parseInt(b.commissionNumber) || 0;
         return numB - numA;
@@ -284,7 +306,7 @@ function renderProposals(proposals, canDelete) {
             const tr = document.createElement('tr');
             const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : p.submittedByEmail;
             tr.innerHTML = `
-                <td data-label="Comm #"><strong>#${p.commissionNumber || '—'}</strong></td>
+                <td data-label="Comm #">${renderCommNumberHtml(p.commissionNumber)}</td>
                 <td data-label="Story Title">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         <a href="proposal?id=${p.id}&view=admin" class="story-title-link">${p.story_title}</a>
@@ -360,7 +382,7 @@ function renderProposals(proposals, canDelete) {
                 : paidDate;
             const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : p.submittedByEmail;
             tr.innerHTML = `
-                <td data-label="Comm #"><strong>#${p.commissionNumber || '—'}</strong></td>
+                <td data-label="Comm #">${renderCommNumberHtml(p.commissionNumber)}</td>
                 <td data-label="Story Title">
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         <a href="proposal?id=${p.id}&view=admin" class="story-title-link">${p.story_title}</a>
@@ -420,7 +442,7 @@ function renderProposals(proposals, canDelete) {
                 const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : p.submittedByEmail;
                 const reason = p.decommissionReason ? p.decommissionReason : '<i>No reason provided</i>';
                 tr.innerHTML = `
-                    <td data-label="Comm #"><strong>#${p.commissionNumber || '—'}</strong></td>
+                    <td data-label="Comm #">${renderCommNumberHtml(p.commissionNumber)}</td>
                     <td data-label="Story Title" class="col-story-title"><a href="proposal?id=${p.id}&view=admin" class="story-title-link">${p.story_title}</a></td>
                     <td data-label="Decommissioned Date">${decDate}</td>
                     <td data-label="Reason" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${p.decommissionReason || ''}">${reason}</td>
@@ -838,13 +860,6 @@ window.openAcceptanceModal = (id) => {
     document.getElementById('acceptanceCommNum').style.borderColor = 'var(--border)';
     
     // Reset Live Studio Interview details
-    const liveStudioToggle = document.getElementById('acceptanceLiveStudioToggle');
-    if (liveStudioToggle) {
-        liveStudioToggle.checked = false;
-        if (typeof liveStudioToggle.dispatchEvent === 'function') {
-            liveStudioToggle.dispatchEvent(new Event('change'));
-        }
-    }
     const seasonInput = document.getElementById('acceptanceSeasonNum');
     if (seasonInput) seasonInput.value = '';
     const episodeInput = document.getElementById('acceptanceEpisodeNum');
@@ -854,14 +869,16 @@ window.openAcceptanceModal = (id) => {
     const storyTypeEl = document.getElementById('acceptanceStoryType');
     if (storyTypeEl) {
         storyTypeEl.value = 'Standard';
-        document.getElementById('acceptanceCommNumGroup').style.display = 'block';
+        if (typeof storyTypeEl.dispatchEvent === 'function') {
+            storyTypeEl.dispatchEvent(new Event('change'));
+        }
     }
     
     // Pre-populate Presenter and Legal Req from proposal if they exist
     const presenterEl = document.getElementById('acceptancePresenter');
     if (presenterEl) {
         const savedPresenter = (proposal.details && proposal.details.presenter) || '';
-        const standardPresenters = ['Catherine Rice', 'Claire Mawisa', 'Erin Bates', 'Govan Whittles', 'Lourensa Eckard', 'Macfarlane Moleli', 'Masa Kekana', 'Nickolaus Bauer'];
+        const standardPresenters = ['Catherine Rice', 'Claire Mawisa', 'Erin Bates', 'Govan Whittles', 'Lourensa Eckard', 'Macfarlane Moleli', 'Masa Kekana', 'Nickolaus Bauer', 'No Presenter'];
         if (savedPresenter && standardPresenters.includes(savedPresenter)) {
             presenterEl.value = savedPresenter;
         } else if (savedPresenter) {
@@ -901,7 +918,7 @@ if (acceptanceForm) {
         const presenter = document.getElementById('acceptancePresenter').value;
         const legal_req = document.querySelector('input[name="acceptanceLegalReq"]:checked')?.value || 'no';
         
-        const liveStudioInterview = document.getElementById('acceptanceLiveStudioToggle')?.checked || false;
+        const liveStudioInterview = (storyType === 'Studio');
         const liveStudioSeason = liveStudioInterview ? document.getElementById('acceptanceSeasonNum')?.value || null : null;
         const liveStudioEpisode = liveStudioInterview ? document.getElementById('acceptanceEpisodeNum')?.value || null : null;
         
@@ -1036,20 +1053,7 @@ if (ecCancel) ecCancel.onclick = () => editCommissionModal.classList.remove('act
 
 // --- TFU / STORY TYPE LOGIC ---
 const acceptanceStoryTypeEl = document.getElementById('acceptanceStoryType');
-if (acceptanceStoryTypeEl) {
-    acceptanceStoryTypeEl.addEventListener('change', (e) => {
-        const type = e.target.value;
-        const commNumGroup = document.getElementById('acceptanceCommNumGroup');
-        if (type === 'TFU') {
-            commNumGroup.style.display = 'none';
-        } else {
-            commNumGroup.style.display = 'block';
-        }
-    });
-}
-
-// --- LIVE STUDIO INTERVIEW LOGIC ---
-const acceptanceLiveStudioToggleEl = document.getElementById('acceptanceLiveStudioToggle');
+const acceptanceCommNumGroup = document.getElementById('acceptanceCommNumGroup');
 const acceptanceLiveStudioGroupEl = document.getElementById('acceptanceLiveStudioGroup');
 const acceptanceSeasonNumEl = document.getElementById('acceptanceSeasonNum');
 const acceptanceEpisodeNumEl = document.getElementById('acceptanceEpisodeNum');
@@ -1057,7 +1061,8 @@ const acceptanceCommNumEl = document.getElementById('acceptanceCommNum');
 const acceptanceCommFeedbackEl = document.getElementById('acceptanceCommFeedback');
 
 function updateLiveStudioCommNum() {
-    if (acceptanceLiveStudioToggleEl && acceptanceLiveStudioToggleEl.checked) {
+    const isStudio = (acceptanceStoryTypeEl && acceptanceStoryTypeEl.value === 'Studio');
+    if (isStudio) {
         const season = (acceptanceSeasonNumEl ? acceptanceSeasonNumEl.value.trim() : '');
         const episode = (acceptanceEpisodeNumEl ? acceptanceEpisodeNumEl.value.trim() : '');
         if (season || episode) {
@@ -1070,19 +1075,33 @@ function updateLiveStudioCommNum() {
     }
 }
 
-if (acceptanceLiveStudioToggleEl) {
-    acceptanceLiveStudioToggleEl.addEventListener('change', (e) => {
-        const checked = e.target.checked;
-        if (acceptanceLiveStudioGroupEl) {
-            acceptanceLiveStudioGroupEl.style.display = checked ? 'grid' : 'none';
-        }
-        if (acceptanceCommNumEl) {
-            acceptanceCommNumEl.readOnly = checked;
-            if (checked) {
-                updateLiveStudioCommNum();
-            } else {
+if (acceptanceStoryTypeEl) {
+    acceptanceStoryTypeEl.addEventListener('change', (e) => {
+        const type = e.target.value;
+        
+        if (type === 'TFU') {
+            if (commNumGroup) commNumGroup.style.display = 'none';
+            if (acceptanceLiveStudioGroupEl) acceptanceLiveStudioGroupEl.style.display = 'none';
+            if (acceptanceCommNumEl) {
+                acceptanceCommNumEl.readOnly = false;
                 acceptanceCommNumEl.value = '';
-                acceptanceCommFeedbackEl.textContent = '';
+                if (acceptanceCommFeedbackEl) acceptanceCommFeedbackEl.textContent = '';
+                acceptanceCommNumEl.style.borderColor = 'var(--border)';
+            }
+        } else if (type === 'Studio') {
+            if (commNumGroup) commNumGroup.style.display = 'block';
+            if (acceptanceLiveStudioGroupEl) acceptanceLiveStudioGroupEl.style.display = 'grid';
+            if (acceptanceCommNumEl) {
+                acceptanceCommNumEl.readOnly = true;
+                updateLiveStudioCommNum();
+            }
+        } else {
+            if (commNumGroup) commNumGroup.style.display = 'block';
+            if (acceptanceLiveStudioGroupEl) acceptanceLiveStudioGroupEl.style.display = 'none';
+            if (acceptanceCommNumEl) {
+                acceptanceCommNumEl.readOnly = false;
+                acceptanceCommNumEl.value = '';
+                if (acceptanceCommFeedbackEl) acceptanceCommFeedbackEl.textContent = '';
                 acceptanceCommNumEl.style.borderColor = 'var(--border)';
             }
         }
