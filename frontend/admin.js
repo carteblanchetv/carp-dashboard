@@ -1080,7 +1080,7 @@ if (acceptanceStoryTypeEl) {
         const type = e.target.value;
         
         if (type === 'TFU') {
-            if (commNumGroup) commNumGroup.style.display = 'none';
+            if (acceptanceCommNumGroup) acceptanceCommNumGroup.style.display = 'none';
             if (acceptanceLiveStudioGroupEl) acceptanceLiveStudioGroupEl.style.display = 'none';
             if (acceptanceCommNumEl) {
                 acceptanceCommNumEl.readOnly = false;
@@ -1089,14 +1089,14 @@ if (acceptanceStoryTypeEl) {
                 acceptanceCommNumEl.style.borderColor = 'var(--border)';
             }
         } else if (type === 'Studio') {
-            if (commNumGroup) commNumGroup.style.display = 'block';
+            if (acceptanceCommNumGroup) acceptanceCommNumGroup.style.display = 'block';
             if (acceptanceLiveStudioGroupEl) acceptanceLiveStudioGroupEl.style.display = 'grid';
             if (acceptanceCommNumEl) {
                 acceptanceCommNumEl.readOnly = true;
                 updateLiveStudioCommNum();
             }
         } else {
-            if (commNumGroup) commNumGroup.style.display = 'block';
+            if (acceptanceCommNumGroup) acceptanceCommNumGroup.style.display = 'block';
             if (acceptanceLiveStudioGroupEl) acceptanceLiveStudioGroupEl.style.display = 'none';
             if (acceptanceCommNumEl) {
                 acceptanceCommNumEl.readOnly = false;
