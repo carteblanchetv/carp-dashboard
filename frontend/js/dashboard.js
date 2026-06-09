@@ -63,6 +63,66 @@ checkAuth().then(user => {
         // Initial UI Render
         renderDashboardUI(user);
 
+        // --- SUBMIT INVOICE WORKFLOW ---
+        const invoiceCard = document.getElementById('invoiceActionCard');
+        if (invoiceCard) {
+            invoiceCard.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                let modal = document.getElementById('invoicePortalModal');
+                if (!modal) {
+                    const modalHTML = `
+                    <div id="invoicePortalModal" class="modal-backdrop">
+                        <div class="modal-card" style="max-width: 450px;">
+                            <div class="modal-header">
+                                <h3>Submit Invoice</h3>
+                                <button class="close-modal" id="closeInvoiceModalBtn">&times;</button>
+                            </div>
+                            <div class="modal-body" style="text-align: center; padding: 2rem 1.5rem;">
+                                <div style="font-size: 2.5rem; margin-bottom: 1rem;">💸</div>
+                                <h4 style="margin-top: 0; margin-bottom: 0.75rem; font-size: 1.15rem; font-weight: 600; color: var(--text-main);">Accounting Supplier Portal</h4>
+                                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.75rem;">
+                                    Have you registered on the production accounting supplier portal?
+                                </p>
+                                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                    <a href="https://www.cap.myacc.co.za/login" target="_blank" id="invoiceLoginBtn" class="btn-soft btn-soft-success" style="padding: 0.75rem 1rem; height: auto; text-decoration: none; text-align: center; font-weight: 700; border-radius: var(--radius-md);">
+                                        Yes, I am registered (Log In)
+                                    </a>
+                                    <a href="https://www.cap.myacc.co.za/supplier-signup" target="_blank" id="invoiceSignupBtn" class="btn-soft btn-soft-primary" style="padding: 0.75rem 1rem; height: auto; text-decoration: none; text-align: center; font-weight: 700; border-radius: var(--radius-md);">
+                                        No, I need to register (Sign Up)
+                                    </a>
+                                    <button id="cancelInvoiceModalBtn" class="btn-soft" style="padding: 0.75rem 1rem; height: auto; border-radius: var(--radius-md); margin-top: 0.25rem; background: transparent; border: 1px solid var(--border); font-weight: 600; cursor: pointer;">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                    document.body.insertAdjacentHTML('beforeend', modalHTML);
+                    modal = document.getElementById('invoicePortalModal');
+                    
+                    const closeModal = () => {
+                        modal.classList.remove('active');
+                        document.body.style.overflow = '';
+                    };
+                    
+                    document.getElementById('closeInvoiceModalBtn').onclick = closeModal;
+                    document.getElementById('cancelInvoiceModalBtn').onclick = closeModal;
+                    document.getElementById('invoiceLoginBtn').onclick = closeModal;
+                    document.getElementById('invoiceSignupBtn').onclick = closeModal;
+                    
+                    modal.onclick = (e) => {
+                        if (e.target === modal) {
+                            closeModal();
+                        }
+                    };
+                }
+                
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
         // --- SEARCH LOGIC ---
         const handleSearch = async () => {
             const params = {
