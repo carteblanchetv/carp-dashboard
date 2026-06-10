@@ -2131,31 +2131,80 @@ app.get('/api/search', async (req, res) => {
         });
     }
 
-    // 4. Filtering Results
-    const filteredResults = proposals.filter(p => {
+    // 4. Filtering and Scoring Results
+    const scoredResults = [];
+    proposals.forEach(p => {
         // Exclude decommissioned stories for non-admins (e.g. producers)
         if (p.status === 'decommissioned' && !hasAdminAccess(req.user)) {
-            return false;
+            return;
         }
 
         // Sensitivity Check - Strictly exclude sensitive stories for non-admins
         if (p.isSensitive && !hasAdminAccess(req.user)) {
-            return false;
+            return;
         }
 
         let isMatch = false;
+        let score = 0;
 
         // A. Keyword Search (Story Title, Summary, Experts)
         if (q) {
-            const query = q.toLowerCase();
-            if (p.story_title?.toLowerCase().includes(query)) isMatch = true;
-            if (p.summary?.toLowerCase().includes(query)) isMatch = true;
-            
+            const query = q.toLowerCase().trim();
+            const title = (p.story_title || '').toLowerCase().trim();
+            const summary = (p.summary || '').toLowerCase().trim();
+
+            let qMatch = false;
+
+            if (title === query) {
+                score = Math.max(score, 100);
+                qMatch = true;
+            } else if (title.startsWith(query)) {
+                score = Math.max(score, 80);
+                qMatch = true;
+            } else {
+                const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const wordBoundaryRegex = new RegExp('\\b' + escapedQuery + '\\b');
+                const wordPrefixRegex = new RegExp('\\b' + escapedQuery);
+                if (wordBoundaryRegex.test(title)) {
+                    score = Math.max(score, 60);
+                    qMatch = true;
+                } else if (wordPrefixRegex.test(title)) {
+                    score = Math.max(score, 50);
+                    qMatch = true;
+                } else if (title.includes(query)) {
+                    score = Math.max(score, 40);
+                    qMatch = true;
+                }
+            }
+
+            // Score Commission Number for Admin/Editorial in global search q
+            if (isAdmin && p.commissionNumber) {
+                const commStr = String(p.commissionNumber).toLowerCase().trim();
+                if (commStr === query) {
+                    score = Math.max(score, 95);
+                    qMatch = true;
+                } else if (commStr.includes(query)) {
+                    score = Math.max(score, 90);
+                    qMatch = true;
+                }
+            }
+
+            if (summary.startsWith(query)) {
+                score = Math.max(score, 30);
+                qMatch = true;
+            } else if (summary.includes(query)) {
+                score = Math.max(score, 20);
+                qMatch = true;
+            }
+
             // Search Experts (Decrypted)
             if (p.experts && p.experts._encrypted) {
                 try {
                     const experts = JSON.parse(decrypt(p.experts));
-                    if (JSON.stringify(experts).toLowerCase().includes(query)) isMatch = true;
+                    if (JSON.stringify(experts).toLowerCase().includes(query)) {
+                        score = Math.max(score, 10);
+                        qMatch = true;
+                    }
                 } catch (e) {}
             }
 
@@ -2163,9 +2212,14 @@ app.get('/api/search', async (req, res) => {
             if (isAdmin && p.caseStudies && p.caseStudies._encrypted) {
                 try {
                     const cases = JSON.parse(decrypt(p.caseStudies));
-                    if (JSON.stringify(cases).toLowerCase().includes(query)) isMatch = true;
+                    if (JSON.stringify(cases).toLowerCase().includes(query)) {
+                        score = Math.max(score, 5);
+                        qMatch = true;
+                    }
                 } catch (e) {}
             }
+
+            if (qMatch) isMatch = true;
         }
 
         // A2. Commission Number Search (Admin & Editorial only)
@@ -2184,7 +2238,9 @@ app.get('/api/search', async (req, res) => {
         // C. Episode/Season Search
         if (season && episode) {
             const key = `S${season}E${episode}`;
-            if (episodeMap[key]?.has(p.story_title)) isMatch = true;
+            if (episodeMap[key]?.has(p.story_title)) {
+                isMatch = true;
+            }
         }
 
         // D. User Name Search
@@ -2192,12 +2248,40 @@ app.get('/api/search', async (req, res) => {
             isMatch = true;
         }
 
-        return isMatch;
+        if (isMatch) {
+            scoredResults.push({ proposal: p, score });
+        }
+    });
+
+    const getTimestampMillis = (ts) => {
+        if (!ts) return 0;
+        if (typeof ts.toMillis === 'function') return ts.toMillis();
+        if (ts.seconds !== undefined) return ts.seconds * 1000;
+        if (ts._seconds !== undefined) return ts._seconds * 1000;
+        const d = new Date(ts);
+        return isNaN(d.getTime()) ? 0 : d.getTime();
+    };
+
+    // Sort scoredResults
+    scoredResults.sort((a, b) => {
+        if (userName) {
+            // Sort by submittedAt descending (newest to oldest)
+            return getTimestampMillis(b.proposal.submittedAt) - getTimestampMillis(a.proposal.submittedAt);
+        } else if (q) {
+            // Sort by score descending, then by submittedAt descending
+            if (b.score !== a.score) {
+                return b.score - a.score;
+            }
+            return getTimestampMillis(b.proposal.submittedAt) - getTimestampMillis(a.proposal.submittedAt);
+        } else {
+            // Default to newest to oldest
+            return getTimestampMillis(b.proposal.submittedAt) - getTimestampMillis(a.proposal.submittedAt);
+        }
     });
 
     // 5. Finalize output
     const isProducerRole = (req.user.role || '').toLowerCase() === 'producer';
-    const results = filteredResults.map(p => {
+    const results = scoredResults.map(({ proposal: p }) => {
         const isOwner = p.submittedBy === req.user.uid || (req.user.email && p.submittedBy === req.user.email.toLowerCase());
         const isRestricted = !isOwner && !isAdmin && isProducerRole;
         

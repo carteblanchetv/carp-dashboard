@@ -1,0 +1,157 @@
+{
+  "show": "Carte Blanche",
+  "extra_budget": "no",
+  "hidden_camera": "no",
+  "legal_req": "no",
+  "isSensitive": false,
+  "isForeignSpecial": false,
+  "permittedUids": [],
+  "budgetItems": [],
+  "submittedAt": {
+    "_seconds": 1776855415,
+    "_nanoseconds": 682000000
+  },
+  "acceptanceDetails": {
+    "duration": "10:00",
+    "deliveryDate": "2026-05-24",
+    "rate": "7100",
+    "contractAccepted": true,
+    "acceptedBy": "stenette@carteblanche.co.za"
+  },
+  "commissionNumber": "6894",
+  "acceptedAt": {
+    "_seconds": 1776855465,
+    "_nanoseconds": 973000000
+  },
+  "txDate": null,
+  "paidAt": null,
+  "status": "accepted",
+  "submittedByEmail": "liz@carteblanche.co.za",
+  "submittedBy": "0H3rZTQJmrRqWojh7qpjofni0ft1",
+  "summary": "",
+  "lastUpdatedAt": {
+    "_seconds": 1781086828,
+    "_nanoseconds": 213000000
+  },
+  "story_title": "",
+  "caseStudies": {
+    "iv": "c8a262ed464ade4fa291541daa9f2b1a",
+    "content": "a553",
+    "tag": "c49f41fc6e63533ba655cc8eedd17d53",
+    "_encrypted": true
+  },
+  "one_liner": "",
+  "details": {
+    "additionalCrew": [],
+    "audio_final_mix": {
+      "name": "Dan",
+      "surname": "Dewes"
+    },
+    "online_editor": {
+      "name": "Dan ",
+      "surname": "Clayton"
+    },
+    "presenter": [
+      "Lourensa Eckard"
+    ],
+    "offline_editor": {
+      "name": "",
+      "surname": ""
+    },
+    "callSheet": {
+      "shoot_dates": [],
+      "crew": [
+        {
+          "role": "Presenter",
+          "name": "",
+          "surname": "",
+          "phone": ""
+        },
+        {
+          "role": "Producer",
+          "name": "",
+          "surname": "",
+          "phone": ""
+        },
+        {
+          "role": "DOP",
+          "name": "",
+          "surname": "",
+          "phone": ""
+        },
+        {
+          "role": "Camera Assistant",
+          "name": "",
+          "surname": "",
+          "phone": ""
+        }
+      ],
+      "security": {
+        "name": "",
+        "surname": "",
+        "company": "",
+        "phone": ""
+      },
+      "risk_assessment": "",
+      "movement_orders": [],
+      "equipment": {
+        "as_per_dop": false,
+        "cameras": [],
+        "audios": [],
+        "camera_type": "",
+        "camera_desc": "",
+        "audio_type": "",
+        "audio_desc": "",
+        "lenses_desc": "",
+        "lighting_desc": "",
+        "rigs_desc": "",
+        "other_desc": ""
+      },
+      "travel": {
+        "flights": [],
+        "flight_file_path": "",
+        "flight_filename": "",
+        "accoms": [],
+        "accom_file_path": "",
+        "accom_filename": "",
+        "transports": [],
+        "trans_file_path": "",
+        "trans_filename": ""
+      }
+    },
+    "sound": [],
+    "camera": [
+      {
+        "name": "Greg",
+        "surname": "Nelson"
+      }
+    ],
+    "camera_assistant": [],
+    "researcher": [
+      {
+        "name": "Liz",
+        "surname": "Fish"
+      }
+    ],
+    "dop": [
+      {
+        "name": "Greg",
+        "surname": "Nelson"
+      }
+    ],
+    "finalScript": {
+      "promoLines": [],
+      "content": "James Joubert: The Cederberg is in my blood. And once it is in your blood, you don't get it out.\nVO: Lourensa Eckard\" James Joubert has been trekking in these mountains with donkeys since he was 13.  \nHe's a fifth generation Cederberger \nUpsound Lourensa Eckard \" Good morning,\nJames Joubert\"  I am James \nVO: Lourensa Eckard \" Mandy and Geweld only get saddled up these days for the tourists.\nBut his forefathers used pack donkeys to transport planks and furniture made from cedar trees\nUpsound - Lourens Eckhard \"They're doing well, these two... come Geweld, come Mandy \nJames Joubert: My father and them, they were cedar people, they harvested and made things with the cedars, they would travel to Clanwilliam with them in the donkey cart. They were Cederberg people\nVO:  Lourensa Eckard \" For 35 years James has planted and protected Cedar trees, like his father before him. Now 72 - his work isn't done\" \nLourensa Eckard:  Would you say you have a special relationship with these trees?\n\nJames Joubert:  Yes, no, no, no, it is part of my life, I have a very close relationship with the cedars, because our place is of course named after the cedars: The Cederberg.\n\nLINK Lourensa Eckard\" These ancient giants have been thriving for millennia without human intervention, but the planet was much cooler then. But today, it's actually quite rare to see a centuries-old cedar in the Cederberg.\nVO: Lourensa Eckard \"The iconic Clanwilliam Cedar tree, clinging to the crags high in the Western Cape Cederberg Wilderness - is in trouble\nDAWIE BURGER \"I think we only have an estimated 8,000 left. To put that in perspective, in 2015, we had about 14,000.\"\nVO: LOURENSA ECKARD \" A species that has survived here for thousands of years - has halved in number in just the past decade \"\nVO: LOURENSA ECKARD \" One of the biggest factors is fire--now more frequent and devastating: \nLate last year, more than 50 thousand hectares of the Cederberg were burnt.\nDAWIE BURGER* \"So these massive fires take about 17% of the cedars out. And that's just the fires. Then you still have extreme wind chill factors... and bark beetles going to cedars and they really struggle, and the bark beetles take them out.\"\nVO: LOURENSA ECKARD \"Up here, the evidence is devastating: \nLINK: Lourensa Eckard\" These dead cedars out number living cedars two to one, and it was recognised as far back as 1882 that they were being over harvested for things like telephone poles, and despite being declared a protected spies in 1964, today they are critically endangered\nVO: Lourensa Eckard -- Dawie Burger is racing against time.      \n He's lived in the Cederberg for 18 years, seeing devastating fires and floods tear through the landscape.  \nHe's become increasingly distressed about the future of the Clanwilliam cedar.\nDawie Burger:\" No one's doing it physically like the restoration work of it. And, um, and I just felt, well, this is where we need to, like, step up, you know from a Government side and from a private passionate side\"\nVO:  Lourensa Eckard \"Three years ago, he started a community driven, non-profit called Sustainable Cedar. \nDawie Burger: Planting cedars out is firstly not for the faint-hearted. I mean your farms are usually at about 1000m above sea level, climbing up to them starts at 1300. The highest cedars grow at around 1600 meters above sea level. With climate factors, we need to start planting higher, into microclimate, rocky island areas.\nVO Lourensa Eckard \"Locals, like James, with his deep knowledge of the mountains and the cedars, had critical skills to offer.  \n Dawie Burger: Ja Oom James I mean that is true character of the Cederberg. Like its for me he is like an old archive book that you open up\nVO: Lourensa Eckard \" They began harvesting seeds, collected across 25 000 hectares where the cedars grow, aiming to grow 10 000 new saplings this year. \nDawie Burger \" We work with botanists, we keep georeference of where we collect that seed because it's all about the genetics So if you pick seeds on that side, you need to plant those cedar saplings back into that environment.\nUpsound Dawie Burger\" Good day Anel\nVO:  Lourensa Eckard \"To increase the saplings' chances of survival,  a small \"teabag\" filled with slow-release nutrients and aquagel is placed in the ground below the saplings when they are planted out,  to help retain moisture around the roots.\nLourensa Eckart Link: \"We are about to head up the mountain for a two-hour hike to find a home for the cedars that have been propagated and hardened in the nursery \nVO:  Lourensa Eckard  \"Cedars are very slow growing; It takes as long as two years for them to grow strong enough to return to the mountains, and it'll be another 20 years before they produce their own seed.\nJames Joubert:  Our parents and grandparents have already trodden these paths  to plant the trees, and I feel it is our duty to continue doing that.\n\nVO: Lourensa Eckart \"Carrying these adapted backpacks - each containing up to 50 saplings and weighing about 15 kilograms - is a challenge in this high-altitude terrain.\n\n \nUp sound Dawie Burger \"Some beautiful rock art, its very small but its here. \nLourensa Eckahrt \"It's a bokkie, \nDawie Burger \" and then there is a guy over here with a bow and arrow, probably between 4000 and 20000 years old. Ja it just reminds us that people have been coming here for a very long time\nBreather\nDawie Burger \"there is some germination happening here,this is natural cedars germinating in their natural environment  \nLourensa Eckart \"so how old is the tree up there\nDawie Burger \"This one is about 250 years old, estimate, some of them go 300 even 400 years old\nLink: Lourensa Eckhard  \"hUff we finally reached the top, I am just glad I wasn't carrying one of those trays, but now we can get planting\"\nVO:  Lourensa Eckard \" Precisely  8,768  saplings have been placed back into the landscape -- each one georeferenced and tracked to monitor whether it's survived.\nUpsound Denwill Zass \" Feel if the ground is soft\"\nVO:  Lourensa Eckard \"The results have been mixed: the effects of a changing climate are taking their toll, they have lost roughly half of them.\nJames Joubert: It is very disappointing, this fire that we have just had, I am sure undid a lot of our replantings, and that is a very sad story, we put a lot into it to get the saplings there, and all of a sudden they were destroyed. But that is natural, and there is nothing a person can do about it.\n \nBreather \n \nVO: Lourensa Eckard \" Drone and other technologies are being used to plant far more saplings than ever before, and Dawie and his team, are aiming for 5000 each year.\n\nDawie Burger There's about probably 25,000 hectares where the cedars still occur.  We can use the drone to help bring up the trays with the cedars to the location where we plant them, and the other side is we can even use the drone to drop these sapling plugs into these rocky crevices\n \nUpsound Dawie Burger\" We have got radios for each backpack that we have built there\"\n \nVO: Lourensa Eckard \" Mobilising a wide network of people, passionate about the Cederberg, has been critical to Sustainable Ceder's work.  They include trail runners carrying adapted seed packs into remote mountain cracks, and teams of over 200 volunteers on coordinated work weekends. \"\n\nLourensa Eckard: Seeing how many people have become enthusiastic about this and have become involved, has that surprised you?\n \nDawie Burger: \"Yeah, definitely. It surprised me, having friends is one thing, but having people supporting you with a spade and a pick and helping on trail maintenance and firebreaks and planting cedars. That's the beauty of it, open the door and everyone starts walking through you know, and that is the lekker thing about it\n  \nJames Joubert:  It is very important for the whole community, I'm also happy for the younger people who are part of the group because our older people are getting older and they are dying out, and the cedars must survive for the next generations.\n\nLink: Lourensa Eckart \"After having spent a day in the mountains it really changed my perspective on time, I mean we walked past rock art that is 1000's of years old and I am thankful that I got to see all of these trees that are two three hundred years old. \nI am fearful about the future, but I am also hopeful about the group of people that are so passionate, and giving these trees a chance at survival.\n\n",
+      "pressRelease": "",
+      "updatedAt": "2026-06-10T10:20:06.887Z"
+    }
+  },
+  "locations": [],
+  "third_party": "no",
+  "experts": {
+    "iv": "6223a01e038e125dd60204986d94e1e4",
+    "content": "8869",
+    "tag": "dd5365d8d93184781aceeefb880f97cc",
+    "_encrypted": true
+  }
+}

@@ -1,34 +1,32 @@
-
 const admin = require('firebase-admin');
-const serviceAccount = require('./serviceAccountKey.json'); // I hope this exists locally if I'm on user's system
+const fs = require('fs');
 
-// Wait, I don't have the service account key.
-// But I am running in the workspace.
-// Firebase admin usually finds credentials if logged in via CLI.
-admin.initializeApp({
-    credential: admin.credential.applicationDefault(),
-    projectId: 'cb-deliverables'
-});
+if (admin.apps.length === 0) {
+    if (fs.existsSync('./serviceAccountKey.json')) {
+        admin.initializeApp({
+            credential: admin.credential.cert(require('./serviceAccountKey.json')),
+            projectId: 'cb-deliverables'
+        });
+    } else {
+        admin.initializeApp({
+            projectId: 'cb-deliverables'
+        });
+    }
+}
 
 const db = admin.firestore();
 
 async function check() {
-    const id = 'Uackto32PS1M6n83g67a';
-    const doc = await db.collection('proposals').doc(id).get();
-    if (doc.exists) {
-        console.log('Exists in proposals');
-    } else {
-        const sDoc = await db.collection('submissions').doc(id).get();
-        if (sDoc.exists) {
-            console.log('Exists in submissions');
-        } else {
-            console.log('Not found');
+    try {
+        const id = 'pGzVis9kO4qYLA61UU3d';
+        const doc = await db.collection('proposals').doc(id).get();
+        if (doc.exists) {
+            fs.writeFileSync('proposal_dump.json', JSON.stringify(doc.data(), null, 2));
+            console.log('Dumped proposal to proposal_dump.json');
         }
+    } catch (e) {
+        console.error('Error:', e);
     }
-    process.exit(0);
 }
 
-check().catch(err => {
-    console.error(err);
-    process.exit(1);
-});
+check().then(() => process.exit(0));
