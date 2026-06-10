@@ -1937,10 +1937,15 @@ app.post('/api/update-proposal-details', express.json(), async (req, res) => {
     }
 
     // Allow updating top-level fields too (e.g. for Admin edits or typos)
-    if (story_title !== undefined) updateData.story_title = story_title;
-    if (show !== undefined) updateData.show = show;
-    if (one_liner !== undefined) updateData.one_liner = one_liner;
-    if (summary !== undefined) updateData.summary = summary;
+    if (story_title !== undefined && String(story_title).trim() !== '') updateData.story_title = story_title;
+    if (show !== undefined && String(show).trim() !== '') updateData.show = show;
+    if (one_liner !== undefined && String(one_liner).trim() !== '') updateData.one_liner = one_liner;
+    if (summary !== undefined) {
+        const trimmedSummary = String(summary).replace(/<[^>]*>/g, '').trim();
+        if (trimmedSummary !== '') {
+            updateData.summary = summary;
+        }
+    }
     if (extra_budget !== undefined) updateData.extra_budget = extra_budget;
     if (locations !== undefined) updateData.locations = locations;
     

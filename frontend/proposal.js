@@ -1890,11 +1890,27 @@ document.addEventListener('DOMContentLoaded', () => {
             summaryTextarea.value = summaryEditor.innerHTML;
         }
         const formData = new FormData(form);
+
+        const getFallback = (key, domValue) => {
+            if (domValue === null || domValue === undefined || String(domValue).trim() === '') {
+                return window.currentProposal?.[key] || '';
+            }
+            return domValue;
+        };
+
+        const getSummaryFallback = (domValue) => {
+            const trimmed = (domValue || '').replace(/<[^>]*>/g, '').trim();
+            if (trimmed === '') {
+                return window.currentProposal?.summary || '';
+            }
+            return domValue;
+        };
+
         const data = {
-            story_title: formData.get('story_title'),
-            show: formData.get('show'),
-            one_liner: formData.get('one_liner'),
-            summary: summaryEditor ? summaryEditor.innerHTML : (formData.get('summary') || ''),
+            story_title: getFallback('story_title', formData.get('story_title')),
+            show: getFallback('show', formData.get('show')),
+            one_liner: getFallback('one_liner', formData.get('one_liner')),
+            summary: getSummaryFallback(summaryEditor ? summaryEditor.innerHTML : (formData.get('summary') || '')),
             extra_budget: (document.getElementById('extra_budget_toggle')?.checked) ? 'yes' : 'no',
             locations: (() => {
                 const countries = Array.from(document.querySelectorAll('[name="loc_country[]"]')).map(i => i.value);

@@ -18,11 +18,33 @@ const db = admin.firestore();
 
 async function check() {
     try {
-        const id = 'pGzVis9kO4qYLA61UU3d';
+        const id = 'OZkzr70HKWWFtNZOi5rs';
+        console.log(`Checking ID: ${id}`);
+        
         const doc = await db.collection('proposals').doc(id).get();
         if (doc.exists) {
-            fs.writeFileSync('proposal_dump.json', JSON.stringify(doc.data(), null, 2));
-            console.log('Dumped proposal to proposal_dump.json');
+            console.log('Exists in proposals collection!');
+            const data = doc.data();
+            console.log('story_title:', data.story_title);
+            console.log('one_liner:', data.one_liner);
+            console.log('summary:', data.summary);
+            console.log('status:', data.status);
+            console.log('commissionNumber:', data.commissionNumber);
+        } else {
+            console.log('Not found in proposals collection.');
+        }
+
+        const sDoc = await db.collection('submissions').doc(id).get();
+        if (sDoc.exists) {
+            console.log('Exists in submissions collection!');
+            const data = sDoc.data();
+            console.log('story_title:', data.story_title);
+            console.log('one_liner:', data.one_liner);
+            console.log('summary:', data.summary);
+            console.log('status:', data.status);
+            console.log('commissionNumber:', data.commissionNumber);
+        } else {
+            console.log('Not found in submissions collection.');
         }
     } catch (e) {
         console.error('Error:', e);
