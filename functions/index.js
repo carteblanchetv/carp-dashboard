@@ -495,7 +495,127 @@ app.post('/api/forgot-password', express.json(), async (req, res) => {
   }
 });
 
+/**
+ * Webhook for external submissions (e.g. Microsoft Power Automate)
+ */
+app.post('/api/submissions/external', express.json({ limit: '15mb' }), async (req, res) => {
+  try {
+    // 1. Verify API Key
+    const apiKey = req.headers['x-api-key'];
+    const expectedKey = process.env.MICROSOFT_API_KEY;
+    if (!expectedKey || apiKey !== expectedKey) {
+      return res.status(401).json({ success: false, error: 'Unauthorized: Invalid or missing API Key.' });
+    }
+
+    const { senderEmail, senderName, subject, body, bodyHtml, attachments } = req.body;
+
+    if (!senderEmail || !subject || !body) {
+      return res.status(400).json({ success: false, error: 'senderEmail, subject, and body are required.' });
+    }
+
+    console.log(`[EXTERNAL_WEBHOOK] Received submission from ${senderEmail} - Subject: "${subject}"`);
+
+    // 2. Classify submission type
+    const tipoffData = parseDstvTipOff(subject, body);
+    const formType = tipoffData ? 'dstv_tipoff' : 'email_submission';
+    console.log(`[EXTERNAL_WEBHOOK] Classifying as ${formType}`);
+
+    // 3. Process attachments
+    const storedAttachments = [];
+    if (Array.isArray(attachments)) {
+      for (const att of attachments) {
+        if (!att.filename || !att.contentType || !att.contentBytes) {
+          console.warn('[EXTERNAL_WEBHOOK] Skipping invalid attachment object:', att);
+          continue;
+        }
+
+        try {
+          const buffer = Buffer.from(att.contentBytes, 'base64');
+          const safeName = att.filename.replace(/[^a-zA-Z0-9_\-.]/g, '');
+          const storagePath = `submissions/${formType}/${Date.now()}_${safeName}`;
+          const encryptedBuf = encryptBuffer(buffer);
+
+          await defaultBucket.file(storagePath).save(encryptedBuf, {
+            contentType: att.contentType,
+          });
+
+          storedAttachments.push({
+            filename: att.filename,
+            contentType: att.contentType,
+            storagePath
+          });
+
+          console.log(`[EXTERNAL_WEBHOOK] Uploaded and encrypted attachment: ${storagePath}`);
+        } catch (uploadErr) {
+          console.error(`[EXTERNAL_WEBHOOK] Failed to process attachment ${att.filename}:`, uploadErr);
+        }
+      }
+    }
+
+    // 4. Save to Firestore
+    const fromName = senderName || senderEmail.split('@')[0];
+    const submissionDoc = {
+      formType,
+      submittedAt: admin.firestore.Timestamp.fromDate(new Date()),
+      importedAt: admin.firestore.FieldValue.serverTimestamp(),
+      submittedByEmail: senderEmail,
+      submittedByName: fromName,
+      subject,
+      body,
+      bodyHtml: bodyHtml || '',
+      attachments: storedAttachments,
+      isEmailImport: true,
+      source: 'microsoft_webhook',
+    };
+
+    if (formType === 'dstv_tipoff' && tipoffData) {
+      submissionDoc.tipoffDetails = tipoffData;
+    }
+
+    const docRef = await admin.firestore().collection('submissions').add(submissionDoc);
+    console.log(`[EXTERNAL_WEBHOOK] Saved to Firestore: submissions/${docRef.id}`);
+
+    // 5. Send alerts to relevant users
+    try {
+      const notifyType = formType === 'dstv_tipoff' ? 'dstv_tipoff' : 'email_submission';
+      const notifySubject = formType === 'dstv_tipoff'
+        ? `New DStv Tip-Off received from ${fromName}`
+        : `New Email Submission: ${subject}`;
+      const notifyHtml = `
+        <div style="font-family:sans-serif;line-height:1.6;color:#333">
+          <h2 style="color:#c00">📩 ${formType === 'dstv_tipoff' ? 'DStv Tip-Off' : 'Email Submission'}</h2>
+          <ul>
+            <li><b>From:</b> ${fromName} &lt;${senderEmail}&gt;</li>
+            <li><b>Subject:</b> ${subject}</li>
+            <li><b>Received:</b> ${new Date().toLocaleString('en-ZA')}</li>
+            ${storedAttachments.length > 0 ? `<li><b>Attachments:</b> ${storedAttachments.map(a => a.filename).join(', ')}</li>` : ''}
+          </ul>
+          ${tipoffData ? `
+          <h3>Tip Details</h3>
+          <ul>
+            <li><b>Name:</b> ${tipoffData.name} ${tipoffData.lastName}</li>
+            <li><b>Email:</b> ${tipoffData.email}</li>
+            <li><b>Phone:</b> ${tipoffData.phone}</li>
+            <li><b>Location:</b> ${tipoffData.location}</li>
+            <li><b>Story:</b> ${tipoffData.story}</li>
+          </ul>` : `<blockquote style="background:#f4f4f4;padding:10px;border-left:4px solid #ccc">${body.substring(0, 800)}</blockquote>`}
+          <p style="font-size:0.8rem;color:#999">View full submission in the CARP Dashboard.</p>
+        </div>
+      `;
+      await notifyRelevantUsers(notifyType, notifySubject, notifyHtml);
+    } catch (notifyErr) {
+      console.error('[EXTERNAL_WEBHOOK] Notification error:', notifyErr);
+    }
+
+    res.status(200).json({ success: true, firestoreDocId: docRef.id });
+  } catch (err) {
+    console.error('[EXTERNAL_WEBHOOK] Error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 app.use(validateFirebaseIdToken);
+
 
 /**
  * Helper to parse multipart form data
@@ -3134,3 +3254,6 @@ exports.verifyTurnstileToken = functions.https.onCall(async (data, context) => {
         throw new functions.https.HttpsError('internal', 'Internal error during security token exchange.');
     }
 });
+
+exports.app = app;
+
