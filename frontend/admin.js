@@ -263,9 +263,9 @@ function renderProposals(proposals, canDelete) {
             container.style.display = 'block';
             container.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin: 0 auto; gap: 1rem;">
-                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.pending === 1 ? 'disabled' : ''} onclick="window.changePage('pending', -1)">&larr; Previous</button>
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem; ${pending.length <= 10 ? 'display: none;' : ''}" ${currentPages.pending === 1 ? 'disabled' : ''} onclick="window.changePage('pending', -1)">&larr; Previous</button>
                     <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted); min-width: 120px; text-align: center;">Page ${currentPages.pending} of ${totalPagesPending}</span>
-                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.pending === totalPagesPending ? 'disabled' : ''} onclick="window.changePage('pending', 1)">Next &rarr;</button>
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem; ${pending.length <= 10 ? 'display: none;' : ''}" ${currentPages.pending === totalPagesPending ? 'disabled' : ''} onclick="window.changePage('pending', 1)">Next &rarr;</button>
                 </div>
             `;
         }
@@ -332,9 +332,9 @@ function renderProposals(proposals, canDelete) {
             container.style.display = 'block';
             container.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin: 0 auto; gap: 1rem;">
-                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.commissioned === 1 ? 'disabled' : ''} onclick="window.changePage('commissioned', -1)">&larr; Previous</button>
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem; ${accepted.length <= 10 ? 'display: none;' : ''}" ${currentPages.commissioned === 1 ? 'disabled' : ''} onclick="window.changePage('commissioned', -1)">&larr; Previous</button>
                     <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted); min-width: 120px; text-align: center;">Page ${currentPages.commissioned} of ${totalPagesComm}</span>
-                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.commissioned === totalPagesComm ? 'disabled' : ''} onclick="window.changePage('commissioned', 1)">Next &rarr;</button>
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem; ${accepted.length <= 10 ? 'display: none;' : ''}" ${currentPages.commissioned === totalPagesComm ? 'disabled' : ''} onclick="window.changePage('commissioned', 1)">Next &rarr;</button>
                 </div>
             `;
         }
@@ -407,9 +407,9 @@ function renderProposals(proposals, canDelete) {
             container.style.display = 'block';
             container.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin: 0 auto; gap: 1rem;">
-                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.paid === 1 ? 'disabled' : ''} onclick="window.changePage('paid', -1)">&larr; Previous</button>
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem; ${paid.length <= 10 ? 'display: none;' : ''}" ${currentPages.paid === 1 ? 'disabled' : ''} onclick="window.changePage('paid', -1)">&larr; Previous</button>
                     <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted); min-width: 120px; text-align: center;">Page ${currentPages.paid} of ${totalPagesPaid}</span>
-                    <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.paid === totalPagesPaid ? 'disabled' : ''} onclick="window.changePage('paid', 1)">Next &rarr;</button>
+                    <button class="btn-soft" style="flex: 1; padding: 0.5rem; ${paid.length <= 10 ? 'display: none;' : ''}" ${currentPages.paid === totalPagesPaid ? 'disabled' : ''} onclick="window.changePage('paid', 1)">Next &rarr;</button>
                 </div>
             `;
         }
@@ -459,9 +459,9 @@ function renderProposals(proposals, canDelete) {
                 container.style.display = 'block';
                 container.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin: 0 auto; gap: 1rem;">
-                        <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.decommissioned === 1 ? 'disabled' : ''} onclick="window.changePage('decommissioned', -1)">&larr; Previous</button>
+                        <button class="btn-soft" style="flex: 1; padding: 0.5rem; ${decommissioned.length <= 10 ? 'display: none;' : ''}" ${currentPages.decommissioned === 1 ? 'disabled' : ''} onclick="window.changePage('decommissioned', -1)">&larr; Previous</button>
                         <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted); min-width: 120px; text-align: center;">Page ${currentPages.decommissioned} of ${totalPagesDecomp}</span>
-                        <button class="btn-soft" style="flex: 1; padding: 0.5rem;" ${currentPages.decommissioned === totalPagesDecomp ? 'disabled' : ''} onclick="window.changePage('decommissioned', 1)">Next &rarr;</button>
+                        <button class="btn-soft" style="flex: 1; padding: 0.5rem; ${decommissioned.length <= 10 ? 'display: none;' : ''}" ${currentPages.decommissioned === totalPagesDecomp ? 'disabled' : ''} onclick="window.changePage('decommissioned', 1)">Next &rarr;</button>
                     </div>
                 `;
             }
