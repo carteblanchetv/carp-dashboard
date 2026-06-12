@@ -14,8 +14,26 @@ const currentPages = {
     resolved: 1
 };
 
+// Load saved pages on init
+try {
+    const saved = localStorage.getItem('cb_viewer_submissions_pages');
+    if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.investigation) currentPages.investigation = Number(parsed.investigation) || 1;
+        if (parsed.submissions) currentPages.submissions = Number(parsed.submissions) || 1;
+        if (parsed.resolved) currentPages.resolved = Number(parsed.resolved) || 1;
+    }
+} catch (e) {
+    console.error('Error loading saved pages from localStorage:', e);
+}
+
 window.changePage = (type, delta) => {
     currentPages[type] += delta;
+    try {
+        localStorage.setItem('cb_viewer_submissions_pages', JSON.stringify(currentPages));
+    } catch (e) {
+        console.error('Error saving pages to localStorage:', e);
+    }
     renderSubmissions(globalSubmissionsCache, currentUserCache);
 };
 
@@ -24,6 +42,7 @@ checkAuth().then(user => {
         window.auth.initNavBar(user);
         currentUserCache = user;
         loadSubmissions(user);
+        initSearch();
     }
 });
 
@@ -68,8 +87,54 @@ function renderSubmissions(submissions, user) {
     const resolvedList = document.getElementById('resolvedList');
     if (!regularList || !investigationList || !resolvedList) return;
 
-    // Filter out spam submissions, and partition into inbox, useful, and resolved
-    const validSubs = submissions.filter(s => s.status !== 'spam' && s.reportedSpam !== true);
+    // Filter out spam/e-purifier submissions, and partition into inbox, useful, and resolved
+    let validSubs = submissions.filter(s => {
+        if (s.status === 'spam' || s.reportedSpam === true) return false;
+        const fromEmail = (s.submittedByEmail || '').toLowerCase();
+        const fromName = (s.submittedByName || '').toLowerCase();
+        if (fromEmail === 'quarantine@e-purifier.com' || fromEmail.includes('e-purifier.com') || fromName.includes('e-purifier support')) {
+            return false;
+        }
+        return true;
+    });
+    
+    // Apply search filter
+    const searchVal = (document.getElementById('submissionsSearchInput')?.value || '').toLowerCase().trim();
+    if (searchVal) {
+        validSubs = validSubs.filter(s => {
+            const subject = (s.subject || '').toLowerCase();
+            const body = (s.body || '').toLowerCase();
+            const fromEmail = (s.submittedByEmail || '').toLowerCase();
+            const fromName = (s.submittedByName || '').toLowerCase();
+            
+            // Check extracted details (Tipoff details)
+            let tipName = '';
+            let tipLastName = '';
+            let tipEmail = '';
+            let tipPhone = '';
+            let tipLocation = '';
+            let tipStory = '';
+            if (s.tipoffDetails) {
+                tipName = (s.tipoffDetails.name || '').toLowerCase();
+                tipLastName = (s.tipoffDetails.lastName || '').toLowerCase();
+                tipEmail = (s.tipoffDetails.email || '').toLowerCase();
+                tipPhone = (s.tipoffDetails.phone || '').toLowerCase();
+                tipLocation = (s.tipoffDetails.location || '').toLowerCase();
+                tipStory = (s.tipoffDetails.story || '').toLowerCase();
+            }
+            
+            return subject.includes(searchVal) ||
+                   body.includes(searchVal) ||
+                   fromEmail.includes(searchVal) ||
+                   fromName.includes(searchVal) ||
+                   tipName.includes(searchVal) ||
+                   tipLastName.includes(searchVal) ||
+                   tipEmail.includes(searchVal) ||
+                   tipPhone.includes(searchVal) ||
+                   tipLocation.includes(searchVal) ||
+                   tipStory.includes(searchVal);
+        });
+    }
     
     const resolvedSubs = validSubs.filter(s => s.resolved === true);
     const investigationSubs = validSubs.filter(s => s.useful === true && s.resolved !== true);
@@ -104,7 +169,7 @@ function renderSubmissions(submissions, user) {
             }
 
             const deleteButtonHtml = canDelete
-                ? `<button class="btn-admin-cell danger delete-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; margin-left: 0.4rem;">🗑️ Delete</button>`
+                ? `<button class="btn-admin-cell danger delete-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">🗑️ Delete</button>`
                 : '';
 
             return `
@@ -120,7 +185,7 @@ function renderSubmissions(submissions, user) {
                     </td>
                     <td data-label="Date Received" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${dateText}</td>
                     <td data-label="Actions" style="text-align: center;">
-                        <div style="display: flex; gap: 0.2rem; justify-content: center; align-items: center;">
+                        <div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center;">
                             <button class="btn-admin-cell secondary view-details-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">📄 View</button>
                             ${deleteButtonHtml}
                         </div>
@@ -170,17 +235,17 @@ function renderSubmissions(submissions, user) {
             }
 
             const deleteButtonHtml = canDelete
-                ? `<button class="btn-admin-cell danger delete-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; margin-left: 0.4rem;">🗑️ Delete</button>`
+                ? `<button class="btn-admin-cell danger delete-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">🗑️ Delete</button>`
                 : '';
             
             const resolveButtonHtml = canDelete
-                ? `<button class="btn-admin-cell success resolve-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; margin-left: 0.4rem;">✅ Resolve</button>`
+                ? `<button class="btn-admin-cell success resolve-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">✅ Resolve</button>`
                 : '';
 
             return `
                 <tr>
                     <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${startIndex + index + 1}.</td>
-                    <td data-label="Actioned By" style="text-align: center; color: #f97316; font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
+                    <td data-label="Actioned By" style="text-align: center; color: var(--text); font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
                     <td data-label="Subject" style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                         <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;" title="${subject.replace(/"/g, '&quot;')}">
                             ${subject}
@@ -191,7 +256,7 @@ function renderSubmissions(submissions, user) {
                     </td>
                     <td data-label="Date Received" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${dateText}</td>
                     <td data-label="Actions" style="text-align: center;">
-                        <div style="display: flex; gap: 0.2rem; justify-content: center; align-items: center;">
+                        <div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center;">
                             <button class="btn-admin-cell secondary view-details-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">📄 View</button>
                             ${resolveButtonHtml}
                             ${deleteButtonHtml}
@@ -242,13 +307,13 @@ function renderSubmissions(submissions, user) {
             }
 
             const deleteButtonHtml = canDelete
-                ? `<button class="btn-admin-cell danger delete-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; margin-left: 0.4rem;">🗑️ Delete</button>`
+                ? `<button class="btn-admin-cell danger delete-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">🗑️ Delete</button>`
                 : '';
 
             return `
                 <tr>
                     <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${startIndex + index + 1}.</td>
-                    <td data-label="Actioned By" style="text-align: center; color: #10b981; font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
+                    <td data-label="Actioned By" style="text-align: center; color: var(--text); font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
                     <td data-label="Subject" style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                         <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;" title="${subject.replace(/"/g, '&quot;')}">
                             ${subject}
@@ -259,7 +324,7 @@ function renderSubmissions(submissions, user) {
                     </td>
                     <td data-label="Date Resolved" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${dateText}</td>
                     <td data-label="Actions" style="text-align: center;">
-                        <div style="display: flex; gap: 0.2rem; justify-content: center; align-items: center;">
+                        <div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center;">
                             <button class="btn-admin-cell secondary view-details-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">📄 View</button>
                             ${deleteButtonHtml}
                         </div>
@@ -519,3 +584,35 @@ modal.onclick = (e) => {
         closeModal();
     }
 };
+
+function initSearch() {
+    const searchInput = document.getElementById('submissionsSearchInput');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', () => {
+        const value = searchInput.value.trim();
+        if (clearBtn) {
+            clearBtn.style.display = value ? 'block' : 'none';
+        }
+        // When searching, reset page counters to 1
+        currentPages.investigation = 1;
+        currentPages.submissions = 1;
+        currentPages.resolved = 1;
+        
+        renderSubmissions(globalSubmissionsCache, currentUserCache);
+    });
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            
+            currentPages.investigation = 1;
+            currentPages.submissions = 1;
+            currentPages.resolved = 1;
+            renderSubmissions(globalSubmissionsCache, currentUserCache);
+            searchInput.focus();
+        });
+    }
+}

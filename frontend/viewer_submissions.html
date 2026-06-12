@@ -87,6 +87,15 @@
             </nav>
         </header>
 
+        <!-- SEARCH BAR -->
+        <div class="search-container-modern" style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
+            <div class="search-input-wrapper">
+                <span style="font-size: 1.1rem; margin-right: 0.5rem; display: flex; align-items: center; color: var(--text-muted);">🔍</span>
+                <input type="text" id="submissionsSearchInput" class="search-input-modern" placeholder="Search by keyword, name, surname or email..." style="width: 100%;">
+                <button id="clearSearchBtn" class="search-icon-btn" style="display: none; font-size: 1.25rem; font-weight: 700; color: var(--text-muted); cursor: pointer;" title="Clear search">&times;</button>
+            </div>
+        </div>
+
         <!-- UNDER INVESTIGATION SECTION -->
         <section id="investigationSection" class="dashboard-section" style="margin-top: 2rem; border-top: 3px solid #f97316;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
@@ -99,10 +108,10 @@
                         <tr>
                             <th style="width: 4%; text-align: center;">#</th>
                             <th style="width: 12%; text-align: center;">Actioned By</th>
-                            <th style="width: 30%; text-align: left;">Subject</th>
-                            <th style="width: 18%; text-align: left;">From</th>
+                            <th style="width: 26%; text-align: left;">Subject</th>
+                            <th style="width: 16%; text-align: left;">From</th>
                             <th style="width: 14%; text-align: center;">Date Received</th>
-                            <th style="width: 22%; text-align: center;">Actions</th>
+                            <th style="width: 28%; text-align: center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="investigationList">
@@ -118,9 +127,9 @@
         </section>
 
         <!-- SUBMISSIONS TABLE SECTION -->
-        <section id="submissionsSection" class="dashboard-section" style="margin-top: 2rem; border-top: 3px solid #3b82f6;">
+        <section id="submissionsSection" class="dashboard-section" style="margin-top: 2rem; border-top: 3px solid var(--primary);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2 class="section-title" style="margin: 0; color: #3b82f6;">Viewer Submissions</h2>
+                <h2 class="section-title" style="margin: 0; color: var(--primary);">Viewer Submissions</h2>
                 <div id="tableLoading" class="spinner-small"></div>
             </div>
             
@@ -159,10 +168,10 @@
                         <tr>
                             <th style="width: 4%; text-align: center;">#</th>
                             <th style="width: 12%; text-align: center;">Actioned By</th>
-                            <th style="width: 30%; text-align: left;">Subject</th>
-                            <th style="width: 18%; text-align: left;">From</th>
+                            <th style="width: 26%; text-align: left;">Subject</th>
+                            <th style="width: 16%; text-align: left;">From</th>
                             <th style="width: 14%; text-align: center;">Date Resolved</th>
-                            <th style="width: 22%; text-align: center;">Actions</th>
+                            <th style="width: 28%; text-align: center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="resolvedList">

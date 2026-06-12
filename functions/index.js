@@ -1686,6 +1686,19 @@ async function internalDeleteSubmission(id, user) {
           console.warn(`[DELETE] Failed to delete file ${data.storagePath}:`, err.message);
       }
   }
+
+  // Handle attachments in viewer submissions
+  if (data.attachments && Array.isArray(data.attachments)) {
+      for (const att of data.attachments) {
+          if (att.storagePath) {
+              try {
+                  await bucket.file(att.storagePath).delete();
+              } catch (err) {
+                  console.warn(`[DELETE] Failed to delete attachment ${att.storagePath}:`, err.message);
+              }
+          }
+      }
+  }
   
   // 4. Delete from Firestore
   await docRef.delete();

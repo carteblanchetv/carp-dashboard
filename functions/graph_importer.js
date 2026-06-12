@@ -120,7 +120,8 @@ async function runImporter() {
       const response = await fetch(messagesUrl, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Prefer': 'outlook.body-content-type="text"'
         }
       });
 
@@ -142,6 +143,15 @@ async function runImporter() {
       const subject = message.subject || '(No Subject)';
       const fromEmail = message.from && message.from.emailAddress ? message.from.emailAddress.address : 'unknown@sender.com';
       const fromName = message.from && message.from.emailAddress ? message.from.emailAddress.name : 'Unknown Sender';
+
+      // Skip quarantine/e-purifier spam emails at backend ingestion time
+      const lowerFromEmail = fromEmail.toLowerCase();
+      const lowerFromName = fromName.toLowerCase();
+      if (lowerFromEmail === 'quarantine@e-purifier.com' || lowerFromEmail.includes('e-purifier.com') || lowerFromName.includes('e-purifier support')) {
+        console.log(`Skipping backend spam/quarantine email: "${subject}" from ${fromName} <${fromEmail}>`);
+        continue;
+      }
+
       const date = message.receivedDateTime ? new Date(message.receivedDateTime) : new Date();
       const bodyText = message.body ? message.body.content || '' : '';
 
