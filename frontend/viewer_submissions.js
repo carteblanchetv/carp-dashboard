@@ -180,7 +180,7 @@ function renderSubmissions(submissions, user) {
             return `
                 <tr>
                     <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${startIndex + index + 1}.</td>
-                    <td data-label="Actioned By" style="text-align: center; color: var(--warning); font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
+                    <td data-label="Actioned By" style="text-align: center; color: #f97316; font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
                     <td data-label="Subject" style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                         <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;" title="${subject.replace(/"/g, '&quot;')}">
                             ${subject}
@@ -248,7 +248,7 @@ function renderSubmissions(submissions, user) {
             return `
                 <tr>
                     <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${startIndex + index + 1}.</td>
-                    <td data-label="Actioned By" style="text-align: center; color: var(--success); font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
+                    <td data-label="Actioned By" style="text-align: center; color: #10b981; font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
                     <td data-label="Subject" style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                         <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;" title="${subject.replace(/"/g, '&quot;')}">
                             ${subject}

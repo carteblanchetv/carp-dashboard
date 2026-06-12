@@ -24,13 +24,29 @@
         @media (max-width: 1200px) {
             .admin-table th, .admin-table td {
                 font-size: 0.8rem !important;
-                padding: 0.8rem 0.5rem !important;
+                padding: 0.8rem 0.4rem !important;
+            }
+        }
+        @media (max-width: 1100px) {
+            /* Stack buttons vertically on medium/small screens to fit the columns */
+            .admin-table td div {
+                flex-direction: column !important;
+                gap: 0.3rem !important;
+                align-items: stretch !important;
+                justify-content: center !important;
+            }
+            .admin-table td button, .admin-table td a {
+                width: 100% !important;
+                margin: 0 !important;
+                text-align: center;
+                padding: 0.4rem 0.6rem !important;
+                font-size: 0.65rem !important;
             }
         }
         @media (max-width: 768px) {
             .admin-table th, .admin-table td {
                 font-size: 0.7rem !important;
-                padding: 0.6rem 0.4rem !important;
+                padding: 0.6rem 0.3rem !important;
             }
         }
     </style>
@@ -72,21 +88,21 @@
         </header>
 
         <!-- UNDER INVESTIGATION SECTION -->
-        <section id="investigationSection" class="dashboard-section" style="margin-top: 2rem;">
+        <section id="investigationSection" class="dashboard-section" style="margin-top: 2rem; border-top: 3px solid #f97316;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2 class="section-title" style="margin: 0; color: var(--warning);">🕵️ Under Investigation</h2>
+                <h2 class="section-title" style="margin: 0; color: #f97316;">Under Investigation</h2>
             </div>
             
             <div class="table-container">
                 <table class="admin-table" style="table-layout: fixed; width: 100%;">
                     <thead>
                         <tr>
-                            <th style="width: 5%; text-align: center;">#</th>
-                            <th style="width: 15%; text-align: center;">Actioned By</th>
-                            <th style="width: 33%; text-align: left;">Subject</th>
-                            <th style="width: 20%; text-align: left;">From</th>
-                            <th style="width: 15%; text-align: center;">Date Received</th>
-                            <th style="width: 12%; text-align: center;">Actions</th>
+                            <th style="width: 4%; text-align: center;">#</th>
+                            <th style="width: 12%; text-align: center;">Actioned By</th>
+                            <th style="width: 30%; text-align: left;">Subject</th>
+                            <th style="width: 18%; text-align: left;">From</th>
+                            <th style="width: 14%; text-align: center;">Date Received</th>
+                            <th style="width: 22%; text-align: center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="investigationList">
@@ -102,9 +118,9 @@
         </section>
 
         <!-- SUBMISSIONS TABLE SECTION -->
-        <section id="submissionsSection" class="dashboard-section" style="margin-top: 2rem;">
+        <section id="submissionsSection" class="dashboard-section" style="margin-top: 2rem; border-top: 3px solid #3b82f6;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2 class="section-title" style="margin: 0;">Viewer Submissions</h2>
+                <h2 class="section-title" style="margin: 0; color: #3b82f6;">Viewer Submissions</h2>
                 <div id="tableLoading" class="spinner-small"></div>
             </div>
             
@@ -112,11 +128,11 @@
                 <table class="admin-table" style="table-layout: fixed; width: 100%;">
                     <thead>
                         <tr>
-                            <th style="width: 5%; text-align: center;">#</th>
-                            <th style="width: 48%; text-align: left;">Subject</th>
+                            <th style="width: 4%; text-align: center;">#</th>
+                            <th style="width: 45%; text-align: left;">Subject</th>
                             <th style="width: 20%; text-align: left;">From</th>
-                            <th style="width: 15%; text-align: center;">Date Received</th>
-                            <th style="width: 12%; text-align: center;">Actions</th>
+                            <th style="width: 14%; text-align: center;">Date Received</th>
+                            <th style="width: 17%; text-align: center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="submissionsList">
@@ -132,21 +148,21 @@
         </section>
 
         <!-- RESOLVED SECTION -->
-        <section id="resolvedSection" class="dashboard-section" style="margin-top: 2rem;">
+        <section id="resolvedSection" class="dashboard-section" style="margin-top: 2rem; border-top: 3px solid #10b981;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2 class="section-title" style="margin: 0; color: var(--success);">✅ Resolved Submissions</h2>
+                <h2 class="section-title" style="margin: 0; color: #10b981;">Resolved Submissions</h2>
             </div>
             
             <div class="table-container">
                 <table class="admin-table" style="table-layout: fixed; width: 100%;">
                     <thead>
                         <tr>
-                            <th style="width: 5%; text-align: center;">#</th>
-                            <th style="width: 15%; text-align: center;">Actioned By</th>
-                            <th style="width: 33%; text-align: left;">Subject</th>
-                            <th style="width: 20%; text-align: left;">From</th>
-                            <th style="width: 15%; text-align: center;">Date Resolved</th>
-                            <th style="width: 12%; text-align: center;">Actions</th>
+                            <th style="width: 4%; text-align: center;">#</th>
+                            <th style="width: 12%; text-align: center;">Actioned By</th>
+                            <th style="width: 30%; text-align: left;">Subject</th>
+                            <th style="width: 18%; text-align: left;">From</th>
+                            <th style="width: 14%; text-align: center;">Date Resolved</th>
+                            <th style="width: 22%; text-align: center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="resolvedList">
