@@ -735,7 +735,7 @@ app.get('/api/viewer-submissions', async (req, res) => {
     const snapshot = await admin.firestore().collection('submissions')
       .where('formType', 'in', ['email_submission', 'dstv_tipoff'])
       .orderBy('submittedAt', 'desc')
-      .limit(100)
+      .limit(2000)
       .get();
     
     const submissions = snapshot.docs.map(doc => {
