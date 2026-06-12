@@ -93,8 +93,7 @@ function renderSubmissions(submissions, user) {
                     </a>
                 </td>
                 <td data-label="From" style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;" title="${fromName} (${sub.submittedByEmail || ''})">
-                    <strong>${fromName}</strong><br/>
-                    <span style="color: var(--text-muted); font-size: 0.8rem;">${sub.submittedByEmail || ''}</span>
+                    <strong>${fromName}</strong>
                 </td>
                 <td data-label="Date Received" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${dateText}</td>
                 <td data-label="Actions" style="text-align: center;">
@@ -187,13 +186,20 @@ function showDetails(sub) {
 
     // Message Body
     const bodyEl = document.getElementById('modalBody');
-    if (sub.bodyHtml) {
-        // Use iframe or sanitized element safely, or just show text for simplicity
-        // Showing bodyHtml safely or plain body is better. Let's use plain text body.
-        bodyEl.textContent = sub.body || '';
-    } else {
-        bodyEl.textContent = sub.body || '';
+    bodyEl.textContent = stripHtml(sub.body || '');
+}
+
+function stripHtml(html) {
+    if (!html) return '';
+    if (!html.includes('<') && !html.includes('>')) return html;
+    try {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        return doc.body.textContent || '';
+    } catch (e) {
+        console.error('Error stripping HTML:', e);
+        return html;
     }
+}
 
     // Attachments
     const attachmentsGroup = document.getElementById('modalAttachmentsGroup');
