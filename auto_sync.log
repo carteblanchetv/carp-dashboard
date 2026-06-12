@@ -456,3 +456,16 @@
 [2026-06-12 16:38:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 [2026-06-12 16:38:44] Sync complete.
 [2026-06-12 17:08:44] Changes detected. Syncing...
+[2026-06-12 17:08:44] warning: in the working copy of 'frontend/js/guide.js', LF will be replaced by CRLF the next time Git touches it
+[2026-06-12 17:08:44] [main f71e481] auto-sync: 2026-06-12 17:08
+[2026-06-12 17:08:44]  3 files changed, 59 insertions(+), 15 deletions(-)
+[2026-06-12 17:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-12 17:08:44]  ! [rejected]        main -> main (fetch first)
+[2026-06-12 17:08:44] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
+[2026-06-12 17:08:44] hint: Updates were rejected because the remote contains work that you do not
+[2026-06-12 17:08:44] hint: have locally. This is usually caused by another repository pushing to
+[2026-06-12 17:08:44] hint: the same ref. If you want to integrate the remote changes, use
+[2026-06-12 17:08:44] hint: 'git pull' before pushing again.
+[2026-06-12 17:08:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[2026-06-12 17:08:44] Sync complete.
+[2026-06-12 17:38:44] Changes detected. Syncing...
