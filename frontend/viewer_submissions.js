@@ -61,16 +61,13 @@ function renderSubmissions(submissions, user) {
     if (regularSubs.length === 0) {
         regularList.innerHTML = `
             <tr>
-                <td colspan="6" style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                <td colspan="5" style="text-align: center; padding: 3rem; color: var(--text-muted);">
                     No viewer submissions found.
                 </td>
             </tr>
         `;
     } else {
         regularList.innerHTML = regularSubs.map((sub, index) => {
-            const type = (sub.formType || 'email_submission').toLowerCase();
-            const typeLabel = type === 'dstv_tipoff' ? 'Web Submission' : 'Email Submission';
-            const typeClass = type === 'dstv_tipoff' ? 'warning' : 'info';
             const subject = sub.subject || '(No Subject)';
             const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
             
@@ -87,11 +84,6 @@ function renderSubmissions(submissions, user) {
             return `
                 <tr>
                     <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${index + 1}.</td>
-                    <td data-label="Type" style="text-align: center;">
-                        <span class="status-badge-modern ${typeClass}" style="width: 100%; justify-content: center;">
-                            ${typeLabel}
-                        </span>
-                    </td>
                     <td data-label="Subject" style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                         <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;" title="${subject.replace(/"/g, '&quot;')}">
                             ${subject}
@@ -123,13 +115,16 @@ function renderSubmissions(submissions, user) {
         `;
     } else {
         investigationList.innerHTML = investigationSubs.map((sub, index) => {
-            const type = (sub.formType || 'email_submission').toLowerCase();
-            const typeLabel = type === 'dstv_tipoff' ? 'Web Submission' : 'Email Submission';
-            const typeClass = type === 'dstv_tipoff' ? 'warning' : 'info';
             const subject = sub.subject || '(No Subject)';
             const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
-            const actionedByName = sub.actionedBy ? sub.actionedBy.name || sub.actionedBy.email : '—';
+            const actionedByFirstName = sub.actionedBy ? (sub.actionedBy.name || '').split(' ')[0] : '—';
             
+            let dateText = '—';
+            if (sub.submittedAt) {
+                const dateObj = sub.submittedAt._seconds ? new Date(sub.submittedAt._seconds * 1000) : new Date(sub.submittedAt);
+                dateText = dateObj.toLocaleString('en-ZA', { dateStyle: 'medium', timeStyle: 'short' });
+            }
+
             const deleteButtonHtml = canDelete
                 ? `<button class="btn-admin-cell danger delete-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; margin-left: 0.4rem;">🗑️ Delete</button>`
                 : '';
@@ -137,11 +132,7 @@ function renderSubmissions(submissions, user) {
             return `
                 <tr>
                     <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${index + 1}.</td>
-                    <td data-label="Type" style="text-align: center;">
-                        <span class="status-badge-modern ${typeClass}" style="width: 100%; justify-content: center;">
-                            ${typeLabel}
-                        </span>
-                    </td>
+                    <td data-label="Action By" style="text-align: center; color: var(--warning); font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
                     <td data-label="Subject" style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                         <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;" title="${subject.replace(/"/g, '&quot;')}">
                             ${subject}
@@ -150,7 +141,7 @@ function renderSubmissions(submissions, user) {
                     <td data-label="From" style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;" title="${fromName} (${sub.submittedByEmail || ''})">
                         <strong>${fromName}</strong>
                     </td>
-                    <td data-label="Actioned By" style="text-align: center; color: var(--warning); font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByName}</td>
+                    <td data-label="Date Received" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${dateText}</td>
                     <td data-label="Actions" style="text-align: center;">
                         <div style="display: flex; gap: 0.2rem; justify-content: center; align-items: center;">
                             <button class="btn-admin-cell secondary view-details-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">📄 View</button>
