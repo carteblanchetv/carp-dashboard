@@ -732,30 +732,49 @@ app.use(validateFirebaseIdToken);
  */
 app.get('/api/viewer-submissions', async (req, res) => {
   try {
-    const snapshot = await admin.firestore().collection('submissions')
+    const BATCH_SIZE = Math.min(parseInt(req.query.limit) || 200, 500);
+    const afterDocId = req.query.after;
+
+    let query = admin.firestore().collection('submissions')
       .where('formType', 'in', ['email_submission', 'dstv_tipoff'])
       .orderBy('submittedAt', 'desc')
-      .limit(2000)
-      .get();
-    
+      .limit(BATCH_SIZE);
+
+    // Cursor-based pagination: start after the given document
+    if (afterDocId) {
+      const cursorDoc = await admin.firestore().collection('submissions').doc(afterDocId).get();
+      if (cursorDoc.exists) {
+        query = query.startAfter(cursorDoc);
+      }
+    }
+
+    const snapshot = await query.get();
+
     const submissions = snapshot.docs.map(doc => {
       const data = doc.data();
       const bodyPreview = data.body ? data.body.substring(0, 300) : '';
       delete data.body;
       delete data.attachments;
-      return { 
-        id: doc.id, 
+      return {
+        id: doc.id,
         bodyPreview,
-        ...data 
+        ...data
       };
     });
-    
-    res.json({ success: true, submissions });
+
+    // Return the last doc's ID so the client can fetch the next page
+    const nextCursor = snapshot.docs.length === BATCH_SIZE
+      ? snapshot.docs[snapshot.docs.length - 1].id
+      : null;
+
+    res.set('Cache-Control', 'private, max-age=30'); // allow 30s browser cache
+    res.json({ success: true, submissions, nextCursor });
   } catch (error) {
     console.error('[API] fetch viewer-submissions failed:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
+
 
 app.get('/api/viewer-submissions/details', async (req, res) => {
   try {

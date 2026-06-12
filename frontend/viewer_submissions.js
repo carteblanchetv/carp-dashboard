@@ -46,20 +46,20 @@ checkAuth().then(user => {
     }
 });
 
+let backgroundLoadActive = false;
+
 async function loadSubmissions(user) {
     if (loadingSpinner) loadingSpinner.style.display = 'block';
+    backgroundLoadActive = false; // cancel any in-progress background load
 
     try {
-        const res = await fetchWithAuth('/api/viewer-submissions');
+        // --- First batch: fetch and render immediately ---
+        const res = await fetchWithAuth('/api/viewer-submissions?limit=200');
         const result = await res.json();
-        
+
         if (loadingSpinner) loadingSpinner.style.display = 'none';
 
-        if (result.success && result.submissions) {
-            globalSubmissionsCache = result.submissions;
-            currentUserCache = user;
-            renderSubmissions(result.submissions, user);
-        } else {
+        if (!result.success || !result.submissions) {
             document.getElementById('submissionsList').innerHTML = `
                 <tr>
                     <td colspan="5" style="text-align: center; padding: 3rem; color: var(--danger);">
@@ -67,7 +67,19 @@ async function loadSubmissions(user) {
                     </td>
                 </tr>
             `;
+            return;
         }
+
+        globalSubmissionsCache = result.submissions;
+        currentUserCache = user;
+        renderSubmissions(result.submissions, user);
+
+        // --- Background loading: stream remaining records silently ---
+        if (result.nextCursor) {
+            backgroundLoadActive = true;
+            loadMoreInBackground(result.nextCursor, user);
+        }
+
     } catch (error) {
         console.error('Error loading submissions:', error);
         if (loadingSpinner) loadingSpinner.style.display = 'none';
@@ -80,6 +92,41 @@ async function loadSubmissions(user) {
         `;
     }
 }
+
+async function loadMoreInBackground(cursor, user) {
+    const indicator = document.getElementById('bgLoadIndicator');
+    if (indicator) indicator.style.display = 'block';
+
+    try {
+        while (cursor && backgroundLoadActive) {
+            const res = await fetchWithAuth(`/api/viewer-submissions?limit=200&after=${encodeURIComponent(cursor)}`);
+            if (!res.ok) break;
+            const result = await res.json();
+            if (!result.success || !result.submissions || result.submissions.length === 0) break;
+
+            // Merge new records into the cache (avoid duplicates)
+            const existingIds = new Set(globalSubmissionsCache.map(s => s.id));
+            const newRecords = result.submissions.filter(s => !existingIds.has(s.id));
+            if (newRecords.length > 0) {
+                globalSubmissionsCache = [...globalSubmissionsCache, ...newRecords];
+                // Only re-render if user is not actively searching (avoid disruption)
+                const searchVal = document.getElementById('submissionsSearchInput')?.value || '';
+                if (!searchVal.trim()) {
+                    renderSubmissions(globalSubmissionsCache, user);
+                }
+            }
+
+            cursor = result.nextCursor || null;
+        }
+    } catch (err) {
+        console.warn('Background load error (non-critical):', err);
+    } finally {
+        if (indicator) indicator.style.display = 'none';
+        backgroundLoadActive = false;
+    }
+}
+
+
 
 function renderSubmissions(submissions, user) {
     const regularList = document.getElementById('submissionsList');

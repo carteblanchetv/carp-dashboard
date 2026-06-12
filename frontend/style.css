@@ -1358,6 +1358,12 @@ select.table-input {
     color: #ffffff !important;
 }
 
+/* Mark as Useful — matches the Under Investigation orange accent */
+#modalMarkUsefulBtn {
+    background: #f97316 !important;
+    color: #ffffff !important;
+}
+
 .btn-admin-cell.info {
     background: #0ea5e9 !important;
     color: #ffffff !important;

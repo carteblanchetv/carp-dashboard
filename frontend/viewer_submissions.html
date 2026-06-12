@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <title>Viewer Submissions - Carte Blanche</title>
-    <link rel="stylesheet" href="style.css?v=8.1.1">
+    <link rel="stylesheet" href="style.css?v=8.2.1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -48,6 +48,10 @@
                 font-size: 0.7rem !important;
                 padding: 0.6rem 0.3rem !important;
             }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
     </style>
 </head>
@@ -186,6 +190,11 @@
             <div id="resolvedPagination" style="margin-top: 1rem;"></div>
         </section>
 
+        <!-- Background load progress indicator -->
+        <div id="bgLoadIndicator" style="display: none; text-align: center; margin-top: 1.5rem; padding: 0.6rem 1.2rem; color: var(--text-muted); font-size: 0.8rem; font-weight: 500; animation: pulse 1.5s ease-in-out infinite;">
+            ⏳ Loading more submissions in the background...
+        </div>
+
         <div style="margin-top: 3rem; text-align: center;">
             <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
                 ← Back to Forms Hub
@@ -249,6 +258,6 @@
         </div>
     </div>
 
-    <script src="viewer_submissions.js?v=8.1.1" type="module"></script>
+    <script src="viewer_submissions.js?v=8.2.0" type="module"></script>
 </body>
 </html>
