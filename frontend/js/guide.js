@@ -46,6 +46,30 @@ document.addEventListener('DOMContentLoaded', () => {
             // Use light image if available and in light mode, otherwise use dark
             img.src = (isLight && lightSrc) ? lightSrc : darkSrc;
         });
+
+        // Position the highlight boxes dynamically based on the current theme
+        const coords = isLight ? {
+            footage: { left: '47.19%', top: '54.68%', width: '19.50%', height: '18.43%' },
+            callsheet: { left: '68.25%', top: '54.68%', width: '11.48%', height: '18.43%' },
+            script: { left: '81.34%', top: '54.68%', width: '12.92%', height: '18.43%' }
+        } : {
+            footage: { left: '46.82%', top: '57.28%', width: '19.35%', height: '19.30%' },
+            callsheet: { left: '67.72%', top: '57.28%', width: '11.39%', height: '19.30%' },
+            script: { left: '80.71%', top: '57.28%', width: '12.82%', height: '19.30%' }
+        };
+
+        document.querySelectorAll('.nav-bar-highlight').forEach(div => {
+            const type = div.classList.contains('footage') ? 'footage' : 
+                         div.classList.contains('callsheet') ? 'callsheet' : 
+                         div.classList.contains('script') ? 'script' : null;
+            if (type && coords[type]) {
+                const c = coords[type];
+                div.style.left = c.left;
+                div.style.top = c.top;
+                div.style.width = c.width;
+                div.style.height = c.height;
+            }
+        });
     }
 
     // Run immediately on page load

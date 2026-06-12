@@ -16,7 +16,7 @@ const currentPages = {
 
 // Load saved pages on init
 try {
-    const saved = localStorage.getItem('cb_viewer_submissions_pages');
+    const saved = sessionStorage.getItem('cb_viewer_submissions_pages');
     if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed.investigation) currentPages.investigation = Number(parsed.investigation) || 1;
@@ -24,15 +24,15 @@ try {
         if (parsed.resolved) currentPages.resolved = Number(parsed.resolved) || 1;
     }
 } catch (e) {
-    console.error('Error loading saved pages from localStorage:', e);
+    console.error('Error loading saved pages from sessionStorage:', e);
 }
 
 window.changePage = (type, delta) => {
     currentPages[type] += delta;
     try {
-        localStorage.setItem('cb_viewer_submissions_pages', JSON.stringify(currentPages));
+        sessionStorage.setItem('cb_viewer_submissions_pages', JSON.stringify(currentPages));
     } catch (e) {
-        console.error('Error saving pages to localStorage:', e);
+        console.error('Error saving pages to sessionStorage:', e);
     }
     renderSubmissions(globalSubmissionsCache, currentUserCache);
 };
@@ -54,7 +54,7 @@ async function loadSubmissions(user) {
 
     try {
         // --- First batch: fetch and render immediately ---
-        const res = await fetchWithAuth('/api/viewer-submissions?limit=200');
+        const res = await fetchWithAuth('/api/viewer-submissions?limit=200', { skipCache: true });
         const result = await res.json();
 
         if (loadingSpinner) loadingSpinner.style.display = 'none';
@@ -99,7 +99,7 @@ async function loadMoreInBackground(cursor, user) {
 
     try {
         while (cursor && backgroundLoadActive) {
-            const res = await fetchWithAuth(`/api/viewer-submissions?limit=200&after=${encodeURIComponent(cursor)}`);
+            const res = await fetchWithAuth(`/api/viewer-submissions?limit=200&after=${encodeURIComponent(cursor)}`, { skipCache: true });
             if (!res.ok) break;
             const result = await res.json();
             if (!result.success || !result.submissions || result.submissions.length === 0) break;

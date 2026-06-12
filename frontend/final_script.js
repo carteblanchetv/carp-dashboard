@@ -426,6 +426,13 @@ document.addEventListener('DOMContentLoaded', () => {
         backBtn.href = `proposal.html?id=${proposalId}&view=preview`;
     }
 
+    const headerBackBtn = document.getElementById('headerBackToProposalBtn');
+    if (headerBackBtn && proposalId) {
+        headerBackBtn.classList.remove('hidden');
+        headerBackBtn.style.display = 'inline-flex';
+        headerBackBtn.href = `proposal.html?id=${proposalId}&view=preview`;
+    }
+
     form.onsubmit = async (e) => {
         e.preventDefault();
         const submitBtn = document.getElementById('submitBtn');

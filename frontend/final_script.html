@@ -62,40 +62,41 @@
         </div>
     </nav>
 
-    <div class="form-wrapper wide">
-        <header class="form-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2.5rem; gap: 2rem;">
-            <div class="logo-group" style="display: flex; gap: 1rem;">
-                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined" style="height: 40px; width: auto;">
-                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo" style="height: 40px; width: auto;">
-            </div>
-            <div>
-                <h1 id="pageTitle">Final Script</h1>
-                <p id="pageSubtext">Complete the final script and promo details for this story.</p>
-            </div>
-            <div id="viewActions" class="no-print" style="display: flex; gap: 0.75rem;">
-                <button type="button" id="editScriptBtn" class="submit-btn hidden" style="padding: 0.6rem 1.2rem; font-size: 0.85rem; margin-top: 0;">Edit Script</button>
-                <button type="button" id="downloadPdfBtn" class="btn-soft hidden">Download PDF</button>
-                <button type="button" id="viewDetailsBtn" class="btn-soft hidden">Proposal View</button>
-            </div>
-        </header>
-        
-        <!-- Story Deliverables Action Bar (Only for COMMISSIONED stories) -->
-        <div id="productionPhaseBar" class="hidden" style="background: var(--bg-card); border: 1px solid var(--border); border-top: 4px solid var(--primary); padding: 1.5rem 2.5rem; border-radius: var(--radius-lg); margin-bottom: 3.5rem; box-shadow: 0 12px 30px -8px rgba(0,0,0,0.15); background-image: radial-gradient(at top left, rgba(0,143,190,0.05), transparent);">
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 2rem;">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <div style="background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(0,143,190,0.3);">🛠️</div>
-                    <div>
-                        <div style="color: var(--primary); font-weight: 800; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase;">Story Deliverables</div>
-                        <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 500; margin-top: 0.1rem;">Upload Footage Declaration, Call Sheet & Script</div>
-                    </div>
+    <!-- Story Deliverables Action Bar (Only for COMMISSIONED stories) -->
+    <div id="productionPhaseBar" class="hidden" style="max-width: 1600px; width: 95%; margin: 1.5rem auto 1rem; background: var(--bg-card); border: 1px solid var(--border); border-top: 4px solid var(--primary); padding: 1rem 2.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); background-image: radial-gradient(at top left, rgba(0,143,190,0.05), transparent);">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 2rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div style="background: var(--primary); color: white; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,143,190,0.3);">🛠️</div>
+                <div>
+                    <div style="color: var(--primary); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.05em; text-transform: uppercase;">Story Deliverables</div>
+                    <div style="color: var(--text-muted); font-size: 0.7rem; font-weight: 500; margin-top: 0.1rem;">Manage declarations, scripts & more</div>
                 </div>
-                <div style="display: flex; gap: 1.25rem;">
-                    <button type="button" id="btnFootageDec" class="btn-soft" style="padding: 0.75rem 1.75rem; font-size: 0.9rem; font-weight: 800; border: 2px solid #f59e0b; color: #f59e0b; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: rgba(245, 158, 11, 0.05);">Footage Declaration</button>
-                    <button type="button" id="btnCallSheet" class="btn-soft" style="padding: 0.75rem 1.75rem; font-size: 0.9rem; font-weight: 800; border: 2px solid var(--success); color: var(--success); border-radius: 10px; cursor: pointer; transition: all 0.2s; background: rgba(16, 185, 129, 0.05);">Call Sheet</button>
-                    <button type="button" id="btnFinalScript" class="btn-soft" style="padding: 0.75rem 1.75rem; font-size: 0.9rem; font-weight: 800; border: 2px solid #7c3aed; color: #7c3aed; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: rgba(124, 58, 237, 0.05);">Final Script</button>
-                </div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button type="button" id="btnFootageDec" class="btn-soft" style="padding: 0.6rem 1.25rem; font-size: 0.8rem; font-weight: 800; border: 1px solid #f59e0b !important; color: #f59e0b; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: rgba(245, 158, 11, 0.05);">Footage Declaration</button>
+                <button type="button" id="btnCallSheet" class="btn-soft" style="padding: 0.6rem 1.25rem; font-size: 0.8rem; font-weight: 800; border: 1px solid var(--success) !important; color: var(--success); border-radius: 8px; cursor: pointer; transition: all 0.2s; background: rgba(16, 185, 129, 0.05);">Call Sheet</button>
+                <button type="button" id="btnFinalScript" class="btn-soft" style="padding: 0.6rem 1.25rem; font-size: 0.8rem; font-weight: 800; border: 1px solid #7c3aed !important; color: #7c3aed; border-radius: 8px; cursor: pointer; transition: all 0.2s; background: rgba(124, 58, 237, 0.05);">Final Script</button>
             </div>
         </div>
+    </div>
+
+    <div class="form-wrapper wide">
+        <header class="form-header">
+            <div class="logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
+            </div>
+            <div style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 50px;">
+                <h1 id="pageTitle" style="margin: 0; text-align: center;">Final Script</h1>
+                <p id="pageSubtext" style="margin: 0.5rem 0 0 0; text-align: center; color: var(--text-muted); font-size: 0.95rem;">Complete the final script and promo details for this story.</p>
+                <div id="viewActions" class="no-print" style="position: absolute; right: 0; display: flex; gap: 0.75rem; align-items: center;">
+                    <button type="button" id="editScriptBtn" class="submit-btn hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0;">Edit Script</button>
+                    <button type="button" id="downloadPdfBtn" class="btn-soft hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0;">Download PDF</button>
+                    <button type="button" id="viewDetailsBtn" class="btn-soft hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0;">Proposal View</button>
+                    <a id="headerBackToProposalBtn" href="#" class="btn-soft hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; border: 1px solid var(--border) !important; color: var(--text-main); border-radius: 8px; text-decoration: none; font-weight: 700; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;">← Back to Proposal</a>
+                </div>
+            </div>
+        </header>
 
         <form id="finalScriptForm">
             <!-- STORY INFO SECTION -->

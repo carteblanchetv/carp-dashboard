@@ -28,6 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
         backBtn.href = `proposal.html?id=${backToId}&view=preview`;
     }
 
+    const headerBackBtn = document.getElementById('headerBackToProposalBtn');
+    if (headerBackBtn && backToId) {
+        headerBackBtn.classList.remove('hidden');
+        headerBackBtn.style.display = 'inline-flex';
+        headerBackBtn.href = `proposal.html?id=${backToId}&view=preview`;
+    }
+
     const footerBackBtn = document.getElementById('footerBackBtn');
     if (footerBackBtn && backToId) {
         footerBackBtn.href = `proposal.html?id=${backToId}&view=preview`;
