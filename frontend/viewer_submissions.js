@@ -87,16 +87,16 @@ function renderSubmissions(submissions, user) {
                         ${typeLabel}
                     </span>
                 </td>
-                <td data-label="Subject" class="col-title" style="font-weight: 700;">
-                    <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;">
+                <td data-label="Subject" style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                    <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;" title="${subject.replace(/"/g, '&quot;')}">
                         ${subject}
                     </a>
                 </td>
-                <td data-label="From" style="font-size: 0.9rem;">
+                <td data-label="From" style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;" title="${fromName} (${sub.submittedByEmail || ''})">
                     <strong>${fromName}</strong><br/>
                     <span style="color: var(--text-muted); font-size: 0.8rem;">${sub.submittedByEmail || ''}</span>
                 </td>
-                <td data-label="Date Received" style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">${dateText}</td>
+                <td data-label="Date Received" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${dateText}</td>
                 <td data-label="Actions" style="text-align: center;">
                     <div style="display: flex; gap: 0.2rem; justify-content: center; align-items: center;">
                         <button class="btn-admin-cell secondary view-details-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">📄 View</button>
