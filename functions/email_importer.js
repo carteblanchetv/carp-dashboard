@@ -38,29 +38,39 @@ function parseDstvTipOff(textBody, subject) {
                  
   if (!isDstv) return null;
 
-  const data = {};
-  
-  // Helper to extract fields using common labels
-  const extractField = (labels, text) => {
+  const extract = (labels, text) => {
+    const allLabels = [
+      'first name', 'last name', 'surname', 'name', 
+      'email address', 'email', 
+      'contact number', 'phone number', 'phone', 'cell', 'contact',
+      'location', 'city', 'province', 'area', 
+      'story title', 'title of story', 'title of your story', 'title', 'subject',
+      'your tip', 'story idea', 'message', 'comments', 'description'
+    ];
+    
     for (const label of labels) {
-      const regex = new RegExp(`(?:${label})\\s*:\\s*(.*)`, 'i');
+      const escapedLabel = label.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const stopPatterns = allLabels
+        .filter(l => l !== label)
+        .map(l => l.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'))
+        .join('|');
+      
+      const regex = new RegExp(`(?:${escapedLabel})\\s*[:\\-]\\s*([\\s\\S]*?)(?=(?:${stopPatterns})\\s*[:\\-]|$)`, 'i');
       const match = text.match(regex);
-      if (match && match[1]) {
-        return match[1].trim();
-      }
+      if (match && match[1]) return match[1].trim();
     }
     return '';
   };
 
-  data.name = extractField(['first name', 'name', 'full name'], textBody);
-  data.lastName = extractField(['last name', 'surname'], textBody);
-  data.email = extractField(['email address', 'email'], textBody);
-  data.phone = extractField(['contact number', 'phone number', 'phone', 'contact'], textBody);
-  data.location = extractField(['location', 'city', 'province'], textBody);
-  data.story = extractField(['your tip', 'story idea', 'comments', 'message', 'description'], textBody);
-
-  // If we couldn't parse structured fields, it might be freeform but still marked as DStv
-  return data;
+  return {
+    name:       extract(['first name', 'name', 'full name'], textBody),
+    lastName:   extract(['last name', 'surname'], textBody),
+    email:      extract(['email address', 'email'], textBody),
+    phone:      extract(['contact number', 'phone number', 'phone', 'contact'], textBody),
+    location:   extract(['location', 'city', 'province'], textBody),
+    storyTitle: extract(['story title', 'title of story', 'title of your story', 'title', 'subject'], textBody),
+    story:      extract(['your tip', 'story idea', 'comments', 'message', 'description'], textBody),
+  };
 }
 
 async function uploadAttachment(attachment, folderName) {
@@ -168,7 +178,7 @@ async function runImporter() {
         importedAt: admin.firestore.FieldValue.serverTimestamp(),
         submittedByEmail: fromEmail,
         submittedByName: fromName,
-        subject: subject,
+        subject: (formType === 'dstv_tipoff' && dstvData && dstvData.storyTitle) ? dstvData.storyTitle : subject,
         body: bodyText,
         attachments: uploadedAttachments,
         isEmailImport: true

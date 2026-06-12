@@ -439,6 +439,16 @@ function showDetails(sub, user) {
     }
     document.getElementById('modalDate').textContent = dateText;
 
+    // Toggle DStv Origin Tag banner
+    const dstvOriginTag = document.getElementById('dstvOriginTag');
+    if (dstvOriginTag) {
+        if ((sub.submittedByEmail || '').toLowerCase() === 'noreplymcleads@gmail.com') {
+            dstvOriginTag.style.display = 'block';
+        } else {
+            dstvOriginTag.style.display = 'none';
+        }
+    }
+
     // Toggle Actioned By text display
     const actionedContainer = document.getElementById('modalActionedByContainer');
     const actionedEl = document.getElementById('modalActionedBy');
@@ -456,27 +466,44 @@ function showDetails(sub, user) {
         contactLink.href = `mailto:${sub.submittedByEmail || ''}?subject=${encodeURIComponent(sub.subject || '')}`;
     }
 
-    // Tip Details (DStv fields)
+    // Hide default Tip Details group as we will display them structured in the body area
     const tipDetailsGroup = document.getElementById('modalTipDetails');
+    if (tipDetailsGroup) tipDetailsGroup.style.display = 'none';
+
+    // Message Body formatting
+    const bodyEl = document.getElementById('modalBody');
     const type = (sub.formType || 'email_submission').toLowerCase();
+
     if (type === 'dstv_tipoff' && sub.tipoffDetails) {
-        tipDetailsGroup.style.display = 'block';
-        document.getElementById('tipName').textContent = `${sub.tipoffDetails.name || ''} ${sub.tipoffDetails.lastName || ''}`.trim() || '—';
-        document.getElementById('tipEmail').textContent = sub.tipoffDetails.email || '—';
-        document.getElementById('tipPhone').textContent = sub.tipoffDetails.phone || '—';
-        document.getElementById('tipLocation').textContent = sub.tipoffDetails.location || '—';
+        const details = sub.tipoffDetails;
+        bodyEl.innerHTML = `
+            <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.95rem; line-height: 1.5;">
+                <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                    <strong style="color: var(--primary);">Name:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.name || '—'}</span>
+                </div>
+                <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                    <strong style="color: var(--primary);">Surname:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.lastName || '—'}</span>
+                </div>
+                <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                    <strong style="color: var(--primary);">Email:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.email || '—'}</span>
+                </div>
+                <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                    <strong style="color: var(--primary);">Contact Number:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.phone || '—'}</span>
+                </div>
+                <div>
+                    <strong style="color: var(--primary);">Summary:</strong>
+                    <div style="margin-top: 0.5rem; background: var(--bg-card); border-left: 4px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-style: italic; color: var(--text-main); line-height: 1.6;">${details.story || '—'}</div>
+                </div>
+            </div>
+        `;
     } else {
-        tipDetailsGroup.style.display = 'none';
+        bodyEl.textContent = stripHtml(sub.body || '');
     }
 
-    // Message Body
-    const bodyEl = document.getElementById('modalBody');
-    bodyEl.textContent = stripHtml(sub.body || '');
-
-    // Attachments
+    // Attachments (Ignore associated files for DStv tip-offs)
     const attachmentsGroup = document.getElementById('modalAttachmentsGroup');
     const attachmentsList = document.getElementById('modalAttachmentsList');
-    if (Array.isArray(sub.attachments) && sub.attachments.length > 0) {
+    if (type !== 'dstv_tipoff' && Array.isArray(sub.attachments) && sub.attachments.length > 0) {
         attachmentsGroup.style.display = 'block';
         attachmentsList.innerHTML = sub.attachments.map(att => {
             const downloadUrl = `/api/get-submission-file?path=${encodeURIComponent(att.storagePath)}&inline=false`;

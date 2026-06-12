@@ -85,8 +85,23 @@ function parseDstvTipOff(subject, bodyText) {
   if (!isDstv) return null;
 
   const extract = (labels, text) => {
+    const allLabels = [
+      'first name', 'last name', 'surname', 'name', 
+      'email address', 'email', 
+      'contact number', 'phone number', 'phone', 'cell', 
+      'location', 'city', 'province', 'area', 
+      'story title', 'title of story', 'title of your story', 'title', 'subject',
+      'your tip', 'tip', 'story idea', 'message', 'comments', 'description'
+    ];
+    
     for (const label of labels) {
-      const regex = new RegExp(`(?:${label})\\s*[:\\-]\\s*(.+)`, 'i');
+      const escapedLabel = label.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const stopPatterns = allLabels
+        .filter(l => l !== label)
+        .map(l => l.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'))
+        .join('|');
+      
+      const regex = new RegExp(`(?:${escapedLabel})\\s*[:\\-]\\s*([\\s\\S]*?)(?=(?:${stopPatterns})\\s*[:\\-]|$)`, 'i');
       const match = text.match(regex);
       if (match && match[1]) return match[1].trim();
     }
@@ -94,12 +109,13 @@ function parseDstvTipOff(subject, bodyText) {
   };
 
   return {
-    name:     extract(['first name', 'full name', 'name'], bodyText),
-    lastName: extract(['last name', 'surname'], bodyText),
-    email:    extract(['email address', 'email'], bodyText),
-    phone:    extract(['contact number', 'phone number', 'phone', 'cell'], bodyText),
-    location: extract(['location', 'city', 'province', 'area'], bodyText),
-    story:    extract(['your tip', 'tip', 'story idea', 'message', 'comments', 'description'], bodyText),
+    name:       extract(['first name', 'full name', 'name'], bodyText),
+    lastName:   extract(['last name', 'surname'], bodyText),
+    email:      extract(['email address', 'email'], bodyText),
+    phone:      extract(['contact number', 'phone number', 'phone', 'cell'], bodyText),
+    location:   extract(['location', 'city', 'province', 'area'], bodyText),
+    storyTitle: extract(['story title', 'title of story', 'title of your story', 'title', 'subject'], bodyText),
+    story:      extract(['your tip', 'tip', 'story idea', 'message', 'comments', 'description'], bodyText),
   };
 }
 
@@ -241,13 +257,14 @@ async function runImporter() {
       }
 
       // 4. Construct submission document
+      // 4. Construct submission document
       const submissionDoc = {
         formType,
         submittedAt: admin.firestore.Timestamp.fromDate(date),
         importedAt: admin.firestore.FieldValue.serverTimestamp(),
         submittedByEmail: fromEmail,
         submittedByName: fromName,
-        subject: subject,
+        subject: (formType === 'dstv_tipoff' && tipoffData && tipoffData.storyTitle) ? tipoffData.storyTitle : subject,
         body: bodyText,
         attachments: uploadedAttachments,
         isEmailImport: true,
