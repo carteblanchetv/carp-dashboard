@@ -31,7 +31,6 @@ console.log("[Theme] theme.js?v=5.1.1 loaded (v=2.5.6)");
     }
 
     window.addEventListener('DOMContentLoaded', updateToggleIcons);
-    updateToggleIcons();
 })();
 
 
