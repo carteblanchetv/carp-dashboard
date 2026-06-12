@@ -751,6 +751,105 @@ app.get('/api/viewer-submissions', async (req, res) => {
 });
 
 /**
+ * Helper to send spam report email to SuperAdmin Lezanne
+ */
+async function sendSpamReportEmail(submission, reporterEmail) {
+  const subject = `[Spam Report] Submission Reported as Spam: "${submission.subject || '(No Subject)'}"`;
+  const html = `
+    <p>A viewer submission has been reported as spam by user <strong>${reporterEmail}</strong>.</p>
+    <p><strong>Submission Details:</strong></p>
+    <ul>
+      <li><strong>Sender Name:</strong> ${submission.submittedByName || 'Unknown'}</li>
+      <li><strong>Sender Email:</strong> ${submission.submittedByEmail || 'No Email'}</li>
+      <li><strong>Subject:</strong> ${submission.subject || '(No Subject)'}</li>
+      <li><strong>Type:</strong> ${submission.formType || ''}</li>
+      <li><strong>Date Received:</strong> ${submission.submittedAt ? (submission.submittedAt._seconds ? new Date(submission.submittedAt._seconds * 1000).toLocaleString() : new Date(submission.submittedAt).toLocaleString()) : '—'}</li>
+    </ul>
+    <p>Please block this sender address manually from making future submissions.</p>
+  `;
+  const targetEmail = 'lezanne@carteblanche.co.za';
+
+  try {
+    if (process.env.MICROSOFT_CLIENT_ID) {
+      await sendEmailViaGraph(subject, html, targetEmail, '');
+      console.log(`[SPAM_REPORT] Notification sent via Graph API to ${targetEmail}`);
+    } else {
+      const mailOptions = {
+        from: `"CARP Dashboard" <${process.env.EMAIL_USER}>`,
+        to: targetEmail,
+        subject: subject,
+        html: html
+      };
+      await transporter.sendMail(mailOptions);
+      console.log(`[SPAM_REPORT] Notification sent via SMTP to ${targetEmail}`);
+    }
+  } catch (err) {
+    console.error('[SPAM_REPORT] Failed to send email notification:', err.message);
+  }
+}
+
+/**
+ * Mark a viewer submission as useful (Under Investigation)
+ */
+app.post('/api/viewer-submissions/mark-useful', express.json(), async (req, res) => {
+  try {
+    const { id, useful } = req.body;
+    if (!id) return res.status(400).json({ success: false, error: 'ID is required' });
+
+    const docRef = admin.firestore().collection('submissions').doc(id);
+    const doc = await docRef.get();
+    if (!doc.exists) return res.status(404).json({ success: false, error: 'Submission not found' });
+
+    const updateData = {};
+    if (useful) {
+      const name = `${req.user.firstName || ''} ${req.user.lastName || ''}`.trim() || req.user.email;
+      updateData.useful = true;
+      updateData.actionedBy = {
+        name: name,
+        email: req.user.email,
+        at: new Date()
+      };
+    } else {
+      updateData.useful = false;
+      updateData.actionedBy = admin.firestore.FieldValue.delete();
+    }
+
+    await docRef.update(updateData);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[API] mark-useful failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * Report a viewer submission as spam (Notifies Lezanne)
+ */
+app.post('/api/viewer-submissions/report-spam', express.json(), async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ success: false, error: 'ID is required' });
+
+    const docRef = admin.firestore().collection('submissions').doc(id);
+    const doc = await docRef.get();
+    if (!doc.exists) return res.status(404).json({ success: false, error: 'Submission not found' });
+
+    const submission = doc.data();
+    await docRef.update({
+      reportedSpam: true,
+      status: 'spam'
+    });
+
+    await sendSpamReportEmail({ id, ...submission }, req.user.email);
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[API] report-spam failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
  * Decryption Proxy for Submissions Storage Files (Accessible by all logged in users)
  */
 app.get('/api/get-submission-file', async (req, res) => {
