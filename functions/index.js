@@ -148,6 +148,107 @@ const transporter = nodemailer.createTransport({
 });
 
 /**
+ * Get an access token for Microsoft Graph API using Client Credentials flow
+ */
+async function getMicrosoftAccessToken() {
+  const tenantId = process.env.MICROSOFT_TENANT_ID;
+  const clientId = process.env.MICROSOFT_CLIENT_ID;
+  const clientSecret = process.env.MICROSOFT_CLIENT_SECRET;
+
+  if (!tenantId || !clientId || !clientSecret) {
+    throw new Error('Missing Microsoft Graph API credentials in environment.');
+  }
+
+  const tokenUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`;
+  const params = new URLSearchParams();
+  params.set('client_id', clientId);
+  params.set('client_secret', clientSecret);
+  params.set('scope', 'https://graph.microsoft.com/.default');
+  params.set('grant_type', 'client_credentials');
+
+  const response = await fetch(tokenUrl, {
+    method: 'POST',
+    body: params,
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to obtain Microsoft Access Token: ${response.statusText} - ${errorText}`);
+  }
+
+  const data = await response.json();
+  return data.access_token;
+}
+
+/**
+ * Send an email using Microsoft Graph API
+ */
+async function sendEmailViaGraph(subject, html, recipientList, bccRecipientsList, attachments = []) {
+  const accessToken = await getMicrosoftAccessToken();
+  const mailbox = process.env.MICROSOFT_MAILBOX_EMAIL || 'story@combinedartists.co.za';
+
+  const toRecipients = (recipientList || mailbox).split(',').map(email => ({
+    emailAddress: { address: email.trim() }
+  }));
+
+  const bccRecipients = (bccRecipientsList || '').split(',').filter(Boolean).map(email => ({
+    emailAddress: { address: email.trim() }
+  }));
+
+  const graphMessage = {
+    message: {
+      subject,
+      body: {
+        contentType: 'HTML',
+        content: html
+      },
+      toRecipients
+    },
+    saveToSentItems: 'false'
+  };
+
+  if (bccRecipients.length > 0) {
+    graphMessage.message.bccRecipients = bccRecipients;
+  }
+
+  if (Array.isArray(attachments) && attachments.length > 0) {
+    graphMessage.message.attachments = attachments.map(att => {
+      let contentBytes = '';
+      if (Buffer.isBuffer(att.content)) {
+        contentBytes = att.content.toString('base64');
+      } else if (typeof att.content === 'string') {
+        contentBytes = Buffer.from(att.content).toString('base64');
+      } else if (att.path) {
+        const fs = require('fs');
+        contentBytes = fs.readFileSync(att.path).toString('base64');
+      }
+      return {
+        '@odata.type': '#microsoft.graph.fileAttachment',
+        name: att.filename,
+        contentType: att.contentType || 'application/octet-stream',
+        contentBytes
+      };
+    });
+  }
+
+  const sendUrl = `https://graph.microsoft.com/v1.0/users/${mailbox}/sendMail`;
+  const response = await fetch(sendUrl, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(graphMessage)
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Graph API sendMail failed: ${response.statusText} - ${errText}`);
+  }
+}
+
+/**
  * Helper to send notifications to relevant admins/editorial/production
  */
 async function notifyRelevantUsers(type, subject, html, attachments = [], extraRecipients = []) {
@@ -196,26 +297,35 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
         }
 
         const recipientList = Array.from(recipients).join(', ');
-        console.log(`[NOTIFY] Sending to: ${recipientList}`);
-
         const fromName = type === 'call_sheet' ? "Call Sheets" : (type === 'editorial_leave' ? "Editorial Leave Calendar" : "CARP Dashboard");
-        
-        const mailOptions = {
-            from: `"${fromName}" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER, // Hide recipient list from users
-            bcc: recipientList,
-            subject: subject,
-            html: html,
-            attachments: attachments
-        };
 
-        await transporter.sendMail(mailOptions);
-        console.log(`[NOTIFY] Email sent successfully to ${recipients.size} recipients.`);
+        if (process.env.MICROSOFT_CLIENT_ID) {
+            console.log(`[NOTIFY] Using Microsoft Graph API to send email to bcc: ${recipientList}`);
+            const mailbox = process.env.MICROSOFT_MAILBOX_EMAIL || 'story@combinedartists.co.za';
+            // Send email to sender (with fromName as custom subject header if possible, or inside subject)
+            const bccList = recipientList;
+            await sendEmailViaGraph(`[${fromName}] ${subject}`, html, mailbox, bccList, attachments);
+            console.log(`[NOTIFY] Graph API email sent successfully to ${recipients.size} recipients.`);
+        } else {
+            console.log(`[NOTIFY] Using legacy SMTP to send email to: ${recipientList}`);
+            const mailOptions = {
+                from: `"${fromName}" <${process.env.EMAIL_USER}>`,
+                to: process.env.EMAIL_USER, // Hide recipient list from users
+                bcc: recipientList,
+                subject: subject,
+                html: html,
+                attachments: attachments
+            };
+
+            await transporter.sendMail(mailOptions);
+            console.log(`[NOTIFY] SMTP email sent successfully to ${recipients.size} recipients.`);
+        }
     } catch (err) {
         console.error(`[NOTIFY] FAILED for type '${type}': ${err.message}`);
         // We don't throw here to avoid blocking the submission flow if email fails
     }
 }
+
 
 const app = express();
 app.use(cors({ origin: true }));
@@ -615,6 +725,65 @@ app.post('/api/submissions/external', express.json({ limit: '15mb' }), async (re
 });
 
 app.use(validateFirebaseIdToken);
+
+/**
+ * Fetch viewer submissions (email submissions and DStv tip-offs)
+ * Accessible by all logged-in users
+ */
+app.get('/api/viewer-submissions', async (req, res) => {
+  try {
+    const snapshot = await admin.firestore().collection('submissions')
+      .where('formType', 'in', ['email_submission', 'dstv_tipoff'])
+      .orderBy('submittedAt', 'desc')
+      .limit(100)
+      .get();
+    
+    const submissions = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return { id: doc.id, ...data };
+    });
+    
+    res.json({ success: true, submissions });
+  } catch (error) {
+    console.error('[API] fetch viewer-submissions failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * Decryption Proxy for Submissions Storage Files (Accessible by all logged in users)
+ */
+app.get('/api/get-submission-file', async (req, res) => {
+  try {
+    const storagePath = req.query.path;
+    if (!storagePath) return res.status(400).json({ success: false, error: 'Path required' });
+    
+    // Safety check: ensure paths are only within submissions directory
+    if (!storagePath.startsWith('submissions/')) {
+      return res.status(403).json({ success: false, error: 'Forbidden: Can only access submissions files.' });
+    }
+
+    console.log(`[STORAGE] Decrypting file for user: ${storagePath}`);
+    const [fileBuffer] = await defaultBucket.file(storagePath).download();
+    const decryptedBuffer = decryptBuffer(fileBuffer);
+
+    // Set appropriate MIME type or fallback
+    const ext = storagePath.split('.').pop().toLowerCase();
+    let mimeType = 'application/octet-stream';
+    if (ext === 'pdf') mimeType = 'application/pdf';
+    else if (ext === 'jpg' || ext === 'jpeg') mimeType = 'image/jpeg';
+    else if (ext === 'png') mimeType = 'image/png';
+    else if (ext === 'txt') mimeType = 'text/plain';
+
+    res.setHeader('Content-Type', mimeType);
+    const disposition = req.query.inline === 'true' ? 'inline' : 'attachment';
+    res.setHeader('Content-Disposition', `${disposition}; filename="${storagePath.split('/').pop()}"`);
+    res.send(decryptedBuffer);
+  } catch (error) {
+    console.error('File decryption failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 
 /**

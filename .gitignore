@@ -25,3 +25,7 @@ Thumbs.db
 
 # Scratch
 scratch/
+
+# Environment configurations
+.env
+functions/.env
