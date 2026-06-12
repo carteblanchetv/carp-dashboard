@@ -424,3 +424,10 @@
 [2026-06-12 14:08:44]    ec1eb5d..7827f60  main -> main
 [2026-06-12 14:08:44] Sync complete.
 [2026-06-12 14:38:44] Changes detected. Syncing...
+[2026-06-12 14:38:44] [main 1fa89b4] auto-sync: 2026-06-12 14:38
+[2026-06-12 14:38:44]  2 files changed, 1 insertion(+)
+[2026-06-12 14:38:44]  create mode 100644 firebase-debug.log
+[2026-06-12 14:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-12 14:38:44]    f73da89..1fa89b4  main -> main
+[2026-06-12 14:38:44] Sync complete.
+[2026-06-12 15:08:44] Changes detected. Syncing...
