@@ -10,6 +10,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
+    <style>
+        .admin-table th {
+            white-space: normal !important;
+            word-wrap: break-word;
+        }
+        .admin-table td {
+            white-space: nowrap;
+        }
+        .table-container {
+            overflow-x: hidden !important;
+        }
+        @media (max-width: 1200px) {
+            .admin-table th, .admin-table td {
+                font-size: 0.8rem !important;
+                padding: 0.8rem 0.5rem !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .admin-table th, .admin-table td {
+                font-size: 0.7rem !important;
+                padding: 0.6rem 0.4rem !important;
+            }
+        }
+    </style>
 </head>
 <body class="dashboard-body">
     <nav class="global-top-nav">
@@ -58,7 +82,7 @@
                     <thead>
                         <tr>
                             <th style="width: 5%; text-align: center;">#</th>
-                            <th style="width: 15%; text-align: center;">Action By</th>
+                            <th style="width: 15%; text-align: center;">Actioned By</th>
                             <th style="width: 33%; text-align: left;">Subject</th>
                             <th style="width: 20%; text-align: left;">From</th>
                             <th style="width: 15%; text-align: center;">Date Received</th>
@@ -74,6 +98,7 @@
                     </tbody>
                 </table>
             </div>
+            <div id="investigationPagination" style="margin-top: 1rem;"></div>
         </section>
 
         <!-- SUBMISSIONS TABLE SECTION -->
@@ -103,6 +128,37 @@
                     </tbody>
                 </table>
             </div>
+            <div id="submissionsPagination" style="margin-top: 1rem;"></div>
+        </section>
+
+        <!-- RESOLVED SECTION -->
+        <section id="resolvedSection" class="dashboard-section" style="margin-top: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 class="section-title" style="margin: 0; color: var(--success);">✅ Resolved Submissions</h2>
+            </div>
+            
+            <div class="table-container">
+                <table class="admin-table" style="table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%; text-align: center;">#</th>
+                            <th style="width: 15%; text-align: center;">Actioned By</th>
+                            <th style="width: 33%; text-align: left;">Subject</th>
+                            <th style="width: 20%; text-align: left;">From</th>
+                            <th style="width: 15%; text-align: center;">Date Resolved</th>
+                            <th style="width: 12%; text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resolvedList">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                No resolved submissions.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="resolvedPagination" style="margin-top: 1rem;"></div>
         </section>
 
         <div style="margin-top: 3rem; text-align: center;">

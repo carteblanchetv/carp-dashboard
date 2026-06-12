@@ -848,6 +848,31 @@ app.post('/api/viewer-submissions/report-spam', express.json(), async (req, res)
     res.status(500).json({ success: false, error: error.message });
   }
 });
+app.post('/api/viewer-submissions/resolve', express.json(), async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ success: false, error: 'ID is required' });
+
+    const docRef = admin.firestore().collection('submissions').doc(id);
+    const doc = await docRef.get();
+    if (!doc.exists) return res.status(404).json({ success: false, error: 'Submission not found' });
+
+    const name = `${req.user.firstName || ''} ${req.user.lastName || ''}`.trim() || req.user.email;
+    await docRef.update({
+      resolved: true,
+      resolvedAt: new Date(),
+      resolvedBy: {
+        name: name,
+        email: req.user.email
+      }
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[API] resolve submission failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 /**
  * Decryption Proxy for Submissions Storage Files (Accessible by all logged in users)

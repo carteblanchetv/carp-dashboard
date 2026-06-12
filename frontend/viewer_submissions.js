@@ -5,9 +5,24 @@ const closeBtn = document.getElementById('closeDetailsModalBtn');
 const cancelBtn = document.getElementById('cancelDetailsModalBtn');
 const loadingSpinner = document.getElementById('tableLoading');
 
+let globalSubmissionsCache = [];
+let currentUserCache = null;
+const PAGE_SIZE = 10;
+const currentPages = {
+    investigation: 1,
+    submissions: 1,
+    resolved: 1
+};
+
+window.changePage = (type, delta) => {
+    currentPages[type] += delta;
+    renderSubmissions(globalSubmissionsCache, currentUserCache);
+};
+
 checkAuth().then(user => {
     if (user) {
         window.auth.initNavBar(user);
+        currentUserCache = user;
         loadSubmissions(user);
     }
 });
@@ -22,11 +37,13 @@ async function loadSubmissions(user) {
         if (loadingSpinner) loadingSpinner.style.display = 'none';
 
         if (result.success && result.submissions) {
+            globalSubmissionsCache = result.submissions;
+            currentUserCache = user;
             renderSubmissions(result.submissions, user);
         } else {
             document.getElementById('submissionsList').innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align: center; padding: 3rem; color: var(--danger);">
+                    <td colspan="5" style="text-align: center; padding: 3rem; color: var(--danger);">
                         ${result.error || 'Failed to load submissions.'}
                     </td>
                 </tr>
@@ -37,7 +54,7 @@ async function loadSubmissions(user) {
         if (loadingSpinner) loadingSpinner.style.display = 'none';
         document.getElementById('submissionsList').innerHTML = `
             <tr>
-                <td colspan="6" style="text-align: center; padding: 3rem; color: var(--danger);">
+                <td colspan="5" style="text-align: center; padding: 3rem; color: var(--danger);">
                     An error occurred while loading submissions.
                 </td>
             </tr>
@@ -48,16 +65,23 @@ async function loadSubmissions(user) {
 function renderSubmissions(submissions, user) {
     const regularList = document.getElementById('submissionsList');
     const investigationList = document.getElementById('investigationList');
-    if (!regularList || !investigationList) return;
+    const resolvedList = document.getElementById('resolvedList');
+    if (!regularList || !investigationList || !resolvedList) return;
 
-    // Filter out spam submissions if any status is set, and partition useful vs non-useful
+    // Filter out spam submissions, and partition into inbox, useful, and resolved
     const validSubs = submissions.filter(s => s.status !== 'spam' && s.reportedSpam !== true);
-    const investigationSubs = validSubs.filter(s => s.useful === true);
-    const regularSubs = validSubs.filter(s => s.useful !== true);
+    
+    const resolvedSubs = validSubs.filter(s => s.resolved === true);
+    const investigationSubs = validSubs.filter(s => s.useful === true && s.resolved !== true);
+    const regularSubs = validSubs.filter(s => s.useful !== true && s.resolved !== true);
 
     const canDelete = ['admin', 'super-admin', 'editorial-production'].includes(user?.role);
 
-    // Render regular submissions
+    // 1. Render regular submissions (Viewer Submissions inbox)
+    const totalPagesRegular = Math.max(1, Math.ceil(regularSubs.length / PAGE_SIZE));
+    if (currentPages.submissions > totalPagesRegular) currentPages.submissions = totalPagesRegular;
+    if (currentPages.submissions < 1) currentPages.submissions = 1;
+
     if (regularSubs.length === 0) {
         regularList.innerHTML = `
             <tr>
@@ -67,7 +91,9 @@ function renderSubmissions(submissions, user) {
             </tr>
         `;
     } else {
-        regularList.innerHTML = regularSubs.map((sub, index) => {
+        const startIndex = (currentPages.submissions - 1) * PAGE_SIZE;
+        const slice = regularSubs.slice(startIndex, startIndex + PAGE_SIZE);
+        regularList.innerHTML = slice.map((sub, index) => {
             const subject = sub.subject || '(No Subject)';
             const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
             
@@ -83,7 +109,7 @@ function renderSubmissions(submissions, user) {
 
             return `
                 <tr>
-                    <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${index + 1}.</td>
+                    <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${startIndex + index + 1}.</td>
                     <td data-label="Subject" style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                         <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;" title="${subject.replace(/"/g, '&quot;')}">
                             ${subject}
@@ -104,7 +130,23 @@ function renderSubmissions(submissions, user) {
         }).join('');
     }
 
-    // Render under investigation submissions
+    const regPagination = document.getElementById('submissionsPagination');
+    if (regPagination) {
+        regPagination.style.display = regularSubs.length <= PAGE_SIZE ? 'none' : 'block';
+        regPagination.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin: 1rem auto 0 auto; gap: 1rem;">
+                <button class="btn-soft" ${currentPages.submissions === 1 ? 'disabled' : ''} onclick="window.changePage('submissions', -1)">&larr; Previous</button>
+                <span style="font-weight: 600; font-size: 0.8rem; color: var(--text-muted); min-width: 120px; text-align: center;">Page ${currentPages.submissions} of ${totalPagesRegular}</span>
+                <button class="btn-soft" ${currentPages.submissions === totalPagesRegular ? 'disabled' : ''} onclick="window.changePage('submissions', 1)">Next &rarr;</button>
+            </div>
+        `;
+    }
+
+    // 2. Render under investigation submissions
+    const totalPagesInvestigation = Math.max(1, Math.ceil(investigationSubs.length / PAGE_SIZE));
+    if (currentPages.investigation > totalPagesInvestigation) currentPages.investigation = totalPagesInvestigation;
+    if (currentPages.investigation < 1) currentPages.investigation = 1;
+
     if (investigationSubs.length === 0) {
         investigationList.innerHTML = `
             <tr>
@@ -114,7 +156,9 @@ function renderSubmissions(submissions, user) {
             </tr>
         `;
     } else {
-        investigationList.innerHTML = investigationSubs.map((sub, index) => {
+        const startIndex = (currentPages.investigation - 1) * PAGE_SIZE;
+        const slice = investigationSubs.slice(startIndex, startIndex + PAGE_SIZE);
+        investigationList.innerHTML = slice.map((sub, index) => {
             const subject = sub.subject || '(No Subject)';
             const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
             const actionedByFirstName = sub.actionedBy ? (sub.actionedBy.name || '').split(' ')[0] : '—';
@@ -128,11 +172,15 @@ function renderSubmissions(submissions, user) {
             const deleteButtonHtml = canDelete
                 ? `<button class="btn-admin-cell danger delete-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; margin-left: 0.4rem;">🗑️ Delete</button>`
                 : '';
+            
+            const resolveButtonHtml = canDelete
+                ? `<button class="btn-admin-cell success resolve-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; margin-left: 0.4rem;">✅ Resolve</button>`
+                : '';
 
             return `
                 <tr>
-                    <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${index + 1}.</td>
-                    <td data-label="Action By" style="text-align: center; color: var(--warning); font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
+                    <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${startIndex + index + 1}.</td>
+                    <td data-label="Actioned By" style="text-align: center; color: var(--warning); font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
                     <td data-label="Subject" style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                         <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;" title="${subject.replace(/"/g, '&quot;')}">
                             ${subject}
@@ -145,6 +193,7 @@ function renderSubmissions(submissions, user) {
                     <td data-label="Actions" style="text-align: center;">
                         <div style="display: flex; gap: 0.2rem; justify-content: center; align-items: center;">
                             <button class="btn-admin-cell secondary view-details-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">📄 View</button>
+                            ${resolveButtonHtml}
                             ${deleteButtonHtml}
                         </div>
                     </td>
@@ -153,14 +202,89 @@ function renderSubmissions(submissions, user) {
         }).join('');
     }
 
+    const invPagination = document.getElementById('investigationPagination');
+    if (invPagination) {
+        invPagination.style.display = investigationSubs.length <= PAGE_SIZE ? 'none' : 'block';
+        invPagination.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin: 1rem auto 0 auto; gap: 1rem;">
+                <button class="btn-soft" ${currentPages.investigation === 1 ? 'disabled' : ''} onclick="window.changePage('investigation', -1)">&larr; Previous</button>
+                <span style="font-weight: 600; font-size: 0.8rem; color: var(--text-muted); min-width: 120px; text-align: center;">Page ${currentPages.investigation} of ${totalPagesInvestigation}</span>
+                <button class="btn-soft" ${currentPages.investigation === totalPagesInvestigation ? 'disabled' : ''} onclick="window.changePage('investigation', 1)">Next &rarr;</button>
+            </div>
+        `;
+    }
+
+    // 3. Render resolved submissions
+    const totalPagesResolved = Math.max(1, Math.ceil(resolvedSubs.length / PAGE_SIZE));
+    if (currentPages.resolved > totalPagesResolved) currentPages.resolved = totalPagesResolved;
+    if (currentPages.resolved < 1) currentPages.resolved = 1;
+
+    if (resolvedSubs.length === 0) {
+        resolvedList.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                    No resolved submissions.
+                </td>
+            </tr>
+        `;
+    } else {
+        const startIndex = (currentPages.resolved - 1) * PAGE_SIZE;
+        const slice = resolvedSubs.slice(startIndex, startIndex + PAGE_SIZE);
+        resolvedList.innerHTML = slice.map((sub, index) => {
+            const subject = sub.subject || '(No Subject)';
+            const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
+            const actionedByFirstName = sub.resolvedBy ? (sub.resolvedBy.name || '').split(' ')[0] : (sub.actionedBy ? (sub.actionedBy.name || '').split(' ')[0] : '—');
+            
+            let dateText = '—';
+            if (sub.resolvedAt) {
+                const dateObj = sub.resolvedAt._seconds ? new Date(sub.resolvedAt._seconds * 1000) : new Date(sub.resolvedAt);
+                dateText = dateObj.toLocaleString('en-ZA', { dateStyle: 'medium', timeStyle: 'short' });
+            }
+
+            const deleteButtonHtml = canDelete
+                ? `<button class="btn-admin-cell danger delete-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; margin-left: 0.4rem;">🗑️ Delete</button>`
+                : '';
+
+            return `
+                <tr>
+                    <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${startIndex + index + 1}.</td>
+                    <td data-label="Actioned By" style="text-align: center; color: var(--success); font-weight: 600; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${actionedByFirstName}</td>
+                    <td data-label="Subject" style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                        <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;" title="${subject.replace(/"/g, '&quot;')}">
+                            ${subject}
+                        </a>
+                    </td>
+                    <td data-label="From" style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;" title="${fromName} (${sub.submittedByEmail || ''})">
+                        <strong>${fromName}</strong>
+                    </td>
+                    <td data-label="Date Resolved" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${dateText}</td>
+                    <td data-label="Actions" style="text-align: center;">
+                        <div style="display: flex; gap: 0.2rem; justify-content: center; align-items: center;">
+                            <button class="btn-admin-cell secondary view-details-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">📄 View</button>
+                            ${deleteButtonHtml}
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    const resPagination = document.getElementById('resolvedPagination');
+    if (resPagination) {
+        resPagination.style.display = resolvedSubs.length <= PAGE_SIZE ? 'none' : 'block';
+        resPagination.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin: 1rem auto 0 auto; gap: 1rem;">
+                <button class="btn-soft" ${currentPages.resolved === 1 ? 'disabled' : ''} onclick="window.changePage('resolved', -1)">&larr; Previous</button>
+                <span style="font-weight: 600; font-size: 0.8rem; color: var(--text-muted); min-width: 120px; text-align: center;">Page ${currentPages.resolved} of ${totalPagesResolved}</span>
+                <button class="btn-soft" ${currentPages.resolved === totalPagesResolved ? 'disabled' : ''} onclick="window.changePage('resolved', 1)">Next &rarr;</button>
+            </div>
+        `;
+    }
+
     // Attach listeners for view buttons
     document.querySelectorAll('.view-details-link, .view-details-btn').forEach(element => {
-        element.addEventListener('click', (e) => {
-            e.preventDefault();
-            const id = element.getAttribute('data-id');
-            const sub = submissions.find(s => s.id === id);
-            if (sub) showDetails(sub, user);
-        });
+        element.removeEventListener('click', handleViewClick);
+        element.addEventListener('click', handleViewClick);
     });
 
     // Attach listeners for delete buttons
@@ -196,6 +320,47 @@ function renderSubmissions(submissions, user) {
             }
         });
     });
+
+    // Attach listeners for resolve buttons
+    document.querySelectorAll('.resolve-submission-btn').forEach(element => {
+        element.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const id = element.getAttribute('data-id');
+            const sub = submissions.find(s => s.id === id);
+            if (!sub) return;
+
+            if (!confirm(`Are you sure you want to mark the story: "${sub.subject}" as Resolved?`)) return;
+
+            try {
+                const response = await fetchWithAuth('/api/viewer-submissions/resolve', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(`Server error (${response.status}): ${text.substring(0, 100)}`);
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    loadSubmissions(user);
+                } else {
+                    throw new Error(result.error || 'Failed to resolve submission');
+                }
+            } catch (err) {
+                alert("Resolve failed: " + err.message);
+            }
+        });
+    });
+}
+
+function handleViewClick(e) {
+    e.preventDefault();
+    const id = e.currentTarget.getAttribute('data-id');
+    const sub = globalSubmissionsCache.find(s => s.id === id);
+    if (sub) showDetails(sub, currentUserCache);
 }
 
 function showDetails(sub, user) {
