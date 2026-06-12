@@ -8,11 +8,11 @@ const loadingSpinner = document.getElementById('tableLoading');
 checkAuth().then(user => {
     if (user) {
         window.auth.initNavBar(user);
-        loadSubmissions();
+        loadSubmissions(user);
     }
 });
 
-async function loadSubmissions() {
+async function loadSubmissions(user) {
     if (loadingSpinner) loadingSpinner.style.display = 'block';
 
     try {
@@ -22,7 +22,7 @@ async function loadSubmissions() {
         if (loadingSpinner) loadingSpinner.style.display = 'none';
 
         if (result.success && result.submissions) {
-            renderSubmissions(result.submissions);
+            renderSubmissions(result.submissions, user);
         } else {
             document.getElementById('submissionsList').innerHTML = `
                 <tr>
@@ -45,7 +45,7 @@ async function loadSubmissions() {
     }
 }
 
-function renderSubmissions(submissions) {
+function renderSubmissions(submissions, user) {
     const list = document.getElementById('submissionsList');
     if (!list) return;
 
@@ -60,6 +60,8 @@ function renderSubmissions(submissions) {
         return;
     }
 
+    const canDelete = ['admin', 'super-admin', 'editorial-production'].includes(user?.role);
+
     list.innerHTML = submissions.map((sub, index) => {
         const type = (sub.formType || 'email_submission').toLowerCase();
         const typeLabel = type === 'dstv_tipoff' ? 'DStv Tip-Off' : 'Email Pitch';
@@ -73,6 +75,10 @@ function renderSubmissions(submissions) {
             const dateObj = sub.submittedAt._seconds ? new Date(sub.submittedAt._seconds * 1000) : new Date(sub.submittedAt);
             dateText = dateObj.toLocaleString('en-ZA', { dateStyle: 'medium', timeStyle: 'short' });
         }
+
+        const deleteButtonHtml = canDelete
+            ? `<button class="btn-admin-cell danger delete-submission-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; margin-left: 0.4rem;">🗑️ Delete</button>`
+            : '';
 
         return `
             <tr>
@@ -93,7 +99,10 @@ function renderSubmissions(submissions) {
                 </td>
                 <td data-label="Date Received" style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">${dateText}</td>
                 <td data-label="Actions" style="text-align: center;">
-                    <button class="btn-admin-cell secondary view-details-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">📄 View Details</button>
+                    <div style="display: flex; gap: 0.2rem; justify-content: center; align-items: center;">
+                        <button class="btn-admin-cell secondary view-details-btn" data-id="${sub.id}" style="font-size: 0.7rem; padding: 0.4rem 0.8rem;">📄 View</button>
+                        ${deleteButtonHtml}
+                    </div>
                 </td>
             </tr>
         `;
@@ -108,7 +117,41 @@ function renderSubmissions(submissions) {
             if (sub) showDetails(sub);
         });
     });
+
+    document.querySelectorAll('.delete-submission-btn').forEach(element => {
+        element.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const id = element.getAttribute('data-id');
+            const sub = submissions.find(s => s.id === id);
+            if (!sub) return;
+            
+            if (!confirm(`Are you sure you want to delete the viewer submission: "${sub.subject}"?\n\nThis action cannot be undone.`)) return;
+
+            try {
+                const response = await fetchWithAuth('/api/admin/delete-submission', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(`Server error (${response.status}): ${text.substring(0, 100)}`);
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    loadSubmissions(user);
+                } else {
+                    throw new Error(result.error || 'Failed to delete submission');
+                }
+            } catch (err) {
+                alert("Delete failed: " + err.message);
+            }
+        });
+    });
 }
+
 
 function showDetails(sub) {
     document.getElementById('modalSubject').textContent = sub.subject || '(No Subject)';
