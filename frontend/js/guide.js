@@ -34,4 +34,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // 3. Theme-aware screenshot swapping
+    // Each screenshot <img> has data-dark and data-light attributes.
+    // When the theme changes, we swap all screenshot src values to match.
+    function syncThemeImages() {
+        const isLight = document.documentElement.classList.contains('light-mode');
+        document.querySelectorAll('img[data-dark]').forEach(img => {
+            const darkSrc = img.getAttribute('data-dark');
+            const lightSrc = img.getAttribute('data-light');
+            // Use light image if available and in light mode, otherwise use dark
+            img.src = (isLight && lightSrc) ? lightSrc : darkSrc;
+        });
+    }
+
+    // Run immediately on page load
+    syncThemeImages();
+
+    // Patch the global toggleTheme so image swap runs after every theme toggle
+    const originalToggle = window.toggleTheme;
+    window.toggleTheme = function() {
+        if (originalToggle) originalToggle();
+        syncThemeImages();
+    };
 });
