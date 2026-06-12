@@ -96,36 +96,6 @@
             </div>
         </div>
 
-        <!-- UNDER INVESTIGATION SECTION -->
-        <section id="investigationSection" class="dashboard-section" style="margin-top: 2rem; border-top: 3px solid #f97316;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2 class="section-title" style="margin: 0; color: #f97316;">Under Investigation</h2>
-            </div>
-            
-            <div class="table-container">
-                <table class="admin-table" style="table-layout: fixed; width: 100%;">
-                    <thead>
-                        <tr>
-                            <th style="width: 4%; text-align: center;">#</th>
-                            <th style="width: 12%; text-align: center;">Actioned By</th>
-                            <th style="width: 26%; text-align: left;">Subject</th>
-                            <th style="width: 16%; text-align: left;">From</th>
-                            <th style="width: 14%; text-align: center;">Date Received</th>
-                            <th style="width: 28%; text-align: center;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="investigationList">
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">
-                                No stories currently under investigation.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div id="investigationPagination" style="margin-top: 1rem;"></div>
-        </section>
-
         <!-- SUBMISSIONS TABLE SECTION -->
         <section id="submissionsSection" class="dashboard-section" style="margin-top: 2rem; border-top: 3px solid var(--primary);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
@@ -154,6 +124,36 @@
                 </table>
             </div>
             <div id="submissionsPagination" style="margin-top: 1rem;"></div>
+        </section>
+
+        <!-- UNDER INVESTIGATION SECTION -->
+        <section id="investigationSection" class="dashboard-section" style="margin-top: 2rem; border-top: 3px solid #f97316;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 class="section-title" style="margin: 0; color: #f97316;">Under Investigation</h2>
+            </div>
+            
+            <div class="table-container">
+                <table class="admin-table" style="table-layout: fixed; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width: 4%; text-align: center;">#</th>
+                            <th style="width: 12%; text-align: center;">Actioned By</th>
+                            <th style="width: 26%; text-align: left;">Subject</th>
+                            <th style="width: 16%; text-align: left;">From</th>
+                            <th style="width: 14%; text-align: center;">Date Received</th>
+                            <th style="width: 28%; text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="investigationList">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                No stories currently under investigation.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="investigationPagination" style="margin-top: 1rem;"></div>
         </section>
 
         <!-- RESOLVED SECTION -->
