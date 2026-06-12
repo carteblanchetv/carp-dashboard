@@ -222,8 +222,8 @@ function showDetails(sub, user) {
     const actionedContainer = document.getElementById('modalActionedByContainer');
     const actionedEl = document.getElementById('modalActionedBy');
     if (sub.useful && sub.actionedBy) {
-        actionedContainer.style.display = 'block';
-        actionedEl.textContent = `${sub.actionedBy.name} (${sub.actionedBy.email})`;
+        actionedContainer.style.display = 'flex';
+        actionedEl.textContent = sub.actionedBy.name;
     } else {
         actionedContainer.style.display = 'none';
         actionedEl.textContent = '';
