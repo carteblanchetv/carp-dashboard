@@ -64,6 +64,8 @@ function renderSubmissions(submissions, user) {
 
     list.innerHTML = submissions.map((sub, index) => {
         const type = (sub.formType || 'email_submission').toLowerCase();
+        const typeLabel = type === 'dstv_tipoff' ? 'Web Submission' : 'Email Submission';
+        const typeClass = type === 'dstv_tipoff' ? 'warning' : 'info'; // status badge helper classes
         const subject = sub.subject || '(No Subject)';
         const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
         
@@ -80,6 +82,11 @@ function renderSubmissions(submissions, user) {
         return `
             <tr>
                 <td data-label="#" style="font-weight: 700; color: var(--text-muted); text-align: center;">${index + 1}.</td>
+                <td data-label="Type" style="text-align: center;">
+                    <span class="status-badge-modern ${typeClass}" style="width: 100%; justify-content: center;">
+                        ${typeLabel}
+                    </span>
+                </td>
                 <td data-label="Subject" class="col-title" style="font-weight: 700;">
                     <a href="#" class="view-details-link" data-id="${sub.id}" style="color: var(--primary); text-decoration: none;">
                         ${subject}
@@ -157,6 +164,14 @@ function showDetails(sub) {
     document.getElementById('modalDate').textContent = dateText;
 
     const type = (sub.formType || 'email_submission').toLowerCase();
+    const typeLabel = type === 'dstv_tipoff' ? 'Web Submission' : 'Email Submission';
+    const typeClass = type === 'dstv_tipoff' ? 'warning' : 'info';
+    
+    const typeBadge = document.getElementById('modalType');
+    if (typeBadge) {
+        typeBadge.textContent = typeLabel;
+        typeBadge.className = `status-badge-modern ${typeClass}`;
+    }
 
     // Tip Details (DStv fields)
     const tipDetailsGroup = document.getElementById('modalTipDetails');
