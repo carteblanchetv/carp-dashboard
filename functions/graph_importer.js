@@ -1,6 +1,8 @@
 const admin = require('firebase-admin');
 const crypto = require('crypto');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+
 
 // Initialize Firebase Admin if not already initialized
 if (admin.apps.length === 0) {
