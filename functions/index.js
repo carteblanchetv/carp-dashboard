@@ -740,12 +740,33 @@ app.get('/api/viewer-submissions', async (req, res) => {
     
     const submissions = snapshot.docs.map(doc => {
       const data = doc.data();
-      return { id: doc.id, ...data };
+      const bodyPreview = data.body ? data.body.substring(0, 300) : '';
+      delete data.body;
+      delete data.attachments;
+      return { 
+        id: doc.id, 
+        bodyPreview,
+        ...data 
+      };
     });
     
     res.json({ success: true, submissions });
   } catch (error) {
     console.error('[API] fetch viewer-submissions failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.get('/api/viewer-submissions/details', async (req, res) => {
+  try {
+    const { id } = req.query;
+    if (!id) return res.status(400).json({ success: false, error: 'ID required' });
+    const doc = await admin.firestore().collection('submissions').doc(id).get();
+    if (!doc.exists) return res.status(404).json({ success: false, error: 'Not found' });
+    
+    res.json({ success: true, submission: { id: doc.id, ...doc.data() } });
+  } catch (error) {
+    console.error('[API] fetch details failed:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

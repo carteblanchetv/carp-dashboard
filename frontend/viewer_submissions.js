@@ -93,10 +93,19 @@ function renderSubmissions(submissions, user) {
         const fromEmail = (s.submittedByEmail || '').toLowerCase();
         const fromName = (s.submittedByName || '').toLowerCase();
         const subject = (s.subject || '').toLowerCase();
-        if (fromEmail === 'quarantine@e-purifier.com' || fromEmail.includes('e-purifier.com') || fromName.includes('e-purifier support')) {
+        if (
+            fromEmail === 'quarantine@e-purifier.com' || 
+            fromEmail === 'postmaster@e-purifier.com' || 
+            fromEmail.includes('e-purifier.com') || 
+            fromName.includes('e-purifier support')
+        ) {
             return false;
         }
-        if (subject.includes('spam to recipient') || subject.includes('quarantine@e-purifier.com')) {
+        if (
+            subject.includes('spam to recipient') || 
+            subject.includes('quarantine@e-purifier.com') ||
+            subject.includes('quarantine message notification')
+        ) {
             return false;
         }
         return true;
@@ -107,7 +116,7 @@ function renderSubmissions(submissions, user) {
     if (searchVal) {
         validSubs = validSubs.filter(s => {
             const subject = (s.subject || '').toLowerCase();
-            const body = (s.body || '').toLowerCase();
+            const body = (s.bodyPreview || '').toLowerCase();
             const fromEmail = (s.submittedByEmail || '').toLowerCase();
             const fromName = (s.submittedByName || '').toLowerCase();
             
@@ -425,11 +434,38 @@ function renderSubmissions(submissions, user) {
     });
 }
 
-function handleViewClick(e) {
+async function handleViewClick(e) {
     e.preventDefault();
     const id = e.currentTarget.getAttribute('data-id');
-    const sub = globalSubmissionsCache.find(s => s.id === id);
-    if (sub) showDetails(sub, currentUserCache);
+    const viewBtn = e.currentTarget;
+    const originalText = viewBtn.innerHTML;
+    
+    // Add brief visual loading feedback
+    if (viewBtn.tagName === 'BUTTON') {
+        viewBtn.disabled = true;
+        viewBtn.innerHTML = '⌛ Load...';
+    }
+    
+    try {
+        const response = await fetchWithAuth(`/api/viewer-submissions/details?id=${encodeURIComponent(id)}`);
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+        const result = await response.json();
+        if (result.success && result.submission) {
+            showDetails(result.submission, currentUserCache);
+        } else {
+            alert(result.error || 'Failed to load details.');
+        }
+    } catch (err) {
+        console.error('Error fetching details:', err);
+        alert('An error occurred while loading details. Please try again.');
+    } finally {
+        if (viewBtn.tagName === 'BUTTON') {
+            viewBtn.disabled = false;
+            viewBtn.innerHTML = originalText;
+        }
+    }
 }
 
 function showDetails(sub, user) {

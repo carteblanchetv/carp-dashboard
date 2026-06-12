@@ -169,7 +169,8 @@ async function runImporter() {
         lowerFromEmail.includes('e-purifier.com') || 
         lowerFromName.includes('e-purifier support') ||
         lowerSubject.includes('spam to recipient') ||
-        lowerSubject.includes('quarantine@e-purifier.com')
+        lowerSubject.includes('quarantine@e-purifier.com') ||
+        lowerSubject.includes('quarantine message notification')
       ) {
         console.log(`Skipping backend spam/quarantine email: "${subject}" from ${fromName} <${fromEmail}>`);
         continue;

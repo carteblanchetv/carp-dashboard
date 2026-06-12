@@ -13,17 +13,19 @@ async function run() {
   let deletedCount = 0;
   for (const doc of snapshot.docs) {
     const data = doc.data();
-    const subject = data.subject || '';
-    const email = data.submittedByEmail || '';
-    const name = data.submittedByName || '';
+    const subject = (data.subject || '').toLowerCase();
+    const email = (data.submittedByEmail || '').toLowerCase();
+    const name = (data.submittedByName || '').toLowerCase();
     
     if (
-      subject.includes("Spam to Recipient") || 
+      email.includes("postmaster@e-purifier.com") || 
+      subject.includes("quarantine message notification") || 
+      subject.includes("spam to recipient") || 
       email.includes("quarantine") || 
       subject.includes("quarantine") || 
       name.includes("quarantine")
     ) {
-      console.log(`Deleting Doc ID: ${doc.id} - Subject: "${subject}" - From: "${email}"`);
+      console.log(`Deleting Doc ID: ${doc.id} - Subject: "${data.subject}" - From: "${data.submittedByEmail}"`);
       await doc.ref.delete();
       deletedCount++;
     }
