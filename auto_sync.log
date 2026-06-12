@@ -1,146 +1,3 @@
-[2026-06-09 13:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 13:08:44]    56d4686..abad42b  main -> main
-[2026-06-09 13:08:44] Sync complete.
-[2026-06-09 13:38:44] Changes detected. Syncing...
-[2026-06-09 13:38:44] [main a6a55d0] auto-sync: 2026-06-09 13:38
-[2026-06-09 13:38:44]  1 file changed, 6 insertions(+)
-[2026-06-09 13:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 13:38:44]    abad42b..a6a55d0  main -> main
-[2026-06-09 13:38:44] Sync complete.
-[2026-06-09 14:08:44] Changes detected. Syncing...
-[2026-06-09 14:08:44] [main a09b531] auto-sync: 2026-06-09 14:08
-[2026-06-09 14:08:44]  1 file changed, 6 insertions(+)
-[2026-06-09 14:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 14:08:44]    a6a55d0..a09b531  main -> main
-[2026-06-09 14:08:44] Sync complete.
-[2026-06-09 14:38:55] Changes detected. Syncing...
-[2026-06-09 14:38:55] [main 376d102] auto-sync: 2026-06-09 14:38
-[2026-06-09 14:38:55]  1 file changed, 6 insertions(+)
-[2026-06-09 14:38:55] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 14:38:55]    a09b531..376d102  main -> main
-[2026-06-09 14:38:55] Sync complete.
-[2026-06-09 15:08:43] Changes detected. Syncing...
-[2026-06-09 15:08:43] [main a948c3c] auto-sync: 2026-06-09 15:08
-[2026-06-09 15:08:43]  1 file changed, 6 insertions(+)
-[2026-06-09 15:08:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 15:08:43]    376d102..a948c3c  main -> main
-[2026-06-09 15:08:43] Sync complete.
-[2026-06-09 15:38:43] Changes detected. Syncing...
-[2026-06-09 15:38:43] [main 021ee50] auto-sync: 2026-06-09 15:38
-[2026-06-09 15:38:43]  1 file changed, 6 insertions(+)
-[2026-06-09 15:38:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 15:38:43]    a948c3c..021ee50  main -> main
-[2026-06-09 15:38:43] Sync complete.
-[2026-06-09 16:08:43] Changes detected. Syncing...
-[2026-06-09 16:08:43] [main fa3a627] auto-sync: 2026-06-09 16:08
-[2026-06-09 16:08:43]  1 file changed, 6 insertions(+)
-[2026-06-09 16:08:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 16:08:43]    8ebdac3..fa3a627  main -> main
-[2026-06-09 16:08:43] Sync complete.
-[2026-06-09 16:38:43] Changes detected. Syncing...
-[2026-06-09 16:38:43] [main ca52950] auto-sync: 2026-06-09 16:38
-[2026-06-09 16:38:43]  1 file changed, 6 insertions(+)
-[2026-06-09 16:38:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 16:38:43]    fa3a627..ca52950  main -> main
-[2026-06-09 16:38:43] Sync complete.
-[2026-06-09 17:08:43] Changes detected. Syncing...
-[2026-06-09 17:08:43] [main 2469e6e] auto-sync: 2026-06-09 17:08
-[2026-06-09 17:08:43]  1 file changed, 6 insertions(+)
-[2026-06-09 17:08:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 17:08:43]    ca52950..2469e6e  main -> main
-[2026-06-09 17:08:43] Sync complete.
-[2026-06-09 17:38:43] Changes detected. Syncing...
-[2026-06-09 17:38:43] [main cba7352] auto-sync: 2026-06-09 17:38
-[2026-06-09 17:38:43]  1 file changed, 6 insertions(+)
-[2026-06-09 17:38:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 17:38:43]    2469e6e..cba7352  main -> main
-[2026-06-09 17:38:43] Sync complete.
-[2026-06-09 18:08:43] Changes detected. Syncing...
-[2026-06-09 18:08:43] [main 842c9eb] auto-sync: 2026-06-09 18:08
-[2026-06-09 18:08:43]  1 file changed, 6 insertions(+)
-[2026-06-09 18:08:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 18:08:43]    cba7352..842c9eb  main -> main
-[2026-06-09 18:08:43] Sync complete.
-[2026-06-09 18:38:43] Changes detected. Syncing...
-[2026-06-09 18:38:43] [main d1f73c4] auto-sync: 2026-06-09 18:38
-[2026-06-09 18:38:43]  1 file changed, 6 insertions(+)
-[2026-06-09 18:38:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 18:38:43]    842c9eb..d1f73c4  main -> main
-[2026-06-09 18:38:43] Sync complete.
-[2026-06-09 19:08:43] Changes detected. Syncing...
-[2026-06-09 19:08:43] [main 1afce4d] auto-sync: 2026-06-09 19:08
-[2026-06-09 19:08:43]  1 file changed, 6 insertions(+)
-[2026-06-09 19:08:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 19:08:43]    d1f73c4..1afce4d  main -> main
-[2026-06-09 19:08:43] Sync complete.
-[2026-06-09 19:38:43] Changes detected. Syncing...
-[2026-06-09 19:38:43] [main 73774be] auto-sync: 2026-06-09 19:38
-[2026-06-09 19:38:43]  1 file changed, 6 insertions(+)
-[2026-06-09 19:38:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 19:38:43]    1afce4d..73774be  main -> main
-[2026-06-09 19:38:43] Sync complete.
-[2026-06-09 20:08:43] Changes detected. Syncing...
-[2026-06-09 20:08:43] [main cc20202] auto-sync: 2026-06-09 20:08
-[2026-06-09 20:08:43]  1 file changed, 6 insertions(+)
-[2026-06-09 20:08:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 20:08:43]    73774be..cc20202  main -> main
-[2026-06-09 20:08:43] Sync complete.
-[2026-06-09 20:38:43] Changes detected. Syncing...
-[2026-06-09 20:38:43] [main 2039857] auto-sync: 2026-06-09 20:38
-[2026-06-09 20:38:43]  1 file changed, 6 insertions(+)
-[2026-06-09 20:38:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 20:38:43]    cc20202..2039857  main -> main
-[2026-06-09 20:38:43] Sync complete.
-[2026-06-09 21:08:43] Changes detected. Syncing...
-[2026-06-09 21:08:43] [main 4a8ae73] auto-sync: 2026-06-09 21:08
-[2026-06-09 21:08:43]  1 file changed, 6 insertions(+), 102 deletions(-)
-[2026-06-09 21:08:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 21:08:43]    2039857..4a8ae73  main -> main
-[2026-06-09 21:08:43] Sync complete.
-[2026-06-09 21:38:43] Changes detected. Syncing...
-[2026-06-09 21:38:43] [main baf74b6] auto-sync: 2026-06-09 21:38
-[2026-06-09 21:38:43]  1 file changed, 6 insertions(+)
-[2026-06-09 21:38:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-09 21:38:43]    4a8ae73..baf74b6  main -> main
-[2026-06-09 21:38:43] Sync complete.
-[2026-06-10 09:45:09] Changes detected. Syncing...
-[2026-06-10 09:45:09] [main e8ed088] auto-sync: 2026-06-10 09:45
-[2026-06-10 09:45:09]  1 file changed, 6 insertions(+)
-[2026-06-10 09:45:09] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 09:45:09]    baf74b6..e8ed088  main -> main
-[2026-06-10 09:45:09] Sync complete.
-[2026-06-10 10:08:44] Changes detected. Syncing...
-[2026-06-10 10:08:44] [main a8f1add] auto-sync: 2026-06-10 10:08
-[2026-06-10 10:08:44]  1 file changed, 6 insertions(+)
-[2026-06-10 10:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 10:08:44]    e8ed088..a8f1add  main -> main
-[2026-06-10 10:08:44] Sync complete.
-[2026-06-10 10:38:45] Changes detected. Syncing...
-[2026-06-10 10:38:45] [main a6b9602] auto-sync: 2026-06-10 10:38
-[2026-06-10 10:38:45]  1 file changed, 6 insertions(+)
-[2026-06-10 10:38:45] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 10:38:45]    a8f1add..a6b9602  main -> main
-[2026-06-10 10:38:45] Sync complete.
-[2026-06-10 11:08:44] Changes detected. Syncing...
-[2026-06-10 11:08:44] [main 7e7951a] auto-sync: 2026-06-10 11:08
-[2026-06-10 11:08:44]  1 file changed, 6 insertions(+)
-[2026-06-10 11:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 11:08:44]    a6b9602..7e7951a  main -> main
-[2026-06-10 11:08:44] Sync complete.
-[2026-06-10 11:38:44] Changes detected. Syncing...
-[2026-06-10 11:38:44] [main ba6a633] auto-sync: 2026-06-10 11:38
-[2026-06-10 11:38:44]  1 file changed, 6 insertions(+)
-[2026-06-10 11:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 11:38:44]    7e7951a..ba6a633  main -> main
-[2026-06-10 11:38:44] Sync complete.
-[2026-06-10 12:08:45] Changes detected. Syncing...
-[2026-06-10 12:08:45] [main aee0022] auto-sync: 2026-06-10 12:08
-[2026-06-10 12:08:45]  1 file changed, 6 insertions(+)
-[2026-06-10 12:08:45] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 12:08:45]    ba6a633..aee0022  main -> main
-[2026-06-10 12:08:45] Sync complete.
-[2026-06-10 12:38:44] Changes detected. Syncing...
-[2026-06-10 12:38:44] [main d71cb25] auto-sync: 2026-06-10 12:38
 [2026-06-10 12:38:44]  1 file changed, 6 insertions(+)
 [2026-06-10 12:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
 [2026-06-10 12:38:44]    aee0022..d71cb25  main -> main
@@ -481,3 +338,64 @@
 [2026-06-12 17:38:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 [2026-06-12 17:38:44] Sync complete.
 [2026-06-12 18:08:44] Changes detected. Syncing...
+[2026-06-12 18:08:44] [main 56b50fd] auto-sync: 2026-06-12 18:08
+[2026-06-12 18:08:44]  50 files changed, 12 insertions(+)
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Account2.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Call_Sheet.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Call_Sheet2.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/DOP_Off.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/DOP_On.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/1 Login Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/10 DOP Off Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/11 DOP On Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/12 Footage Declaration Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/13 Footage Import Dark.png
+[2026-06-12 18:08:44]  rename frontend/assets/{Sensitive.png => Dark Theme/14 Sensitive Dark.png} (100%)
+[2026-06-12 18:08:44]  rename frontend/assets/{Forms_Bar.png => Dark Theme/15 Forms List Dark.png} (100%)
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/16 Submission Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/17 Final Script Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/2 Home Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/3 Account Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/4 Stories Dashboard Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/5 New Proposal Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/6 Edit Proposal Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/7 Additional Info Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/8 Nav Bar Dark.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Dark Theme/9 Call Sheet Dark.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Home.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Home_Menu_Bar.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Images Dark and Light.docx
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Insert_Details.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/1 Login Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/10 DOP Off Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/11 DOP On Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/12 Footage Declaration Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/13 Footage Import Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/14 Sensitive Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/15 Forms List Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/16 Submission Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/17 Final Script Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/2 Home Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/3 Account Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/4 Stories Dashboard Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/5 New Proposal Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/6 Edit Proposal Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/7 Additional Info Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/8 Nav Bar Light.png
+[2026-06-12 18:08:44]  create mode 100644 frontend/assets/Light Theme/9 Call Sheet Light.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Login.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Nav_Bar.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Proposal_NEW.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Proposal_PREVIEW.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Proposal_TABLE.png
+[2026-06-12 18:08:44]  delete mode 100644 frontend/assets/Submission_View.png
+[2026-06-12 18:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-12 18:08:44]  ! [rejected]        main -> main (fetch first)
+[2026-06-12 18:08:44] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
+[2026-06-12 18:08:44] hint: Updates were rejected because the remote contains work that you do not
+[2026-06-12 18:08:44] hint: have locally. This is usually caused by another repository pushing to
+[2026-06-12 18:08:44] hint: the same ref. If you want to integrate the remote changes, use
+[2026-06-12 18:08:44] hint: 'git pull' before pushing again.
+[2026-06-12 18:08:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[2026-06-12 18:08:44] Sync complete.
+[2026-06-12 18:38:44] Changes detected. Syncing...
