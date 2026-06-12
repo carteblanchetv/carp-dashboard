@@ -92,7 +92,11 @@ function renderSubmissions(submissions, user) {
         if (s.status === 'spam' || s.reportedSpam === true) return false;
         const fromEmail = (s.submittedByEmail || '').toLowerCase();
         const fromName = (s.submittedByName || '').toLowerCase();
+        const subject = (s.subject || '').toLowerCase();
         if (fromEmail === 'quarantine@e-purifier.com' || fromEmail.includes('e-purifier.com') || fromName.includes('e-purifier support')) {
+            return false;
+        }
+        if (subject.includes('spam to recipient') || subject.includes('quarantine@e-purifier.com')) {
             return false;
         }
         return true;

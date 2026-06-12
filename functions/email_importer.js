@@ -132,7 +132,14 @@ async function runImporter() {
       // Skip quarantine/e-purifier spam emails at backend ingestion time
       const lowerFromEmail = fromEmail.toLowerCase();
       const lowerFromName = fromName.toLowerCase();
-      if (lowerFromEmail === 'quarantine@e-purifier.com' || lowerFromEmail.includes('e-purifier.com') || lowerFromName.includes('e-purifier support')) {
+      const lowerSubject = subject.toLowerCase();
+      if (
+        lowerFromEmail === 'quarantine@e-purifier.com' || 
+        lowerFromEmail.includes('e-purifier.com') || 
+        lowerFromName.includes('e-purifier support') ||
+        lowerSubject.includes('spam to recipient') ||
+        lowerSubject.includes('quarantine@e-purifier.com')
+      ) {
         console.log(`Skipping backend spam/quarantine email: "${subject}" from ${fromName} <${fromEmail}>`);
         if (!dryRun) {
           await connection.addFlags(message.attributes.uid, 'Seen');
