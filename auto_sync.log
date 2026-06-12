@@ -1,125 +1,3 @@
-[2026-06-10 12:38:44]  1 file changed, 6 insertions(+)
-[2026-06-10 12:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 12:38:44]    aee0022..d71cb25  main -> main
-[2026-06-10 12:38:44] Sync complete.
-[2026-06-10 13:08:44] Changes detected. Syncing...
-[2026-06-10 13:08:44] warning: in the working copy of 'functions/check_id.js', LF will be replaced by CRLF the next time Git touches it
-[2026-06-10 13:08:44] warning: in the working copy of 'functions/proposal_dump.json', LF will be replaced by CRLF the next time Git touches it
-[2026-06-10 13:08:44] [main 977681c] auto-sync: 2026-06-10 13:08
-[2026-06-10 13:08:44]  4 files changed, 282 insertions(+), 37 deletions(-)
-[2026-06-10 13:08:44]  create mode 100644 functions/proposal_dump.json
-[2026-06-10 13:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 13:08:44]    d71cb25..977681c  main -> main
-[2026-06-10 13:08:44] Sync complete.
-[2026-06-10 13:38:44] Changes detected. Syncing...
-[2026-06-10 13:38:44] warning: in the working copy of 'functions/check_id.js', LF will be replaced by CRLF the next time Git touches it
-[2026-06-10 13:38:44] warning: in the working copy of 'functions/check_other.js', LF will be replaced by CRLF the next time Git touches it
-[2026-06-10 13:38:44] warning: in the working copy of 'functions/find_history.js', LF will be replaced by CRLF the next time Git touches it
-[2026-06-10 13:38:44] warning: in the working copy of 'functions/search_story.js', LF will be replaced by CRLF the next time Git touches it
-[2026-06-10 13:38:44] warning: in the working copy of 'functions/view_history_docs.js', LF will be replaced by CRLF the next time Git touches it
-[2026-06-10 13:38:44] [main 7af2dab] auto-sync: 2026-06-10 13:38
-[2026-06-10 13:38:44]  9 files changed, 232 insertions(+), 12 deletions(-)
-[2026-06-10 13:38:44]  create mode 100644 functions/check_other.js
-[2026-06-10 13:38:44]  create mode 100644 functions/find_history.js
-[2026-06-10 13:38:44]  create mode 100644 functions/search_story.js
-[2026-06-10 13:38:44]  create mode 100644 functions/view_history_docs.js
-[2026-06-10 13:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 13:38:44]    977681c..7af2dab  main -> main
-[2026-06-10 13:38:44] Sync complete.
-[2026-06-10 14:08:45] Changes detected. Syncing...
-[2026-06-10 14:08:45] [main b51767f] auto-sync: 2026-06-10 14:08
-[2026-06-10 14:08:45]  1 file changed, 15 insertions(+)
-[2026-06-10 14:08:45] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 14:08:45]    7af2dab..b51767f  main -> main
-[2026-06-10 14:08:45] Sync complete.
-[2026-06-10 14:38:44] Changes detected. Syncing...
-[2026-06-10 14:38:44] [main ce83475] auto-sync: 2026-06-10 14:38
-[2026-06-10 14:38:44]  1 file changed, 6 insertions(+)
-[2026-06-10 14:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 14:38:44]    b51767f..ce83475  main -> main
-[2026-06-10 14:38:44] Sync complete.
-[2026-06-10 15:08:44] Changes detected. Syncing...
-[2026-06-10 15:08:44] [main d6cc83a] auto-sync: 2026-06-10 15:08
-[2026-06-10 15:08:44]  1 file changed, 6 insertions(+)
-[2026-06-10 15:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 15:08:44]    ce83475..d6cc83a  main -> main
-[2026-06-10 15:08:44] Sync complete.
-[2026-06-10 15:38:45] Changes detected. Syncing...
-[2026-06-10 15:38:45] [main 84bfe60] auto-sync: 2026-06-10 15:38
-[2026-06-10 15:38:45]  4 files changed, 135 insertions(+)
-[2026-06-10 15:38:45] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 15:38:45]    d6cc83a..84bfe60  main -> main
-[2026-06-10 15:38:45] Sync complete.
-[2026-06-10 16:08:44] Changes detected. Syncing...
-[2026-06-10 16:08:44] [main 8403625] auto-sync: 2026-06-10 16:08
-[2026-06-10 16:08:44]  2 files changed, 5 insertions(+), 106 deletions(-)
-[2026-06-10 16:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 16:08:44]    84bfe60..8403625  main -> main
-[2026-06-10 16:08:44] Sync complete.
-[2026-06-10 16:38:44] No changes. Nothing to sync.
-[2026-06-10 17:08:44] Changes detected. Syncing...
-[2026-06-10 17:08:44] [main cf08aa8] auto-sync: 2026-06-10 17:08
-[2026-06-10 17:08:44]  1 file changed, 2 insertions(+)
-[2026-06-10 17:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 17:08:44]    8403625..cf08aa8  main -> main
-[2026-06-10 17:08:44] Sync complete.
-[2026-06-10 17:38:44] Changes detected. Syncing...
-[2026-06-10 17:38:44] [main 085512a] auto-sync: 2026-06-10 17:38
-[2026-06-10 17:38:44]  1 file changed, 6 insertions(+)
-[2026-06-10 17:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 17:38:44]    cf08aa8..085512a  main -> main
-[2026-06-10 17:38:44] Sync complete.
-[2026-06-10 18:08:44] Changes detected. Syncing...
-[2026-06-10 18:08:44] [main 274a7d5] auto-sync: 2026-06-10 18:08
-[2026-06-10 18:08:44]  1 file changed, 6 insertions(+)
-[2026-06-10 18:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 18:08:44]    085512a..274a7d5  main -> main
-[2026-06-10 18:08:44] Sync complete.
-[2026-06-10 18:38:44] Changes detected. Syncing...
-[2026-06-10 18:38:44] [main 6fbd6e0] auto-sync: 2026-06-10 18:38
-[2026-06-10 18:38:44]  1 file changed, 6 insertions(+)
-[2026-06-10 18:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 18:38:44]    274a7d5..6fbd6e0  main -> main
-[2026-06-10 18:38:44] Sync complete.
-[2026-06-10 19:08:44] Changes detected. Syncing...
-[2026-06-10 19:08:44] [main 32d8d31] auto-sync: 2026-06-10 19:08
-[2026-06-10 19:08:44]  1 file changed, 6 insertions(+)
-[2026-06-10 19:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 19:08:44]    6fbd6e0..32d8d31  main -> main
-[2026-06-10 19:08:44] Sync complete.
-[2026-06-10 19:38:44] Changes detected. Syncing...
-[2026-06-10 19:38:44] [main 6c5eb93] auto-sync: 2026-06-10 19:38
-[2026-06-10 19:38:44]  1 file changed, 6 insertions(+)
-[2026-06-10 19:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 19:38:44]    32d8d31..6c5eb93  main -> main
-[2026-06-10 19:38:44] Sync complete.
-[2026-06-10 20:08:44] Changes detected. Syncing...
-[2026-06-10 20:08:44] [main 6a373d1] auto-sync: 2026-06-10 20:08
-[2026-06-10 20:08:44]  1 file changed, 6 insertions(+)
-[2026-06-10 20:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 20:08:44]    6c5eb93..6a373d1  main -> main
-[2026-06-10 20:08:44] Sync complete.
-[2026-06-10 20:38:44] Changes detected. Syncing...
-[2026-06-10 20:38:44] [main 56de92e] auto-sync: 2026-06-10 20:38
-[2026-06-10 20:38:44]  1 file changed, 6 insertions(+)
-[2026-06-10 20:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-10 20:38:44]    6a373d1..56de92e  main -> main
-[2026-06-10 20:38:44] Sync complete.
-[2026-06-11 09:09:09] Changes detected. Syncing...
-[2026-06-11 09:09:09] [main fb7ffb8] auto-sync: 2026-06-11 09:09
-[2026-06-11 09:09:09]  1 file changed, 6 insertions(+)
-[2026-06-11 09:09:09] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-11 09:09:09]    56de92e..fb7ffb8  main -> main
-[2026-06-11 09:09:09] Sync complete.
-[2026-06-11 09:38:44] Changes detected. Syncing...
-[2026-06-11 09:38:44] [main 52402f8] auto-sync: 2026-06-11 09:38
-[2026-06-11 09:38:44]  1 file changed, 6 insertions(+)
-[2026-06-11 09:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-11 09:38:44]    fb7ffb8..52402f8  main -> main
-[2026-06-11 09:38:44] Sync complete.
-[2026-06-11 10:08:48] Changes detected. Syncing...
-[2026-06-11 10:08:48] [main 9851d57] auto-sync: 2026-06-11 10:08
-[2026-06-11 10:08:48]  1 file changed, 6 insertions(+)
 [2026-06-11 10:08:48] To https://github.com/carteblanchetv/carp-dashboard.git
 [2026-06-11 10:08:48]    52402f8..9851d57  main -> main
 [2026-06-11 10:08:48] Sync complete.
@@ -471,3 +349,53 @@
 [2026-06-12 21:08:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 [2026-06-12 21:08:44] Sync complete.
 [2026-06-12 21:38:44] Changes detected. Syncing...
+[2026-06-12 21:38:44] warning: in the working copy of 'frontend/js/guide.js', LF will be replaced by CRLF the next time Git touches it
+[2026-06-12 21:38:44] warning: in the working copy of 'frontend/viewer_submissions.js', LF will be replaced by CRLF the next time Git touches it
+[2026-06-12 21:38:44] warning: in the working copy of 'analyze.js', LF will be replaced by CRLF the next time Git touches it
+[2026-06-12 21:38:44] [main 447092c] auto-sync: 2026-06-12 21:38
+[2026-06-12 21:38:44]  45 files changed, 3911 insertions(+), 70 deletions(-)
+[2026-06-12 21:38:44]  create mode 100644 analyze.js
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Account2.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Account2_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Call_Sheet2.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Call_Sheet2_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/DOP_Off.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/DOP_Off_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/DOP_On.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/DOP_On_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Final_Script.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Final_Script_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Footage_Declaration.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Footage_Declaration_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Footage_Import.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Footage_Import_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Forms_List.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Forms_List_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Home.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Home_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Insert_Details.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Insert_Details_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Login.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Login_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Nav_Bar.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Nav_Bar_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Proposal_NEW.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Proposal_NEW_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Proposal_PREVIEW.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Proposal_PREVIEW_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Proposal_TABLE.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Proposal_TABLE_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Sensitive.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Sensitive_light.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Submission_View.png
+[2026-06-12 21:38:44]  create mode 100644 frontend/assets/Submission_View_light.png
+[2026-06-12 21:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-12 21:38:44]  ! [rejected]        main -> main (fetch first)
+[2026-06-12 21:38:44] error: failed to push some refs to 'https://github.com/carteblanchetv/carp-dashboard.git'
+[2026-06-12 21:38:44] hint: Updates were rejected because the remote contains work that you do not
+[2026-06-12 21:38:44] hint: have locally. This is usually caused by another repository pushing to
+[2026-06-12 21:38:44] hint: the same ref. If you want to integrate the remote changes, use
+[2026-06-12 21:38:44] hint: 'git pull' before pushing again.
+[2026-06-12 21:38:44] hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[2026-06-12 21:38:44] Sync complete.
+[2026-06-12 22:08:44] Changes detected. Syncing...
