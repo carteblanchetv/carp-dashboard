@@ -141,9 +141,12 @@ async function runImporter() {
     const accessToken = await getMicrosoftAccessToken();
     const mailbox = process.env.MICROSOFT_MAILBOX_EMAIL || 'story@combinedartists.co.za';
 
-    // 1. Query emails since 1 May 2026 with pagination
+    // 1. Query emails from the last 3 days dynamically with pagination
+    const threeDaysAgo = new Date();
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+    const filterDate = threeDaysAgo.toISOString().split('.')[0] + 'Z';
     let messages = [];
-    let messagesUrl = `https://graph.microsoft.com/v1.0/users/${mailbox}/messages?$filter=receivedDateTime ge 2026-05-01T00:00:00Z&$select=id,subject,body,from,receivedDateTime,hasAttachments,isRead&$top=50`;
+    let messagesUrl = `https://graph.microsoft.com/v1.0/users/${mailbox}/messages?$filter=receivedDateTime ge ${filterDate}&$select=id,subject,body,from,receivedDateTime,hasAttachments,isRead&$top=50`;
 
     while (messagesUrl) {
       console.log(`Fetching messages from Microsoft Graph...`);
