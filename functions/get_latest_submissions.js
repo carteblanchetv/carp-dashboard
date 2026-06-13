@@ -1,7 +1,16 @@
 const admin = require('firebase-admin');
+const path = require('path');
+
+let serviceAccount;
+try {
+  serviceAccount = require('./serviceAccountKey.json');
+} catch (e) {
+  serviceAccount = require('../serviceAccountKey.json');
+}
+
 if (admin.apps.length === 0) {
   admin.initializeApp({
-    projectId: "cb-deliverables",
+    credential: admin.credential.cert(serviceAccount),
     storageBucket: "cb-deliverables.appspot.com"
   });
 }
@@ -9,7 +18,7 @@ if (admin.apps.length === 0) {
 async function run() {
   const snapshot = await admin.firestore().collection('submissions')
     .orderBy('submittedAt', 'desc')
-    .limit(10)
+    .limit(20)
     .get();
   
   console.log(`Found ${snapshot.size} latest submissions:`);
@@ -25,7 +34,8 @@ async function run() {
       source: data.source,
       useful: data.useful,
       resolved: data.resolved,
-      reportedSpam: data.reportedSpam
+      reportedSpam: data.reportedSpam,
+      recipient: data.recipient
     });
   });
 }

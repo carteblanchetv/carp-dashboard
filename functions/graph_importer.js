@@ -6,10 +6,24 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 // Initialize Firebase Admin if not already initialized
 if (admin.apps.length === 0) {
-  admin.initializeApp({
-    projectId: process.env.FIREBASE_PROJECT_ID || 'cb-deliverables',
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'cb-deliverables.appspot.com'
-  });
+  let serviceAccount = null;
+  try {
+    serviceAccount = require('./serviceAccountKey.json');
+  } catch (e) {
+    // Ignore
+  }
+
+  if (serviceAccount) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'cb-deliverables.appspot.com'
+    });
+  } else {
+    admin.initializeApp({
+      projectId: process.env.FIREBASE_PROJECT_ID || 'cb-deliverables',
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'cb-deliverables.appspot.com'
+    });
+  }
 }
 
 const db = admin.firestore();
