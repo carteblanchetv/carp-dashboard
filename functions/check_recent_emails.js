@@ -25,12 +25,13 @@ async function getMicrosoftAccessToken() {
 
 async function run() {
   const accessToken = await getMicrosoftAccessToken();
-  const mailbox = process.env.MICROSOFT_MAILBOX_EMAIL || 'story@combinedartists.co.za';
-
-  const folders = ['inbox', 'junkemail'];
+  const folders = ['inbox', 'junkemail', 'archive', 'deleteditems'];
+  const today = '2026-06-13T00:00:00Z';
+  const mailbox = 'story@combinedartists.co.za';
+  
   for (const folder of folders) {
-    const messagesUrl = `https://graph.microsoft.com/v1.0/users/${mailbox}/mailFolders/${folder}/messages?$select=id,subject,from,receivedDateTime&$top=10&$orderby=receivedDateTime desc`;
-    console.log(`\nFetching 10 most recent messages from folder [${folder}] in mailbox [${mailbox}]...`);
+    const messagesUrl = `https://graph.microsoft.com/v1.0/users/${mailbox}/mailFolders/${folder}/messages?$filter=receivedDateTime ge ${today}&$select=id,subject,from,receivedDateTime&$orderby=receivedDateTime desc`;
+    console.log(`\nChecking folder [${folder}] in mailbox [${mailbox}] for emails received today...`);
     const response = await fetch(messagesUrl, {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
@@ -45,7 +46,7 @@ async function run() {
     }
 
     const data = await response.json();
-    console.log(`Most recent emails in ${folder}:`);
+    console.log(`Found ${data.value.length} email(s) in ${folder} received today:`);
     data.value.forEach((msg, idx) => {
       console.log(`${idx + 1}. Subject: "${msg.subject}"`);
       console.log(`   From: ${msg.from?.emailAddress?.name} <${msg.from?.emailAddress?.address}>`);
