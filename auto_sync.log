@@ -461,3 +461,37 @@
 [2026-06-13 16:08:44] 
 [2026-06-13 16:08:44] Microsoft Graph email import cycle completed successfully.
 [2026-06-13 16:08:44] Changes detected. Syncing...
+[2026-06-13 16:08:44] [main 18d67b8] auto-sync: 2026-06-13 16:09
+[2026-06-13 16:08:44]  1 file changed, 34 insertions(+)
+[2026-06-13 16:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-13 16:08:44]    d516439..18d67b8  main -> main
+[2026-06-13 16:08:44] Sync complete.
+[2026-06-13 16:38:44] Running Microsoft Graph Email Importer...
+[2026-06-13 16:38:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-13 16:38:44] Fetching messages from Microsoft Graph...
+[2026-06-13 16:38:44] Found 22 email(s) since 1 May 2026 to check.
+[2026-06-13 16:38:44] Skipping duplicate: "Fwd: Feel-good song captures flavour of Cape Town" from Roshiela Moonsamy <roshielamoon@gmail.com> (received: 2026-06-10T15:44:16Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Refund on plane ticket canceled by Camair" from george <george@unique-ds.co.za> (received: 2026-06-10T16:14:22Z)
+[2026-06-13 16:38:44] Skipping duplicate: "FORMAL   COMPLAINT: ALLEGED FRAUDULENT VEHICLE SALES, ODOMETER TAMPERING, AND ROADWORTHY IRREGULARITIES G혀 D&D AUTO, EAST LONDON" from rtoody222 <rtoody222@proton.me> (received: 2026-06-10T16:39:14Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Consumer Fraud Claim Rejected Despite Evidence G혀 Request for Investigation" from Yvette Gouws <ygouws2502@gmail.com> (received: 2026-06-10T18:42:20Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Consumer Fraud Claim Rejected Despite Evidence G혀 Request for Investigation" from Yvette Gouws <ygouws2502@gmail.com> (received: 2026-06-10T18:46:21Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Desperate Plea for Help G혀 Historic Gamkaskloof (Die Hel) Cut Off from the Outside World" from kevin@pixelsandbits.co.za <kevin@pixelsandbits.co.za> (received: 2026-06-10T21:41:25Z)
+[2026-06-13 16:38:44] Skipping duplicate: "April- a mother and wife running out of time" from Paige <paige.sirchia02@gmail.com> (received: 2026-06-11T04:43:40Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Exclusive: Fake Betting Apps Set To Surge Ahead Of World Cup 2026" from Louis Hobbs (SportsBoom) <delivery@agilitypr.delivery> (received: 2026-06-11T07:01:36Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Pro Dept Solutions (PDS) Scam - PLEASE HELP" from Francois Burger <francois@eesc.co.za> (received: 2026-06-11T08:51:33Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Re: URGENT: Safety-Critical Faults on New Suzuki Baleno G혀 Immediate Intervention Required" from John Stuart Marshall <john.marshall@m-kopa.com> (received: 2026-06-11T09:10:05Z)
+[2026-06-13 16:38:44] Skipping duplicate: "DEMAND TO ISSUE RETRACTION - Roelf Kuter: Complaint: Racist Slur" from Erika Holmes <holmes@wylie.co.za> (received: 2026-06-11T10:15:26Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Document from Inez Wales" from walesinez@proton.me <walesinez@proton.me> (received: 2026-06-11T10:52:24Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Unfair business and labour practices by foreign owned company in South Africa" from Concerned South African <concernedcitizenzar1990@gmail.com> (received: 2026-06-11T10:52:46Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Malawian refugees stranded in Uniondale June 2026" from miawales@proton.me <miawales@proton.me> (received: 2026-06-11T12:00:25Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Re: APPLICATION OF ASSISTANCE" from William Bene <benewilliam2@gmail.com> (received: 2026-06-11T12:01:52Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Karyn Maughan - HIV Storie" from lindiemnf@gmail.com <lindiemnf@gmail.com> (received: 2026-06-11T12:07:14Z)
+[2026-06-13 16:38:44] Skipping duplicate: "FOLLOW-ON RECENT REPORTS ON UNDOCUMENTED FOREIGN NATIONALS" from FRANKLIN FORTUNE <franklinfortune@yahoo.co.uk> (received: 2026-06-11T14:59:57Z)
+[2026-06-13 16:38:44] Skipping duplicate: "RE: [CAUTION:EXTERNAL EMAIL]  FOR THE ATTENTION OF THE CHAIRMAN & GROUP CHIEF EXECUTIVE | Unpaid Verified Refund R18,512.33 | Account 9070710068 | 280 Days Overdue G현 Case Report Attached" from KZN Executives <KZN_executives@eskom.co.za> (received: 2026-06-12T06:40:52Z)
+[2026-06-13 16:38:44] Skipping duplicate: "F.E.R Hospital" from Seun Posthumus <seun50posthumus@gmail.com> (received: 2026-06-12T07:26:17Z)
+[2026-06-13 16:38:44] Skipping duplicate: "Fwd: Melissa van den Berg // DJ van den Berg" from Melissa Eastes <shaunmelissaeastes@gmail.com> (received: 2026-06-12T11:02:14Z)
+[2026-06-13 16:38:44] Skipping duplicate: "FW: ANOTHER LIFE ESIDIMENI SITUATION AT JONA VAUGHAN AMANZINTOTI DURBAN" from Submissions <story@combinedartists.co.za> (received: 2026-06-12T11:37:53Z)
+[2026-06-13 16:38:44] Skipping duplicate: "How bad bbh hospital" from Renzja Roos <renzjamagdalena@gmail.com> (received: 2026-06-12T11:50:21Z)
+[2026-06-13 16:38:44] 
+[2026-06-13 16:38:44] Microsoft Graph email import cycle completed successfully.
+[2026-06-13 16:38:44] Changes detected. Syncing...
