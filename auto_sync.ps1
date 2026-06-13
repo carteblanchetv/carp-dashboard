@@ -23,6 +23,10 @@ if (Test-Path $LOG_FILE) {
 
 Set-Location $REPO_DIR
 
+Write-Log "Running Microsoft Graph Email Importer..."
+& node functions/graph_importer.js 2>&1 | ForEach-Object { Write-Log $_ }
+
+
 # Check for changes
 $status = & $GIT status --porcelain 2>&1
 if (-not $status) {
