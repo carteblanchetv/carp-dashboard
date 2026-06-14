@@ -4,189 +4,6 @@
 [2026-06-14 15:38:44]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
 [2026-06-14 15:38:44]   config: {
 [2026-06-14 15:38:44]     method: 'POST',
-[2026-06-14 15:38:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781444361621_SIGNED-VRentalsSupplementaryLetter-3June2026.pdf&uploadType=resumable',
-[2026-06-14 15:38:44]     params: {
-[2026-06-14 15:38:44]       name: 'submissions/email_submission/1781444361621_SIGNED-VRentalsSupplementaryLetter-3June2026.pdf',
-[2026-06-14 15:38:44]       uploadType: 'resumable'
-[2026-06-14 15:38:44]     },
-[2026-06-14 15:38:44]     data: {},
-[2026-06-14 15:38:44]     headers: {
-[2026-06-14 15:38:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-14 15:38:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/8180941e-e265-498e-a221-812e87656402',
-[2026-06-14 15:38:44]       'X-Upload-Content-Type': 'application/pdf',
-[2026-06-14 15:38:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-14 15:38:44]       'Content-Type': 'application/json'
-[2026-06-14 15:38:44]     },
-[2026-06-14 15:38:44]     validateStatus: [Function (anonymous)],
-[2026-06-14 15:38:44]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-14 15:38:44]     body: '{}',
-[2026-06-14 15:38:44]     responseType: 'unknown',
-[2026-06-14 15:38:44]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-14 15:38:44]   },
-[2026-06-14 15:38:44]   response: {
-[2026-06-14 15:38:44]     config: {
-[2026-06-14 15:38:44]       method: 'POST',
-[2026-06-14 15:38:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781444361621_SIGNED-VRentalsSupplementaryLetter-3June2026.pdf&uploadType=resumable',
-[2026-06-14 15:38:44]       params: [Object],
-[2026-06-14 15:38:44]       data: {},
-[2026-06-14 15:38:44]       headers: [Object],
-[2026-06-14 15:38:44]       validateStatus: [Function (anonymous)],
-[2026-06-14 15:38:44]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-14 15:38:44]       body: '{}',
-[2026-06-14 15:38:44]       responseType: 'unknown',
-[2026-06-14 15:38:44]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-14 15:38:44]     },
-[2026-06-14 15:38:44]     data: '{\n' +
-[2026-06-14 15:38:44]       '  "error": {\n' +
-[2026-06-14 15:38:44]       '    "code": 404,\n' +
-[2026-06-14 15:38:44]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-14 15:38:44]       '    "errors": [\n' +
-[2026-06-14 15:38:44]       '      {\n' +
-[2026-06-14 15:38:44]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-14 15:38:44]       '        "domain": "global",\n' +
-[2026-06-14 15:38:44]       '        "reason": "notFound"\n' +
-[2026-06-14 15:38:44]       '      }\n' +
-[2026-06-14 15:38:44]       '    ]\n' +
-[2026-06-14 15:38:44]       '  }\n' +
-[2026-06-14 15:38:44]       '}\n',
-[2026-06-14 15:38:44]     headers: {
-[2026-06-14 15:38:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-14 15:38:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-14 15:38:44]       'content-length': '247',
-[2026-06-14 15:38:44]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-14 15:38:44]       date: 'Sun, 14 Jun 2026 13:39:20 GMT',
-[2026-06-14 15:38:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-14 15:38:44]       pragma: 'no-cache',
-[2026-06-14 15:38:44]       server: 'UploadServer',
-[2026-06-14 15:38:44]       vary: 'Origin, X-Origin',
-[2026-06-14 15:38:44]       'x-guploader-uploadid': 'AJ5rDhHZv83-qpjjKT6oUESO8IQ_eV1UTwzg9kE0ts9bBvsIx8wfVmDtpAKYqQEZgXWFVQ2xGSLvKGsrnp9kTfTUuBNy2T2E6ARLQhAx6Zwzarc'
-[2026-06-14 15:38:44]     },
-[2026-06-14 15:38:44]     status: 404,
-[2026-06-14 15:38:44]     statusText: 'Not Found',
-[2026-06-14 15:38:44]     request: {
-[2026-06-14 15:38:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781444361621_SIGNED-VRentalsSupplementaryLetter-3June2026.pdf&uploadType=resumable'
-[2026-06-14 15:38:44]     }
-[2026-06-14 15:38:44]   },
-[2026-06-14 15:38:44]   error: undefined,
-[2026-06-14 15:38:44]   status: 404,
-[2026-06-14 15:38:44]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-14 15:38:44] }
-[2026-06-14 15:38:44] Saved submission successfully to Firestore: submissions/Y5LWh1giHROBx5mtjEJv
-[2026-06-14 15:38:44] Marked email as read on Microsoft Graph.
-[2026-06-14 15:38:44] 
-[2026-06-14 15:38:44] Processing: "Thousands of zims , Nigerians , mozams, malawians, Indians etc enter legally abusing the visitors visa" from Adrian De Villiers <adriandevilliers321@gmail.com>
-[2026-06-14 15:38:44] Identified formType: email_submission
-[2026-06-14 15:38:44] Failed to process attachment 1000003526.png: GaxiosError: {
-[2026-06-14 15:38:44]   "error": {
-[2026-06-14 15:38:44]     "code": 404,
-[2026-06-14 15:38:44]     "message": "The specified bucket does not exist.",
-[2026-06-14 15:38:44]     "errors": [
-[2026-06-14 15:38:44]       {
-[2026-06-14 15:38:44]         "message": "The specified bucket does not exist.",
-[2026-06-14 15:38:44]         "domain": "global",
-[2026-06-14 15:38:44]         "reason": "notFound"
-[2026-06-14 15:38:44]       }
-[2026-06-14 15:38:44]     ]
-[2026-06-14 15:38:44]   }
-[2026-06-14 15:38:44] }
-[2026-06-14 15:38:44] System.Management.Automation.RemoteException
-[2026-06-14 15:38:44]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-14 15:38:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-14 15:38:44]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-14 15:38:44]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-14 15:38:44]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-14 15:38:44]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-14 15:38:44]   config: {
-[2026-06-14 15:38:44]     method: 'POST',
-[2026-06-14 15:38:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781444365004_1000003526.png&uploadType=resumable',
-[2026-06-14 15:38:44]     params: {
-[2026-06-14 15:38:44]       name: 'submissions/email_submission/1781444365004_1000003526.png',
-[2026-06-14 15:38:44]       uploadType: 'resumable'
-[2026-06-14 15:38:44]     },
-[2026-06-14 15:38:44]     data: {},
-[2026-06-14 15:38:44]     headers: {
-[2026-06-14 15:38:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-14 15:38:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/58ba06bc-5140-44bd-a053-d7f0c8586f86',
-[2026-06-14 15:38:44]       'X-Upload-Content-Type': 'image/png',
-[2026-06-14 15:38:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-14 15:38:44]       'Content-Type': 'application/json'
-[2026-06-14 15:38:44]     },
-[2026-06-14 15:38:44]     validateStatus: [Function (anonymous)],
-[2026-06-14 15:38:44]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-14 15:38:44]     body: '{}',
-[2026-06-14 15:38:44]     responseType: 'unknown',
-[2026-06-14 15:38:44]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-14 15:38:44]   },
-[2026-06-14 15:38:44]   response: {
-[2026-06-14 15:38:44]     config: {
-[2026-06-14 15:38:44]       method: 'POST',
-[2026-06-14 15:38:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781444365004_1000003526.png&uploadType=resumable',
-[2026-06-14 15:38:44]       params: [Object],
-[2026-06-14 15:38:44]       data: {},
-[2026-06-14 15:38:44]       headers: [Object],
-[2026-06-14 15:38:44]       validateStatus: [Function (anonymous)],
-[2026-06-14 15:38:44]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-14 15:38:44]       body: '{}',
-[2026-06-14 15:38:44]       responseType: 'unknown',
-[2026-06-14 15:38:44]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-14 15:38:44]     },
-[2026-06-14 15:38:44]     data: '{\n' +
-[2026-06-14 15:38:44]       '  "error": {\n' +
-[2026-06-14 15:38:44]       '    "code": 404,\n' +
-[2026-06-14 15:38:44]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-14 15:38:44]       '    "errors": [\n' +
-[2026-06-14 15:38:44]       '      {\n' +
-[2026-06-14 15:38:44]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-14 15:38:44]       '        "domain": "global",\n' +
-[2026-06-14 15:38:44]       '        "reason": "notFound"\n' +
-[2026-06-14 15:38:44]       '      }\n' +
-[2026-06-14 15:38:44]       '    ]\n' +
-[2026-06-14 15:38:44]       '  }\n' +
-[2026-06-14 15:38:44]       '}\n',
-[2026-06-14 15:38:44]     headers: {
-[2026-06-14 15:38:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-14 15:38:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-14 15:38:44]       'content-length': '247',
-[2026-06-14 15:38:44]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-14 15:38:44]       date: 'Sun, 14 Jun 2026 13:39:24 GMT',
-[2026-06-14 15:38:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-14 15:38:44]       pragma: 'no-cache',
-[2026-06-14 15:38:44]       server: 'UploadServer',
-[2026-06-14 15:38:44]       vary: 'Origin, X-Origin',
-[2026-06-14 15:38:44]       'x-guploader-uploadid': 'AJ5rDhGIc9P3yIteTeGjp5-zTnp0UlXPhy-IDJdr0ZvfIVfDchGxfy7ywy4z-uYnrj_FFJa235L-X7X4wvaLd58DyM2wbrJlUD-SlvGBMkg0Kw'
-[2026-06-14 15:38:44]     },
-[2026-06-14 15:38:44]     status: 404,
-[2026-06-14 15:38:44]     statusText: 'Not Found',
-[2026-06-14 15:38:44]     request: {
-[2026-06-14 15:38:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781444365004_1000003526.png&uploadType=resumable'
-[2026-06-14 15:38:44]     }
-[2026-06-14 15:38:44]   },
-[2026-06-14 15:38:44]   error: undefined,
-[2026-06-14 15:38:44]   status: 404,
-[2026-06-14 15:38:44]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-14 15:38:44] }
-[2026-06-14 15:38:44] Failed to process attachment 1000003527.png: GaxiosError: {
-[2026-06-14 15:38:44]   "error": {
-[2026-06-14 15:38:44]     "code": 404,
-[2026-06-14 15:38:44]     "message": "The specified bucket does not exist.",
-[2026-06-14 15:38:44]     "errors": [
-[2026-06-14 15:38:44]       {
-[2026-06-14 15:38:44]         "message": "The specified bucket does not exist.",
-[2026-06-14 15:38:44]         "domain": "global",
-[2026-06-14 15:38:44]         "reason": "notFound"
-[2026-06-14 15:38:44]       }
-[2026-06-14 15:38:44]     ]
-[2026-06-14 15:38:44]   }
-[2026-06-14 15:38:44] }
-[2026-06-14 15:38:44] System.Management.Automation.RemoteException
-[2026-06-14 15:38:44]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-14 15:38:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-14 15:38:44]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-14 15:38:44]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-14 15:38:44]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-14 15:38:44]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-14 15:38:44]   config: {
-[2026-06-14 15:38:44]     method: 'POST',
 [2026-06-14 15:38:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781444365514_1000003527.png&uploadType=resumable',
 [2026-06-14 15:38:44]     params: {
 [2026-06-14 15:38:44]       name: 'submissions/email_submission/1781444365514_1000003527.png',
@@ -576,3 +393,33 @@
 [2026-06-14 19:08:45] 
 [2026-06-14 19:08:45] Microsoft Graph email import cycle completed successfully.
 [2026-06-14 19:08:45] Changes detected. Syncing...
+[2026-06-14 19:08:45] [main 7c68e2b] auto-sync: 2026-06-14 19:09
+[2026-06-14 19:08:45]  1 file changed, 127 insertions(+)
+[2026-06-14 19:08:45] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-14 19:08:45]    f922be3..7c68e2b  main -> main
+[2026-06-14 19:08:45] Sync complete.
+[2026-06-14 19:38:44] Running Microsoft Graph Email Importer...
+[2026-06-14 19:38:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-14 19:38:44] Fetching messages from Microsoft Graph...
+[2026-06-14 19:38:44] Found 18 email(s) since 1 May 2026 to check.
+[2026-06-14 19:38:44] Skipping duplicate: "RE: [CAUTION:EXTERNAL EMAIL]  FOR THE ATTENTION OF THE CHAIRMAN & GROUP CHIEF EXECUTIVE | Unpaid Verified Refund R18,512.33 | Account 9070710068 | 280 Days Overdue GÇö Case Report Attached" from KZN Executives <KZN_executives@eskom.co.za> (received: 2026-06-12T06:40:52Z)
+[2026-06-14 19:38:44] Skipping duplicate: "F.E.R Hospital" from Seun Posthumus <seun50posthumus@gmail.com> (received: 2026-06-12T07:26:17Z)
+[2026-06-14 19:38:44] Skipping duplicate: "Fwd: Melissa van den Berg // DJ van den Berg" from Melissa Eastes <shaunmelissaeastes@gmail.com> (received: 2026-06-12T11:02:14Z)
+[2026-06-14 19:38:44] Skipping duplicate: "FW: ANOTHER LIFE ESIDIMENI SITUATION AT JONA VAUGHAN AMANZINTOTI DURBAN" from Submissions <story@combinedartists.co.za> (received: 2026-06-12T11:37:53Z)
+[2026-06-14 19:38:44] Skipping duplicate: "How bad bbh hospital" from Renzja Roos <renzjamagdalena@gmail.com> (received: 2026-06-12T11:50:21Z)
+[2026-06-14 19:38:44] Skipping duplicate: "(No Subject)" from Basheer Nalla <basheern761@gmail.com> (received: 2026-06-12T13:34:17Z)
+[2026-06-14 19:38:44] Skipping duplicate: "Hospital negligence right now" from Susan Strydom <susanstrydom777@gmail.com> (received: 2026-06-12T13:38:59Z)
+[2026-06-14 19:38:44] Skipping duplicate: "Urgent Refund Request GÇô Unauthorised USD 200 Charge ($400 in Total) https://setter-syndicate.com/" from Stan Janse van Rensburg <stanjvr@outlook.com> (received: 2026-06-12T15:34:22Z)
+[2026-06-14 19:38:44] Skipping duplicate: "Re: Urgent Refund Request GÇô Unauthorised USD 200 Charge ($400 in Total) https://setter-syndicate.com/" from Nazar Hendricks <nazar@salessyndicategroup.com> (received: 2026-06-12T15:39:59Z)
+[2026-06-14 19:38:44] Skipping duplicate: "Please contact me - Sakunda Holdings" from David Cronje <david@dfcdesignstudio.co.za> (received: 2026-06-12T20:16:38Z)
+[2026-06-14 19:38:44] Skipping duplicate: "Story Tip GÇö Alleged Fraud & Racketeering: V-Rentals (Merzy Agencies CC) | Johannesburg & Durban" from Francois Boshoff <davidfrancoisboshoff@gmail.com> (received: 2026-06-13T10:08:04Z)
+[2026-06-14 19:38:44] Skipping duplicate: "Thousands of zims , Nigerians , mozams, malawians, Indians etc enter legally abusing the visitors visa" from Adrian De Villiers <adriandevilliers321@gmail.com> (received: 2026-06-13T11:46:35Z)
+[2026-06-14 19:38:44] Skipping duplicate: "How many neurodiverse children are being failed by the education system? GÇô Gerhard BothaGÇÖs story" from Amanda Broodryk <amandabroodryk1982@gmail.com> (received: 2026-06-13T14:10:47Z)
+[2026-06-14 19:38:44] Skipping duplicate: "Sakunda Holdings and Ntombi Mlilo" from David Cronje <Midnightarch@mweb.co.za> (received: 2026-06-13T21:09:17Z)
+[2026-06-14 19:38:44] Skipping duplicate: "Ridgeway racebar" from Ryan Rajpaul <rocketfuel.ryan@gmail.com> (received: 2026-06-13T21:50:54Z)
+[2026-06-14 19:38:44] Skipping duplicate: "My side of " The Story to tell"" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-14T09:13:34Z)
+[2026-06-14 19:38:44] Skipping duplicate: "STORY pitch: motor industry Employer deducting and withholding employee retirement fund (MIRF)and UIF contribution" from Snethemba Nxedlana <nxedlanasnethemba@gmail.com> (received: 2026-06-14T14:32:18Z)
+[2026-06-14 19:38:44] Skipping duplicate: "Re: Summary of community case study - suggested Production Brief" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-14T16:20:31Z)
+[2026-06-14 19:38:44] 
+[2026-06-14 19:38:44] Microsoft Graph email import cycle completed successfully.
+[2026-06-14 19:38:44] Changes detected. Syncing...
