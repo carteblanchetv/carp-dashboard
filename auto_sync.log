@@ -471,3 +471,21 @@
 [2026-06-14 14:38:44] 
 [2026-06-14 14:38:44] Microsoft Graph email import cycle completed successfully.
 [2026-06-14 14:38:44] Changes detected. Syncing...
+[2026-06-14 14:38:44] [main 7e53aee] auto-sync: 2026-06-14 14:38
+[2026-06-14 14:38:44]  1 file changed, 18 insertions(+)
+[2026-06-14 14:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-14 14:38:44]    27a9891..7e53aee  main -> main
+[2026-06-14 14:38:44] Sync complete.
+[2026-06-14 15:08:45] Running Microsoft Graph Email Importer...
+[2026-06-14 15:08:45] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-14 15:08:45] Fetching messages from Microsoft Graph...
+[2026-06-14 15:08:45] Found 6 email(s) since 1 May 2026 to check.
+[2026-06-14 15:08:45] Skipping duplicate: "FOLLOW-ON RECENT REPORTS ON UNDOCUMENTED FOREIGN NATIONALS" from FRANKLIN FORTUNE <franklinfortune@yahoo.co.uk> (received: 2026-06-11T14:59:57Z)
+[2026-06-14 15:08:45] Skipping duplicate: "RE: [CAUTION:EXTERNAL EMAIL]  FOR THE ATTENTION OF THE CHAIRMAN & GROUP CHIEF EXECUTIVE | Unpaid Verified Refund R18,512.33 | Account 9070710068 | 280 Days Overdue GÇö Case Report Attached" from KZN Executives <KZN_executives@eskom.co.za> (received: 2026-06-12T06:40:52Z)
+[2026-06-14 15:08:45] Skipping duplicate: "F.E.R Hospital" from Seun Posthumus <seun50posthumus@gmail.com> (received: 2026-06-12T07:26:17Z)
+[2026-06-14 15:08:45] Skipping duplicate: "Fwd: Melissa van den Berg // DJ van den Berg" from Melissa Eastes <shaunmelissaeastes@gmail.com> (received: 2026-06-12T11:02:14Z)
+[2026-06-14 15:08:45] Skipping duplicate: "FW: ANOTHER LIFE ESIDIMENI SITUATION AT JONA VAUGHAN AMANZINTOTI DURBAN" from Submissions <story@combinedartists.co.za> (received: 2026-06-12T11:37:53Z)
+[2026-06-14 15:08:45] Skipping duplicate: "How bad bbh hospital" from Renzja Roos <renzjamagdalena@gmail.com> (received: 2026-06-12T11:50:21Z)
+[2026-06-14 15:08:45] 
+[2026-06-14 15:08:45] Microsoft Graph email import cycle completed successfully.
+[2026-06-14 15:08:45] Changes detected. Syncing...
