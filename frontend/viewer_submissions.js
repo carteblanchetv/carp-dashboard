@@ -616,7 +616,7 @@ function showDetails(sub, user) {
         tabsContainer.style.cssText = `
             display: flex;
             gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1.5rem 1.1rem 1.5rem;
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
             overflow-x: auto;
@@ -788,10 +788,15 @@ function showDetails(sub, user) {
 
             return `
                 <button class="nested-sub-tab" data-sub-id="${activeSub.id}" style="
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
                     background: ${bgStyle};
                     color: ${colorStyle};
                     border: ${borderStyle};
-                    padding: 0.4rem 0.8rem;
+                    padding: 0.5rem 1rem;
+                    line-height: 1;
+                    height: 2rem;
                     border-radius: var(--radius-sm);
                     font-size: 0.8rem;
                     font-weight: 600;

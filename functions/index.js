@@ -273,8 +273,14 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
             
             // Check if user has this specific notification enabled
             if (prefs[type] === true) {
-                const rawEmail = decrypt(data.email) || data.email || (doc.id.includes('@') ? doc.id : null);
-                if (rawEmail && rawEmail.includes('@')) {
+                let rawEmail = decrypt(data.email);
+                if (rawEmail && typeof rawEmail === 'object') {
+                    rawEmail = doc.id.includes('@') ? doc.id : null;
+                }
+                if (!rawEmail) {
+                    rawEmail = data.email && typeof data.email === 'string' ? data.email : (doc.id.includes('@') ? doc.id : null);
+                }
+                if (typeof rawEmail === 'string' && rawEmail.includes('@')) {
                     const normalized = rawEmail.toLowerCase().trim();
                     recipients.add(normalized);
                     console.log(`[NOTIFY] Added preference-based recipient: ${normalized}`);
@@ -2602,7 +2608,8 @@ app.get('/api/search', async (req, res) => {
         const userSnapshot = await admin.firestore().collection('users').get();
         userSnapshot.docs.forEach(doc => {
             const data = doc.data();
-            const firstName = decrypt(data.name).toLowerCase();
+            const decName = decrypt(data.name);
+            const firstName = (typeof decName === 'string' ? decName : '').toLowerCase();
             if (firstName.includes(userName.toLowerCase())) {
                 matchedUids.push(doc.id);
             }
@@ -2884,13 +2891,16 @@ app.get('/api/list-reviewers', async (req, res) => {
     // Map documents to parse their fields
     const allDocs = snapshot.docs.map(doc => {
       const data = doc.data();
-      const email = (decrypt(data.email) || doc.id).toLowerCase().trim();
+      const decryptedEmail = decrypt(data.email);
+      const email = (typeof decryptedEmail === 'string' ? decryptedEmail : doc.id).toLowerCase().trim();
       const isEmailKey = doc.id.includes('@');
+      const decName = decrypt(data.name);
+      const decSurname = decrypt(data.surname);
       return {
         id: doc.id,
         email,
-        name: decrypt(data.name) || 'Unknown',
-        surname: decrypt(data.surname) || '',
+        name: (typeof decName === 'string' ? decName : '') || 'Unknown',
+        surname: (typeof decSurname === 'string' ? decSurname : '') || '',
         role: data.role,
         isEmailKey
       };

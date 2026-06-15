@@ -481,3 +481,52 @@
 [2026-06-15 10:43:54] 
 [2026-06-15 10:43:54] Microsoft Graph email import cycle completed successfully.
 [2026-06-15 10:43:54] Changes detected. Syncing...
+[2026-06-15 10:43:54] [main 81d3fbc] auto-sync: 2026-06-15 10:44
+[2026-06-15 10:43:54]  2 files changed, 45 insertions(+), 1 deletion(-)
+[2026-06-15 10:43:54] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-15 10:43:54]    2a87edb..81d3fbc  main -> main
+[2026-06-15 10:43:54] Sync complete.
+[2026-06-15 11:08:44] Running Microsoft Graph Email Importer...
+[2026-06-15 11:08:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-15 11:08:44] Fetching messages from Microsoft Graph...
+[2026-06-15 11:08:44] Found 33 email(s) since 1 May 2026 to check.
+[2026-06-15 11:08:44] Skipping duplicate: "Fwd: Melissa van den Berg // DJ van den Berg" from Melissa Eastes <shaunmelissaeastes@gmail.com> (received: 2026-06-12T11:02:14Z)
+[2026-06-15 11:08:44] Skipping duplicate: "FW: ANOTHER LIFE ESIDIMENI SITUATION AT JONA VAUGHAN AMANZINTOTI DURBAN" from Submissions <story@combinedartists.co.za> (received: 2026-06-12T11:37:53Z)
+[2026-06-15 11:08:44] Skipping duplicate: "How bad bbh hospital" from Renzja Roos <renzjamagdalena@gmail.com> (received: 2026-06-12T11:50:21Z)
+[2026-06-15 11:08:44] Skipping duplicate: "(No Subject)" from Basheer Nalla <basheern761@gmail.com> (received: 2026-06-12T13:34:17Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Hospital negligence right now" from Susan Strydom <susanstrydom777@gmail.com> (received: 2026-06-12T13:38:59Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Urgent Refund Request GÇô Unauthorised USD 200 Charge ($400 in Total) https://setter-syndicate.com/" from Stan Janse van Rensburg <stanjvr@outlook.com> (received: 2026-06-12T15:34:22Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Re: Urgent Refund Request GÇô Unauthorised USD 200 Charge ($400 in Total) https://setter-syndicate.com/" from Nazar Hendricks <nazar@salessyndicategroup.com> (received: 2026-06-12T15:39:59Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Please contact me - Sakunda Holdings" from David Cronje <david@dfcdesignstudio.co.za> (received: 2026-06-12T20:16:38Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Story Tip GÇö Alleged Fraud & Racketeering: V-Rentals (Merzy Agencies CC) | Johannesburg & Durban" from Francois Boshoff <davidfrancoisboshoff@gmail.com> (received: 2026-06-13T10:08:04Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Thousands of zims , Nigerians , mozams, malawians, Indians etc enter legally abusing the visitors visa" from Adrian De Villiers <adriandevilliers321@gmail.com> (received: 2026-06-13T11:46:35Z)
+[2026-06-15 11:08:44] Skipping duplicate: "How many neurodiverse children are being failed by the education system? GÇô Gerhard BothaGÇÖs story" from Amanda Broodryk <amandabroodryk1982@gmail.com> (received: 2026-06-13T14:10:47Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Sakunda Holdings and Ntombi Mlilo" from David Cronje <Midnightarch@mweb.co.za> (received: 2026-06-13T21:09:17Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Ridgeway racebar" from Ryan Rajpaul <rocketfuel.ryan@gmail.com> (received: 2026-06-13T21:50:54Z)
+[2026-06-15 11:08:44] Skipping duplicate: "My side of " The Story to tell"" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-14T09:13:34Z)
+[2026-06-15 11:08:44] Skipping duplicate: "STORY pitch: motor industry Employer deducting and withholding employee retirement fund (MIRF)and UIF contribution" from Snethemba Nxedlana <nxedlanasnethemba@gmail.com> (received: 2026-06-14T14:32:18Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Re: Summary of community case study - suggested Production Brief" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-14T16:20:31Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Short Wave Radio Frequencies / Constructive Dismissal / Indirect Murder / Rape / Fraud" from Marcel Stein <marcelstein530@gmail.com> (received: 2026-06-15T05:41:25Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Short Wave Radio Frequencies / Constructive Dismissal / Indirect Murder / Rape / Fraud" from Marcel Stein <marcelstein530@gmail.com> (received: 2026-06-15T05:47:42Z)
+[2026-06-15 11:08:44] Skipping duplicate: "IDAC AFFIDAVIT " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:01:33Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Draft translated writing / statement" from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:02:18Z)
+[2026-06-15 11:08:44] Skipping duplicate: "IDAC AFFIDAVIT " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:10:04Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Draft translated writing / statement" from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:11:16Z)
+[2026-06-15 11:08:44] Skipping duplicate: "CASE 87/4/2026 Correspondence " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:12:51Z)
+[2026-06-15 11:08:44] Skipping duplicate: "CASE 87/4/2026 Correspondance " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:15:01Z)
+[2026-06-15 11:08:44] Skipping duplicate: "CASE 87/4/2026 Correspondance Project" from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:16:39Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Mr Adams Money Laundering " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:21:35Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Mr Adams Partner Joseph " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:22:33Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Wynand - Crime Intelligence " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:26:58Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Wynand - Crime Intelligence " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:40:30Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Moreata Motlou " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:41:27Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Response letter" from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:47:14Z)
+[2026-06-15 11:08:44] Skipping duplicate: "Fwd: YOUR COMPLAINT LODGED WITH THE PUBLIC PROTECTOR AGAINST THE SOUTH AFRICAN POLICE SERVICES" from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:50:42Z)
+[2026-06-15 11:08:44] 
+[2026-06-15 11:08:44] Processing: "(No Subject)" from Hlompho Mokubung <hlompho6pondo@gmail.com>
+[2026-06-15 11:08:44] Identified formType: email_submission
+[2026-06-15 11:08:44] Saved submission successfully to Firestore: submissions/uTpVpZoAoUacX65LxSVF
+[2026-06-15 11:08:44] Marked email as read on Microsoft Graph.
+[2026-06-15 11:08:44] 
+[2026-06-15 11:08:44] Microsoft Graph email import cycle completed successfully.
+[2026-06-15 11:08:44] Changes detected. Syncing...

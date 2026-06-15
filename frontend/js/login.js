@@ -68,7 +68,7 @@ checkAuth(false).then(user => {
 // --- 4. Handle External Error Params ---
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('error') === 'domain') {
-    showError("Please use your authorized work account.");
+    showError("Please use your authorised work account.");
 }
 
 // Forgot Password UI Toggling & Submission
