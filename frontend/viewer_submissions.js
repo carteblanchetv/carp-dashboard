@@ -128,13 +128,107 @@ async function loadMoreInBackground(cursor, user) {
 
 
 
+function groupAndNestSubmissions(subsList) {
+    const groupsByEmail = {};
+    subsList.forEach(sub => {
+        const key = (sub.submittedByEmail || sub.submittedByName || 'unknown').toLowerCase().trim();
+        if (!groupsByEmail[key]) {
+            groupsByEmail[key] = [];
+        }
+        groupsByEmail[key].push(sub);
+    });
+
+    const groupedResult = [];
+
+    Object.keys(groupsByEmail).forEach(key => {
+        const list = groupsByEmail[key];
+        
+        list.sort((a, b) => {
+            const dateA = a.submittedAt?._seconds ? a.submittedAt._seconds * 1000 : new Date(a.submittedAt).getTime();
+            const dateB = b.submittedAt?._seconds ? b.submittedAt._seconds * 1000 : new Date(b.submittedAt).getTime();
+            return dateB - dateA;
+        });
+
+        let currentGroup = [list[0]];
+        for (let i = 1; i < list.length; i++) {
+            const prevSub = list[i - 1];
+            const currentSub = list[i];
+            
+            const prevDate = prevSub.submittedAt?._seconds ? prevSub.submittedAt._seconds * 1000 : new Date(prevSub.submittedAt).getTime();
+            const currDate = currentSub.submittedAt?._seconds ? currentSub.submittedAt._seconds * 1000 : new Date(currentSub.submittedAt).getTime();
+            
+            const gapMs = prevDate - currDate;
+            const gapDays = gapMs / (1000 * 60 * 60 * 24);
+
+            if (gapDays >= 90) {
+                groupedResult.push(currentGroup);
+                currentGroup = [currentSub];
+            } else {
+                currentGroup.push(currentSub);
+            }
+        }
+        groupedResult.push(currentGroup);
+    });
+
+    const mappedGroups = groupedResult.map(group => {
+        const parent = { ...group[0] };
+        parent.nestedSubmissions = group;
+        parent.nestedCount = group.length;
+        return parent;
+    });
+
+    mappedGroups.sort((a, b) => {
+        const dateA = a.submittedAt?._seconds ? a.submittedAt._seconds * 1000 : new Date(a.submittedAt).getTime();
+        const dateB = b.submittedAt?._seconds ? b.submittedAt._seconds * 1000 : new Date(b.submittedAt).getTime();
+        return dateB - dateA;
+    });
+
+    return mappedGroups;
+}
+
+function getNestedGroupForSubmission(subId) {
+    const parentSub = globalSubmissionsCache.find(s => s.id === subId);
+    if (!parentSub) return [];
+
+    let categorySubs = [];
+    if (parentSub.resolved === true) {
+        categorySubs = globalSubmissionsCache.filter(s => s.resolved === true);
+    } else if (parentSub.useful === true) {
+        categorySubs = globalSubmissionsCache.filter(s => s.useful === true && s.resolved !== true);
+    } else {
+        categorySubs = globalSubmissionsCache.filter(s => s.useful !== true && s.resolved !== true);
+    }
+
+    categorySubs = categorySubs.filter(s => {
+        if (s.status === 'spam' || s.reportedSpam === true) return false;
+        const fromEmail = (s.submittedByEmail || '').toLowerCase();
+        const fromName = (s.submittedByName || '').toLowerCase();
+        const subject = (s.subject || '').toLowerCase();
+        if (
+            fromEmail === 'quarantine@e-purifier.com' || 
+            fromEmail === 'postmaster@e-purifier.com' || 
+            fromEmail.includes('e-purifier.com') || 
+            fromName.includes('e-purifier support')
+        ) return false;
+        if (
+            subject.includes('spam to recipient') || 
+            subject.includes('quarantine@e-purifier.com') ||
+            subject.includes('quarantine message notification')
+        ) return false;
+        return true;
+    });
+
+    const groups = groupAndNestSubmissions(categorySubs);
+    const targetGroup = groups.find(g => g.nestedSubmissions.some(ns => ns.id === subId));
+    return targetGroup ? targetGroup.nestedSubmissions : [parentSub];
+}
+
 function renderSubmissions(submissions, user) {
     const regularList = document.getElementById('submissionsList');
     const investigationList = document.getElementById('investigationList');
     const resolvedList = document.getElementById('resolvedList');
     if (!regularList || !investigationList || !resolvedList) return;
 
-    // Filter out spam/e-purifier submissions, and partition into inbox, useful, and resolved
     let validSubs = submissions.filter(s => {
         if (s.status === 'spam' || s.reportedSpam === true) return false;
         const fromEmail = (s.submittedByEmail || '').toLowerCase();
@@ -158,7 +252,6 @@ function renderSubmissions(submissions, user) {
         return true;
     });
     
-    // Apply search filter
     const searchVal = (document.getElementById('submissionsSearchInput')?.value || '').toLowerCase().trim();
     if (searchVal) {
         validSubs = validSubs.filter(s => {
@@ -167,7 +260,6 @@ function renderSubmissions(submissions, user) {
             const fromEmail = (s.submittedByEmail || '').toLowerCase();
             const fromName = (s.submittedByName || '').toLowerCase();
             
-            // Check extracted details (Tipoff details)
             let tipName = '';
             let tipLastName = '';
             let tipEmail = '';
@@ -196,13 +288,12 @@ function renderSubmissions(submissions, user) {
         });
     }
     
-    const resolvedSubs = validSubs.filter(s => s.resolved === true);
-    const investigationSubs = validSubs.filter(s => s.useful === true && s.resolved !== true);
-    const regularSubs = validSubs.filter(s => s.useful !== true && s.resolved !== true);
+    const resolvedSubs = groupAndNestSubmissions(validSubs.filter(s => s.resolved === true));
+    const investigationSubs = groupAndNestSubmissions(validSubs.filter(s => s.useful === true && s.resolved !== true));
+    const regularSubs = groupAndNestSubmissions(validSubs.filter(s => s.useful !== true && s.resolved !== true));
 
     const canDelete = ['admin', 'super-admin', 'editorial-production'].includes(user?.role);
 
-    // 1. Render regular submissions (Viewer Submissions inbox)
     const totalPagesRegular = Math.max(1, Math.ceil(regularSubs.length / PAGE_SIZE));
     if (currentPages.submissions > totalPagesRegular) currentPages.submissions = totalPagesRegular;
     if (currentPages.submissions < 1) currentPages.submissions = 1;
@@ -221,6 +312,7 @@ function renderSubmissions(submissions, user) {
         regularList.innerHTML = slice.map((sub, index) => {
             const subject = sub.subject || '(No Subject)';
             const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
+            const badgeHtml = sub.nestedCount > 1 ? `<span class="nested-count-badge" style="background: var(--bg-card); color: var(--primary); padding: 0.1rem 0.45rem; border-radius: 10px; font-size: 0.75rem; border: 1px solid var(--border); margin-left: 0.35rem; font-weight: 700;" title="${sub.nestedCount} submissions from this sender within 3 months">${sub.nestedCount}</span>` : '';
             
             let dateText = '—';
             if (sub.submittedAt) {
@@ -241,7 +333,7 @@ function renderSubmissions(submissions, user) {
                         </a>
                     </td>
                     <td data-label="From" style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;" title="${fromName} (${sub.submittedByEmail || ''})">
-                        <strong>${fromName}</strong>
+                        <strong>${fromName}</strong>${badgeHtml}
                     </td>
                     <td data-label="Date Received" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${dateText}</td>
                     <td data-label="Actions" style="text-align: center;">
@@ -267,7 +359,6 @@ function renderSubmissions(submissions, user) {
         `;
     }
 
-    // 2. Render under investigation submissions
     const totalPagesInvestigation = Math.max(1, Math.ceil(investigationSubs.length / PAGE_SIZE));
     if (currentPages.investigation > totalPagesInvestigation) currentPages.investigation = totalPagesInvestigation;
     if (currentPages.investigation < 1) currentPages.investigation = 1;
@@ -286,6 +377,7 @@ function renderSubmissions(submissions, user) {
         investigationList.innerHTML = slice.map((sub, index) => {
             const subject = sub.subject || '(No Subject)';
             const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
+            const badgeHtml = sub.nestedCount > 1 ? `<span class="nested-count-badge" style="background: var(--bg-card); color: var(--primary); padding: 0.1rem 0.45rem; border-radius: 10px; font-size: 0.75rem; border: 1px solid var(--border); margin-left: 0.35rem; font-weight: 700;" title="${sub.nestedCount} submissions from this sender within 3 months">${sub.nestedCount}</span>` : '';
             const actionedByFirstName = sub.actionedBy ? (sub.actionedBy.name || '').split(' ')[0] : '—';
             
             let dateText = '—';
@@ -312,7 +404,7 @@ function renderSubmissions(submissions, user) {
                         </a>
                     </td>
                     <td data-label="From" style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;" title="${fromName} (${sub.submittedByEmail || ''})">
-                        <strong>${fromName}</strong>
+                        <strong>${fromName}</strong>${badgeHtml}
                     </td>
                     <td data-label="Date Received" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${dateText}</td>
                     <td data-label="Actions" style="text-align: center;">
@@ -339,7 +431,6 @@ function renderSubmissions(submissions, user) {
         `;
     }
 
-    // 3. Render resolved submissions
     const totalPagesResolved = Math.max(1, Math.ceil(resolvedSubs.length / PAGE_SIZE));
     if (currentPages.resolved > totalPagesResolved) currentPages.resolved = totalPagesResolved;
     if (currentPages.resolved < 1) currentPages.resolved = 1;
@@ -358,6 +449,7 @@ function renderSubmissions(submissions, user) {
         resolvedList.innerHTML = slice.map((sub, index) => {
             const subject = sub.subject || '(No Subject)';
             const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
+            const badgeHtml = sub.nestedCount > 1 ? `<span class="nested-count-badge" style="background: var(--bg-card); color: var(--primary); padding: 0.1rem 0.45rem; border-radius: 10px; font-size: 0.75rem; border: 1px solid var(--border); margin-left: 0.35rem; font-weight: 700;" title="${sub.nestedCount} submissions from this sender within 3 months">${sub.nestedCount}</span>` : '';
             const actionedByFirstName = sub.resolvedBy ? (sub.resolvedBy.name || '').split(' ')[0] : (sub.actionedBy ? (sub.actionedBy.name || '').split(' ')[0] : '—');
             
             let dateText = '—';
@@ -380,7 +472,7 @@ function renderSubmissions(submissions, user) {
                         </a>
                     </td>
                     <td data-label="From" style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;" title="${fromName} (${sub.submittedByEmail || ''})">
-                        <strong>${fromName}</strong>
+                        <strong>${fromName}</strong>${badgeHtml}
                     </td>
                     <td data-label="Date Resolved" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">${dateText}</td>
                     <td data-label="Actions" style="text-align: center;">
@@ -487,7 +579,6 @@ async function handleViewClick(e) {
     const viewBtn = e.currentTarget;
     const originalText = viewBtn.innerHTML;
     
-    // Add brief visual loading feedback
     if (viewBtn.tagName === 'BUTTON') {
         viewBtn.disabled = true;
         viewBtn.innerHTML = '⌛ Load...';
@@ -516,159 +607,226 @@ async function handleViewClick(e) {
 }
 
 function showDetails(sub, user) {
-    document.getElementById('modalSubject').textContent = sub.subject || '(No Subject)';
-    document.getElementById('modalFrom').textContent = `${sub.submittedByName || 'Unknown'} (${sub.submittedByEmail || 'No Email'})`;
+    const nestedGroup = getNestedGroupForSubmission(sub.id);
     
-    let dateText = '—';
-    if (sub.submittedAt) {
-        const dateObj = sub.submittedAt._seconds ? new Date(sub.submittedAt._seconds * 1000) : new Date(sub.submittedAt);
-        dateText = dateObj.toLocaleString('en-ZA', { dateStyle: 'long', timeStyle: 'short' });
-    }
-    document.getElementById('modalDate').textContent = dateText;
-
-    // Toggle DStv Origin Tag banner
-    const dstvOriginTag = document.getElementById('dstvOriginTag');
-    if (dstvOriginTag) {
-        if ((sub.submittedByEmail || '').toLowerCase() === 'noreplymcleads@gmail.com') {
-            dstvOriginTag.style.display = 'block';
-        } else {
-            dstvOriginTag.style.display = 'none';
-        }
-    }
-
-    // Toggle Actioned By text display
-    const actionedContainer = document.getElementById('modalActionedByContainer');
-    const actionedEl = document.getElementById('modalActionedBy');
-    if (sub.useful && sub.actionedBy) {
-        actionedContainer.style.display = 'flex';
-        actionedEl.textContent = sub.actionedBy.name;
-    } else {
-        actionedContainer.style.display = 'none';
-        actionedEl.textContent = '';
-    }
-
-    // Set contact individual email prefill details
-    const contactLink = document.getElementById('modalContactLink');
-    if (contactLink) {
-        contactLink.href = `mailto:${sub.submittedByEmail || ''}?subject=${encodeURIComponent(sub.subject || '')}`;
-    }
-
-    // Hide default Tip Details group as we will display them structured in the body area
-    const tipDetailsGroup = document.getElementById('modalTipDetails');
-    if (tipDetailsGroup) tipDetailsGroup.style.display = 'none';
-
-    // Message Body formatting
-    const bodyEl = document.getElementById('modalBody');
-    const type = (sub.formType || 'email_submission').toLowerCase();
-
-    if (type === 'dstv_tipoff' && sub.tipoffDetails) {
-        const details = sub.tipoffDetails;
-        bodyEl.innerHTML = `
-            <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.95rem; line-height: 1.5;">
-                <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                    <strong style="color: var(--primary);">Name:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.name || '—'}</span>
-                </div>
-                <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                    <strong style="color: var(--primary);">Surname:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.lastName || '—'}</span>
-                </div>
-                <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                    <strong style="color: var(--primary);">Email:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.email || '—'}</span>
-                </div>
-                <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                    <strong style="color: var(--primary);">Contact Number:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.phone || '—'}</span>
-                </div>
-                <div>
-                    <strong style="color: var(--primary);">Summary:</strong>
-                    <div style="margin-top: 0.5rem; background: var(--bg-card); border-left: 4px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-style: italic; color: var(--text-main); line-height: 1.6;">${details.story || '—'}</div>
-                </div>
-            </div>
+    let tabsContainer = document.getElementById('modalTabsContainer');
+    if (!tabsContainer) {
+        tabsContainer = document.createElement('div');
+        tabsContainer.id = 'modalTabsContainer';
+        tabsContainer.style.cssText = `
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            white-space: nowrap;
         `;
-    } else {
-        bodyEl.textContent = stripHtml(sub.body || '');
+        
+        const modalBody = document.querySelector('.modal-body');
+        modalBody.parentNode.insertBefore(tabsContainer, modalBody);
     }
+    
+    function loadSingleSubDetails(activeSub) {
+        document.getElementById('modalSubject').textContent = activeSub.subject || '(No Subject)';
+        document.getElementById('modalFrom').textContent = `${activeSub.submittedByName || 'Unknown'} (${activeSub.submittedByEmail || 'No Email'})`;
+        
+        let dateText = '—';
+        if (activeSub.submittedAt) {
+            const dateObj = activeSub.submittedAt._seconds ? new Date(activeSub.submittedAt._seconds * 1000) : new Date(activeSub.submittedAt);
+            dateText = dateObj.toLocaleString('en-ZA', { dateStyle: 'long', timeStyle: 'short' });
+        }
+        document.getElementById('modalDate').textContent = dateText;
 
-    // Attachments (Ignore associated files for DStv tip-offs)
-    const attachmentsGroup = document.getElementById('modalAttachmentsGroup');
-    const attachmentsList = document.getElementById('modalAttachmentsList');
-    if (type !== 'dstv_tipoff' && Array.isArray(sub.attachments) && sub.attachments.length > 0) {
-        attachmentsGroup.style.display = 'block';
-        attachmentsList.innerHTML = sub.attachments.map(att => {
-            const downloadUrl = `/api/get-submission-file?path=${encodeURIComponent(att.storagePath)}&inline=false`;
-            const viewUrl = `/api/get-submission-file?path=${encodeURIComponent(att.storagePath)}&inline=true`;
-            return `
-                <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem 1rem; display: flex; align-items: center; gap: 0.75rem;">
-                    <span style="font-size: 1.25rem;">📎</span>
-                    <div style="display: flex; flex-direction: column;">
-                        <span style="font-weight: 600; font-size: 0.85rem; color: var(--text-main); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${att.filename || 'File'}</span>
-                        <div style="display: flex; gap: 0.5rem; margin-top: 0.15rem; font-size: 0.75rem;">
-                            <a href="${viewUrl}" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 700;">👁️ View</a>
-                            <span style="color: var(--text-muted);">|</span>
-                            <a href="${downloadUrl}" style="color: var(--primary); text-decoration: none; font-weight: 700;">📥 Download</a>
-                        </div>
+        const dstvOriginTag = document.getElementById('dstvOriginTag');
+        if (dstvOriginTag) {
+            if ((activeSub.submittedByEmail || '').toLowerCase() === 'noreplymcleads@gmail.com') {
+                dstvOriginTag.style.display = 'block';
+            } else {
+                dstvOriginTag.style.display = 'none';
+            }
+        }
+
+        const actionedContainer = document.getElementById('modalActionedByContainer');
+        const actionedEl = document.getElementById('modalActionedBy');
+        if (activeSub.useful && activeSub.actionedBy) {
+            actionedContainer.style.display = 'flex';
+            actionedEl.textContent = activeSub.actionedBy.name;
+        } else {
+            actionedContainer.style.display = 'none';
+            actionedEl.textContent = '';
+        }
+
+        const contactLink = document.getElementById('modalContactLink');
+        if (contactLink) {
+            contactLink.href = `mailto:${activeSub.submittedByEmail || ''}?subject=${encodeURIComponent(activeSub.subject || '')}`;
+        }
+
+        const bodyEl = document.getElementById('modalBody');
+        const type = (activeSub.formType || 'email_submission').toLowerCase();
+
+        if (type === 'dstv_tipoff' && activeSub.tipoffDetails) {
+            const details = activeSub.tipoffDetails;
+            bodyEl.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 0.85rem; font-size: 0.95rem; line-height: 1.5;">
+                    <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <strong style="color: var(--primary);">Name:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.name || '—'}</span>
+                    </div>
+                    <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <strong style="color: var(--primary);">Surname:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.lastName || '—'}</span>
+                    </div>
+                    <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <strong style="color: var(--primary);">Email:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.email || '—'}</span>
+                    </div>
+                    <div style="border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <strong style="color: var(--primary);">Contact Number:</strong> <span style="margin-left: 0.5rem; color: var(--text-main); font-weight: 500;">${details.phone || '—'}</span>
+                    </div>
+                    <div>
+                        <strong style="color: var(--primary);">Summary:</strong>
+                        <div style="margin-top: 0.5rem; background: var(--bg-card); border-left: 4px solid var(--primary); padding: 0.75rem 1rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-style: italic; color: var(--text-main); line-height: 1.6;">${details.story || '—'}</div>
                     </div>
                 </div>
             `;
+        } else {
+            bodyEl.textContent = stripHtml(activeSub.body || '');
+        }
+
+        const attachmentsGroup = document.getElementById('modalAttachmentsGroup');
+        const attachmentsList = document.getElementById('modalAttachmentsList');
+        if (type !== 'dstv_tipoff' && Array.isArray(activeSub.attachments) && activeSub.attachments.length > 0) {
+            attachmentsGroup.style.display = 'block';
+            attachmentsList.innerHTML = activeSub.attachments.map(att => {
+                const downloadUrl = `/api/get-submission-file?path=${encodeURIComponent(att.storagePath)}&inline=false`;
+                const viewUrl = `/api/get-submission-file?path=${encodeURIComponent(att.storagePath)}&inline=true`;
+                return `
+                    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem 1rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="font-size: 1.25rem;">📎</span>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-weight: 600; font-size: 0.85rem; color: var(--text-main); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${att.filename || 'File'}</span>
+                            <div style="display: flex; gap: 0.5rem; margin-top: 0.15rem; font-size: 0.75rem;">
+                                <a href="${viewUrl}" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 700;">👁️ View</a>
+                                <span style="color: var(--text-muted);">|</span>
+                                <a href="${downloadUrl}" style="color: var(--primary); text-decoration: none; font-weight: 700;">📥 Download</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            attachmentsGroup.style.display = 'none';
+            attachmentsList.innerHTML = '';
+        }
+
+        const markUsefulBtn = document.getElementById('modalMarkUsefulBtn');
+        if (markUsefulBtn) {
+            markUsefulBtn.textContent = activeSub.useful ? '⭐ Remove from Useful' : '⭐ Mark as Useful';
+            const newMarkUsefulBtn = markUsefulBtn.cloneNode(true);
+            markUsefulBtn.parentNode.replaceChild(newMarkUsefulBtn, markUsefulBtn);
+            newMarkUsefulBtn.addEventListener('click', async () => {
+                try {
+                    const targetUseful = !activeSub.useful;
+                    const res = await fetchWithAuth('/api/viewer-submissions/mark-useful', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: activeSub.id, useful: targetUseful })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        closeModal();
+                        loadSubmissions(user);
+                    } else {
+                        alert(data.error || 'Failed to update submission status.');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('An error occurred.');
+                }
+            });
+        }
+
+        const reportSpamBtn = document.getElementById('modalReportSpamBtn');
+        if (reportSpamBtn) {
+            const newReportSpamBtn = reportSpamBtn.cloneNode(true);
+            reportSpamBtn.parentNode.replaceChild(newReportSpamBtn, reportSpamBtn);
+            newReportSpamBtn.addEventListener('click', async () => {
+                if (!confirm('Are you sure you want to report this submission as spam? This will notify SuperAdmin (Lezanne) to block the address.')) return;
+                try {
+                    const res = await fetchWithAuth('/api/viewer-submissions/report-spam', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: activeSub.id })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        alert('Submission reported as spam successfully.');
+                        closeModal();
+                        loadSubmissions(user);
+                    } else {
+                        alert(data.error || 'Failed to report spam.');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('An error occurred.');
+                }
+            });
+        }
+    }
+
+    if (nestedGroup.length > 1) {
+        tabsContainer.style.display = 'flex';
+        tabsContainer.innerHTML = nestedGroup.map((activeSub) => {
+            const dateObj = activeSub.submittedAt._seconds ? new Date(activeSub.submittedAt._seconds * 1000) : new Date(activeSub.submittedAt);
+            const dateText = dateObj.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+            const timeText = dateObj.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' });
+            const tabSubject = activeSub.subject || '(No Subject)';
+            const tabLabel = `${dateText} ${timeText}`;
+
+            const isActive = activeSub.id === sub.id;
+            const bgStyle = isActive ? 'var(--primary)' : 'var(--bg-light)';
+            const colorStyle = isActive ? '#ffffff' : 'var(--text-main)';
+            const borderStyle = isActive ? '1px solid var(--primary)' : '1px solid var(--border)';
+
+            return `
+                <button class="nested-sub-tab" data-sub-id="${activeSub.id}" style="
+                    background: ${bgStyle};
+                    color: ${colorStyle};
+                    border: ${borderStyle};
+                    padding: 0.4rem 0.8rem;
+                    border-radius: var(--radius-sm);
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                " title="${tabSubject.replace(/"/g, '&quot;')}">
+                    ${tabLabel}
+                </button>
+            `;
         }).join('');
+
+        tabsContainer.querySelectorAll('.nested-sub-tab').forEach(tabBtn => {
+            tabBtn.addEventListener('click', (e) => {
+                const selectedId = e.currentTarget.getAttribute('data-sub-id');
+                const selectedSub = nestedGroup.find(s => s.id === selectedId);
+                
+                tabsContainer.querySelectorAll('.nested-sub-tab').forEach(btn => {
+                    btn.style.background = 'var(--bg-light)';
+                    btn.style.color = 'var(--text-main)';
+                    btn.style.border = '1px solid var(--border)';
+                });
+                e.currentTarget.style.background = 'var(--primary)';
+                e.currentTarget.style.color = '#ffffff';
+                e.currentTarget.style.border = '1px solid var(--primary)';
+
+                loadSingleSubDetails(selectedSub);
+            });
+        });
+
     } else {
-        attachmentsGroup.style.display = 'none';
-        attachmentsList.innerHTML = '';
+        tabsContainer.style.display = 'none';
+        tabsContainer.innerHTML = '';
     }
 
-    // "Mark as Useful" toggle logic
-    const markUsefulBtn = document.getElementById('modalMarkUsefulBtn');
-    if (markUsefulBtn) {
-        markUsefulBtn.textContent = sub.useful ? '⭐ Remove from Useful' : '⭐ Mark as Useful';
-        const newMarkUsefulBtn = markUsefulBtn.cloneNode(true);
-        markUsefulBtn.parentNode.replaceChild(newMarkUsefulBtn, markUsefulBtn);
-        newMarkUsefulBtn.addEventListener('click', async () => {
-            try {
-                const targetUseful = !sub.useful;
-                const res = await fetchWithAuth('/api/viewer-submissions/mark-useful', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: sub.id, useful: targetUseful })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    closeModal();
-                    loadSubmissions(user);
-                } else {
-                    alert(data.error || 'Failed to update submission status.');
-                }
-            } catch (err) {
-                console.error(err);
-                alert('An error occurred.');
-            }
-        });
-    }
-
-    // "Report as Spam" button trigger logic
-    const reportSpamBtn = document.getElementById('modalReportSpamBtn');
-    if (reportSpamBtn) {
-        const newReportSpamBtn = reportSpamBtn.cloneNode(true);
-        reportSpamBtn.parentNode.replaceChild(newReportSpamBtn, reportSpamBtn);
-        newReportSpamBtn.addEventListener('click', async () => {
-            if (!confirm('Are you sure you want to report this submission as spam? This will notify SuperAdmin (Lezanne) to block the address.')) return;
-            try {
-                const res = await fetchWithAuth('/api/viewer-submissions/report-spam', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: sub.id })
-                });
-                const data = await res.json();
-                if (data.success) {
-                    alert('Submission reported as spam successfully.');
-                    closeModal();
-                    loadSubmissions(user);
-                } else {
-                    alert(data.error || 'Failed to report spam.');
-                }
-            } catch (err) {
-                console.error(err);
-                alert('An error occurred.');
-            }
-        });
-    }
+    loadSingleSubDetails(sub);
 
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
