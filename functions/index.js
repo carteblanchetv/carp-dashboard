@@ -305,14 +305,21 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
         const recipientList = Array.from(recipients).join(', ');
         const fromName = type === 'call_sheet' ? "Call Sheets" : (type === 'editorial_leave' ? "Editorial Leave Calendar" : "CARP Dashboard");
 
+        let sentViaGraph = false;
         if (process.env.MICROSOFT_CLIENT_ID) {
-            console.log(`[NOTIFY] Using Microsoft Graph API to send email to bcc: ${recipientList}`);
-            const mailbox = process.env.MICROSOFT_MAILBOX_EMAIL || 'story@combinedartists.co.za';
-            // Send email to sender (with fromName as custom subject header if possible, or inside subject)
-            const bccList = recipientList;
-            await sendEmailViaGraph(`[${fromName}] ${subject}`, html, mailbox, bccList, attachments);
-            console.log(`[NOTIFY] Graph API email sent successfully to ${recipients.size} recipients.`);
-        } else {
+            try {
+                console.log(`[NOTIFY] Using Microsoft Graph API to send email to bcc: ${recipientList}`);
+                const mailbox = process.env.MICROSOFT_MAILBOX_EMAIL || 'story@combinedartists.co.za';
+                const bccList = recipientList;
+                await sendEmailViaGraph(`[${fromName}] ${subject}`, html, mailbox, bccList, attachments);
+                console.log(`[NOTIFY] Graph API email sent successfully to ${recipients.size} recipients.`);
+                sentViaGraph = true;
+            } catch (graphErr) {
+                console.error(`[NOTIFY] Graph API send failed: ${graphErr.message}. Falling back to legacy SMTP...`);
+            }
+        }
+
+        if (!sentViaGraph) {
             console.log(`[NOTIFY] Using legacy SMTP to send email to: ${recipientList}`);
             const mailOptions = {
                 from: `"${fromName}" <${process.env.EMAIL_USER}>`,
