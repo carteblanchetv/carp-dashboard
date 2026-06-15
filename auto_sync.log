@@ -1,133 +1,3 @@
-[2026-06-15 10:31:20]       '  }\n' +
-[2026-06-15 10:31:20]       '}\n',
-[2026-06-15 10:31:20]     headers: {
-[2026-06-15 10:31:20]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-15 10:31:20]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-15 10:31:20]       'content-length': '247',
-[2026-06-15 10:31:20]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-15 10:31:20]       date: 'Mon, 15 Jun 2026 08:32:27 GMT',
-[2026-06-15 10:31:20]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-15 10:31:20]       pragma: 'no-cache',
-[2026-06-15 10:31:20]       server: 'UploadServer',
-[2026-06-15 10:31:20]       vary: 'Origin, X-Origin',
-[2026-06-15 10:31:20]       'x-guploader-uploadid': 'AJ5rDhGkojijChS2qymR5l6hH3SGo5olyqG3qJIOu18O3z6rpakvO8Ugijjg0FUecvNplT7XRFXV7NaBPODJKG3vNs6N39F4zfZ_s2hlFjOegj8'
-[2026-06-15 10:31:20]     },
-[2026-06-15 10:31:20]     status: 404,
-[2026-06-15 10:31:20]     statusText: 'Not Found',
-[2026-06-15 10:31:20]     request: {
-[2026-06-15 10:31:20]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781512348637_image002.jpg&uploadType=resumable'
-[2026-06-15 10:31:20]     }
-[2026-06-15 10:31:20]   },
-[2026-06-15 10:31:20]   error: undefined,
-[2026-06-15 10:31:20]   status: 404,
-[2026-06-15 10:31:20]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-15 10:31:20] }
-[2026-06-15 10:31:20] Failed to process attachment CJC-3-3-00110_Letter to AfricaPlant.pdf: GaxiosError: {
-[2026-06-15 10:31:20]   "error": {
-[2026-06-15 10:31:20]     "code": 404,
-[2026-06-15 10:31:20]     "message": "The specified bucket does not exist.",
-[2026-06-15 10:31:20]     "errors": [
-[2026-06-15 10:31:20]       {
-[2026-06-15 10:31:20]         "message": "The specified bucket does not exist.",
-[2026-06-15 10:31:20]         "domain": "global",
-[2026-06-15 10:31:20]         "reason": "notFound"
-[2026-06-15 10:31:20]       }
-[2026-06-15 10:31:20]     ]
-[2026-06-15 10:31:20]   }
-[2026-06-15 10:31:20] }
-[2026-06-15 10:31:20] System.Management.Automation.RemoteException
-[2026-06-15 10:31:20]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-15 10:31:20]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-15 10:31:20]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-15 10:31:20]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-15 10:31:20]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-15 10:31:20]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-15 10:31:20]   config: {
-[2026-06-15 10:31:20]     method: 'POST',
-[2026-06-15 10:31:20]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781512349409_CJC-3-3-00110_LettertoAfricaPlant.pdf&uploadType=resumable',
-[2026-06-15 10:31:20]     params: {
-[2026-06-15 10:31:20]       name: 'submissions/email_submission/1781512349409_CJC-3-3-00110_LettertoAfricaPlant.pdf',
-[2026-06-15 10:31:20]       uploadType: 'resumable'
-[2026-06-15 10:31:20]     },
-[2026-06-15 10:31:20]     data: {},
-[2026-06-15 10:31:20]     headers: {
-[2026-06-15 10:31:20]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-15 10:31:20]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/8b3cb806-e1f3-433d-94e5-7aa4a3f5154d',
-[2026-06-15 10:31:20]       'X-Upload-Content-Type': 'application/pdf',
-[2026-06-15 10:31:20]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-15 10:31:20]       'Content-Type': 'application/json'
-[2026-06-15 10:31:20]     },
-[2026-06-15 10:31:20]     validateStatus: [Function (anonymous)],
-[2026-06-15 10:31:20]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-15 10:31:20]     body: '{}',
-[2026-06-15 10:31:20]     responseType: 'unknown',
-[2026-06-15 10:31:20]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-15 10:31:20]   },
-[2026-06-15 10:31:20]   response: {
-[2026-06-15 10:31:20]     config: {
-[2026-06-15 10:31:20]       method: 'POST',
-[2026-06-15 10:31:20]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781512349409_CJC-3-3-00110_LettertoAfricaPlant.pdf&uploadType=resumable',
-[2026-06-15 10:31:20]       params: [Object],
-[2026-06-15 10:31:20]       data: {},
-[2026-06-15 10:31:20]       headers: [Object],
-[2026-06-15 10:31:20]       validateStatus: [Function (anonymous)],
-[2026-06-15 10:31:20]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-15 10:31:20]       body: '{}',
-[2026-06-15 10:31:20]       responseType: 'unknown',
-[2026-06-15 10:31:20]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-15 10:31:20]     },
-[2026-06-15 10:31:20]     data: '{\n' +
-[2026-06-15 10:31:20]       '  "error": {\n' +
-[2026-06-15 10:31:20]       '    "code": 404,\n' +
-[2026-06-15 10:31:20]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-15 10:31:20]       '    "errors": [\n' +
-[2026-06-15 10:31:20]       '      {\n' +
-[2026-06-15 10:31:20]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-15 10:31:20]       '        "domain": "global",\n' +
-[2026-06-15 10:31:20]       '        "reason": "notFound"\n' +
-[2026-06-15 10:31:20]       '      }\n' +
-[2026-06-15 10:31:20]       '    ]\n' +
-[2026-06-15 10:31:20]       '  }\n' +
-[2026-06-15 10:31:20]       '}\n',
-[2026-06-15 10:31:20]     headers: {
-[2026-06-15 10:31:20]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-15 10:31:20]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-15 10:31:20]       'content-length': '247',
-[2026-06-15 10:31:20]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-15 10:31:20]       date: 'Mon, 15 Jun 2026 08:32:28 GMT',
-[2026-06-15 10:31:20]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-15 10:31:20]       pragma: 'no-cache',
-[2026-06-15 10:31:20]       server: 'UploadServer',
-[2026-06-15 10:31:20]       vary: 'Origin, X-Origin',
-[2026-06-15 10:31:20]       'x-guploader-uploadid': 'AJ5rDhFYwrBghCHSKE8XhrmOc4xT6RkkfkYGfSxxu5fhGNtSLXptVFuVcllOoair6YU5gdYQ6mkMXqKTntBzc6znRKNGozPzhT2y3zufwg_zTA'
-[2026-06-15 10:31:20]     },
-[2026-06-15 10:31:20]     status: 404,
-[2026-06-15 10:31:20]     statusText: 'Not Found',
-[2026-06-15 10:31:20]     request: {
-[2026-06-15 10:31:20]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781512349409_CJC-3-3-00110_LettertoAfricaPlant.pdf&uploadType=resumable'
-[2026-06-15 10:31:20]     }
-[2026-06-15 10:31:20]   },
-[2026-06-15 10:31:20]   error: undefined,
-[2026-06-15 10:31:20]   status: 404,
-[2026-06-15 10:31:20]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-15 10:31:20] }
-[2026-06-15 10:31:20] Saved submission successfully to Firestore: submissions/xMHr76iSQa3wEBWoSPam
-[2026-06-15 10:31:20] Marked email as read on Microsoft Graph.
-[2026-06-15 10:31:20] 
-[2026-06-15 10:31:20] Processing: "Fwd: YOUR COMPLAINT LODGED WITH THE PUBLIC PROTECTOR AGAINST THE SOUTH AFRICAN POLICE SERVICES" from Africa Plant <africaplant@icloud.com>
-[2026-06-15 10:31:20] Identified formType: email_submission
-[2026-06-15 10:31:20] Saved submission successfully to Firestore: submissions/mwUONQvFoqUxpuzjnoWV
-[2026-06-15 10:31:20] Marked email as read on Microsoft Graph.
-[2026-06-15 10:31:20] 
-[2026-06-15 10:31:20] Microsoft Graph email import cycle completed successfully.
-[2026-06-15 10:31:20] Changes detected. Syncing...
-[2026-06-15 10:31:20] [main b7c3723] auto-sync: 2026-06-15 10:32
-[2026-06-15 10:31:20]  2 files changed, 2014 insertions(+), 146 deletions(-)
-[2026-06-15 10:31:20] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-15 10:31:20]    e0fa36b..b7c3723  main -> main
-[2026-06-15 10:31:20] Sync complete.
-[2026-06-15 10:38:44] Running Microsoft Graph Email Importer...
-[2026-06-15 10:38:44] Starting Graph API Email Importer... Mode: LIVE
 [2026-06-15 10:38:44] Fetching messages from Microsoft Graph...
 [2026-06-15 10:38:44] Found 32 email(s) since 1 May 2026 to check.
 [2026-06-15 10:38:44] Skipping duplicate: "Fwd: Melissa van den Berg // DJ van den Berg" from Melissa Eastes <shaunmelissaeastes@gmail.com> (received: 2026-06-12T11:02:14Z)
@@ -522,3 +392,46 @@
 [2026-06-15 14:08:44] 
 [2026-06-15 14:08:44] Microsoft Graph email import cycle completed successfully.
 [2026-06-15 14:08:44] Changes detected. Syncing...
+[2026-06-15 14:08:44] [main 7140e73] auto-sync: 2026-06-15 14:09
+[2026-06-15 14:08:44]  3 files changed, 56 insertions(+), 7 deletions(-)
+[2026-06-15 14:08:44]  create mode 100644 firebase-debug.log
+[2026-06-15 14:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-15 14:08:44]    923164e..7140e73  main -> main
+[2026-06-15 14:08:44] Sync complete.
+[2026-06-15 14:38:44] Running Microsoft Graph Email Importer...
+[2026-06-15 14:38:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-15 14:38:44] Fetching messages from Microsoft Graph...
+[2026-06-15 14:38:44] Found 30 email(s) since 1 May 2026 to check.
+[2026-06-15 14:38:44] Skipping duplicate: "(No Subject)" from Basheer Nalla <basheern761@gmail.com> (received: 2026-06-12T13:34:17Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Hospital negligence right now" from Susan Strydom <susanstrydom777@gmail.com> (received: 2026-06-12T13:38:59Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Urgent Refund Request GÇô Unauthorised USD 200 Charge ($400 in Total) https://setter-syndicate.com/" from Stan Janse van Rensburg <stanjvr@outlook.com> (received: 2026-06-12T15:34:22Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Re: Urgent Refund Request GÇô Unauthorised USD 200 Charge ($400 in Total) https://setter-syndicate.com/" from Nazar Hendricks <nazar@salessyndicategroup.com> (received: 2026-06-12T15:39:59Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Please contact me - Sakunda Holdings" from David Cronje <david@dfcdesignstudio.co.za> (received: 2026-06-12T20:16:38Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Story Tip GÇö Alleged Fraud & Racketeering: V-Rentals (Merzy Agencies CC) | Johannesburg & Durban" from Francois Boshoff <davidfrancoisboshoff@gmail.com> (received: 2026-06-13T10:08:04Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Thousands of zims , Nigerians , mozams, malawians, Indians etc enter legally abusing the visitors visa" from Adrian De Villiers <adriandevilliers321@gmail.com> (received: 2026-06-13T11:46:35Z)
+[2026-06-15 14:38:44] Skipping duplicate: "How many neurodiverse children are being failed by the education system? GÇô Gerhard BothaGÇÖs story" from Amanda Broodryk <amandabroodryk1982@gmail.com> (received: 2026-06-13T14:10:47Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Sakunda Holdings and Ntombi Mlilo" from David Cronje <Midnightarch@mweb.co.za> (received: 2026-06-13T21:09:17Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Ridgeway racebar" from Ryan Rajpaul <rocketfuel.ryan@gmail.com> (received: 2026-06-13T21:50:54Z)
+[2026-06-15 14:38:44] Skipping duplicate: "My side of " The Story to tell"" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-14T09:13:34Z)
+[2026-06-15 14:38:44] Skipping duplicate: "STORY pitch: motor industry Employer deducting and withholding employee retirement fund (MIRF)and UIF contribution" from Snethemba Nxedlana <nxedlanasnethemba@gmail.com> (received: 2026-06-14T14:32:18Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Re: Summary of community case study - suggested Production Brief" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-14T16:20:31Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Short Wave Radio Frequencies / Constructive Dismissal / Indirect Murder / Rape / Fraud" from Marcel Stein <marcelstein530@gmail.com> (received: 2026-06-15T05:41:25Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Short Wave Radio Frequencies / Constructive Dismissal / Indirect Murder / Rape / Fraud" from Marcel Stein <marcelstein530@gmail.com> (received: 2026-06-15T05:47:42Z)
+[2026-06-15 14:38:44] Skipping duplicate: "IDAC AFFIDAVIT " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:01:33Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Draft translated writing / statement" from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:02:18Z)
+[2026-06-15 14:38:44] Skipping duplicate: "IDAC AFFIDAVIT " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:10:04Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Draft translated writing / statement" from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:11:16Z)
+[2026-06-15 14:38:44] Skipping duplicate: "CASE 87/4/2026 Correspondence " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:12:51Z)
+[2026-06-15 14:38:44] Skipping duplicate: "CASE 87/4/2026 Correspondance " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:15:01Z)
+[2026-06-15 14:38:44] Skipping duplicate: "CASE 87/4/2026 Correspondance Project" from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:16:39Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Mr Adams Money Laundering " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:21:35Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Mr Adams Partner Joseph " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:22:33Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Wynand - Crime Intelligence " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:26:58Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Wynand - Crime Intelligence " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:40:30Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Moreata Motlou " from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:41:27Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Response letter" from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:47:14Z)
+[2026-06-15 14:38:44] Skipping duplicate: "Fwd: YOUR COMPLAINT LODGED WITH THE PUBLIC PROTECTOR AGAINST THE SOUTH AFRICAN POLICE SERVICES" from Africa Plant <africaplant@icloud.com> (received: 2026-06-15T06:50:42Z)
+[2026-06-15 14:38:44] Skipping duplicate: "(No Subject)" from Hlompho Mokubung <hlompho6pondo@gmail.com> (received: 2026-06-15T08:38:36Z)
+[2026-06-15 14:38:44] 
+[2026-06-15 14:38:44] Microsoft Graph email import cycle completed successfully.
+[2026-06-15 14:38:44] Changes detected. Syncing...

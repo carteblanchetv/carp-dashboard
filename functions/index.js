@@ -823,10 +823,18 @@ async function sendSpamReportEmail(submission, reporterEmail) {
   const targetEmail = 'lezanne@carteblanche.co.za';
 
   try {
+    let sentViaGraph = false;
     if (process.env.MICROSOFT_CLIENT_ID) {
-      await sendEmailViaGraph(subject, html, targetEmail, '');
-      console.log(`[SPAM_REPORT] Notification sent via Graph API to ${targetEmail}`);
-    } else {
+      try {
+        await sendEmailViaGraph(subject, html, targetEmail, '');
+        console.log(`[SPAM_REPORT] Notification sent via Graph API to ${targetEmail}`);
+        sentViaGraph = true;
+      } catch (graphErr) {
+        console.error(`[SPAM_REPORT] Graph API send failed: ${graphErr.message}. Falling back to legacy SMTP...`);
+      }
+    }
+
+    if (!sentViaGraph) {
       const mailOptions = {
         from: `"CARP Dashboard" <${process.env.EMAIL_USER}>`,
         to: targetEmail,
