@@ -466,3 +466,16 @@
 [2026-06-18 16:08:44]   }
 [2026-06-18 16:08:44] }
 [2026-06-18 16:08:44] Changes detected. Syncing...
+[2026-06-18 16:08:44] [main 52e1389] auto-sync: 2026-06-18 16:08
+[2026-06-18 16:08:44]  1 file changed, 17 insertions(+)
+[2026-06-18 16:08:44] fatal: unable to access 'https://github.com/carteblanchetv/carp-dashboard.git/': Could not resolve host: github.com
+[2026-06-18 16:08:44] Sync complete.
+[2026-06-18 16:38:44] Running Microsoft Graph Email Importer...
+[2026-06-18 16:38:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-18 16:38:44] Fetching messages from Microsoft Graph...
+[2026-06-18 16:38:44] Found 2 email(s) since 1 May 2026 to check.
+[2026-06-18 16:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
+[2026-06-18 16:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
+[2026-06-18 16:38:44] 
+[2026-06-18 16:38:44] Microsoft Graph email import cycle completed successfully.
+[2026-06-18 16:38:44] Changes detected. Syncing...
