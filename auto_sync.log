@@ -449,3 +449,20 @@
 [2026-06-18 15:38:44] 
 [2026-06-18 15:38:44] Microsoft Graph email import cycle completed successfully.
 [2026-06-18 15:38:44] Changes detected. Syncing...
+[2026-06-18 15:38:44] [main 63a73cc] auto-sync: 2026-06-18 15:38
+[2026-06-18 15:38:44]  1 file changed, 14 insertions(+)
+[2026-06-18 15:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-18 15:38:44]    525b1e4..63a73cc  main -> main
+[2026-06-18 15:38:44] Sync complete.
+[2026-06-18 16:08:44] Running Microsoft Graph Email Importer...
+[2026-06-18 16:08:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-18 16:08:44] Error during Graph email import execution: [TypeError: fetch failed] {
+[2026-06-18 16:08:44]   [cause]: Error: getaddrinfo ENOTFOUND login.microsoftonline.com
+[2026-06-18 16:08:44]       at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+[2026-06-18 16:08:44]     errno: -3008,
+[2026-06-18 16:08:44]     code: 'ENOTFOUND',
+[2026-06-18 16:08:44]     syscall: 'getaddrinfo',
+[2026-06-18 16:08:44]     hostname: 'login.microsoftonline.com'
+[2026-06-18 16:08:44]   }
+[2026-06-18 16:08:44] }
+[2026-06-18 16:08:44] Changes detected. Syncing...
