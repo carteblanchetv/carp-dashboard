@@ -418,3 +418,15 @@
 [2026-06-18 10:38:44] 
 [2026-06-18 10:38:44] Microsoft Graph email import cycle completed successfully.
 [2026-06-18 10:38:44] Changes detected. Syncing...
+[2026-06-18 10:38:44] [main 89dd6a3] auto-sync: 2026-06-18 10:38
+[2026-06-18 10:38:44]  1 file changed, 12 insertions(+)
+[2026-06-18 10:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-18 10:38:44]    2159d07..89dd6a3  main -> main
+[2026-06-18 10:38:44] Sync complete.
+[2026-06-18 11:08:44] Running Microsoft Graph Email Importer...
+[2026-06-18 11:08:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-18 11:08:44] Fetching messages from Microsoft Graph...
+[2026-06-18 11:08:44] Found 0 email(s) since 1 May 2026 to check.
+[2026-06-18 11:08:44] 
+[2026-06-18 11:08:44] Microsoft Graph email import cycle completed successfully.
+[2026-06-18 11:08:44] Changes detected. Syncing...
