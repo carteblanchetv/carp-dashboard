@@ -105,8 +105,20 @@ function parseDstvTipOff(subject, bodyText) {
       'contact number', 'phone number', 'phone', 'cell', 
       'location', 'city', 'province', 'area', 
       'story title', 'title of story', 'title of your story', 'title', 'subject',
-      'your tip', 'tip', 'story idea', 'message', 'comments', 'description'
+      'your tip', 'tip', 'story idea', 'message', 'comments', 'description', 'story summary'
     ];
+
+    // Try parsing using HTML tag patterns if HTML structure is present
+    if (text.includes('<h4') || text.includes('<p')) {
+      for (const label of labels) {
+        const escapedLabel = label.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const htmlRegex = new RegExp(`<h4[^>]*>\\s*${escapedLabel}\\s*<\/h4>\\s*<p[^>]*>([\\s\\S]*?)(?:<br\\s*\\/?>)?\\s*<\/p>`, 'i');
+        const match = text.match(htmlRegex);
+        if (match && match[1]) {
+          return match[1].replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        }
+      }
+    }
     
     for (const label of labels) {
       const escapedLabel = label.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -129,7 +141,7 @@ function parseDstvTipOff(subject, bodyText) {
     phone:      extract(['contact number', 'phone number', 'phone', 'cell'], bodyText),
     location:   extract(['location', 'city', 'province', 'area'], bodyText),
     storyTitle: extract(['story title', 'title of story', 'title of your story', 'title', 'subject'], bodyText),
-    story:      extract(['your tip', 'tip', 'story idea', 'message', 'comments', 'description'], bodyText),
+    story:      extract(['your tip', 'tip', 'story idea', 'message', 'comments', 'description', 'story summary'], bodyText),
   };
 }
 
