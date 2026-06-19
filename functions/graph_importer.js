@@ -312,7 +312,7 @@ async function runImporter() {
         submittedByEmail: fromEmail,
         submittedByName: fromName,
         subject: (formType === 'dstv_tipoff' && tipoffData && tipoffData.storyTitle) ? tipoffData.storyTitle : cleanSubject(subject),
-        body: bodyText,
+        body: extractOriginalStory(subject, bodyText),
         attachments: uploadedAttachments,
         isEmailImport: true,
         source: 'microsoft_graph',
@@ -365,14 +365,130 @@ if (require.main === module) {
   });
 }
 
-module.exports = { runImporter };
+module.exports = { runImporter, cleanSubject, extractOriginalStory, stripHeaders };
 
 function cleanSubject(subject) {
   if (!subject) return '(No Subject)';
   let cleaned = subject;
-  const pattern = /^(?:re|fw|fwd)\s*:\s*/i;
+  const pattern = /^(?:re|fw|fwd|undeliverable|undelivered)\s*:\s*/i;
   while (pattern.test(cleaned)) {
     cleaned = cleaned.replace(pattern, '').trim();
   }
+  const undeliveredMailsPattern = /^undelivered mails for\s*:\s*/i;
+  while (undeliveredMailsPattern.test(cleaned)) {
+    cleaned = cleaned.replace(undeliveredMailsPattern, '').trim();
+  }
   return cleaned || '(No Subject)';
+}
+
+function stripHeaders(text) {
+  if (!text) return '';
+  const lines = text.split('\n');
+  let bodyStartIndex = 0;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const t = line.trim();
+    if (t === '') {
+      bodyStartIndex = i + 1;
+      continue;
+    }
+    
+    const isHeader = 
+      /^[a-zA-Z0-9\-]+\s*:/i.test(line) || 
+      /^\s+/.test(line) || 
+      /^--/.test(t) || 
+      /^(?:b|d|s|h|bh|cv)\s*=/i.test(t) || 
+      t.toLowerCase().includes('mailto:') ||
+      t.toLowerCase().startsWith('resent-') ||
+      t.toLowerCase().startsWith('auto-submitted') ||
+      t.toLowerCase().startsWith('message-id') ||
+      /^\d+\s+\d{1,2}\/\d{1,2}\/\d{4}/.test(t) ||
+      (t.toLowerCase().startsWith('hop') && t.toLowerCase().includes('time')) ||
+      t.includes('spf=') ||
+      t.includes('dkim=') ||
+      t.includes('dmarc=');
+                     
+    if (isHeader) {
+      bodyStartIndex = i + 1;
+    } else {
+      break;
+    }
+  }
+  
+  const cleanedText = lines.slice(bodyStartIndex).join('\n').trim();
+  if (cleanedText.split('\n').some(line => line.includes('DKIM-Signature') || line.includes('ARC-Seal'))) {
+    return '';
+  }
+  return cleanedText;
+}
+
+function extractOriginalStory(subject, bodyText) {
+  if (!bodyText) return '';
+  const lowerSubject = (subject || '').toLowerCase();
+  
+  const isNDR = lowerSubject.includes('undeliver') || 
+                lowerSubject.includes('returned mail') || 
+                lowerSubject.includes('failure notice') || 
+                bodyText.includes('postmaster@') || 
+                bodyText.includes('MicrosoftExchange');
+                
+  if (!isNDR) return bodyText;
+
+  const forwardedMarkers = [
+    /----------\s*Forwarded message\s*----------/gi,
+    /----------\s*Forwarded message\s*---------/gi,
+    /Original Message Details/gi,
+    /Original Message/gi
+  ];
+  
+  let indices = [];
+  for (const marker of forwardedMarkers) {
+    let match;
+    while ((match = marker.exec(bodyText)) !== null) {
+      indices.push(match.index);
+    }
+  }
+  
+  indices.sort((a, b) => a - b);
+  
+  if (indices.length > 0) {
+    for (let i = indices.length - 1; i >= 0; i--) {
+      const segment = bodyText.substring(indices[i]);
+      
+      const fromMatch = segment.match(/From\s*:\s*(.+)/i);
+      const toMatch = segment.match(/To\s*:\s*(.+)/i);
+      const subjectMatch = segment.match(/Subject\s*:\s*(.+)/i);
+      
+      if (fromMatch && toMatch && subjectMatch) {
+        const subjectIndex = segment.search(/Subject\s*:\s*/i);
+        if (subjectIndex !== -1) {
+          const rest = segment.substring(subjectIndex);
+          const lineEnd = rest.indexOf('\n');
+          if (lineEnd !== -1) {
+            let story = rest.substring(lineEnd).trim();
+            story = stripHeaders(story);
+            if (story.length > 0) {
+              return story;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  const lastSubjectIdx = bodyText.lastIndexOf('Subject:');
+  if (lastSubjectIdx !== -1) {
+    const rest = bodyText.substring(lastSubjectIdx);
+    const lineEnd = rest.indexOf('\n');
+    if (lineEnd !== -1) {
+      let story = rest.substring(lineEnd).trim();
+      story = stripHeaders(story);
+      if (story.length > 0) {
+        return story;
+      }
+    }
+  }
+
+  return bodyText;
 }

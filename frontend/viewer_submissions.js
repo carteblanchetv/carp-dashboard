@@ -936,10 +936,14 @@ function initSearch() {
 function cleanSubject(subject) {
     if (!subject) return '(No Subject)';
     let cleaned = subject;
-    // Strip leading RE:, FW:, FWD: etc. (case-insensitive, optional colons, spaces, brackets)
-    const pattern = /^(?:re|fw|fwd)\s*:\s*/i;
+    // Strip leading RE:, FW:, FWD:, Undeliverable:, Undelivered: etc.
+    const pattern = /^(?:re|fw|fwd|undeliverable|undelivered)\s*:\s*/i;
     while (pattern.test(cleaned)) {
         cleaned = cleaned.replace(pattern, '').trim();
+    }
+    const undeliveredMailsPattern = /^undelivered mails for\s*:\s*/i;
+    while (undeliveredMailsPattern.test(cleaned)) {
+        cleaned = cleaned.replace(undeliveredMailsPattern, '').trim();
     }
     return cleaned || '(No Subject)';
 }
