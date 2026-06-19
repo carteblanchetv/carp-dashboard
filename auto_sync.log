@@ -470,3 +470,81 @@
 [2026-06-19 19:38:44] 
 [2026-06-19 19:38:44] Microsoft Graph email import cycle completed successfully.
 [2026-06-19 19:38:44] Changes detected. Syncing...
+[2026-06-19 19:38:44] [main 7d2b4d5] auto-sync: 2026-06-19 19:39
+[2026-06-19 19:38:44]  1 file changed, 80 insertions(+), 157 deletions(-)
+[2026-06-19 19:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-19 19:38:44]    d6771c3..7d2b4d5  main -> main
+[2026-06-19 19:38:44] Sync complete.
+[2026-06-19 20:08:44] Running Microsoft Graph Email Importer...
+[2026-06-19 20:08:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-19 20:08:44] Fetching messages from Microsoft Graph...
+[2026-06-19 20:08:44] Fetching messages from Microsoft Graph...
+[2026-06-19 20:08:44] Found 61 email(s) since 1 May 2026 to check.
+[2026-06-19 20:08:44] Skipping duplicate: "Feel-Good Story about proudly SA Musician with Disability Turning Struggles Into Hope" from David Devo Oosthuizen <devo@devographic.com> (received: 2026-06-17T10:41:35Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-18T14:46:37Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Moontlike opvolgstorie: Ernstige komplikasies n+í skoueroperasie" from Lientjie Schmidt <schmidtlientjie@gmail.com> (received: 2026-06-19T05:35:46Z)
+[2026-06-19 20:08:44] Skipping duplicate: "bribe" from Veronica van der Neut <VeronicaN@armscor.co.za> (received: 2026-06-19T08:17:18Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Fw: Due to Bank fraud 80 year old now face homelessness " from Lionel Newby <lionel48@live.co.za> (received: 2026-06-19T08:54:35Z)
+[2026-06-19 20:08:44] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:01Z)
+[2026-06-19 20:08:44] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:20Z)
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:38Z)
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:54Z)
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:03Z)
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:09Z)
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:18Z)
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:25Z)
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:33Z)
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:41Z)
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:48Z)
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:56Z)
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:05Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:12Z)
+[2026-06-19 20:08:44] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 20:08:44] Skipping duplicate: "My story to tell: Millanie" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-19T13:04:04Z)
+[2026-06-19 20:08:44] Skipping blocked sender email: "Re: How Is Your Current Process Working?#" from jayden thomas <jatden.nic@outlook.com>
+[2026-06-19 20:08:44] Skipping duplicate: "[Spam Report] Submission Reported as Spam: "Re: How Is Your Current Process Working?#"" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T13:33:32Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T14:51:11Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Two Oceans aquarium demands only Muslim food come in" from Tonetha Jay <drtonijay@gmail.com> (received: 2026-06-19T14:59:23Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Clanwilliam Cedar Restoration - Aired on Sunday night 14 June 2026" from rasheeddesai <rasheeddesai@mweb.co.za> (received: 2026-06-19T15:08:06Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:45:37Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:46:26Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Story tip-off: SA Embassy in Vietnam left so under-staffed its emergency line went unanswered GÇô sick employee is sole cover" from Ruan van der westhuizen <ruanvanderwesthuizen96@gmail.com> (received: 2026-06-19T15:47:53Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Re: Far East Hospital" from Douw van Niekerk <douwlin@gmail.com> (received: 2026-06-19T16:07:23Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T16:46:44Z)
+[2026-06-19 20:08:44] Skipping duplicate: "Global Wellness Enterprises" from Louise Van Heerden <louisevanheerden82@gmail.com> (received: 2026-06-19T17:37:54Z)
+[2026-06-19 20:08:44] 
+[2026-06-19 20:08:44] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-06-19 20:08:44] Identified formType: dstv_tipoff
+[2026-06-19 20:08:44] Saved submission successfully to Firestore: submissions/v0lJP7cH6FrzrLdKfjoU
+[2026-06-19 20:08:44] Marked email as read on Microsoft Graph.
+[2026-06-19 20:08:44] 
+[2026-06-19 20:08:44] Microsoft Graph email import cycle completed successfully.
+[2026-06-19 20:08:44] Changes detected. Syncing...
