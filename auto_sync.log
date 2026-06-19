@@ -1,124 +1,3 @@
-[2026-06-19 12:38:44]       '        "reason": "notFound"\n' +
-[2026-06-19 12:38:44]       '      }\n' +
-[2026-06-19 12:38:44]       '    ]\n' +
-[2026-06-19 12:38:44]       '  }\n' +
-[2026-06-19 12:38:44]       '}\n',
-[2026-06-19 12:38:44]     headers: {
-[2026-06-19 12:38:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-19 12:38:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-19 12:38:44]       'content-length': '247',
-[2026-06-19 12:38:44]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-19 12:38:44]       date: 'Fri, 19 Jun 2026 10:38:51 GMT',
-[2026-06-19 12:38:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-19 12:38:44]       pragma: 'no-cache',
-[2026-06-19 12:38:44]       server: 'UploadServer',
-[2026-06-19 12:38:44]       vary: 'Origin, X-Origin',
-[2026-06-19 12:38:44]       'x-guploader-uploadid': 'AJ5rDhF4XceOken4rcxjWUqhi6cXAvpk52M3PSpeFAEjVwqKfmufd49yHjAw73ZmjB43xa4N1GVuBqdghTME-UvrKoGccQKJvwQx3H72EoKsIBE'
-[2026-06-19 12:38:44]     },
-[2026-06-19 12:38:44]     status: 404,
-[2026-06-19 12:38:44]     statusText: 'Not Found',
-[2026-06-19 12:38:44]     request: {
-[2026-06-19 12:38:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781865533258_StephenGawking1920x1080byPrecisionPhotographyBallito.jpg&uploadType=resumable'
-[2026-06-19 12:38:44]     }
-[2026-06-19 12:38:44]   },
-[2026-06-19 12:38:44]   error: undefined,
-[2026-06-19 12:38:44]   status: 404,
-[2026-06-19 12:38:44]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-19 12:38:44] }
-[2026-06-19 12:38:44] Failed to process attachment EPK - Stephen Gawking - Manna featuring Mark Haze and Eva Morgan.pdf: GaxiosError: {
-[2026-06-19 12:38:44]   "error": {
-[2026-06-19 12:38:44]     "code": 404,
-[2026-06-19 12:38:44]     "message": "The specified bucket does not exist.",
-[2026-06-19 12:38:44]     "errors": [
-[2026-06-19 12:38:44]       {
-[2026-06-19 12:38:44]         "message": "The specified bucket does not exist.",
-[2026-06-19 12:38:44]         "domain": "global",
-[2026-06-19 12:38:44]         "reason": "notFound"
-[2026-06-19 12:38:44]       }
-[2026-06-19 12:38:44]     ]
-[2026-06-19 12:38:44]   }
-[2026-06-19 12:38:44] }
-[2026-06-19 12:38:44] System.Management.Automation.RemoteException
-[2026-06-19 12:38:44]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-19 12:38:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-19 12:38:44]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-19 12:38:44]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-19 12:38:44]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-19 12:38:44]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-19 12:38:44]   config: {
-[2026-06-19 12:38:44]     method: 'POST',
-[2026-06-19 12:38:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781865533790_EPK-StephenGawking-MannafeaturingMarkHazeandEvaMorgan.pdf&uploadType=resumable',
-[2026-06-19 12:38:44]     params: {
-[2026-06-19 12:38:44]       name: 'submissions/email_submission/1781865533790_EPK-StephenGawking-MannafeaturingMarkHazeandEvaMorgan.pdf',
-[2026-06-19 12:38:44]       uploadType: 'resumable'
-[2026-06-19 12:38:44]     },
-[2026-06-19 12:38:44]     data: {},
-[2026-06-19 12:38:44]     headers: {
-[2026-06-19 12:38:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-19 12:38:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/670d66bc-51e9-4d67-b207-49dd37442b35',
-[2026-06-19 12:38:44]       'X-Upload-Content-Type': 'application/pdf',
-[2026-06-19 12:38:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-19 12:38:44]       'Content-Type': 'application/json'
-[2026-06-19 12:38:44]     },
-[2026-06-19 12:38:44]     validateStatus: [Function (anonymous)],
-[2026-06-19 12:38:44]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-19 12:38:44]     body: '{}',
-[2026-06-19 12:38:44]     responseType: 'unknown',
-[2026-06-19 12:38:44]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-19 12:38:44]   },
-[2026-06-19 12:38:44]   response: {
-[2026-06-19 12:38:44]     config: {
-[2026-06-19 12:38:44]       method: 'POST',
-[2026-06-19 12:38:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781865533790_EPK-StephenGawking-MannafeaturingMarkHazeandEvaMorgan.pdf&uploadType=resumable',
-[2026-06-19 12:38:44]       params: [Object],
-[2026-06-19 12:38:44]       data: {},
-[2026-06-19 12:38:44]       headers: [Object],
-[2026-06-19 12:38:44]       validateStatus: [Function (anonymous)],
-[2026-06-19 12:38:44]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-19 12:38:44]       body: '{}',
-[2026-06-19 12:38:44]       responseType: 'unknown',
-[2026-06-19 12:38:44]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-19 12:38:44]     },
-[2026-06-19 12:38:44]     data: '{\n' +
-[2026-06-19 12:38:44]       '  "error": {\n' +
-[2026-06-19 12:38:44]       '    "code": 404,\n' +
-[2026-06-19 12:38:44]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-19 12:38:44]       '    "errors": [\n' +
-[2026-06-19 12:38:44]       '      {\n' +
-[2026-06-19 12:38:44]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-19 12:38:44]       '        "domain": "global",\n' +
-[2026-06-19 12:38:44]       '        "reason": "notFound"\n' +
-[2026-06-19 12:38:44]       '      }\n' +
-[2026-06-19 12:38:44]       '    ]\n' +
-[2026-06-19 12:38:44]       '  }\n' +
-[2026-06-19 12:38:44]       '}\n',
-[2026-06-19 12:38:44]     headers: {
-[2026-06-19 12:38:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-19 12:38:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-19 12:38:44]       'content-length': '247',
-[2026-06-19 12:38:44]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-19 12:38:44]       date: 'Fri, 19 Jun 2026 10:38:52 GMT',
-[2026-06-19 12:38:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-19 12:38:44]       pragma: 'no-cache',
-[2026-06-19 12:38:44]       server: 'UploadServer',
-[2026-06-19 12:38:44]       vary: 'Origin, X-Origin',
-[2026-06-19 12:38:44]       'x-guploader-uploadid': 'AJ5rDhGqAZ0Q0L4geBjMev9UqAar0hSsUEjzq51HVwKu3x1xFUmEoO2jI1o2DT3fc_ksdFi_ydZpWIPFl9WjW7dqWBpCpYgcuyBmUqOo_pYIvJk'
-[2026-06-19 12:38:44]     },
-[2026-06-19 12:38:44]     status: 404,
-[2026-06-19 12:38:44]     statusText: 'Not Found',
-[2026-06-19 12:38:44]     request: {
-[2026-06-19 12:38:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781865533790_EPK-StephenGawking-MannafeaturingMarkHazeandEvaMorgan.pdf&uploadType=resumable'
-[2026-06-19 12:38:44]     }
-[2026-06-19 12:38:44]   },
-[2026-06-19 12:38:44]   error: undefined,
-[2026-06-19 12:38:44]   status: 404,
-[2026-06-19 12:38:44]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-19 12:38:44] }
-[2026-06-19 12:38:44] Saved submission successfully to Firestore: submissions/7l43vUYjADcgpxVQ9GCy
-[2026-06-19 12:38:44] Marked email as read on Microsoft Graph.
-[2026-06-19 12:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-19 12:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-19 12:38:44] 
 [2026-06-19 12:38:44] Processing: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz>
 [2026-06-19 12:38:44] Identified formType: email_submission
 [2026-06-19 12:38:44] Saved submission successfully to Firestore: submissions/sYmDTko4UPtwPjvC4uGd
@@ -514,3 +393,68 @@
 [2026-06-19 14:38:44] 
 [2026-06-19 14:38:44] Microsoft Graph email import cycle completed successfully.
 [2026-06-19 14:38:44] Changes detected. Syncing...
+[2026-06-19 14:38:44] [main 590c65d] auto-sync: 2026-06-19 14:39
+[2026-06-19 14:38:44]  1 file changed, 60 insertions(+)
+[2026-06-19 14:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-19 14:38:44]    164b9e8..590c65d  main -> main
+[2026-06-19 14:38:44] Sync complete.
+[2026-06-19 15:08:44] Running Microsoft Graph Email Importer...
+[2026-06-19 15:08:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-19 15:08:44] Fetching messages from Microsoft Graph...
+[2026-06-19 15:08:44] Found 49 email(s) since 1 May 2026 to check.
+[2026-06-19 15:08:44] Skipping duplicate: "Feel-Good Story about proudly SA Musician with Disability Turning Struggles Into Hope" from David Devo Oosthuizen <devo@devographic.com> (received: 2026-06-17T10:41:35Z)
+[2026-06-19 15:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
+[2026-06-19 15:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
+[2026-06-19 15:08:44] Skipping duplicate: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-18T14:46:37Z)
+[2026-06-19 15:08:44] Skipping duplicate: "Moontlike opvolgstorie: Ernstige komplikasies n+í skoueroperasie" from Lientjie Schmidt <schmidtlientjie@gmail.com> (received: 2026-06-19T05:35:46Z)
+[2026-06-19 15:08:44] Skipping duplicate: "bribe" from Veronica van der Neut <VeronicaN@armscor.co.za> (received: 2026-06-19T08:17:18Z)
+[2026-06-19 15:08:44] Skipping duplicate: "Fw: Due to Bank fraud 80 year old now face homelessness " from Lionel Newby <lionel48@live.co.za> (received: 2026-06-19T08:54:35Z)
+[2026-06-19 15:08:44] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:01Z)
+[2026-06-19 15:08:44] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:20Z)
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:38Z)
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:54Z)
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:03Z)
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:09Z)
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:18Z)
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:25Z)
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:33Z)
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:41Z)
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:48Z)
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:56Z)
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:05Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:12Z)
+[2026-06-19 15:08:44] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 15:08:44] 
+[2026-06-19 15:08:44] Processing: "My story to tell: Millanie" from Milana Van Rooyen <millanielaflor@gmail.com>
+[2026-06-19 15:08:44] Identified formType: email_submission
+[2026-06-19 15:08:44] Saved submission successfully to Firestore: submissions/gZgQ58KcTGzIxYtMlT63
+[2026-06-19 15:08:44] Marked email as read on Microsoft Graph.
+[2026-06-19 15:08:44] 
+[2026-06-19 15:08:44] Microsoft Graph email import cycle completed successfully.
+[2026-06-19 15:08:44] Changes detected. Syncing...
