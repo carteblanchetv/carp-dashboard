@@ -311,7 +311,7 @@ async function runImporter() {
         importedAt: admin.firestore.FieldValue.serverTimestamp(),
         submittedByEmail: fromEmail,
         submittedByName: fromName,
-        subject: (formType === 'dstv_tipoff' && tipoffData && tipoffData.storyTitle) ? tipoffData.storyTitle : subject,
+        subject: (formType === 'dstv_tipoff' && tipoffData && tipoffData.storyTitle) ? tipoffData.storyTitle : cleanSubject(subject),
         body: bodyText,
         attachments: uploadedAttachments,
         isEmailImport: true,
@@ -366,3 +366,13 @@ if (require.main === module) {
 }
 
 module.exports = { runImporter };
+
+function cleanSubject(subject) {
+  if (!subject) return '(No Subject)';
+  let cleaned = subject;
+  const pattern = /^(?:re|fw|fwd)\s*:\s*/i;
+  while (pattern.test(cleaned)) {
+    cleaned = cleaned.replace(pattern, '').trim();
+  }
+  return cleaned || '(No Subject)';
+}

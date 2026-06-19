@@ -314,7 +314,7 @@ function renderSubmissions(submissions, user) {
         const startIndex = (currentPages.submissions - 1) * PAGE_SIZE;
         const slice = regularSubs.slice(startIndex, startIndex + PAGE_SIZE);
         regularList.innerHTML = slice.map((sub, index) => {
-            const subject = sub.subject || '(No Subject)';
+            const subject = cleanSubject(sub.subject);
             const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
             const badgeHtml = sub.nestedCount > 1 ? `<span class="nested-count-badge" style="background: var(--bg-card); color: var(--primary); padding: 0.1rem 0.45rem; border-radius: 10px; font-size: 0.75rem; border: 1px solid var(--border); margin-left: 0.35rem; font-weight: 700;" title="${sub.nestedCount} submissions from this sender within 3 months">${sub.nestedCount}</span>` : '';
             
@@ -379,7 +379,7 @@ function renderSubmissions(submissions, user) {
         const startIndex = (currentPages.investigation - 1) * PAGE_SIZE;
         const slice = investigationSubs.slice(startIndex, startIndex + PAGE_SIZE);
         investigationList.innerHTML = slice.map((sub, index) => {
-            const subject = sub.subject || '(No Subject)';
+            const subject = cleanSubject(sub.subject);
             const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
             const badgeHtml = sub.nestedCount > 1 ? `<span class="nested-count-badge" style="background: var(--bg-card); color: var(--primary); padding: 0.1rem 0.45rem; border-radius: 10px; font-size: 0.75rem; border: 1px solid var(--border); margin-left: 0.35rem; font-weight: 700;" title="${sub.nestedCount} submissions from this sender within 3 months">${sub.nestedCount}</span>` : '';
             const actionedByFirstName = sub.actionedBy ? (sub.actionedBy.name || '').split(' ')[0] : '—';
@@ -451,7 +451,7 @@ function renderSubmissions(submissions, user) {
         const startIndex = (currentPages.resolved - 1) * PAGE_SIZE;
         const slice = resolvedSubs.slice(startIndex, startIndex + PAGE_SIZE);
         resolvedList.innerHTML = slice.map((sub, index) => {
-            const subject = sub.subject || '(No Subject)';
+            const subject = cleanSubject(sub.subject);
             const fromName = sub.submittedByName || sub.submittedByEmail || 'Unknown';
             const badgeHtml = sub.nestedCount > 1 ? `<span class="nested-count-badge" style="background: var(--bg-card); color: var(--primary); padding: 0.1rem 0.45rem; border-radius: 10px; font-size: 0.75rem; border: 1px solid var(--border); margin-left: 0.35rem; font-weight: 700;" title="${sub.nestedCount} submissions from this sender within 3 months">${sub.nestedCount}</span>` : '';
             const actionedByFirstName = sub.resolvedBy ? (sub.resolvedBy.name || '').split(' ')[0] : (sub.actionedBy ? (sub.actionedBy.name || '').split(' ')[0] : '—');
@@ -632,7 +632,7 @@ function showDetails(sub, user) {
     }
     
     function loadSingleSubDetails(activeSub) {
-        document.getElementById('modalSubject').textContent = activeSub.subject || '(No Subject)';
+        document.getElementById('modalSubject').textContent = cleanSubject(activeSub.subject);
         document.getElementById('modalFrom').textContent = `${activeSub.submittedByName || 'Unknown'} (${activeSub.submittedByEmail || 'No Email'})`;
         
         let dateText = '—';
@@ -817,7 +817,7 @@ function showDetails(sub, user) {
             const dateObj = activeSub.submittedAt._seconds ? new Date(activeSub.submittedAt._seconds * 1000) : new Date(activeSub.submittedAt);
             const dateText = dateObj.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
             const timeText = dateObj.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' });
-            const tabSubject = activeSub.subject || '(No Subject)';
+            const tabSubject = cleanSubject(activeSub.subject);
             const tabLabel = `${dateText} ${timeText}`;
 
             const isActive = activeSub.id === sub.id;
@@ -931,4 +931,15 @@ function initSearch() {
             searchInput.focus();
         });
     }
+}
+
+function cleanSubject(subject) {
+    if (!subject) return '(No Subject)';
+    let cleaned = subject;
+    // Strip leading RE:, FW:, FWD: etc. (case-insensitive, optional colons, spaces, brackets)
+    const pattern = /^(?:re|fw|fwd)\s*:\s*/i;
+    while (pattern.test(cleaned)) {
+        cleaned = cleaned.replace(pattern, '').trim();
+    }
+    return cleaned || '(No Subject)';
 }
