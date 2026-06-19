@@ -3642,6 +3642,25 @@ mailgunApp.post('/mailgun-inbound', async (req, res) => {
 
     console.log(`[MAILGUN] Received email: "${subject}" from ${sender} (${attachCount} attachment(s))`);
 
+    // Filter out system-generated automated notifications or bounces/auto-responses
+    const normalizedSubject = subject.toLowerCase();
+    const isSystemEmail = 
+      normalizedSubject.includes('new commission:') || 
+      normalizedSubject.includes('new proposal:') || 
+      normalizedSubject.includes('call sheet for') ||
+      normalizedSubject.includes('editorial leave') ||
+      normalizedSubject.includes('alert: email delivery failed') ||
+      normalizedSubject.includes('smtp test') ||
+      normalizedSubject.includes('smtp live test') ||
+      normalizedSubject.includes('test-smtp') ||
+      normalizedSubject.includes('office 365 smtp test') ||
+      normalizedSubject.includes('carp dashboard');
+
+    if (isSystemEmail) {
+      console.log(`[MAILGUN] Filtering out system-generated email: "${subject}" from ${sender}`);
+      return res.status(200).json({ success: true, message: 'Filtered out system email.' });
+    }
+
     // 4. Detect DStv tip-off vs general email submission
     const tipoffData = parseDstvTipOff(subject, bodyText);
     const formType   = tipoffData ? 'dstv_tipoff' : 'email_submission';

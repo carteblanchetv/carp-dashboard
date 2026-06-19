@@ -177,10 +177,20 @@ async function runImporter() {
       const fromEmail = message.from && message.from.emailAddress ? message.from.emailAddress.address : 'unknown@sender.com';
       const fromName = message.from && message.from.emailAddress ? message.from.emailAddress.name : 'Unknown Sender';
 
-      // Skip quarantine/e-purifier spam emails at backend ingestion time
+      // Skip blocked senders and quarantine/e-purifier spam emails at backend ingestion time
       const lowerFromEmail = fromEmail.toLowerCase();
       const lowerFromName = fromName.toLowerCase();
       const lowerSubject = subject.toLowerCase();
+
+      const BLOCKED_EMAILS = [
+        'jatden.nic@outlook.com'
+      ];
+
+      if (BLOCKED_EMAILS.includes(lowerFromEmail)) {
+        console.log(`Skipping blocked sender email: "${subject}" from ${fromName} <${fromEmail}>`);
+        continue;
+      }
+
       if (
         lowerFromEmail === 'quarantine@e-purifier.com' || 
         lowerFromEmail.includes('e-purifier.com') || 
