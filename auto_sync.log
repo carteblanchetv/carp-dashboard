@@ -1,533 +1,3 @@
-[2026-06-18 12:38:44] Sync complete.
-[2026-06-18 13:08:44] Running Microsoft Graph Email Importer...
-[2026-06-18 13:08:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 13:08:44] Fetching messages from Microsoft Graph...
-[2026-06-18 13:08:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 13:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 13:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 13:08:44] 
-[2026-06-18 13:08:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 13:08:44] Changes detected. Syncing...
-[2026-06-18 13:08:44] [main 9022487] auto-sync: 2026-06-18 13:08
-[2026-06-18 13:08:44]  1 file changed, 14 insertions(+)
-[2026-06-18 13:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 13:08:44]    2cf04d9..9022487  main -> main
-[2026-06-18 13:08:44] Sync complete.
-[2026-06-18 13:38:44] Running Microsoft Graph Email Importer...
-[2026-06-18 13:38:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 13:38:44] Fetching messages from Microsoft Graph...
-[2026-06-18 13:38:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 13:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 13:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 13:38:44] 
-[2026-06-18 13:38:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 13:38:44] Changes detected. Syncing...
-[2026-06-18 13:38:44] [main 655f9ad] auto-sync: 2026-06-18 13:38
-[2026-06-18 13:38:44]  1 file changed, 14 insertions(+)
-[2026-06-18 13:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 13:38:44]    9022487..655f9ad  main -> main
-[2026-06-18 13:38:44] Sync complete.
-[2026-06-18 14:08:44] Running Microsoft Graph Email Importer...
-[2026-06-18 14:08:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 14:08:44] Fetching messages from Microsoft Graph...
-[2026-06-18 14:08:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 14:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 14:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 14:08:44] 
-[2026-06-18 14:08:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 14:08:44] Changes detected. Syncing...
-[2026-06-18 14:08:44] [main fd7cec7] auto-sync: 2026-06-18 14:08
-[2026-06-18 14:08:44]  1 file changed, 14 insertions(+), 113 deletions(-)
-[2026-06-18 14:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 14:08:44]    655f9ad..fd7cec7  main -> main
-[2026-06-18 14:08:44] Sync complete.
-[2026-06-18 14:38:44] Running Microsoft Graph Email Importer...
-[2026-06-18 14:38:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 14:38:44] Fetching messages from Microsoft Graph...
-[2026-06-18 14:38:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 14:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 14:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 14:38:44] 
-[2026-06-18 14:38:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 14:38:44] Changes detected. Syncing...
-[2026-06-18 14:38:44] [main 653ef8d] auto-sync: 2026-06-18 14:38
-[2026-06-18 14:38:44]  1 file changed, 14 insertions(+)
-[2026-06-18 14:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 14:38:44]    fd7cec7..653ef8d  main -> main
-[2026-06-18 14:38:44] Sync complete.
-[2026-06-18 15:08:44] Running Microsoft Graph Email Importer...
-[2026-06-18 15:08:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 15:08:44] Fetching messages from Microsoft Graph...
-[2026-06-18 15:08:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 15:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 15:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 15:08:44] 
-[2026-06-18 15:08:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 15:08:44] Changes detected. Syncing...
-[2026-06-18 15:08:44] [main 525b1e4] auto-sync: 2026-06-18 15:08
-[2026-06-18 15:08:44]  1 file changed, 14 insertions(+)
-[2026-06-18 15:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 15:08:44]    653ef8d..525b1e4  main -> main
-[2026-06-18 15:08:44] Sync complete.
-[2026-06-18 15:38:44] Running Microsoft Graph Email Importer...
-[2026-06-18 15:38:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 15:38:44] Fetching messages from Microsoft Graph...
-[2026-06-18 15:38:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 15:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 15:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 15:38:44] 
-[2026-06-18 15:38:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 15:38:44] Changes detected. Syncing...
-[2026-06-18 15:38:44] [main 63a73cc] auto-sync: 2026-06-18 15:38
-[2026-06-18 15:38:44]  1 file changed, 14 insertions(+)
-[2026-06-18 15:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 15:38:44]    525b1e4..63a73cc  main -> main
-[2026-06-18 15:38:44] Sync complete.
-[2026-06-18 16:08:44] Running Microsoft Graph Email Importer...
-[2026-06-18 16:08:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 16:08:44] Error during Graph email import execution: [TypeError: fetch failed] {
-[2026-06-18 16:08:44]   [cause]: Error: getaddrinfo ENOTFOUND login.microsoftonline.com
-[2026-06-18 16:08:44]       at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
-[2026-06-18 16:08:44]     errno: -3008,
-[2026-06-18 16:08:44]     code: 'ENOTFOUND',
-[2026-06-18 16:08:44]     syscall: 'getaddrinfo',
-[2026-06-18 16:08:44]     hostname: 'login.microsoftonline.com'
-[2026-06-18 16:08:44]   }
-[2026-06-18 16:08:44] }
-[2026-06-18 16:08:44] Changes detected. Syncing...
-[2026-06-18 16:08:44] [main 52e1389] auto-sync: 2026-06-18 16:08
-[2026-06-18 16:08:44]  1 file changed, 17 insertions(+)
-[2026-06-18 16:08:44] fatal: unable to access 'https://github.com/carteblanchetv/carp-dashboard.git/': Could not resolve host: github.com
-[2026-06-18 16:08:44] Sync complete.
-[2026-06-18 16:38:44] Running Microsoft Graph Email Importer...
-[2026-06-18 16:38:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 16:38:44] Fetching messages from Microsoft Graph...
-[2026-06-18 16:38:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 16:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 16:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 16:38:44] 
-[2026-06-18 16:38:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 16:38:44] Changes detected. Syncing...
-[2026-06-18 16:38:44] [main f9bbed4] auto-sync: 2026-06-18 16:38
-[2026-06-18 16:38:44]  1 file changed, 13 insertions(+)
-[2026-06-18 16:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 16:38:44]    63a73cc..f9bbed4  main -> main
-[2026-06-18 16:38:44] Sync complete.
-[2026-06-18 17:08:44] Running Microsoft Graph Email Importer...
-[2026-06-18 17:08:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 17:08:44] Fetching messages from Microsoft Graph...
-[2026-06-18 17:08:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 17:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 17:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 17:08:44] 
-[2026-06-18 17:08:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 17:08:44] Changes detected. Syncing...
-[2026-06-18 17:08:44] [main 4f5b94e] auto-sync: 2026-06-18 17:08
-[2026-06-18 17:08:44]  1 file changed, 14 insertions(+)
-[2026-06-18 17:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 17:08:44]    f9bbed4..4f5b94e  main -> main
-[2026-06-18 17:08:44] Sync complete.
-[2026-06-18 17:38:44] Running Microsoft Graph Email Importer...
-[2026-06-18 17:38:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 17:38:44] Fetching messages from Microsoft Graph...
-[2026-06-18 17:38:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 17:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 17:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 17:38:44] 
-[2026-06-18 17:38:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 17:38:44] Changes detected. Syncing...
-[2026-06-18 17:38:44] [main 3857784] auto-sync: 2026-06-18 17:38
-[2026-06-18 17:38:44]  1 file changed, 14 insertions(+)
-[2026-06-18 17:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 17:38:44]    4f5b94e..3857784  main -> main
-[2026-06-18 17:38:44] Sync complete.
-[2026-06-18 18:08:44] Running Microsoft Graph Email Importer...
-[2026-06-18 18:08:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 18:08:44] Fetching messages from Microsoft Graph...
-[2026-06-18 18:08:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 18:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 18:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 18:08:44] 
-[2026-06-18 18:08:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 18:08:44] Changes detected. Syncing...
-[2026-06-18 18:08:44] [main db46b34] auto-sync: 2026-06-18 18:08
-[2026-06-18 18:08:44]  1 file changed, 14 insertions(+), 114 deletions(-)
-[2026-06-18 18:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 18:08:44]    3857784..db46b34  main -> main
-[2026-06-18 18:08:44] Sync complete.
-[2026-06-18 18:38:44] Running Microsoft Graph Email Importer...
-[2026-06-18 18:38:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 18:38:44] Fetching messages from Microsoft Graph...
-[2026-06-18 18:38:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 18:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 18:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 18:38:44] 
-[2026-06-18 18:38:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 18:38:44] Changes detected. Syncing...
-[2026-06-18 18:38:44] [main 0bfea84] auto-sync: 2026-06-18 18:38
-[2026-06-18 18:38:44]  1 file changed, 14 insertions(+)
-[2026-06-18 18:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 18:38:44]    db46b34..0bfea84  main -> main
-[2026-06-18 18:38:44] Sync complete.
-[2026-06-18 19:08:44] Running Microsoft Graph Email Importer...
-[2026-06-18 19:08:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 19:08:44] Fetching messages from Microsoft Graph...
-[2026-06-18 19:08:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 19:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 19:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 19:08:44] 
-[2026-06-18 19:08:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 19:08:44] Changes detected. Syncing...
-[2026-06-18 19:08:44] [main 45c497a] auto-sync: 2026-06-18 19:08
-[2026-06-18 19:08:44]  2 files changed, 17 insertions(+)
-[2026-06-18 19:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 19:08:44]    0bfea84..45c497a  main -> main
-[2026-06-18 19:08:44] Sync complete.
-[2026-06-18 19:38:44] Running Microsoft Graph Email Importer...
-[2026-06-18 19:38:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 19:38:44] Fetching messages from Microsoft Graph...
-[2026-06-18 19:38:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 19:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 19:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 19:38:44] 
-[2026-06-18 19:38:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 19:38:44] Changes detected. Syncing...
-[2026-06-18 19:38:44] [main 5eba8b4] auto-sync: 2026-06-18 19:38
-[2026-06-18 19:38:44]  1 file changed, 14 insertions(+)
-[2026-06-18 19:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 19:38:44]    45c497a..5eba8b4  main -> main
-[2026-06-18 19:38:44] Sync complete.
-[2026-06-18 20:08:44] Running Microsoft Graph Email Importer...
-[2026-06-18 20:08:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 20:08:44] Fetching messages from Microsoft Graph...
-[2026-06-18 20:08:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 20:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 20:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 20:08:44] 
-[2026-06-18 20:08:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 20:08:44] Changes detected. Syncing...
-[2026-06-18 20:08:44] [main 2066d4e] auto-sync: 2026-06-18 20:08
-[2026-06-18 20:08:44]  1 file changed, 14 insertions(+)
-[2026-06-18 20:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 20:08:44]    5eba8b4..2066d4e  main -> main
-[2026-06-18 20:08:44] Sync complete.
-[2026-06-18 20:38:44] Running Microsoft Graph Email Importer...
-[2026-06-18 20:38:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 20:38:44] Fetching messages from Microsoft Graph...
-[2026-06-18 20:38:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 20:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 20:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 20:38:44] 
-[2026-06-18 20:38:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 20:38:44] Changes detected. Syncing...
-[2026-06-18 20:38:44] [main 9cb241d] auto-sync: 2026-06-18 20:38
-[2026-06-18 20:38:44]  1 file changed, 14 insertions(+)
-[2026-06-18 20:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 20:38:44]    2066d4e..9cb241d  main -> main
-[2026-06-18 20:38:44] Sync complete.
-[2026-06-18 21:08:44] Running Microsoft Graph Email Importer...
-[2026-06-18 21:08:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-18 21:08:44] Fetching messages from Microsoft Graph...
-[2026-06-18 21:08:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-18 21:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-18 21:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-18 21:08:44] 
-[2026-06-18 21:08:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-18 21:08:44] Changes detected. Syncing...
-[2026-06-18 21:08:44] [main 8f1a422] auto-sync: 2026-06-18 21:08
-[2026-06-18 21:08:44]  1 file changed, 14 insertions(+)
-[2026-06-18 21:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-18 21:08:44]    9cb241d..8f1a422  main -> main
-[2026-06-18 21:08:44] Sync complete.
-[2026-06-19 11:08:23] Running Microsoft Graph Email Importer...
-[2026-06-19 11:08:23] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-19 11:08:23] Fetching messages from Microsoft Graph...
-[2026-06-19 11:08:23] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-19 11:08:23] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-19 11:08:23] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-19 11:08:23] 
-[2026-06-19 11:08:23] Microsoft Graph email import cycle completed successfully.
-[2026-06-19 11:08:23] Changes detected. Syncing...
-[2026-06-19 11:08:23] [main cd80985] auto-sync: 2026-06-19 11:08
-[2026-06-19 11:08:23]  1 file changed, 14 insertions(+)
-[2026-06-19 11:08:23] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-19 11:08:23]    8f1a422..cd80985  main -> main
-[2026-06-19 11:08:23] Sync complete.
-[2026-06-19 11:08:45] Running Microsoft Graph Email Importer...
-[2026-06-19 11:08:45] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-19 11:08:45] Fetching messages from Microsoft Graph...
-[2026-06-19 11:08:45] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-19 11:08:45] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-19 11:08:45] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-19 11:08:45] 
-[2026-06-19 11:08:45] Microsoft Graph email import cycle completed successfully.
-[2026-06-19 11:08:45] Changes detected. Syncing...
-[2026-06-19 11:08:45] [main c2cabc0] auto-sync: 2026-06-19 11:08
-[2026-06-19 11:08:45]  1 file changed, 14 insertions(+), 112 deletions(-)
-[2026-06-19 11:08:45] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-19 11:08:45]    cd80985..c2cabc0  main -> main
-[2026-06-19 11:08:45] Sync complete.
-[2026-06-19 11:38:44] Running Microsoft Graph Email Importer...
-[2026-06-19 11:38:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-19 11:38:44] Fetching messages from Microsoft Graph...
-[2026-06-19 11:38:44] Found 2 email(s) since 1 May 2026 to check.
-[2026-06-19 11:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-19 11:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-19 11:38:44] 
-[2026-06-19 11:38:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-19 11:38:44] Changes detected. Syncing...
-[2026-06-19 11:38:44] [main 5966b93] auto-sync: 2026-06-19 11:38
-[2026-06-19 11:38:44]  1 file changed, 14 insertions(+)
-[2026-06-19 11:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-19 11:38:44]    c2cabc0..5966b93  main -> main
-[2026-06-19 11:38:44] Sync complete.
-[2026-06-19 12:08:44] Running Microsoft Graph Email Importer...
-[2026-06-19 12:08:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-19 12:08:44] Fetching messages from Microsoft Graph...
-[2026-06-19 12:08:44] Found 43 email(s) since 1 May 2026 to check.
-[2026-06-19 12:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-19 12:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/1TmUpOyqPHNYxn3e3cD0
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/AG1S81q8riaFRbZDp31I
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/FsDPjWPlVYT4AyPh9L4u
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/Ms5oNg7E3wLFoCAwKnms
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/Ft35x0AqDbsdaVAQohY9
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/Aqm9k8uPAqLmkMADqIyg
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/rzGWWH7aHOuGIJjVoW4A
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/LbeU2OqNbzTYB0DZ7nah
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/4SGz6OxuotoMrbbbmwYY
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/Ex80eUC4Y7AFohd3PSEW
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/raMx0uQ1NdWbyCfYGOit
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/y86Pa2VjFgt9HwMLYcT1
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/41pcUu9t016pUndQvJva
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/zOm7MHO8zCKnTPz0XuyT
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Processing: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za>
-[2026-06-19 12:08:44] Identified formType: email_submission
-[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/ZGdTA9FSVIJoGsiOl5K5
-[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
-[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 12:08:44] 
-[2026-06-19 12:08:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-19 12:08:44] Changes detected. Syncing...
-[2026-06-19 12:08:44] warning: in the working copy of 'functions/get_recent_proposals.js', LF will be replaced by CRLF the next time Git touches it
-[2026-06-19 12:08:44] [main 0534424] auto-sync: 2026-06-19 12:10
-[2026-06-19 12:08:44]  3 files changed, 398 insertions(+), 33 deletions(-)
-[2026-06-19 12:08:44]  create mode 100644 functions/get_recent_proposals.js
-[2026-06-19 12:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-19 12:08:44]    5966b93..0534424  main -> main
-[2026-06-19 12:08:44] Sync complete.
-[2026-06-19 12:38:44] Running Microsoft Graph Email Importer...
-[2026-06-19 12:38:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-19 12:38:44] Fetching messages from Microsoft Graph...
-[2026-06-19 12:38:44] Found 49 email(s) since 1 May 2026 to check.
-[2026-06-19 12:38:44] 
-[2026-06-19 12:38:44] Processing: " Urgent Appeal GÇô Help the Tshwane SPCA Continue Its Lifesaving Work for Animals in Need" from PR - SPCA Tshwane <PR@spcapta.org.za>
-[2026-06-19 12:38:44] Identified formType: email_submission
-[2026-06-19 12:38:44] Failed to process attachment Outlook-505we15y.jpg: GaxiosError: {
-[2026-06-19 12:38:44]   "error": {
-[2026-06-19 12:38:44]     "code": 404,
-[2026-06-19 12:38:44]     "message": "The specified bucket does not exist.",
-[2026-06-19 12:38:44]     "errors": [
-[2026-06-19 12:38:44]       {
-[2026-06-19 12:38:44]         "message": "The specified bucket does not exist.",
-[2026-06-19 12:38:44]         "domain": "global",
-[2026-06-19 12:38:44]         "reason": "notFound"
-[2026-06-19 12:38:44]       }
-[2026-06-19 12:38:44]     ]
-[2026-06-19 12:38:44]   }
-[2026-06-19 12:38:44] }
-[2026-06-19 12:38:44] System.Management.Automation.RemoteException
-[2026-06-19 12:38:44]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-19 12:38:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-19 12:38:44]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-19 12:38:44]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-19 12:38:44]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-19 12:38:44]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-19 12:38:44]   config: {
-[2026-06-19 12:38:44]     method: 'POST',
-[2026-06-19 12:38:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781865528703_Outlook-505we15y.jpg&uploadType=resumable',
-[2026-06-19 12:38:44]     params: {
-[2026-06-19 12:38:44]       name: 'submissions/email_submission/1781865528703_Outlook-505we15y.jpg',
-[2026-06-19 12:38:44]       uploadType: 'resumable'
-[2026-06-19 12:38:44]     },
-[2026-06-19 12:38:44]     data: {},
-[2026-06-19 12:38:44]     headers: {
-[2026-06-19 12:38:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-19 12:38:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/13f96cbf-e7c7-4119-bb13-326c1f3d6732',
-[2026-06-19 12:38:44]       'X-Upload-Content-Type': 'image/jpeg',
-[2026-06-19 12:38:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-19 12:38:44]       'Content-Type': 'application/json'
-[2026-06-19 12:38:44]     },
-[2026-06-19 12:38:44]     validateStatus: [Function (anonymous)],
-[2026-06-19 12:38:44]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-19 12:38:44]     body: '{}',
-[2026-06-19 12:38:44]     responseType: 'unknown',
-[2026-06-19 12:38:44]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-19 12:38:44]   },
-[2026-06-19 12:38:44]   response: {
-[2026-06-19 12:38:44]     config: {
-[2026-06-19 12:38:44]       method: 'POST',
-[2026-06-19 12:38:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781865528703_Outlook-505we15y.jpg&uploadType=resumable',
-[2026-06-19 12:38:44]       params: [Object],
-[2026-06-19 12:38:44]       data: {},
-[2026-06-19 12:38:44]       headers: [Object],
-[2026-06-19 12:38:44]       validateStatus: [Function (anonymous)],
-[2026-06-19 12:38:44]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-19 12:38:44]       body: '{}',
-[2026-06-19 12:38:44]       responseType: 'unknown',
-[2026-06-19 12:38:44]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-19 12:38:44]     },
-[2026-06-19 12:38:44]     data: '{\n' +
-[2026-06-19 12:38:44]       '  "error": {\n' +
-[2026-06-19 12:38:44]       '    "code": 404,\n' +
-[2026-06-19 12:38:44]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-19 12:38:44]       '    "errors": [\n' +
-[2026-06-19 12:38:44]       '      {\n' +
-[2026-06-19 12:38:44]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-19 12:38:44]       '        "domain": "global",\n' +
-[2026-06-19 12:38:44]       '        "reason": "notFound"\n' +
-[2026-06-19 12:38:44]       '      }\n' +
-[2026-06-19 12:38:44]       '    ]\n' +
-[2026-06-19 12:38:44]       '  }\n' +
-[2026-06-19 12:38:44]       '}\n',
-[2026-06-19 12:38:44]     headers: {
-[2026-06-19 12:38:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-19 12:38:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-19 12:38:44]       'content-length': '247',
-[2026-06-19 12:38:44]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-19 12:38:44]       date: 'Fri, 19 Jun 2026 10:38:47 GMT',
-[2026-06-19 12:38:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-19 12:38:44]       pragma: 'no-cache',
-[2026-06-19 12:38:44]       server: 'UploadServer',
-[2026-06-19 12:38:44]       vary: 'Origin, X-Origin',
-[2026-06-19 12:38:44]       'x-guploader-uploadid': 'AJ5rDhHUN-mg3ooiytR_sAPaWYlaOswH7S4h9IEv0kyD4BjJVxg7LaWzkgpPFbxPnIj_x1OZeLpf-ekj0P_Xmo8FrwJ_nzpTRVALHLgAS78Qag'
-[2026-06-19 12:38:44]     },
-[2026-06-19 12:38:44]     status: 404,
-[2026-06-19 12:38:44]     statusText: 'Not Found',
-[2026-06-19 12:38:44]     request: {
-[2026-06-19 12:38:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781865528703_Outlook-505we15y.jpg&uploadType=resumable'
-[2026-06-19 12:38:44]     }
-[2026-06-19 12:38:44]   },
-[2026-06-19 12:38:44]   error: undefined,
-[2026-06-19 12:38:44]   status: 404,
-[2026-06-19 12:38:44]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-19 12:38:44] }
-[2026-06-19 12:38:44] Failed to process attachment Urgent Appeal GÇô Help the Tshwane SPCA Continue Its Lifesaving Work for Animals in Need.pdf: GaxiosError: {
-[2026-06-19 12:38:44]   "error": {
-[2026-06-19 12:38:44]     "code": 404,
-[2026-06-19 12:38:44]     "message": "The specified bucket does not exist.",
-[2026-06-19 12:38:44]     "errors": [
-[2026-06-19 12:38:44]       {
-[2026-06-19 12:38:44]         "message": "The specified bucket does not exist.",
-[2026-06-19 12:38:44]         "domain": "global",
-[2026-06-19 12:38:44]         "reason": "notFound"
-[2026-06-19 12:38:44]       }
-[2026-06-19 12:38:44]     ]
-[2026-06-19 12:38:44]   }
-[2026-06-19 12:38:44] }
-[2026-06-19 12:38:44] System.Management.Automation.RemoteException
-[2026-06-19 12:38:44]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-19 12:38:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-19 12:38:44]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-19 12:38:44]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-19 12:38:44]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-19 12:38:44]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-19 12:38:44]   config: {
-[2026-06-19 12:38:44]     method: 'POST',
-[2026-06-19 12:38:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1781865530029_UrgentAppealHelptheTshwaneSPCAContinueItsLifesavingWorkforAnimalsinNeed.pdf&uploadType=resumable',
-[2026-06-19 12:38:44]     params: {
-[2026-06-19 12:38:44]       name: 'submissions/email_submission/1781865530029_UrgentAppealHelptheTshwaneSPCAContinueItsLifesavingWorkforAnimalsinNeed.pdf',
-[2026-06-19 12:38:44]       uploadType: 'resumable'
-[2026-06-19 12:38:44]     },
-[2026-06-19 12:38:44]     data: {},
-[2026-06-19 12:38:44]     headers: {
-[2026-06-19 12:38:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-19 12:38:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/7198a444-2c7a-4f18-a094-f36ee7b0d2a3',
-[2026-06-19 12:38:44]       'X-Upload-Content-Type': 'application/pdf',
-[2026-06-19 12:38:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-19 12:38:44]       'Content-Type': 'application/json'
 [2026-06-19 12:38:44]     },
 [2026-06-19 12:38:44]     validateStatus: [Function (anonymous)],
 [2026-06-19 12:38:44]     paramsSerializer: [Function: paramsSerializer],
@@ -923,3 +393,64 @@
 [2026-06-19 12:38:44] 
 [2026-06-19 12:38:44] Microsoft Graph email import cycle completed successfully.
 [2026-06-19 12:38:44] Changes detected. Syncing...
+[2026-06-19 12:38:44] [main a3097f8] auto-sync: 2026-06-19 12:40
+[2026-06-19 12:38:44]  1 file changed, 532 insertions(+), 145 deletions(-)
+[2026-06-19 12:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-19 12:38:44]    0534424..a3097f8  main -> main
+[2026-06-19 12:38:44] Sync complete.
+[2026-06-19 13:08:45] Running Microsoft Graph Email Importer...
+[2026-06-19 13:08:45] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-19 13:08:45] Fetching messages from Microsoft Graph...
+[2026-06-19 13:08:45] Found 49 email(s) since 1 May 2026 to check.
+[2026-06-19 13:08:45] Skipping duplicate: " Urgent Appeal GÇô Help the Tshwane SPCA Continue Its Lifesaving Work for Animals in Need" from PR - SPCA Tshwane <PR@spcapta.org.za> (received: 2026-06-16T12:35:29Z)
+[2026-06-19 13:08:45] Skipping duplicate: "Feel-Good Story about proudly SA Musician with Disability Turning Struggles Into Hope" from David Devo Oosthuizen <devo@devographic.com> (received: 2026-06-17T10:41:35Z)
+[2026-06-19 13:08:45] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
+[2026-06-19 13:08:45] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
+[2026-06-19 13:08:45] Skipping duplicate: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-18T14:46:37Z)
+[2026-06-19 13:08:45] Skipping duplicate: "Moontlike opvolgstorie: Ernstige komplikasies n+í skoueroperasie" from Lientjie Schmidt <schmidtlientjie@gmail.com> (received: 2026-06-19T05:35:46Z)
+[2026-06-19 13:08:45] Skipping duplicate: "bribe" from Veronica van der Neut <VeronicaN@armscor.co.za> (received: 2026-06-19T08:17:18Z)
+[2026-06-19 13:08:45] Skipping duplicate: "Fw: Due to Bank fraud 80 year old now face homelessness " from Lionel Newby <lionel48@live.co.za> (received: 2026-06-19T08:54:35Z)
+[2026-06-19 13:08:45] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:01Z)
+[2026-06-19 13:08:45] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:20Z)
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:38Z)
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:54Z)
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:03Z)
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:09Z)
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:18Z)
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:25Z)
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:33Z)
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:41Z)
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:48Z)
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:56Z)
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:05Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:12Z)
+[2026-06-19 13:08:45] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 13:08:45] 
+[2026-06-19 13:08:45] Microsoft Graph email import cycle completed successfully.
+[2026-06-19 13:08:45] Changes detected. Syncing...
