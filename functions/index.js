@@ -249,15 +249,148 @@ async function sendEmailViaGraph(subject, html, recipientList, bccRecipientsList
 }
 
 /**
+ * Helper to serialize attachments into base64 format for Firestore storage
+ */
+function serializeAttachments(attachments) {
+  if (!Array.isArray(attachments)) return [];
+  return attachments.map(att => {
+    let base64Content = '';
+    if (Buffer.isBuffer(att.content)) {
+      base64Content = att.content.toString('base64');
+    } else if (typeof att.content === 'string') {
+      base64Content = Buffer.from(att.content).toString('base64');
+    } else if (att.path) {
+      try {
+        const fs = require('fs');
+        base64Content = fs.readFileSync(att.path).toString('base64');
+      } catch (e) {
+        console.error('[NOTIFY] Error reading attachment path for serialization:', e);
+      }
+    }
+    return {
+      filename: att.filename,
+      contentType: att.contentType || 'application/octet-stream',
+      base64Content
+    };
+  });
+}
+
+/**
+ * Helper to deserialize base64 attachments back to Buffer formats
+ */
+function deserializeAttachments(serialized) {
+  if (!Array.isArray(serialized)) return [];
+  return serialized.map(att => ({
+    filename: att.filename,
+    contentType: att.contentType,
+    content: Buffer.from(att.base64Content, 'base64')
+  }));
+}
+
+/**
+ * Sends a notification email utilizing the three-tier failover system
+ */
+async function sendNotificationEmail(fromName, subject, html, recipientList, attachments = []) {
+    let lastError = null;
+    let sentViaGraph = false;
+
+    if (process.env.MICROSOFT_CLIENT_ID) {
+        try {
+            console.log(`[NOTIFY] Using Microsoft Graph API to send email to bcc: ${recipientList}`);
+            const mailbox = process.env.MICROSOFT_MAILBOX_EMAIL || 'story@combinedartists.co.za';
+            await sendEmailViaGraph(`[${fromName}] ${subject}`, html, mailbox, recipientList, attachments);
+            console.log(`[NOTIFY] Graph API email sent successfully.`);
+            sentViaGraph = true;
+            return;
+        } catch (graphErr) {
+            lastError = graphErr;
+            console.error(`[NOTIFY] Graph API send failed: ${graphErr.message}. Falling back to legacy SMTP...`);
+        }
+    }
+
+    if (!sentViaGraph) {
+        console.log(`[NOTIFY] Using legacy SMTP to send email to: ${recipientList}`);
+        const mailOptions = {
+            from: `"${fromName}" <${process.env.EMAIL_USER}>`,
+            to: process.env.EMAIL_USER,
+            bcc: recipientList,
+            subject: subject,
+            html: html,
+            attachments: attachments
+        };
+
+        try {
+            await transporter.sendMail(mailOptions);
+            console.log(`[NOTIFY] SMTP email sent successfully.`);
+            return;
+        } catch (smtpErr) {
+            lastError = smtpErr;
+            console.error(`[NOTIFY] SMTP send failed: ${smtpErr.message}. Trying Office 365 SMTP...`);
+            try {
+                const o365Transporter = nodemailer.createTransport({
+                    host: 'smtp.office365.com',
+                    port: 587,
+                    secure: false,
+                    auth: {
+                        user: process.env.IMAP_USER || 'story@combinedartists.co.za',
+                        pass: process.env.IMAP_PASSWORD
+                    }
+                });
+                const o365MailOptions = {
+                    from: `"${fromName}" <${process.env.IMAP_USER || 'story@combinedartists.co.za'}>`,
+                    to: process.env.IMAP_USER || 'story@combinedartists.co.za',
+                    bcc: recipientList,
+                    subject: subject,
+                    html: html,
+                    attachments: attachments
+                };
+                await o365Transporter.sendMail(o365MailOptions);
+                console.log(`[NOTIFY] Office 365 SMTP email sent successfully.`);
+                return;
+            } catch (o365Err) {
+                lastError = o365Err;
+                console.error(`[NOTIFY] Office 365 SMTP send failed: ${o365Err.message}`);
+            }
+        }
+    }
+
+    throw lastError || new Error('All email send attempts failed.');
+}
+
+/**
+ * Queue a failed notification in Firestore for automatic retries
+ */
+async function queueFailedEmail(type, subject, html, attachments, recipientList, errorMsg) {
+  try {
+    const serialized = serializeAttachments(attachments);
+    const recipients = typeof recipientList === 'string'
+      ? recipientList.split(',').map(r => r.trim()).filter(Boolean)
+      : (Array.isArray(recipientList) ? recipientList : []);
+    
+    await admin.firestore().collection('failed_emails').add({
+      type,
+      subject,
+      html,
+      recipients,
+      attachments: serialized,
+      lastError: errorMsg || 'Unknown error',
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      retryCount: 0,
+      status: 'pending'
+    });
+    console.log(`[NOTIFY] Successfully queued failed email in Firestore 'failed_emails' collection.`);
+  } catch (err) {
+    console.error(`[NOTIFY] CRITICAL ERROR: Failed to queue email in Firestore: ${err.message}`);
+  }
+}
+
+/**
  * Helper to send notifications to relevant admins/editorial/production
  */
 async function notifyRelevantUsers(type, subject, html, attachments = [], extraRecipients = []) {
     try {
         console.log(`[NOTIFY] Resolving recipients for type: ${type}`);
         const recipients = new Set();
-        
-        // 1. Mandatory Recipients
-        // Currently restricted to Lezanne only per request
         
         // Always include Lezanne as a safety fallback/audit
         recipients.add('lezanne@carteblanche.co.za'.toLowerCase().trim());
@@ -305,43 +438,22 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
         const recipientList = Array.from(recipients).join(', ');
         const fromName = type === 'call_sheet' ? "Call Sheets" : (type === 'editorial_leave' ? "Editorial Leave Calendar" : "CARP Dashboard");
 
-        let sentViaGraph = false;
-        if (process.env.MICROSOFT_CLIENT_ID) {
-            try {
-                console.log(`[NOTIFY] Using Microsoft Graph API to send email to bcc: ${recipientList}`);
-                const mailbox = process.env.MICROSOFT_MAILBOX_EMAIL || 'story@combinedartists.co.za';
-                const bccList = recipientList;
-                await sendEmailViaGraph(`[${fromName}] ${subject}`, html, mailbox, bccList, attachments);
-                console.log(`[NOTIFY] Graph API email sent successfully to ${recipients.size} recipients.`);
-                sentViaGraph = true;
-            } catch (graphErr) {
-                console.error(`[NOTIFY] Graph API send failed: ${graphErr.message}. Falling back to legacy SMTP...`);
-            }
-        }
-
-        if (!sentViaGraph) {
-            console.log(`[NOTIFY] Using legacy SMTP to send email to: ${recipientList}`);
-            const mailOptions = {
-                from: `"${fromName}" <${process.env.EMAIL_USER}>`,
-                to: process.env.EMAIL_USER, // Hide recipient list from users
-                bcc: recipientList,
-                subject: subject,
-                html: html,
-                attachments: attachments
-            };
-
-            await transporter.sendMail(mailOptions);
-            console.log(`[NOTIFY] SMTP email sent successfully to ${recipients.size} recipients.`);
+        try {
+            await sendNotificationEmail(fromName, subject, html, recipientList, attachments);
+        } catch (sendErr) {
+            console.error(`[NOTIFY] All email attempts failed for type '${type}': ${sendErr.message}. Queuing in Firestore...`);
+            await queueFailedEmail(type, subject, html, attachments, recipientList, sendErr.message);
         }
     } catch (err) {
         console.error(`[NOTIFY] FAILED for type '${type}': ${err.message}`);
-        // We don't throw here to avoid blocking the submission flow if email fails
     }
 }
 
 
 const app = express();
 app.use(cors({ origin: true }));
+
+
 
 /**
  * Editorial Leave Notification (Public Endpoint)
@@ -841,8 +953,29 @@ async function sendSpamReportEmail(submission, reporterEmail) {
         subject: subject,
         html: html
       };
-      await transporter.sendMail(mailOptions);
-      console.log(`[SPAM_REPORT] Notification sent via SMTP to ${targetEmail}`);
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log(`[SPAM_REPORT] Notification sent via SMTP to ${targetEmail}`);
+      } catch (smtpErr) {
+        console.error(`[SPAM_REPORT] SMTP send failed: ${smtpErr.message}. Trying Office 365 SMTP...`);
+        const o365Transporter = nodemailer.createTransport({
+          host: 'smtp.office365.com',
+          port: 587,
+          secure: false,
+          auth: {
+            user: process.env.IMAP_USER || 'story@combinedartists.co.za',
+            pass: process.env.IMAP_PASSWORD
+          }
+        });
+        const o365MailOptions = {
+          from: `"CARP Dashboard" <${process.env.IMAP_USER || 'story@combinedartists.co.za'}>`,
+          to: targetEmail,
+          subject: subject,
+          html: html
+        };
+        await o365Transporter.sendMail(o365MailOptions);
+        console.log(`[SPAM_REPORT] Notification sent via Office 365 SMTP to ${targetEmail}`);
+      }
     }
   } catch (err) {
     console.error('[SPAM_REPORT] Failed to send email notification:', err.message);
@@ -3631,6 +3764,78 @@ exports.verifyTurnstileToken = functions.https.onCall(async (data, context) => {
         console.error('[AppCheck] Error in token exchange:', error);
         throw new functions.https.HttpsError('internal', 'Internal error during security token exchange.');
     }
+});
+
+exports.processFailedEmails = functions.runWith({ timeoutSeconds: 300, memory: '512MB' })
+  .pubsub.schedule('every 15 minutes').onRun(async (context) => {
+    console.log('[CRON] Checking for failed emails in queue...');
+    const db = admin.firestore();
+    const snapshot = await db.collection('failed_emails')
+        .where('status', '==', 'pending')
+        .where('retryCount', '<', 5)
+        .get();
+
+    if (snapshot.empty) {
+        console.log('[CRON] No pending failed emails found.');
+        return null;
+    }
+
+    console.log(`[CRON] Found ${snapshot.size} pending failed emails to retry.`);
+    for (const doc of snapshot.docs) {
+        const data = doc.data();
+        const docRef = doc.ref;
+        const fromName = data.type === 'call_sheet' ? "Call Sheets" : (data.type === 'editorial_leave' ? "Editorial Leave Calendar" : "CARP Dashboard");
+        const attachments = deserializeAttachments(data.attachments);
+        const recipientList = data.recipients.join(', ');
+
+        try {
+            await sendNotificationEmail(fromName, data.subject, data.html, recipientList, attachments);
+            await docRef.update({
+                status: 'sent',
+                retryCount: data.retryCount + 1,
+                lastAttemptAt: admin.firestore.FieldValue.serverTimestamp(),
+                lastError: null
+            });
+            console.log(`[CRON] Successfully retried and sent email doc ID: ${doc.id}`);
+        } catch (err) {
+            const nextRetryCount = data.retryCount + 1;
+            const updates = {
+                retryCount: nextRetryCount,
+                lastAttemptAt: admin.firestore.FieldValue.serverTimestamp(),
+                lastError: err.message
+            };
+
+            if (nextRetryCount >= 5) {
+                updates.status = 'failed_permanently';
+                console.error(`[CRON] Email doc ID: ${doc.id} reached max retries and failed permanently.`);
+                
+                // Notify SuperAdmin Lezanne
+                try {
+                    const alertSubject = `ALERT: Email Delivery Failed Permanently after 5 Retries`;
+                    const alertHtml = `
+                        <h2>⚠️ Email Delivery Failure Alert</h2>
+                        <p>An automated notification failed to send after 5 retry attempts.</p>
+                        <hr/>
+                        <ul>
+                            <li><b>Original Subject:</b> ${data.subject}</li>
+                            <li><b>Original Recipients:</b> ${recipientList}</li>
+                            <li><b>Error:</b> ${err.message}</li>
+                            <li><b>Document ID:</b> ${doc.id}</li>
+                        </ul>
+                    `;
+                    await sendNotificationEmail("CARP Alerts", alertSubject, alertHtml, "lezanne@carteblanche.co.za", []);
+                    console.log(`[CRON] Alert notification sent to SuperAdmin Lezanne.`);
+                } catch (alertErr) {
+                    console.error(`[CRON] FAILED to notify SuperAdmin Lezanne of failure: ${alertErr.message}`);
+                }
+            } else {
+                console.warn(`[CRON] Retry attempt ${nextRetryCount} failed for doc ID: ${doc.id}: ${err.message}`);
+            }
+
+            await docRef.update(updates);
+        }
+    }
+    return null;
 });
 
 exports.app = app;

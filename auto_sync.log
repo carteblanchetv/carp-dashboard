@@ -421,3 +421,118 @@
 [2026-06-19 11:38:44] 
 [2026-06-19 11:38:44] Microsoft Graph email import cycle completed successfully.
 [2026-06-19 11:38:44] Changes detected. Syncing...
+[2026-06-19 11:38:44] [main 5966b93] auto-sync: 2026-06-19 11:38
+[2026-06-19 11:38:44]  1 file changed, 14 insertions(+)
+[2026-06-19 11:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-19 11:38:44]    c2cabc0..5966b93  main -> main
+[2026-06-19 11:38:44] Sync complete.
+[2026-06-19 12:08:44] Running Microsoft Graph Email Importer...
+[2026-06-19 12:08:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-19 12:08:44] Fetching messages from Microsoft Graph...
+[2026-06-19 12:08:44] Found 43 email(s) since 1 May 2026 to check.
+[2026-06-19 12:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
+[2026-06-19 12:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/1TmUpOyqPHNYxn3e3cD0
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/AG1S81q8riaFRbZDp31I
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/FsDPjWPlVYT4AyPh9L4u
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/Ms5oNg7E3wLFoCAwKnms
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/Ft35x0AqDbsdaVAQohY9
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/Aqm9k8uPAqLmkMADqIyg
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/rzGWWH7aHOuGIJjVoW4A
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/LbeU2OqNbzTYB0DZ7nah
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/4SGz6OxuotoMrbbbmwYY
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/Ex80eUC4Y7AFohd3PSEW
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/raMx0uQ1NdWbyCfYGOit
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/y86Pa2VjFgt9HwMLYcT1
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/41pcUu9t016pUndQvJva
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/zOm7MHO8zCKnTPz0XuyT
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Processing: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za>
+[2026-06-19 12:08:44] Identified formType: email_submission
+[2026-06-19 12:08:44] Saved submission successfully to Firestore: submissions/ZGdTA9FSVIJoGsiOl5K5
+[2026-06-19 12:08:44] Email was already marked as read. Bypassed marking as read.
+[2026-06-19 12:08:44] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-19 12:08:44] 
+[2026-06-19 12:08:44] Microsoft Graph email import cycle completed successfully.
+[2026-06-19 12:08:44] Changes detected. Syncing...
