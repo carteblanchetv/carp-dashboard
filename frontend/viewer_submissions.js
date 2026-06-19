@@ -131,7 +131,11 @@ async function loadMoreInBackground(cursor, user) {
 function groupAndNestSubmissions(subsList) {
     const groupsByEmail = {};
     subsList.forEach(sub => {
-        const key = (sub.submittedByEmail || sub.submittedByName || 'unknown').toLowerCase().trim();
+        const isDstvTipoff = sub.formType === 'dstv_tipoff';
+        const key = isDstvTipoff 
+            ? `dstv_tipoff_${sub.id}`
+            : (sub.submittedByEmail || sub.submittedByName || 'unknown').toLowerCase().trim();
+            
         if (!groupsByEmail[key]) {
             groupsByEmail[key] = [];
         }
