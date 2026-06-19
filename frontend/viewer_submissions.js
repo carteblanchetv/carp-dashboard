@@ -296,7 +296,7 @@ function renderSubmissions(submissions, user) {
     const investigationSubs = groupAndNestSubmissions(validSubs.filter(s => s.useful === true && s.resolved !== true));
     const regularSubs = groupAndNestSubmissions(validSubs.filter(s => s.useful !== true && s.resolved !== true));
 
-    const canDelete = ['admin', 'super-admin', 'editorial-production'].includes(user?.role);
+    const canDelete = ['admin', 'super-admin'].includes(user?.role);
 
     const totalPagesRegular = Math.max(1, Math.ceil(regularSubs.length / PAGE_SIZE));
     if (currentPages.submissions > totalPagesRegular) currentPages.submissions = totalPagesRegular;
@@ -773,6 +773,41 @@ function showDetails(sub, user) {
                     alert('An error occurred.');
                 }
             });
+        }
+
+        const deleteBtn = document.getElementById('modalDeleteBtn');
+        if (deleteBtn) {
+            const userCanDelete = ['admin', 'super-admin'].includes(user?.role);
+            if (userCanDelete) {
+                deleteBtn.style.display = 'block';
+                const newDeleteBtn = deleteBtn.cloneNode(true);
+                deleteBtn.parentNode.replaceChild(newDeleteBtn, deleteBtn);
+                newDeleteBtn.addEventListener('click', async () => {
+                    if (!confirm(`Are you sure you want to delete the viewer submission: "${activeSub.subject || '(No Subject)'}"?\n\nThis action cannot be undone.`)) return;
+                    try {
+                        const res = await fetchWithAuth('/api/admin/delete-submission', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id: activeSub.id })
+                        });
+                        if (!res.ok) {
+                            const text = await res.text();
+                            throw new Error(`Server error (${res.status}): ${text.substring(0, 100)}`);
+                        }
+                        const data = await res.json();
+                        if (data.success) {
+                            closeModal();
+                            loadSubmissions(user);
+                        } else {
+                            throw new Error(data.error || 'Failed to delete submission');
+                        }
+                    } catch (err) {
+                        alert("Delete failed: " + err.message);
+                    }
+                });
+            } else {
+                deleteBtn.style.display = 'none';
+            }
         }
     }
 
