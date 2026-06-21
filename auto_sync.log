@@ -1,1344 +1,487 @@
-[2026-06-19 20:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:45:37Z)
-[2026-06-19 20:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:46:26Z)
-[2026-06-19 20:08:44] Skipping duplicate: "Story tip-off: SA Embassy in Vietnam left so under-staffed its emergency line went unanswered GÇô sick employee is sole cover" from Ruan van der westhuizen <ruanvanderwesthuizen96@gmail.com> (received: 2026-06-19T15:47:53Z)
-[2026-06-19 20:08:44] Skipping duplicate: "Re: Far East Hospital" from Douw van Niekerk <douwlin@gmail.com> (received: 2026-06-19T16:07:23Z)
-[2026-06-19 20:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T16:46:44Z)
-[2026-06-19 20:08:44] Skipping duplicate: "Global Wellness Enterprises" from Louise Van Heerden <louisevanheerden82@gmail.com> (received: 2026-06-19T17:37:54Z)
-[2026-06-19 20:08:44] 
-[2026-06-19 20:08:44] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
-[2026-06-19 20:08:44] Identified formType: dstv_tipoff
-[2026-06-19 20:08:44] Saved submission successfully to Firestore: submissions/v0lJP7cH6FrzrLdKfjoU
-[2026-06-19 20:08:44] Marked email as read on Microsoft Graph.
-[2026-06-19 20:08:44] 
-[2026-06-19 20:08:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-19 20:08:44] Changes detected. Syncing...
-[2026-06-19 20:08:44] [main 4e3aa89] auto-sync: 2026-06-19 20:10
-[2026-06-19 20:08:44]  1 file changed, 78 insertions(+)
-[2026-06-19 20:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-19 20:08:44]    7d2b4d5..4e3aa89  main -> main
-[2026-06-19 20:08:44] Sync complete.
-[2026-06-19 20:38:44] Running Microsoft Graph Email Importer...
-[2026-06-19 20:38:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-19 20:38:44] Fetching messages from Microsoft Graph...
-[2026-06-19 20:38:44] Fetching messages from Microsoft Graph...
-[2026-06-19 20:38:44] Found 61 email(s) since 1 May 2026 to check.
-[2026-06-19 20:38:44] Skipping duplicate: "Feel-Good Story about proudly SA Musician with Disability Turning Struggles Into Hope" from David Devo Oosthuizen <devo@devographic.com> (received: 2026-06-17T10:41:35Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-18T14:46:37Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Moontlike opvolgstorie: Ernstige komplikasies n+í skoueroperasie" from Lientjie Schmidt <schmidtlientjie@gmail.com> (received: 2026-06-19T05:35:46Z)
-[2026-06-19 20:38:44] Skipping duplicate: "bribe" from Veronica van der Neut <VeronicaN@armscor.co.za> (received: 2026-06-19T08:17:18Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Fw: Due to Bank fraud 80 year old now face homelessness " from Lionel Newby <lionel48@live.co.za> (received: 2026-06-19T08:54:35Z)
-[2026-06-19 20:38:44] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:01Z)
-[2026-06-19 20:38:44] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:20Z)
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:38Z)
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:54Z)
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:03Z)
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:09Z)
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:18Z)
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:25Z)
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:33Z)
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:41Z)
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:48Z)
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:56Z)
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:05Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:12Z)
-[2026-06-19 20:38:44] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 20:38:44] Skipping duplicate: "My story to tell: Millanie" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-19T13:04:04Z)
-[2026-06-19 20:38:44] Skipping blocked sender email: "Re: How Is Your Current Process Working?#" from jayden thomas <jatden.nic@outlook.com>
-[2026-06-19 20:38:44] Skipping duplicate: "[Spam Report] Submission Reported as Spam: "Re: How Is Your Current Process Working?#"" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T13:33:32Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T14:51:11Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Two Oceans aquarium demands only Muslim food come in" from Tonetha Jay <drtonijay@gmail.com> (received: 2026-06-19T14:59:23Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Clanwilliam Cedar Restoration - Aired on Sunday night 14 June 2026" from rasheeddesai <rasheeddesai@mweb.co.za> (received: 2026-06-19T15:08:06Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:45:37Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:46:26Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Story tip-off: SA Embassy in Vietnam left so under-staffed its emergency line went unanswered GÇô sick employee is sole cover" from Ruan van der westhuizen <ruanvanderwesthuizen96@gmail.com> (received: 2026-06-19T15:47:53Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Re: Far East Hospital" from Douw van Niekerk <douwlin@gmail.com> (received: 2026-06-19T16:07:23Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T16:46:44Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Global Wellness Enterprises" from Louise Van Heerden <louisevanheerden82@gmail.com> (received: 2026-06-19T17:37:54Z)
-[2026-06-19 20:38:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T17:50:07Z)
-[2026-06-19 20:38:44] 
-[2026-06-19 20:38:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-19 20:38:44] Changes detected. Syncing...
-[2026-06-19 20:38:44] [main 6340d70] auto-sync: 2026-06-19 20:39
-[2026-06-19 20:38:44]  1 file changed, 74 insertions(+), 155 deletions(-)
-[2026-06-19 20:38:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-19 20:38:44]    4e3aa89..6340d70  main -> main
-[2026-06-19 20:38:44] Sync complete.
-[2026-06-19 21:08:44] Running Microsoft Graph Email Importer...
-[2026-06-19 21:08:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-19 21:08:44] Fetching messages from Microsoft Graph...
-[2026-06-19 21:08:44] Fetching messages from Microsoft Graph...
-[2026-06-19 21:08:44] Found 61 email(s) since 1 May 2026 to check.
-[2026-06-19 21:08:44] Skipping duplicate: "Feel-Good Story about proudly SA Musician with Disability Turning Struggles Into Hope" from David Devo Oosthuizen <devo@devographic.com> (received: 2026-06-17T10:41:35Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-18T14:46:37Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Moontlike opvolgstorie: Ernstige komplikasies n+í skoueroperasie" from Lientjie Schmidt <schmidtlientjie@gmail.com> (received: 2026-06-19T05:35:46Z)
-[2026-06-19 21:08:44] Skipping duplicate: "bribe" from Veronica van der Neut <VeronicaN@armscor.co.za> (received: 2026-06-19T08:17:18Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Fw: Due to Bank fraud 80 year old now face homelessness " from Lionel Newby <lionel48@live.co.za> (received: 2026-06-19T08:54:35Z)
-[2026-06-19 21:08:44] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:01Z)
-[2026-06-19 21:08:44] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:20Z)
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:38Z)
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:54Z)
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:03Z)
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:09Z)
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:18Z)
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:25Z)
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:33Z)
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:41Z)
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:48Z)
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:56Z)
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:05Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:12Z)
-[2026-06-19 21:08:44] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:08:44] Skipping duplicate: "My story to tell: Millanie" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-19T13:04:04Z)
-[2026-06-19 21:08:44] Skipping blocked sender email: "Re: How Is Your Current Process Working?#" from jayden thomas <jatden.nic@outlook.com>
-[2026-06-19 21:08:44] Skipping duplicate: "[Spam Report] Submission Reported as Spam: "Re: How Is Your Current Process Working?#"" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T13:33:32Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T14:51:11Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Two Oceans aquarium demands only Muslim food come in" from Tonetha Jay <drtonijay@gmail.com> (received: 2026-06-19T14:59:23Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Clanwilliam Cedar Restoration - Aired on Sunday night 14 June 2026" from rasheeddesai <rasheeddesai@mweb.co.za> (received: 2026-06-19T15:08:06Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:45:37Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:46:26Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Story tip-off: SA Embassy in Vietnam left so under-staffed its emergency line went unanswered GÇô sick employee is sole cover" from Ruan van der westhuizen <ruanvanderwesthuizen96@gmail.com> (received: 2026-06-19T15:47:53Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Re: Far East Hospital" from Douw van Niekerk <douwlin@gmail.com> (received: 2026-06-19T16:07:23Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T16:46:44Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Global Wellness Enterprises" from Louise Van Heerden <louisevanheerden82@gmail.com> (received: 2026-06-19T17:37:54Z)
-[2026-06-19 21:08:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T17:50:07Z)
-[2026-06-19 21:08:44] 
-[2026-06-19 21:08:44] Microsoft Graph email import cycle completed successfully.
-[2026-06-19 21:08:44] Changes detected. Syncing...
-[2026-06-19 21:08:44] [main 1128f39] auto-sync: 2026-06-19 21:09
-[2026-06-19 21:08:44]  1 file changed, 74 insertions(+)
-[2026-06-19 21:08:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-19 21:08:44]    6340d70..1128f39  main -> main
-[2026-06-19 21:08:44] Sync complete.
-[2026-06-19 21:15:40] Running Microsoft Graph Email Importer...
-[2026-06-19 21:15:40] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-19 21:15:40] Fetching messages from Microsoft Graph...
-[2026-06-19 21:15:40] Fetching messages from Microsoft Graph...
-[2026-06-19 21:15:40] Found 61 email(s) since 1 May 2026 to check.
-[2026-06-19 21:15:40] Skipping duplicate: "Feel-Good Story about proudly SA Musician with Disability Turning Struggles Into Hope" from David Devo Oosthuizen <devo@devographic.com> (received: 2026-06-17T10:41:35Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-18T14:46:37Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Moontlike opvolgstorie: Ernstige komplikasies n+í skoueroperasie" from Lientjie Schmidt <schmidtlientjie@gmail.com> (received: 2026-06-19T05:35:46Z)
-[2026-06-19 21:15:40] Skipping duplicate: "bribe" from Veronica van der Neut <VeronicaN@armscor.co.za> (received: 2026-06-19T08:17:18Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Fw: Due to Bank fraud 80 year old now face homelessness " from Lionel Newby <lionel48@live.co.za> (received: 2026-06-19T08:54:35Z)
-[2026-06-19 21:15:40] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:01Z)
-[2026-06-19 21:15:40] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:20Z)
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:38Z)
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:54Z)
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:03Z)
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:09Z)
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:18Z)
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:25Z)
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:33Z)
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:41Z)
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:48Z)
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:56Z)
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:05Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:12Z)
-[2026-06-19 21:15:40] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-19 21:15:40] Skipping duplicate: "My story to tell: Millanie" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-19T13:04:04Z)
-[2026-06-19 21:15:40] Skipping blocked sender email: "Re: How Is Your Current Process Working?#" from jayden thomas <jatden.nic@outlook.com>
-[2026-06-19 21:15:40] Skipping duplicate: "[Spam Report] Submission Reported as Spam: "Re: How Is Your Current Process Working?#"" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T13:33:32Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T14:51:11Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Two Oceans aquarium demands only Muslim food come in" from Tonetha Jay <drtonijay@gmail.com> (received: 2026-06-19T14:59:23Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Clanwilliam Cedar Restoration - Aired on Sunday night 14 June 2026" from rasheeddesai <rasheeddesai@mweb.co.za> (received: 2026-06-19T15:08:06Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:45:37Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:46:26Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Story tip-off: SA Embassy in Vietnam left so under-staffed its emergency line went unanswered GÇô sick employee is sole cover" from Ruan van der westhuizen <ruanvanderwesthuizen96@gmail.com> (received: 2026-06-19T15:47:53Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Re: Far East Hospital" from Douw van Niekerk <douwlin@gmail.com> (received: 2026-06-19T16:07:23Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T16:46:44Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Global Wellness Enterprises" from Louise Van Heerden <louisevanheerden82@gmail.com> (received: 2026-06-19T17:37:54Z)
-[2026-06-19 21:15:40] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T17:50:07Z)
-[2026-06-19 21:15:40] 
-[2026-06-19 21:15:40] Microsoft Graph email import cycle completed successfully.
-[2026-06-19 21:15:40] Changes detected. Syncing...
-[2026-06-19 21:15:40] [main 672d5be] auto-sync: 2026-06-19 21:16
-[2026-06-19 21:15:40]  1 file changed, 25 insertions(+)
-[2026-06-19 21:15:40] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-19 21:15:40]    1128f39..672d5be  main -> main
-[2026-06-19 21:15:40] Sync complete.
-[2026-06-21 11:38:45] Running Microsoft Graph Email Importer...
-[2026-06-21 11:38:45] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-21 11:38:45] Fetching messages from Microsoft Graph...
-[2026-06-21 11:38:45] Fetching messages from Microsoft Graph...
-[2026-06-21 11:38:45] Found 81 email(s) since 1 May 2026 to check.
-[2026-06-21 11:38:45] Skipping duplicate: "Fw: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:18Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Fw: Undeliverable: Re: URGENT - CCMA, SAPS, UIF DEPT FRAUD, BRIBERY AND MONEY LAUNDERING IN LIMPOPO" from Lezanne Janse van Rensburg <lezanne@carteblanche.co.za> (received: 2026-06-18T10:01:32Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-18T14:46:37Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Moontlike opvolgstorie: Ernstige komplikasies n+í skoueroperasie" from Lientjie Schmidt <schmidtlientjie@gmail.com> (received: 2026-06-19T05:35:46Z)
-[2026-06-21 11:38:45] Skipping duplicate: "bribe" from Veronica van der Neut <VeronicaN@armscor.co.za> (received: 2026-06-19T08:17:18Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Fw: Due to Bank fraud 80 year old now face homelessness " from Lionel Newby <lionel48@live.co.za> (received: 2026-06-19T08:54:35Z)
-[2026-06-21 11:38:45] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:01Z)
-[2026-06-21 11:38:45] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:20Z)
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:38Z)
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:54Z)
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:03Z)
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:09Z)
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:18Z)
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:25Z)
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:33Z)
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:41Z)
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:48Z)
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:56Z)
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:05Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:12Z)
-[2026-06-21 11:38:45] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 11:38:45] Skipping duplicate: "My story to tell: Millanie" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-19T13:04:04Z)
-[2026-06-21 11:38:45] Skipping blocked sender email: "Re: How Is Your Current Process Working?#" from jayden thomas <jatden.nic@outlook.com>
-[2026-06-21 11:38:45] Skipping duplicate: "[Spam Report] Submission Reported as Spam: "Re: How Is Your Current Process Working?#"" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T13:33:32Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T14:51:11Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Two Oceans aquarium demands only Muslim food come in" from Tonetha Jay <drtonijay@gmail.com> (received: 2026-06-19T14:59:23Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Clanwilliam Cedar Restoration - Aired on Sunday night 14 June 2026" from rasheeddesai <rasheeddesai@mweb.co.za> (received: 2026-06-19T15:08:06Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:45:37Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:46:26Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Story tip-off: SA Embassy in Vietnam left so under-staffed its emergency line went unanswered GÇô sick employee is sole cover" from Ruan van der westhuizen <ruanvanderwesthuizen96@gmail.com> (received: 2026-06-19T15:47:53Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Re: Far East Hospital" from Douw van Niekerk <douwlin@gmail.com> (received: 2026-06-19T16:07:23Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T16:46:44Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Global Wellness Enterprises" from Louise Van Heerden <louisevanheerden82@gmail.com> (received: 2026-06-19T17:37:54Z)
-[2026-06-21 11:38:45] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T17:50:07Z)
-[2026-06-21 11:38:45] 
-[2026-06-21 11:38:45] Processing: "Insert Footage Declaration: James Ketchell 2 (#6931)" from Submissions <story@combinedartists.co.za>
-[2026-06-21 11:38:45] Identified formType: email_submission
-[2026-06-21 11:38:45] Failed to process attachment InsertFootage_1781899540728.pdf: GaxiosError: {
-[2026-06-21 11:38:45]   "error": {
-[2026-06-21 11:38:45]     "code": 404,
-[2026-06-21 11:38:45]     "message": "The specified bucket does not exist.",
-[2026-06-21 11:38:45]     "errors": [
-[2026-06-21 11:38:45]       {
-[2026-06-21 11:38:45]         "message": "The specified bucket does not exist.",
-[2026-06-21 11:38:45]         "domain": "global",
-[2026-06-21 11:38:45]         "reason": "notFound"
-[2026-06-21 11:38:45]       }
-[2026-06-21 11:38:45]     ]
-[2026-06-21 11:38:45]   }
-[2026-06-21 11:38:45] }
-[2026-06-21 11:38:45] System.Management.Automation.RemoteException
-[2026-06-21 11:38:45]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-21 11:38:45]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-21 11:38:45]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-21 11:38:45]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-21 11:38:45]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-21 11:38:45]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-21 11:38:45]   config: {
-[2026-06-21 11:38:45]     method: 'POST',
-[2026-06-21 11:38:45]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782034806314_InsertFootage_1781899540728.pdf&uploadType=resumable',
-[2026-06-21 11:38:45]     params: {
-[2026-06-21 11:38:45]       name: 'submissions/email_submission/1782034806314_InsertFootage_1781899540728.pdf',
-[2026-06-21 11:38:45]       uploadType: 'resumable'
-[2026-06-21 11:38:45]     },
-[2026-06-21 11:38:45]     data: {},
-[2026-06-21 11:38:45]     headers: {
-[2026-06-21 11:38:45]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-21 11:38:45]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/a9e7a708-0950-479d-8716-2007b5ee951a',
-[2026-06-21 11:38:45]       'X-Upload-Content-Type': 'application/pdf',
-[2026-06-21 11:38:45]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-21 11:38:45]       'Content-Type': 'application/json'
-[2026-06-21 11:38:45]     },
-[2026-06-21 11:38:45]     validateStatus: [Function (anonymous)],
-[2026-06-21 11:38:45]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 11:38:45]     body: '{}',
-[2026-06-21 11:38:45]     responseType: 'unknown',
-[2026-06-21 11:38:45]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 11:38:45]   },
-[2026-06-21 11:38:45]   response: {
-[2026-06-21 11:38:45]     config: {
-[2026-06-21 11:38:45]       method: 'POST',
-[2026-06-21 11:38:45]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782034806314_InsertFootage_1781899540728.pdf&uploadType=resumable',
-[2026-06-21 11:38:45]       params: [Object],
-[2026-06-21 11:38:45]       data: {},
-[2026-06-21 11:38:45]       headers: [Object],
-[2026-06-21 11:38:45]       validateStatus: [Function (anonymous)],
-[2026-06-21 11:38:45]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 11:38:45]       body: '{}',
-[2026-06-21 11:38:45]       responseType: 'unknown',
-[2026-06-21 11:38:45]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 11:38:45]     },
-[2026-06-21 11:38:45]     data: '{\n' +
-[2026-06-21 11:38:45]       '  "error": {\n' +
-[2026-06-21 11:38:45]       '    "code": 404,\n' +
-[2026-06-21 11:38:45]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 11:38:45]       '    "errors": [\n' +
-[2026-06-21 11:38:45]       '      {\n' +
-[2026-06-21 11:38:45]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 11:38:45]       '        "domain": "global",\n' +
-[2026-06-21 11:38:45]       '        "reason": "notFound"\n' +
-[2026-06-21 11:38:45]       '      }\n' +
-[2026-06-21 11:38:45]       '    ]\n' +
-[2026-06-21 11:38:45]       '  }\n' +
-[2026-06-21 11:38:45]       '}\n',
-[2026-06-21 11:38:45]     headers: {
-[2026-06-21 11:38:45]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-21 11:38:45]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-21 11:38:45]       'content-length': '247',
-[2026-06-21 11:38:45]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-21 11:38:45]       date: 'Sun, 21 Jun 2026 09:40:04 GMT',
-[2026-06-21 11:38:45]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-21 11:38:45]       pragma: 'no-cache',
-[2026-06-21 11:38:45]       server: 'UploadServer',
-[2026-06-21 11:38:45]       vary: 'Origin, X-Origin',
-[2026-06-21 11:38:45]       'x-guploader-uploadid': 'AJ5rDhEwApTYtXq30dkMNiU2vnsJM6QPytAn-Lf39eO5BiPsg69WDhZnX-sv52wErz_GLm7ckyUls5y3GoHnIwDPGqEFb10tAHQT2o0XkXfy8Q'
-[2026-06-21 11:38:45]     },
-[2026-06-21 11:38:45]     status: 404,
-[2026-06-21 11:38:45]     statusText: 'Not Found',
-[2026-06-21 11:38:45]     request: {
-[2026-06-21 11:38:45]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782034806314_InsertFootage_1781899540728.pdf&uploadType=resumable'
-[2026-06-21 11:38:45]     }
-[2026-06-21 11:38:45]   },
-[2026-06-21 11:38:45]   error: undefined,
-[2026-06-21 11:38:45]   status: 404,
-[2026-06-21 11:38:45]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-21 11:38:45] }
-[2026-06-21 11:38:45] Saved submission successfully to Firestore: submissions/nrrVBTZfQSp4OSCFXLEr
-[2026-06-21 11:38:45] Email was already marked as read. Bypassed marking as read.
-[2026-06-21 12:10:22] Running Microsoft Graph Email Importer...
-[2026-06-21 12:10:22] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-21 12:10:22] Fetching messages from Microsoft Graph...
-[2026-06-21 12:10:22] Fetching messages from Microsoft Graph...
-[2026-06-21 12:10:22] Found 79 email(s) since 1 May 2026 to check.
-[2026-06-21 12:10:22] Skipping duplicate: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-18T14:46:37Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Moontlike opvolgstorie: Ernstige komplikasies n+í skoueroperasie" from Lientjie Schmidt <schmidtlientjie@gmail.com> (received: 2026-06-19T05:35:46Z)
-[2026-06-21 12:10:22] Skipping duplicate: "bribe" from Veronica van der Neut <VeronicaN@armscor.co.za> (received: 2026-06-19T08:17:18Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Fw: Due to Bank fraud 80 year old now face homelessness " from Lionel Newby <lionel48@live.co.za> (received: 2026-06-19T08:54:35Z)
-[2026-06-21 12:10:22] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:01Z)
-[2026-06-21 12:10:22] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:20Z)
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:38Z)
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:54Z)
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:03Z)
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:09Z)
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:18Z)
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:25Z)
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:33Z)
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:41Z)
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:48Z)
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:56Z)
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:05Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:12Z)
-[2026-06-21 12:10:22] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:10:22] Skipping duplicate: "My story to tell: Millanie" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-19T13:04:04Z)
-[2026-06-21 12:10:22] Skipping blocked sender email: "Re: How Is Your Current Process Working?#" from jayden thomas <jatden.nic@outlook.com>
-[2026-06-21 12:10:22] Skipping duplicate: "[Spam Report] Submission Reported as Spam: "Re: How Is Your Current Process Working?#"" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T13:33:32Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T14:51:11Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Two Oceans aquarium demands only Muslim food come in" from Tonetha Jay <drtonijay@gmail.com> (received: 2026-06-19T14:59:23Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Clanwilliam Cedar Restoration - Aired on Sunday night 14 June 2026" from rasheeddesai <rasheeddesai@mweb.co.za> (received: 2026-06-19T15:08:06Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:45:37Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:46:26Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Story tip-off: SA Embassy in Vietnam left so under-staffed its emergency line went unanswered GÇô sick employee is sole cover" from Ruan van der westhuizen <ruanvanderwesthuizen96@gmail.com> (received: 2026-06-19T15:47:53Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Re: Far East Hospital" from Douw van Niekerk <douwlin@gmail.com> (received: 2026-06-19T16:07:23Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T16:46:44Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Global Wellness Enterprises" from Louise Van Heerden <louisevanheerden82@gmail.com> (received: 2026-06-19T17:37:54Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T17:50:07Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Insert Footage Declaration: James Ketchell 2 (#6931)" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T20:05:54Z)
-[2026-06-21 12:10:22] Skipping duplicate: "Insert Footage Declaration: James Ketchell 2 (#6931)" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T20:05:56Z)
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "Pholosong Hospital" from Sindisiwe Maseko <sindisiwe.maseko88@yahoo.com>
-[2026-06-21 12:10:22] Identified formType: email_submission
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/v2LZQNoEJ84Gip9pW177
-[2026-06-21 12:10:22] Marked email as read on Microsoft Graph.
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "Re: Cmr East London URGENT" from Taryn Fox <tarynfox545@gmail.com>
-[2026-06-21 12:10:22] Identified formType: email_submission
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/byryXtzlii7sQQfUtwqb
-[2026-06-21 12:10:22] Marked email as read on Microsoft Graph.
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
-[2026-06-21 12:10:22] Identified formType: dstv_tipoff
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/4lbTPYwXUrnuv6jWQGhE
-[2026-06-21 12:10:22] Marked email as read on Microsoft Graph.
-[2026-06-21 12:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:18:48Z)
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
-[2026-06-21 12:10:22] Identified formType: dstv_tipoff
-[2026-06-21 12:10:22] Failed to process attachment img_1971.jpeg: GaxiosError: {
-[2026-06-21 12:10:22]   "error": {
-[2026-06-21 12:10:22]     "code": 404,
-[2026-06-21 12:10:22]     "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]     "errors": [
-[2026-06-21 12:10:22]       {
-[2026-06-21 12:10:22]         "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]         "domain": "global",
-[2026-06-21 12:10:22]         "reason": "notFound"
-[2026-06-21 12:10:22]       }
-[2026-06-21 12:10:22]     ]
-[2026-06-21 12:10:22]   }
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] System.Management.Automation.RemoteException
-[2026-06-21 12:10:22]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-21 12:10:22]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-21 12:10:22]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-21 12:10:22]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-21 12:10:22]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-21 12:10:22]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-21 12:10:22]   config: {
-[2026-06-21 12:10:22]     method: 'POST',
-[2026-06-21 12:10:22]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1782036712883_img_1971.jpeg&uploadType=resumable',
-[2026-06-21 12:10:22]     params: {
-[2026-06-21 12:10:22]       name: 'submissions/dstv_tipoff/1782036712883_img_1971.jpeg',
-[2026-06-21 12:10:22]       uploadType: 'resumable'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: {},
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-21 12:10:22]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/efd74d18-b862-48f3-9808-6af7b0e401f4',
-[2026-06-21 12:10:22]       'X-Upload-Content-Type': 'application/octet-stream',
-[2026-06-21 12:10:22]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-21 12:10:22]       'Content-Type': 'application/json'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]     body: '{}',
-[2026-06-21 12:10:22]     responseType: 'unknown',
-[2026-06-21 12:10:22]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   response: {
-[2026-06-21 12:10:22]     config: {
-[2026-06-21 12:10:22]       method: 'POST',
-[2026-06-21 12:10:22]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1782036712883_img_1971.jpeg&uploadType=resumable',
-[2026-06-21 12:10:22]       params: [Object],
-[2026-06-21 12:10:22]       data: {},
-[2026-06-21 12:10:22]       headers: [Object],
-[2026-06-21 12:10:22]       validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]       body: '{}',
-[2026-06-21 12:10:22]       responseType: 'unknown',
-[2026-06-21 12:10:22]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: '{\n' +
-[2026-06-21 12:10:22]       '  "error": {\n' +
-[2026-06-21 12:10:22]       '    "code": 404,\n' +
-[2026-06-21 12:10:22]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '    "errors": [\n' +
-[2026-06-21 12:10:22]       '      {\n' +
-[2026-06-21 12:10:22]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '        "domain": "global",\n' +
-[2026-06-21 12:10:22]       '        "reason": "notFound"\n' +
-[2026-06-21 12:10:22]       '      }\n' +
-[2026-06-21 12:10:22]       '    ]\n' +
-[2026-06-21 12:10:22]       '  }\n' +
-[2026-06-21 12:10:22]       '}\n',
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-21 12:10:22]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-21 12:10:22]       'content-length': '247',
-[2026-06-21 12:10:22]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-21 12:10:22]       date: 'Sun, 21 Jun 2026 10:11:51 GMT',
-[2026-06-21 12:10:22]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-21 12:10:22]       pragma: 'no-cache',
-[2026-06-21 12:10:22]       server: 'UploadServer',
-[2026-06-21 12:10:22]       vary: 'Origin, X-Origin',
-[2026-06-21 12:10:22]       'x-guploader-uploadid': 'AJ5rDhEgNreQHXRpjFJK5cWKq6Y2JAW3I-slMB8tP_lsTwsuXxmUEfG-GYX61fU-R0sIpAcNEVhwVhPWR7Eh2hBcnGjRupLWm6t4EKhN6kmWqMw'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     status: 404,
-[2026-06-21 12:10:22]     statusText: 'Not Found',
-[2026-06-21 12:10:22]     request: {
-[2026-06-21 12:10:22]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1782036712883_img_1971.jpeg&uploadType=resumable'
-[2026-06-21 12:10:22]     }
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   error: undefined,
-[2026-06-21 12:10:22]   status: 404,
-[2026-06-21 12:10:22]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/aXkE9NkPtUGyEhX03ERZ
-[2026-06-21 12:10:22] Marked email as read on Microsoft Graph.
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
-[2026-06-21 12:10:22] Identified formType: dstv_tipoff
-[2026-06-21 12:10:22] Failed to process attachment img_1971.jpeg: GaxiosError: {
-[2026-06-21 12:10:22]   "error": {
-[2026-06-21 12:10:22]     "code": 404,
-[2026-06-21 12:10:22]     "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]     "errors": [
-[2026-06-21 12:10:22]       {
-[2026-06-21 12:10:22]         "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]         "domain": "global",
-[2026-06-21 12:10:22]         "reason": "notFound"
-[2026-06-21 12:10:22]       }
-[2026-06-21 12:10:22]     ]
-[2026-06-21 12:10:22]   }
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] System.Management.Automation.RemoteException
-[2026-06-21 12:10:22]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-21 12:10:22]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-21 12:10:22]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-21 12:10:22]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-21 12:10:22]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-21 12:10:22]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-21 12:10:22]   config: {
-[2026-06-21 12:10:22]     method: 'POST',
-[2026-06-21 12:10:22]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1782036718620_img_1971.jpeg&uploadType=resumable',
-[2026-06-21 12:10:22]     params: {
-[2026-06-21 12:10:22]       name: 'submissions/dstv_tipoff/1782036718620_img_1971.jpeg',
-[2026-06-21 12:10:22]       uploadType: 'resumable'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: {},
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-21 12:10:22]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/e59cefa7-bad2-4ab8-9f1e-90c0faae1362',
-[2026-06-21 12:10:22]       'X-Upload-Content-Type': 'application/octet-stream',
-[2026-06-21 12:10:22]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-21 12:10:22]       'Content-Type': 'application/json'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]     body: '{}',
-[2026-06-21 12:10:22]     responseType: 'unknown',
-[2026-06-21 12:10:22]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   response: {
-[2026-06-21 12:10:22]     config: {
-[2026-06-21 12:10:22]       method: 'POST',
-[2026-06-21 12:10:22]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1782036718620_img_1971.jpeg&uploadType=resumable',
-[2026-06-21 12:10:22]       params: [Object],
-[2026-06-21 12:10:22]       data: {},
-[2026-06-21 12:10:22]       headers: [Object],
-[2026-06-21 12:10:22]       validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]       body: '{}',
-[2026-06-21 12:10:22]       responseType: 'unknown',
-[2026-06-21 12:10:22]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: '{\n' +
-[2026-06-21 12:10:22]       '  "error": {\n' +
-[2026-06-21 12:10:22]       '    "code": 404,\n' +
-[2026-06-21 12:10:22]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '    "errors": [\n' +
-[2026-06-21 12:10:22]       '      {\n' +
-[2026-06-21 12:10:22]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '        "domain": "global",\n' +
-[2026-06-21 12:10:22]       '        "reason": "notFound"\n' +
-[2026-06-21 12:10:22]       '      }\n' +
-[2026-06-21 12:10:22]       '    ]\n' +
-[2026-06-21 12:10:22]       '  }\n' +
-[2026-06-21 12:10:22]       '}\n',
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-21 12:10:22]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-21 12:10:22]       'content-length': '247',
-[2026-06-21 12:10:22]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-21 12:10:22]       date: 'Sun, 21 Jun 2026 10:11:56 GMT',
-[2026-06-21 12:10:22]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-21 12:10:22]       pragma: 'no-cache',
-[2026-06-21 12:10:22]       server: 'UploadServer',
-[2026-06-21 12:10:22]       vary: 'Origin, X-Origin',
-[2026-06-21 12:10:22]       'x-guploader-uploadid': 'AJ5rDhEs2tPXJHK_10pw9NrBIKYh8a9-AMlTlu42pICxCbEcfLjX8O_5f2AxpJa6AYPR3BinKqyu283TNSIJI5qBoZtVcSslml_TZ9fR7Bjw_mk'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     status: 404,
-[2026-06-21 12:10:22]     statusText: 'Not Found',
-[2026-06-21 12:10:22]     request: {
-[2026-06-21 12:10:22]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1782036718620_img_1971.jpeg&uploadType=resumable'
-[2026-06-21 12:10:22]     }
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   error: undefined,
-[2026-06-21 12:10:22]   status: 404,
-[2026-06-21 12:10:22]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/RM1KY2Mc2hwrcUw8ypm4
-[2026-06-21 12:10:22] Marked email as read on Microsoft Graph.
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
-[2026-06-21 12:10:22] Identified formType: dstv_tipoff
-[2026-06-21 12:10:22] Failed to process attachment img_1971.jpeg: GaxiosError: {
-[2026-06-21 12:10:22]   "error": {
-[2026-06-21 12:10:22]     "code": 404,
-[2026-06-21 12:10:22]     "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]     "errors": [
-[2026-06-21 12:10:22]       {
-[2026-06-21 12:10:22]         "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]         "domain": "global",
-[2026-06-21 12:10:22]         "reason": "notFound"
-[2026-06-21 12:10:22]       }
-[2026-06-21 12:10:22]     ]
-[2026-06-21 12:10:22]   }
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] System.Management.Automation.RemoteException
-[2026-06-21 12:10:22]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-21 12:10:22]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-21 12:10:22]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-21 12:10:22]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-21 12:10:22]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-21 12:10:22]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-21 12:10:22]   config: {
-[2026-06-21 12:10:22]     method: 'POST',
-[2026-06-21 12:10:22]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1782036723088_img_1971.jpeg&uploadType=resumable',
-[2026-06-21 12:10:22]     params: {
-[2026-06-21 12:10:22]       name: 'submissions/dstv_tipoff/1782036723088_img_1971.jpeg',
-[2026-06-21 12:10:22]       uploadType: 'resumable'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: {},
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-21 12:10:22]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/b630197b-fe70-4661-ae93-91866a431a04',
-[2026-06-21 12:10:22]       'X-Upload-Content-Type': 'application/octet-stream',
-[2026-06-21 12:10:22]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-21 12:10:22]       'Content-Type': 'application/json'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]     body: '{}',
-[2026-06-21 12:10:22]     responseType: 'unknown',
-[2026-06-21 12:10:22]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   response: {
-[2026-06-21 12:10:22]     config: {
-[2026-06-21 12:10:22]       method: 'POST',
-[2026-06-21 12:10:22]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1782036723088_img_1971.jpeg&uploadType=resumable',
-[2026-06-21 12:10:22]       params: [Object],
-[2026-06-21 12:10:22]       data: {},
-[2026-06-21 12:10:22]       headers: [Object],
-[2026-06-21 12:10:22]       validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]       body: '{}',
-[2026-06-21 12:10:22]       responseType: 'unknown',
-[2026-06-21 12:10:22]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: '{\n' +
-[2026-06-21 12:10:22]       '  "error": {\n' +
-[2026-06-21 12:10:22]       '    "code": 404,\n' +
-[2026-06-21 12:10:22]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '    "errors": [\n' +
-[2026-06-21 12:10:22]       '      {\n' +
-[2026-06-21 12:10:22]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '        "domain": "global",\n' +
-[2026-06-21 12:10:22]       '        "reason": "notFound"\n' +
-[2026-06-21 12:10:22]       '      }\n' +
-[2026-06-21 12:10:22]       '    ]\n' +
-[2026-06-21 12:10:22]       '  }\n' +
-[2026-06-21 12:10:22]       '}\n',
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-21 12:10:22]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-21 12:10:22]       'content-length': '247',
-[2026-06-21 12:10:22]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-21 12:10:22]       date: 'Sun, 21 Jun 2026 10:12:00 GMT',
-[2026-06-21 12:10:22]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-21 12:10:22]       pragma: 'no-cache',
-[2026-06-21 12:10:22]       server: 'UploadServer',
-[2026-06-21 12:10:22]       vary: 'Origin, X-Origin',
-[2026-06-21 12:10:22]       'x-guploader-uploadid': 'AJ5rDhHFlPf4jS5sJv_ifSG8HS-oeYIcYYXWyeUk_lABa2_FH2G6j-wZWDYA7rauXKxBlC5SQw5EDK3YGerqhbsWOG6V07_S_8bzuTwHQX_Tqg'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     status: 404,
-[2026-06-21 12:10:22]     statusText: 'Not Found',
-[2026-06-21 12:10:22]     request: {
-[2026-06-21 12:10:22]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1782036723088_img_1971.jpeg&uploadType=resumable'
-[2026-06-21 12:10:22]     }
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   error: undefined,
-[2026-06-21 12:10:22]   status: 404,
-[2026-06-21 12:10:22]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/S9iZAqVKMOslhvDD4nTR
-[2026-06-21 12:10:22] Marked email as read on Microsoft Graph.
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "Request for Investigation into the Situation of Pakistani Workers in South Africa" from Christelle Calisse <christelle.grobler2@gmail.com>
-[2026-06-21 12:10:22] Identified formType: email_submission
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/URTnQpzZNxIBcxNgZYmC
-[2026-06-21 12:10:22] Marked email as read on Microsoft Graph.
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za>
-[2026-06-21 12:10:22] Identified formType: email_submission
-[2026-06-21 12:10:22] Failed to process attachment Call_Sheet_6932.pdf: GaxiosError: {
-[2026-06-21 12:10:22]   "error": {
-[2026-06-21 12:10:22]     "code": 404,
-[2026-06-21 12:10:22]     "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]     "errors": [
-[2026-06-21 12:10:22]       {
-[2026-06-21 12:10:22]         "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]         "domain": "global",
-[2026-06-21 12:10:22]         "reason": "notFound"
-[2026-06-21 12:10:22]       }
-[2026-06-21 12:10:22]     ]
-[2026-06-21 12:10:22]   }
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] System.Management.Automation.RemoteException
-[2026-06-21 12:10:22]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-21 12:10:22]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-21 12:10:22]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-21 12:10:22]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-21 12:10:22]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-21 12:10:22]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-21 12:10:22]   config: {
-[2026-06-21 12:10:22]     method: 'POST',
-[2026-06-21 12:10:22]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036731210_Call_Sheet_6932.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]     params: {
-[2026-06-21 12:10:22]       name: 'submissions/email_submission/1782036731210_Call_Sheet_6932.pdf',
-[2026-06-21 12:10:22]       uploadType: 'resumable'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: {},
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-21 12:10:22]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/f55b12be-02a5-45a0-8c03-fcc535962945',
-[2026-06-21 12:10:22]       'X-Upload-Content-Type': 'application/pdf',
-[2026-06-21 12:10:22]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-21 12:10:22]       'Content-Type': 'application/json'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]     body: '{}',
-[2026-06-21 12:10:22]     responseType: 'unknown',
-[2026-06-21 12:10:22]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   response: {
-[2026-06-21 12:10:22]     config: {
-[2026-06-21 12:10:22]       method: 'POST',
-[2026-06-21 12:10:22]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036731210_Call_Sheet_6932.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]       params: [Object],
-[2026-06-21 12:10:22]       data: {},
-[2026-06-21 12:10:22]       headers: [Object],
-[2026-06-21 12:10:22]       validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]       body: '{}',
-[2026-06-21 12:10:22]       responseType: 'unknown',
-[2026-06-21 12:10:22]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: '{\n' +
-[2026-06-21 12:10:22]       '  "error": {\n' +
-[2026-06-21 12:10:22]       '    "code": 404,\n' +
-[2026-06-21 12:10:22]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '    "errors": [\n' +
-[2026-06-21 12:10:22]       '      {\n' +
-[2026-06-21 12:10:22]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '        "domain": "global",\n' +
-[2026-06-21 12:10:22]       '        "reason": "notFound"\n' +
-[2026-06-21 12:10:22]       '      }\n' +
-[2026-06-21 12:10:22]       '    ]\n' +
-[2026-06-21 12:10:22]       '  }\n' +
-[2026-06-21 12:10:22]       '}\n',
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-21 12:10:22]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-21 12:10:22]       'content-length': '247',
-[2026-06-21 12:10:22]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-21 12:10:22]       date: 'Sun, 21 Jun 2026 10:12:09 GMT',
-[2026-06-21 12:10:22]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-21 12:10:22]       pragma: 'no-cache',
-[2026-06-21 12:10:22]       server: 'UploadServer',
-[2026-06-21 12:10:22]       vary: 'Origin, X-Origin',
-[2026-06-21 12:10:22]       'x-guploader-uploadid': 'AJ5rDhFpszPbWaOcWuL7O0UALh3HmwrXBNUJLQuQi4F67h91BxwuuhUrAbdDl2-IK6YRA7aXaoMJiZjSwBnvcc3T6jx1z-HX2iO3rSchQGf8nA'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     status: 404,
-[2026-06-21 12:10:22]     statusText: 'Not Found',
-[2026-06-21 12:10:22]     request: {
-[2026-06-21 12:10:22]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036731210_Call_Sheet_6932.pdf&uploadType=resumable'
-[2026-06-21 12:10:22]     }
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   error: undefined,
-[2026-06-21 12:10:22]   status: 404,
-[2026-06-21 12:10:22]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/KYkz8tuLHc0vUFrQRJJ6
-[2026-06-21 12:10:22] Email was already marked as read. Bypassed marking as read.
-[2026-06-21 12:10:22] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T07:00:35Z)
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "Re: Story Tip GÇö Alleged Fraud & Racketeering: V-Rentals (Merzy Agencies CC) | Johannesburg & Durban" from Francois Boshoff <davidfrancoisboshoff@gmail.com>
-[2026-06-21 12:10:22] Identified formType: email_submission
-[2026-06-21 12:10:22] Failed to process attachment Email - Adv Koroma.pdf: GaxiosError: {
-[2026-06-21 12:10:22]   "error": {
-[2026-06-21 12:10:22]     "code": 404,
-[2026-06-21 12:10:22]     "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]     "errors": [
-[2026-06-21 12:10:22]       {
-[2026-06-21 12:10:22]         "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]         "domain": "global",
-[2026-06-21 12:10:22]         "reason": "notFound"
-[2026-06-21 12:10:22]       }
-[2026-06-21 12:10:22]     ]
-[2026-06-21 12:10:22]   }
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] System.Management.Automation.RemoteException
-[2026-06-21 12:10:22]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-21 12:10:22]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-21 12:10:22]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-21 12:10:22]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-21 12:10:22]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-21 12:10:22]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-21 12:10:22]   config: {
-[2026-06-21 12:10:22]     method: 'POST',
-[2026-06-21 12:10:22]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036738249_Email-AdvKoroma.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]     params: {
-[2026-06-21 12:10:22]       name: 'submissions/email_submission/1782036738249_Email-AdvKoroma.pdf',
-[2026-06-21 12:10:22]       uploadType: 'resumable'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: {},
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-21 12:10:22]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/9295f68e-faa3-44c7-adf1-b2f03a0652b5',
-[2026-06-21 12:10:22]       'X-Upload-Content-Type': 'application/pdf',
-[2026-06-21 12:10:22]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-21 12:10:22]       'Content-Type': 'application/json'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]     body: '{}',
-[2026-06-21 12:10:22]     responseType: 'unknown',
-[2026-06-21 12:10:22]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   response: {
-[2026-06-21 12:10:22]     config: {
-[2026-06-21 12:10:22]       method: 'POST',
-[2026-06-21 12:10:22]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036738249_Email-AdvKoroma.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]       params: [Object],
-[2026-06-21 12:10:22]       data: {},
-[2026-06-21 12:10:22]       headers: [Object],
-[2026-06-21 12:10:22]       validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]       body: '{}',
-[2026-06-21 12:10:22]       responseType: 'unknown',
-[2026-06-21 12:10:22]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: '{\n' +
-[2026-06-21 12:10:22]       '  "error": {\n' +
-[2026-06-21 12:10:22]       '    "code": 404,\n' +
-[2026-06-21 12:10:22]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '    "errors": [\n' +
-[2026-06-21 12:10:22]       '      {\n' +
-[2026-06-21 12:10:22]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '        "domain": "global",\n' +
-[2026-06-21 12:10:22]       '        "reason": "notFound"\n' +
-[2026-06-21 12:10:22]       '      }\n' +
-[2026-06-21 12:10:22]       '    ]\n' +
-[2026-06-21 12:10:22]       '  }\n' +
-[2026-06-21 12:10:22]       '}\n',
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-21 12:10:22]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-21 12:10:22]       'content-length': '247',
-[2026-06-21 12:10:22]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-21 12:10:22]       date: 'Sun, 21 Jun 2026 10:12:16 GMT',
-[2026-06-21 12:10:22]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-21 12:10:22]       pragma: 'no-cache',
-[2026-06-21 12:10:22]       server: 'UploadServer',
-[2026-06-21 12:10:22]       vary: 'Origin, X-Origin',
-[2026-06-21 12:10:22]       'x-guploader-uploadid': 'AJ5rDhEvUSO1LYI59LXkvoZUTJqL_rhOatwlPCQBmiFRb3atJ7ds38LFxFXD9hdfVIg8j-4G_GWA0SJQzme1mmXc6mNCJnAcjtZzjMiscYovxA'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     status: 404,
-[2026-06-21 12:10:22]     statusText: 'Not Found',
-[2026-06-21 12:10:22]     request: {
-[2026-06-21 12:10:22]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036738249_Email-AdvKoroma.pdf&uploadType=resumable'
-[2026-06-21 12:10:22]     }
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   error: undefined,
-[2026-06-21 12:10:22]   status: 404,
-[2026-06-21 12:10:22]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] Failed to process attachment LETTER to DAVID FRANCOIS BOSHOFF 19062026.pdf: GaxiosError: {
-[2026-06-21 12:10:22]   "error": {
-[2026-06-21 12:10:22]     "code": 404,
-[2026-06-21 12:10:22]     "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]     "errors": [
-[2026-06-21 12:10:22]       {
-[2026-06-21 12:10:22]         "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]         "domain": "global",
-[2026-06-21 12:10:22]         "reason": "notFound"
-[2026-06-21 12:10:22]       }
-[2026-06-21 12:10:22]     ]
-[2026-06-21 12:10:22]   }
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] System.Management.Automation.RemoteException
-[2026-06-21 12:10:22]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-21 12:10:22]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-21 12:10:22]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-21 12:10:22]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-21 12:10:22]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-21 12:10:22]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-21 12:10:22]   config: {
-[2026-06-21 12:10:22]     method: 'POST',
-[2026-06-21 12:10:22]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036739243_LETTERtoDAVIDFRANCOISBOSHOFF19062026.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]     params: {
-[2026-06-21 12:10:22]       name: 'submissions/email_submission/1782036739243_LETTERtoDAVIDFRANCOISBOSHOFF19062026.pdf',
-[2026-06-21 12:10:22]       uploadType: 'resumable'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: {},
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-21 12:10:22]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/40993faf-69c9-4d50-a221-5530dd4a84cb',
-[2026-06-21 12:10:22]       'X-Upload-Content-Type': 'application/pdf',
-[2026-06-21 12:10:22]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-21 12:10:22]       'Content-Type': 'application/json'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]     body: '{}',
-[2026-06-21 12:10:22]     responseType: 'unknown',
-[2026-06-21 12:10:22]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   response: {
-[2026-06-21 12:10:22]     config: {
-[2026-06-21 12:10:22]       method: 'POST',
-[2026-06-21 12:10:22]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036739243_LETTERtoDAVIDFRANCOISBOSHOFF19062026.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]       params: [Object],
-[2026-06-21 12:10:22]       data: {},
-[2026-06-21 12:10:22]       headers: [Object],
-[2026-06-21 12:10:22]       validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]       body: '{}',
-[2026-06-21 12:10:22]       responseType: 'unknown',
-[2026-06-21 12:10:22]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: '{\n' +
-[2026-06-21 12:10:22]       '  "error": {\n' +
-[2026-06-21 12:10:22]       '    "code": 404,\n' +
-[2026-06-21 12:10:22]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '    "errors": [\n' +
-[2026-06-21 12:10:22]       '      {\n' +
-[2026-06-21 12:10:22]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '        "domain": "global",\n' +
-[2026-06-21 12:10:22]       '        "reason": "notFound"\n' +
-[2026-06-21 12:10:22]       '      }\n' +
-[2026-06-21 12:10:22]       '    ]\n' +
-[2026-06-21 12:10:22]       '  }\n' +
-[2026-06-21 12:10:22]       '}\n',
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-21 12:10:22]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-21 12:10:22]       'content-length': '247',
-[2026-06-21 12:10:22]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-21 12:10:22]       date: 'Sun, 21 Jun 2026 10:12:16 GMT',
-[2026-06-21 12:10:22]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-21 12:10:22]       pragma: 'no-cache',
-[2026-06-21 12:10:22]       server: 'UploadServer',
-[2026-06-21 12:10:22]       vary: 'Origin, X-Origin',
-[2026-06-21 12:10:22]       'x-guploader-uploadid': 'AJ5rDhFTaJ2XAnztZ53OU2IQXzwxjeRbbZTHQXUwbxgFNwnKBOMS7N9q-1IbUXIQYO29DB0UgT4IizcMY7a79HI7Q6DUPidoekUSgmpXdf2PL7g'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     status: 404,
-[2026-06-21 12:10:22]     statusText: 'Not Found',
-[2026-06-21 12:10:22]     request: {
-[2026-06-21 12:10:22]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036739243_LETTERtoDAVIDFRANCOISBOSHOFF19062026.pdf&uploadType=resumable'
-[2026-06-21 12:10:22]     }
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   error: undefined,
-[2026-06-21 12:10:22]   status: 404,
-[2026-06-21 12:10:22]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/9XgHfNwiZhvgupBh3UHd
-[2026-06-21 12:10:22] Marked email as read on Microsoft Graph.
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za>
-[2026-06-21 12:10:22] Identified formType: email_submission
-[2026-06-21 12:10:22] Failed to process attachment Call_Sheet_6932.pdf: GaxiosError: {
-[2026-06-21 12:10:22]   "error": {
-[2026-06-21 12:10:22]     "code": 404,
-[2026-06-21 12:10:22]     "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]     "errors": [
-[2026-06-21 12:10:22]       {
-[2026-06-21 12:10:22]         "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]         "domain": "global",
-[2026-06-21 12:10:22]         "reason": "notFound"
-[2026-06-21 12:10:22]       }
-[2026-06-21 12:10:22]     ]
-[2026-06-21 12:10:22]   }
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] System.Management.Automation.RemoteException
-[2026-06-21 12:10:22]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-21 12:10:22]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-21 12:10:22]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-21 12:10:22]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-21 12:10:22]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-21 12:10:22]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-21 12:10:22]   config: {
-[2026-06-21 12:10:22]     method: 'POST',
-[2026-06-21 12:10:22]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036744531_Call_Sheet_6932.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]     params: {
-[2026-06-21 12:10:22]       name: 'submissions/email_submission/1782036744531_Call_Sheet_6932.pdf',
-[2026-06-21 12:10:22]       uploadType: 'resumable'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: {},
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-21 12:10:22]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/a40f9a55-5ccc-43ea-9569-e2437e86cf50',
-[2026-06-21 12:10:22]       'X-Upload-Content-Type': 'application/pdf',
-[2026-06-21 12:10:22]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-21 12:10:22]       'Content-Type': 'application/json'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]     body: '{}',
-[2026-06-21 12:10:22]     responseType: 'unknown',
-[2026-06-21 12:10:22]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   response: {
-[2026-06-21 12:10:22]     config: {
-[2026-06-21 12:10:22]       method: 'POST',
-[2026-06-21 12:10:22]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036744531_Call_Sheet_6932.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]       params: [Object],
-[2026-06-21 12:10:22]       data: {},
-[2026-06-21 12:10:22]       headers: [Object],
-[2026-06-21 12:10:22]       validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]       body: '{}',
-[2026-06-21 12:10:22]       responseType: 'unknown',
-[2026-06-21 12:10:22]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: '{\n' +
-[2026-06-21 12:10:22]       '  "error": {\n' +
-[2026-06-21 12:10:22]       '    "code": 404,\n' +
-[2026-06-21 12:10:22]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '    "errors": [\n' +
-[2026-06-21 12:10:22]       '      {\n' +
-[2026-06-21 12:10:22]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '        "domain": "global",\n' +
-[2026-06-21 12:10:22]       '        "reason": "notFound"\n' +
-[2026-06-21 12:10:22]       '      }\n' +
-[2026-06-21 12:10:22]       '    ]\n' +
-[2026-06-21 12:10:22]       '  }\n' +
-[2026-06-21 12:10:22]       '}\n',
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-21 12:10:22]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-21 12:10:22]       'content-length': '247',
-[2026-06-21 12:10:22]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-21 12:10:22]       date: 'Sun, 21 Jun 2026 10:12:22 GMT',
-[2026-06-21 12:10:22]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-21 12:10:22]       pragma: 'no-cache',
-[2026-06-21 12:10:22]       server: 'UploadServer',
-[2026-06-21 12:10:22]       vary: 'Origin, X-Origin',
-[2026-06-21 12:10:22]       'x-guploader-uploadid': 'AJ5rDhEEy2V153eN_xbjVSHkr7SUTkRUEyxNXZ2CpG8NegwfbO17rVYAfcLnzRmWGUv-trBfkKhpOWd2aeHeRkUcjI0OBhX-aUoS2F3wSXkcgA'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     status: 404,
-[2026-06-21 12:10:22]     statusText: 'Not Found',
-[2026-06-21 12:10:22]     request: {
-[2026-06-21 12:10:22]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036744531_Call_Sheet_6932.pdf&uploadType=resumable'
-[2026-06-21 12:10:22]     }
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   error: undefined,
-[2026-06-21 12:10:22]   status: 404,
-[2026-06-21 12:10:22]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/PYnh4K3FG2LJZptsEyyF
-[2026-06-21 12:10:22] Email was already marked as read. Bypassed marking as read.
-[2026-06-21 12:10:22] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T10:43:55Z)
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "Insert Footage Declaration: Eight Meters from Grace (#6921)" from Submissions <story@combinedartists.co.za>
-[2026-06-21 12:10:22] Identified formType: email_submission
-[2026-06-21 12:10:22] Failed to process attachment InsertFootage_1781976149611.pdf: GaxiosError: {
-[2026-06-21 12:10:22]   "error": {
-[2026-06-21 12:10:22]     "code": 404,
-[2026-06-21 12:10:22]     "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]     "errors": [
-[2026-06-21 12:10:22]       {
-[2026-06-21 12:10:22]         "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]         "domain": "global",
-[2026-06-21 12:10:22]         "reason": "notFound"
-[2026-06-21 12:10:22]       }
-[2026-06-21 12:10:22]     ]
-[2026-06-21 12:10:22]   }
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] System.Management.Automation.RemoteException
-[2026-06-21 12:10:22]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-21 12:10:22]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-21 12:10:22]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-21 12:10:22]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-21 12:10:22]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-21 12:10:22]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-21 12:10:22]   config: {
-[2026-06-21 12:10:22]     method: 'POST',
-[2026-06-21 12:10:22]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036753451_InsertFootage_1781976149611.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]     params: {
-[2026-06-21 12:10:22]       name: 'submissions/email_submission/1782036753451_InsertFootage_1781976149611.pdf',
-[2026-06-21 12:10:22]       uploadType: 'resumable'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: {},
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-21 12:10:22]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/0d9478f0-e472-4ee7-95cd-85b6761c4b69',
-[2026-06-21 12:10:22]       'X-Upload-Content-Type': 'application/pdf',
-[2026-06-21 12:10:22]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-21 12:10:22]       'Content-Type': 'application/json'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]     body: '{}',
-[2026-06-21 12:10:22]     responseType: 'unknown',
-[2026-06-21 12:10:22]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   response: {
-[2026-06-21 12:10:22]     config: {
-[2026-06-21 12:10:22]       method: 'POST',
-[2026-06-21 12:10:22]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036753451_InsertFootage_1781976149611.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]       params: [Object],
-[2026-06-21 12:10:22]       data: {},
-[2026-06-21 12:10:22]       headers: [Object],
-[2026-06-21 12:10:22]       validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]       body: '{}',
-[2026-06-21 12:10:22]       responseType: 'unknown',
-[2026-06-21 12:10:22]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: '{\n' +
-[2026-06-21 12:10:22]       '  "error": {\n' +
-[2026-06-21 12:10:22]       '    "code": 404,\n' +
-[2026-06-21 12:10:22]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '    "errors": [\n' +
-[2026-06-21 12:10:22]       '      {\n' +
-[2026-06-21 12:10:22]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '        "domain": "global",\n' +
-[2026-06-21 12:10:22]       '        "reason": "notFound"\n' +
-[2026-06-21 12:10:22]       '      }\n' +
-[2026-06-21 12:10:22]       '    ]\n' +
-[2026-06-21 12:10:22]       '  }\n' +
-[2026-06-21 12:10:22]       '}\n',
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-21 12:10:22]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-21 12:10:22]       'content-length': '247',
-[2026-06-21 12:10:22]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-21 12:10:22]       date: 'Sun, 21 Jun 2026 10:12:31 GMT',
-[2026-06-21 12:10:22]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-21 12:10:22]       pragma: 'no-cache',
-[2026-06-21 12:10:22]       server: 'UploadServer',
-[2026-06-21 12:10:22]       vary: 'Origin, X-Origin',
-[2026-06-21 12:10:22]       'x-guploader-uploadid': 'AJ5rDhGP2LwsfD15wc_fRBC4AbkDFECSytVMdl57glMO_7SL8qmATvCgAouqRC0xXC6olJWaoT-uTrZm_rRt50F5aXeh0Pq2xdwDwIqEahD6qw'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     status: 404,
-[2026-06-21 12:10:22]     statusText: 'Not Found',
-[2026-06-21 12:10:22]     request: {
-[2026-06-21 12:10:22]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036753451_InsertFootage_1781976149611.pdf&uploadType=resumable'
-[2026-06-21 12:10:22]     }
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   error: undefined,
-[2026-06-21 12:10:22]   status: 404,
-[2026-06-21 12:10:22]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/w9wgsk7RDe6Pav0CEA6l
-[2026-06-21 12:10:22] Email was already marked as read. Bypassed marking as read.
-[2026-06-21 12:10:22] Skipping duplicate: "Insert Footage Declaration: Eight Meters from Grace (#6921)" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T17:22:44Z)
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za>
-[2026-06-21 12:10:22] Identified formType: email_submission
-[2026-06-21 12:10:22] Failed to process attachment Call_Sheet_6932.pdf: GaxiosError: {
-[2026-06-21 12:10:22]   "error": {
-[2026-06-21 12:10:22]     "code": 404,
-[2026-06-21 12:10:22]     "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]     "errors": [
-[2026-06-21 12:10:22]       {
-[2026-06-21 12:10:22]         "message": "The specified bucket does not exist.",
-[2026-06-21 12:10:22]         "domain": "global",
-[2026-06-21 12:10:22]         "reason": "notFound"
-[2026-06-21 12:10:22]       }
-[2026-06-21 12:10:22]     ]
-[2026-06-21 12:10:22]   }
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] System.Management.Automation.RemoteException
-[2026-06-21 12:10:22]     at Gaxios._request (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-06-21 12:10:22]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-06-21 12:10:22]     at async JWT.requestAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-06-21 12:10:22]     at async Upload.makeRequest (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-06-21 12:10:22]     at async uri.retries (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-06-21 12:10:22]     at async Upload.createURIAsync (C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-06-21 12:10:22]   config: {
-[2026-06-21 12:10:22]     method: 'POST',
-[2026-06-21 12:10:22]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036761136_Call_Sheet_6932.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]     params: {
-[2026-06-21 12:10:22]       name: 'submissions/email_submission/1782036761136_Call_Sheet_6932.pdf',
-[2026-06-21 12:10:22]       uploadType: 'resumable'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: {},
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-06-21 12:10:22]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/c4bdde7b-c4e7-4f0c-a00c-648d45b9fd16',
-[2026-06-21 12:10:22]       'X-Upload-Content-Type': 'application/pdf',
-[2026-06-21 12:10:22]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-06-21 12:10:22]       'Content-Type': 'application/json'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]     paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]     body: '{}',
-[2026-06-21 12:10:22]     responseType: 'unknown',
-[2026-06-21 12:10:22]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   response: {
-[2026-06-21 12:10:22]     config: {
-[2026-06-21 12:10:22]       method: 'POST',
-[2026-06-21 12:10:22]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036761136_Call_Sheet_6932.pdf&uploadType=resumable',
-[2026-06-21 12:10:22]       params: [Object],
-[2026-06-21 12:10:22]       data: {},
-[2026-06-21 12:10:22]       headers: [Object],
-[2026-06-21 12:10:22]       validateStatus: [Function (anonymous)],
-[2026-06-21 12:10:22]       paramsSerializer: [Function: paramsSerializer],
-[2026-06-21 12:10:22]       body: '{}',
-[2026-06-21 12:10:22]       responseType: 'unknown',
-[2026-06-21 12:10:22]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     data: '{\n' +
-[2026-06-21 12:10:22]       '  "error": {\n' +
-[2026-06-21 12:10:22]       '    "code": 404,\n' +
-[2026-06-21 12:10:22]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '    "errors": [\n' +
-[2026-06-21 12:10:22]       '      {\n' +
-[2026-06-21 12:10:22]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-06-21 12:10:22]       '        "domain": "global",\n' +
-[2026-06-21 12:10:22]       '        "reason": "notFound"\n' +
-[2026-06-21 12:10:22]       '      }\n' +
-[2026-06-21 12:10:22]       '    ]\n' +
-[2026-06-21 12:10:22]       '  }\n' +
-[2026-06-21 12:10:22]       '}\n',
-[2026-06-21 12:10:22]     headers: {
-[2026-06-21 12:10:22]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-06-21 12:10:22]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-06-21 12:10:22]       'content-length': '247',
-[2026-06-21 12:10:22]       'content-type': 'text/html; charset=UTF-8',
-[2026-06-21 12:10:22]       date: 'Sun, 21 Jun 2026 10:12:38 GMT',
-[2026-06-21 12:10:22]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-06-21 12:10:22]       pragma: 'no-cache',
-[2026-06-21 12:10:22]       server: 'UploadServer',
-[2026-06-21 12:10:22]       vary: 'Origin, X-Origin',
-[2026-06-21 12:10:22]       'x-guploader-uploadid': 'AJ5rDhE6nAFDrfV1PGu8RFbJEtQQ-AuCapax-henGI61I_Epf9WmiuZjWtRg0HcFGk3BH6fj5wf-7kv075Ic6NQZr0fnvw_6hF7V7z0kj41yJA'
-[2026-06-21 12:10:22]     },
-[2026-06-21 12:10:22]     status: 404,
-[2026-06-21 12:10:22]     statusText: 'Not Found',
-[2026-06-21 12:10:22]     request: {
-[2026-06-21 12:10:22]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1782036761136_Call_Sheet_6932.pdf&uploadType=resumable'
-[2026-06-21 12:10:22]     }
-[2026-06-21 12:10:22]   },
-[2026-06-21 12:10:22]   error: undefined,
-[2026-06-21 12:10:22]   status: 404,
-[2026-06-21 12:10:22]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-06-21 12:10:22] }
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/3fqLOvyqOhA4BOxSqFzg
-[2026-06-21 12:10:22] Email was already marked as read. Bypassed marking as read.
-[2026-06-21 12:10:22] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T20:05:44Z)
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
-[2026-06-21 12:10:22] Identified formType: dstv_tipoff
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/puI4R5GuUYVzIsXWlwbY
-[2026-06-21 12:10:22] Marked email as read on Microsoft Graph.
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Processing: "Assault case" from Khethiwe Chelemu <khethwe.chelemu@gmail.com>
-[2026-06-21 12:10:22] Identified formType: email_submission
-[2026-06-21 12:10:22] Saved submission successfully to Firestore: submissions/A9onSdkCCTIl0n5xUFhL
-[2026-06-21 12:10:22] Marked email as read on Microsoft Graph.
-[2026-06-21 12:10:22] 
-[2026-06-21 12:10:22] Microsoft Graph email import cycle completed successfully.
-[2026-06-21 12:10:22] Changes detected. Syncing...
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_158.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_159.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_16.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_160.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_161.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_162.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_163.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_164.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_165.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_166.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_167.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_168.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_169.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_17.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_170.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_171.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_172.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_173.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_174.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_175.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_176.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_177.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_178.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_179.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_18.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_180.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_181.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_182.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_183.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_184.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_185.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_186.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_187.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_188.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_189.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_19.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_190.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_191.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_192.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_193.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_194.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_195.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_196.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_197.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_198.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_199.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_2.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_20.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_200.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_201.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_202.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_203.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_204.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_205.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_206.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_207.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_208.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_209.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_21.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_210.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_211.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_212.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_213.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_214.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_215.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_216.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_217.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_218.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_219.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_22.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_220.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_221.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_222.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_223.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_224.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_225.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_226.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_227.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_228.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_229.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_23.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_230.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_231.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_232.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_233.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_234.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_235.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_236.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_237.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_238.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_239.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_24.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_240.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_241.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_242.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_243.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_244.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_245.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_246.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_247.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_248.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_249.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_25.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_250.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_251.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_252.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_253.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_254.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_255.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_256.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_257.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_258.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_259.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_26.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_260.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_261.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_262.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_263.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_264.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_265.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_266.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_267.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_268.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_269.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_27.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_270.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_271.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_272.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_273.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_274.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_275.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_276.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_277.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_278.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_279.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_28.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_280.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_281.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_282.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_283.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_284.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_285.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_286.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_287.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_288.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_289.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_29.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_290.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_291.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_292.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_293.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_294.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_295.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_296.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_297.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_298.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_299.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_3.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_30.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_300.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_301.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_302.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_303.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_304.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_305.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_306.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_307.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_308.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_309.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_31.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_310.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_311.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_312.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_313.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_314.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_315.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_316.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_317.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_318.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_319.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_32.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_320.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_321.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_322.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_323.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_324.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_325.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_326.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_327.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_328.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_329.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_33.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_330.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_331.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_332.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_333.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_334.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_335.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_336.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_337.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_338.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_339.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_34.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_340.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_341.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_342.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_343.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_344.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_345.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_346.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_347.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_348.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_349.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_35.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_350.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_351.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_352.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_353.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_354.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_355.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_356.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_357.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_358.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_359.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_36.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_360.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_361.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_362.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_363.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_364.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_365.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_366.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_367.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_368.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_369.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_37.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_370.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_371.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_372.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_373.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_374.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_375.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_376.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_377.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_378.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_379.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_38.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_380.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_381.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_382.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_383.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_384.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_385.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_386.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_387.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_388.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_389.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_39.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_390.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_391.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_392.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_393.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_394.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_395.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_396.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_397.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_398.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_399.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_4.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_40.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_400.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_401.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_402.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_403.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_404.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_405.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_406.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_407.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_408.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_409.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_41.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_410.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_411.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_412.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_413.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_414.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_415.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_416.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_417.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_418.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_419.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_42.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_420.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_421.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_422.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_423.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_424.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_425.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_426.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_427.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_428.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_429.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_43.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_430.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_431.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_432.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_433.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_434.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_435.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_436.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_437.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_438.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_439.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_44.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_440.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_441.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_442.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_443.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_444.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_445.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_446.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_447.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_448.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_449.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_45.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_450.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_451.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_452.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_453.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_454.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_455.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_456.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_457.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_458.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_459.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_46.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_460.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_461.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_47.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_48.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_49.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_5.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_50.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_51.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_52.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_53.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_54.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_55.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_56.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_57.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_58.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_59.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_6.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_60.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_61.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_62.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_63.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_64.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_65.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_66.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_67.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_68.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_69.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_7.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_70.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_71.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_72.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_73.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_74.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_75.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_76.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_77.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_78.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_79.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_8.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_80.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_81.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_82.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_83.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_84.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_85.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_86.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_87.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_88.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_89.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_9.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_90.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_91.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_92.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_93.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_94.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_95.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_96.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_97.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_98.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_99.json
+[2026-06-21 12:10:22]  create mode 100644 scraper/scraper_multi.js
+[2026-06-21 12:10:22] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-21 12:10:22]    672d5be..d6ca869  main -> main
+[2026-06-21 12:10:22] Sync complete.
+[2026-06-21 12:40:41] Running Microsoft Graph Email Importer...
+[2026-06-21 12:40:41] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-21 12:40:41] Fetching messages from Microsoft Graph...
+[2026-06-21 12:40:41] Fetching messages from Microsoft Graph...
+[2026-06-21 12:40:41] Found 79 email(s) since 1 May 2026 to check.
+[2026-06-21 12:40:41] Skipping duplicate: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-18T14:46:37Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Moontlike opvolgstorie: Ernstige komplikasies n+í skoueroperasie" from Lientjie Schmidt <schmidtlientjie@gmail.com> (received: 2026-06-19T05:35:46Z)
+[2026-06-21 12:40:41] Skipping duplicate: "bribe" from Veronica van der Neut <VeronicaN@armscor.co.za> (received: 2026-06-19T08:17:18Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Fw: Due to Bank fraud 80 year old now face homelessness " from Lionel Newby <lionel48@live.co.za> (received: 2026-06-19T08:54:35Z)
+[2026-06-21 12:40:41] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:01Z)
+[2026-06-21 12:40:41] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:20Z)
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:38Z)
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:54Z)
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:03Z)
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:09Z)
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:18Z)
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:25Z)
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:33Z)
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:41Z)
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:48Z)
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:56Z)
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:05Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:12Z)
+[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 12:40:41] Skipping duplicate: "My story to tell: Millanie" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-19T13:04:04Z)
+[2026-06-21 12:40:41] Skipping blocked sender email: "Re: How Is Your Current Process Working?#" from jayden thomas <jatden.nic@outlook.com>
+[2026-06-21 12:40:41] Skipping duplicate: "[Spam Report] Submission Reported as Spam: "Re: How Is Your Current Process Working?#"" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T13:33:32Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T14:51:11Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Two Oceans aquarium demands only Muslim food come in" from Tonetha Jay <drtonijay@gmail.com> (received: 2026-06-19T14:59:23Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Clanwilliam Cedar Restoration - Aired on Sunday night 14 June 2026" from rasheeddesai <rasheeddesai@mweb.co.za> (received: 2026-06-19T15:08:06Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:45:37Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:46:26Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Story tip-off: SA Embassy in Vietnam left so under-staffed its emergency line went unanswered GÇô sick employee is sole cover" from Ruan van der westhuizen <ruanvanderwesthuizen96@gmail.com> (received: 2026-06-19T15:47:53Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Re: Far East Hospital" from Douw van Niekerk <douwlin@gmail.com> (received: 2026-06-19T16:07:23Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T16:46:44Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Global Wellness Enterprises" from Louise Van Heerden <louisevanheerden82@gmail.com> (received: 2026-06-19T17:37:54Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T17:50:07Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Insert Footage Declaration: James Ketchell 2 (#6931)" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T20:05:54Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Insert Footage Declaration: James Ketchell 2 (#6931)" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T20:05:56Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Pholosong Hospital" from Sindisiwe Maseko <sindisiwe.maseko88@yahoo.com> (received: 2026-06-19T23:23:03Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Re: Cmr East London URGENT" from Taryn Fox <tarynfox545@gmail.com> (received: 2026-06-20T00:36:06Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:18:47Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:18:48Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:24:35Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:25:30Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:31:49Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Request for Investigation into the Situation of Pakistani Workers in South Africa" from Christelle Calisse <christelle.grobler2@gmail.com> (received: 2026-06-20T06:56:43Z)
+[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T07:00:33Z)
+[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T07:00:35Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Re: Story Tip GÇö Alleged Fraud & Racketeering: V-Rentals (Merzy Agencies CC) | Johannesburg & Durban" from Francois Boshoff <davidfrancoisboshoff@gmail.com> (received: 2026-06-20T08:07:46Z)
+[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T10:43:52Z)
+[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T10:43:55Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Insert Footage Declaration: Eight Meters from Grace (#6921)" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T17:22:42Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Insert Footage Declaration: Eight Meters from Grace (#6921)" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T17:22:44Z)
+[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T20:05:43Z)
+[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T20:05:44Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T23:09:29Z)
+[2026-06-21 12:40:41] Skipping duplicate: "Assault case" from Khethiwe Chelemu <khethwe.chelemu@gmail.com> (received: 2026-06-21T08:03:35Z)
+[2026-06-21 12:40:41] 
+[2026-06-21 12:40:41] Microsoft Graph email import cycle completed successfully.
+[2026-06-21 12:40:41] Changes detected. Syncing...
