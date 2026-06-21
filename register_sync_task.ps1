@@ -1,4 +1,4 @@
-$action   = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument '-WindowStyle Hidden -NonInteractive -ExecutionPolicy Bypass -File "C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\auto_sync.ps1"'
+$action   = New-ScheduledTaskAction -Execute 'wscript.exe' -Argument '"C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\auto_sync.vbs"'
 $trigger  = New-ScheduledTaskTrigger -RepetitionInterval (New-TimeSpan -Minutes 30) -Once -At (Get-Date)
 $settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Minutes 5) -StartWhenAvailable
 
