@@ -1,487 +1,487 @@
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_158.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_159.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_16.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_160.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_161.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_162.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_163.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_164.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_165.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_166.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_167.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_168.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_169.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_17.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_170.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_171.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_172.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_173.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_174.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_175.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_176.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_177.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_178.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_179.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_18.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_180.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_181.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_182.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_183.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_184.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_185.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_186.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_187.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_188.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_189.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_19.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_190.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_191.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_192.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_193.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_194.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_195.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_196.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_197.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_198.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_199.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_2.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_20.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_200.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_201.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_202.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_203.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_204.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_205.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_206.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_207.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_208.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_209.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_21.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_210.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_211.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_212.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_213.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_214.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_215.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_216.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_217.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_218.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_219.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_22.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_220.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_221.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_222.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_223.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_224.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_225.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_226.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_227.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_228.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_229.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_23.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_230.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_231.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_232.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_233.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_234.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_235.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_236.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_237.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_238.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_239.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_24.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_240.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_241.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_242.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_243.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_244.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_245.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_246.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_247.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_248.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_249.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_25.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_250.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_251.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_252.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_253.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_254.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_255.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_256.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_257.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_258.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_259.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_26.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_260.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_261.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_262.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_263.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_264.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_265.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_266.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_267.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_268.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_269.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_27.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_270.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_271.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_272.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_273.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_274.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_275.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_276.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_277.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_278.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_279.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_28.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_280.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_281.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_282.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_283.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_284.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_285.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_286.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_287.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_288.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_289.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_29.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_290.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_291.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_292.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_293.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_294.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_295.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_296.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_297.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_298.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_299.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_3.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_30.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_300.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_301.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_302.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_303.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_304.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_305.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_306.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_307.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_308.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_309.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_31.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_310.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_311.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_312.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_313.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_314.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_315.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_316.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_317.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_318.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_319.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_32.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_320.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_321.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_322.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_323.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_324.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_325.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_326.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_327.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_328.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_329.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_33.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_330.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_331.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_332.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_333.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_334.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_335.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_336.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_337.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_338.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_339.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_34.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_340.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_341.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_342.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_343.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_344.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_345.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_346.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_347.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_348.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_349.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_35.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_350.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_351.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_352.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_353.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_354.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_355.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_356.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_357.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_358.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_359.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_36.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_360.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_361.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_362.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_363.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_364.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_365.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_366.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_367.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_368.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_369.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_37.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_370.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_371.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_372.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_373.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_374.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_375.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_376.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_377.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_378.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_379.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_38.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_380.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_381.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_382.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_383.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_384.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_385.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_386.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_387.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_388.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_389.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_39.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_390.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_391.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_392.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_393.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_394.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_395.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_396.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_397.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_398.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_399.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_4.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_40.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_400.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_401.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_402.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_403.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_404.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_405.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_406.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_407.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_408.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_409.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_41.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_410.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_411.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_412.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_413.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_414.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_415.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_416.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_417.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_418.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_419.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_42.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_420.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_421.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_422.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_423.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_424.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_425.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_426.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_427.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_428.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_429.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_43.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_430.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_431.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_432.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_433.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_434.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_435.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_436.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_437.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_438.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_439.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_44.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_440.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_441.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_442.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_443.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_444.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_445.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_446.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_447.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_448.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_449.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_45.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_450.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_451.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_452.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_453.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_454.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_455.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_456.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_457.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_458.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_459.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_46.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_460.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_461.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_47.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_48.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_49.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_5.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_50.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_51.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_52.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_53.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_54.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_55.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_56.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_57.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_58.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_59.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_6.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_60.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_61.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_62.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_63.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_64.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_65.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_66.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_67.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_68.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_69.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_7.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_70.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_71.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_72.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_73.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_74.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_75.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_76.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_77.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_78.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_79.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_8.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_80.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_81.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_82.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_83.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_84.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_85.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_86.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_87.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_88.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_89.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_9.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_90.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_91.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_92.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_93.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_94.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_95.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_96.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_97.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_98.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/exports/reports/item_99.json
-[2026-06-21 12:10:22]  create mode 100644 scraper/scraper_multi.js
-[2026-06-21 12:10:22] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-06-21 12:10:22]    672d5be..d6ca869  main -> main
-[2026-06-21 12:10:22] Sync complete.
-[2026-06-21 12:40:41] Running Microsoft Graph Email Importer...
-[2026-06-21 12:40:41] Starting Graph API Email Importer... Mode: LIVE
-[2026-06-21 12:40:41] Fetching messages from Microsoft Graph...
-[2026-06-21 12:40:41] Fetching messages from Microsoft Graph...
-[2026-06-21 12:40:41] Found 79 email(s) since 1 May 2026 to check.
-[2026-06-21 12:40:41] Skipping duplicate: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-18T14:46:37Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Moontlike opvolgstorie: Ernstige komplikasies n+í skoueroperasie" from Lientjie Schmidt <schmidtlientjie@gmail.com> (received: 2026-06-19T05:35:46Z)
-[2026-06-21 12:40:41] Skipping duplicate: "bribe" from Veronica van der Neut <VeronicaN@armscor.co.za> (received: 2026-06-19T08:17:18Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Fw: Due to Bank fraud 80 year old now face homelessness " from Lionel Newby <lionel48@live.co.za> (received: 2026-06-19T08:54:35Z)
-[2026-06-21 12:40:41] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:01Z)
-[2026-06-21 12:40:41] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:20Z)
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:38Z)
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:54Z)
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:03Z)
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:09Z)
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:18Z)
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:25Z)
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:33Z)
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:41Z)
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:48Z)
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:56Z)
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:05Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:12Z)
-[2026-06-21 12:40:41] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
-[2026-06-21 12:40:41] Skipping duplicate: "My story to tell: Millanie" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-19T13:04:04Z)
-[2026-06-21 12:40:41] Skipping blocked sender email: "Re: How Is Your Current Process Working?#" from jayden thomas <jatden.nic@outlook.com>
-[2026-06-21 12:40:41] Skipping duplicate: "[Spam Report] Submission Reported as Spam: "Re: How Is Your Current Process Working?#"" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T13:33:32Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T14:51:11Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Two Oceans aquarium demands only Muslim food come in" from Tonetha Jay <drtonijay@gmail.com> (received: 2026-06-19T14:59:23Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Clanwilliam Cedar Restoration - Aired on Sunday night 14 June 2026" from rasheeddesai <rasheeddesai@mweb.co.za> (received: 2026-06-19T15:08:06Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:45:37Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:46:26Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Story tip-off: SA Embassy in Vietnam left so under-staffed its emergency line went unanswered GÇô sick employee is sole cover" from Ruan van der westhuizen <ruanvanderwesthuizen96@gmail.com> (received: 2026-06-19T15:47:53Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Re: Far East Hospital" from Douw van Niekerk <douwlin@gmail.com> (received: 2026-06-19T16:07:23Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T16:46:44Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Global Wellness Enterprises" from Louise Van Heerden <louisevanheerden82@gmail.com> (received: 2026-06-19T17:37:54Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T17:50:07Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Insert Footage Declaration: James Ketchell 2 (#6931)" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T20:05:54Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Insert Footage Declaration: James Ketchell 2 (#6931)" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T20:05:56Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Pholosong Hospital" from Sindisiwe Maseko <sindisiwe.maseko88@yahoo.com> (received: 2026-06-19T23:23:03Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Re: Cmr East London URGENT" from Taryn Fox <tarynfox545@gmail.com> (received: 2026-06-20T00:36:06Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:18:47Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:18:48Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:24:35Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:25:30Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:31:49Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Request for Investigation into the Situation of Pakistani Workers in South Africa" from Christelle Calisse <christelle.grobler2@gmail.com> (received: 2026-06-20T06:56:43Z)
-[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T07:00:33Z)
-[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T07:00:35Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Re: Story Tip GÇö Alleged Fraud & Racketeering: V-Rentals (Merzy Agencies CC) | Johannesburg & Durban" from Francois Boshoff <davidfrancoisboshoff@gmail.com> (received: 2026-06-20T08:07:46Z)
-[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T10:43:52Z)
-[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T10:43:55Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Insert Footage Declaration: Eight Meters from Grace (#6921)" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T17:22:42Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Insert Footage Declaration: Eight Meters from Grace (#6921)" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T17:22:44Z)
-[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T20:05:43Z)
-[2026-06-21 12:40:41] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T20:05:44Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T23:09:29Z)
-[2026-06-21 12:40:41] Skipping duplicate: "Assault case" from Khethiwe Chelemu <khethwe.chelemu@gmail.com> (received: 2026-06-21T08:03:35Z)
-[2026-06-21 12:40:41] 
-[2026-06-21 12:40:41] Microsoft Graph email import cycle completed successfully.
-[2026-06-21 12:40:41] Changes detected. Syncing...
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_603.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_604.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_605.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_606.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_607.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_608.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_609.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_610.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_611.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_612.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_613.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_614.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_615.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_616.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_617.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_618.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_619.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_620.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_621.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_622.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_623.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_624.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_625.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_626.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_627.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_628.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_629.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_630.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_631.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_632.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_633.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_634.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_635.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_636.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_637.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_638.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_639.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_640.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_641.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_642.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_643.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_644.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_645.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_646.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_647.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_648.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_649.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_650.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_651.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_652.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_653.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_654.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_655.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_656.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_657.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_658.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_659.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_660.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_661.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_662.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_663.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_664.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_665.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_666.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_667.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_668.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_669.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_670.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_671.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_672.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_673.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_674.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_675.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_676.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_677.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_678.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_679.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_680.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_681.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_682.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_683.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_684.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_685.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_686.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_687.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_688.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_689.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_690.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_691.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_692.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_693.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_694.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_695.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_696.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_697.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_698.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_699.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_700.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_701.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_702.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_703.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_704.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_705.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_706.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_707.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_708.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_709.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_710.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_711.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_712.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_713.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_714.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_715.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_716.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_717.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_718.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_719.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_720.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_721.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_722.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_723.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_724.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_725.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_726.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_727.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_728.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_729.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_730.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_731.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_732.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_733.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_734.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_735.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_736.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_737.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_738.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_739.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_740.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_741.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_742.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_743.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_744.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_745.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_746.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_747.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_748.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_749.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_750.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_751.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_752.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_753.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_754.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_755.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_756.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_757.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_758.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_759.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_760.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_761.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_762.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_763.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_764.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_765.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_766.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_767.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_768.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_769.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_770.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_771.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_772.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_773.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_774.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_775.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_776.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_777.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_778.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_779.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_780.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_781.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_782.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_783.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_784.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_785.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_786.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_787.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_788.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_789.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_790.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_791.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_792.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_793.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_794.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_795.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_796.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_797.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_798.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_799.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_800.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_801.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_802.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_803.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_804.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_805.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_806.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_807.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_808.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_809.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_810.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_811.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_812.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_813.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_814.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_815.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_816.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_817.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_818.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_819.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_820.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_821.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_822.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_823.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_824.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_825.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_826.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_827.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_828.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_829.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_830.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_831.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_832.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_833.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_834.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_835.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_836.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_837.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_838.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_839.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_840.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_841.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_842.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_843.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_844.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_845.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_846.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_847.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_848.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_849.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_850.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_851.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_852.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_853.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_854.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_855.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_856.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_857.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_858.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_859.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_860.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_861.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_862.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_863.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_864.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_865.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_866.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_867.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_868.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_869.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_870.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_871.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_872.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_873.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_874.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_875.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_876.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_877.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_878.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_879.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_880.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_881.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_882.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_883.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_884.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_885.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_886.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_887.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_888.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_889.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_890.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_891.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_892.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_893.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_894.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_895.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_896.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_897.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_898.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_899.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_900.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_901.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_902.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_903.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_904.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_905.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_906.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_907.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_908.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_909.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_910.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_911.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_912.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_913.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_914.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_915.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_916.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_917.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_918.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_919.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_920.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_921.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_922.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_923.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_924.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_925.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_926.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_927.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_928.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_929.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_930.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_931.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_932.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_933.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_934.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_935.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_936.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_937.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_938.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_939.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_940.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_941.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_942.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_943.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_944.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_945.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_946.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_947.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_948.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_949.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_950.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_951.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_952.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_953.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_954.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_955.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_956.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_957.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_958.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_959.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_960.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_961.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_962.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_963.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_964.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_965.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_966.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_967.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_968.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_969.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_970.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_971.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_972.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_973.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_974.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_975.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_976.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_977.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_978.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_979.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_980.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_981.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_982.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_983.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_984.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_985.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_986.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_987.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_988.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_989.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_990.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_991.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_992.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_993.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_994.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_995.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_996.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_997.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_998.json
+[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_999.json
+[2026-06-21 12:40:41] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-06-21 12:40:41]    d6ca869..76e1e2c  main -> main
+[2026-06-21 12:40:41] Sync complete.
+[2026-06-21 13:10:22] Running Microsoft Graph Email Importer...
+[2026-06-21 13:10:22] Starting Graph API Email Importer... Mode: LIVE
+[2026-06-21 13:10:22] Fetching messages from Microsoft Graph...
+[2026-06-21 13:10:22] Fetching messages from Microsoft Graph...
+[2026-06-21 13:10:22] Found 79 email(s) since 1 May 2026 to check.
+[2026-06-21 13:10:22] Skipping duplicate: "Thousands of kids not placed in schools" from sainitaly@edea.biz <sainitaly@edea.biz> (received: 2026-06-18T14:46:37Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Moontlike opvolgstorie: Ernstige komplikasies n+í skoueroperasie" from Lientjie Schmidt <schmidtlientjie@gmail.com> (received: 2026-06-19T05:35:46Z)
+[2026-06-21 13:10:22] Skipping duplicate: "bribe" from Veronica van der Neut <VeronicaN@armscor.co.za> (received: 2026-06-19T08:17:18Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Fw: Due to Bank fraud 80 year old now face homelessness " from Lionel Newby <lionel48@live.co.za> (received: 2026-06-19T08:54:35Z)
+[2026-06-21 13:10:22] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:01Z)
+[2026-06-21 13:10:22] Skipping duplicate: "CARP Dashboard - Office 365 SMTP Test" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:54:20Z)
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:38Z)
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: Malaika Orphanage - Sebe Buthelezi" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:40Z)
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: Rapist Surfer - Latashia Naidoo" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:47Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Malaika Orphanage - Sebe Buthelezi" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:54Z)
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: Rapist Surfer | 6930" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:57:55Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Rapist Surfer - Latashia Naidoo" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:03Z)
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: James Ketchell 2 - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:04Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Rapist Surfer | 6930" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:09Z)
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: James Ketchell 2 | 6931" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:12Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: James Ketchell 2 - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:18Z)
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: SA's care capital - Floris Kotze" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:19Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: James Ketchell 2 | 6931" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:25Z)
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: SA's care capital | 6935" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:26Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: SA's care capital - Floris Kotze" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:33Z)
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: Illegal D-Day - Kate Barry" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:36Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: SA's care capital | 6935" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:41Z)
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: Illegal D-Day | 6932" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:42Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Illegal D-Day - Kate Barry" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:48Z)
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: Red Hot Summer - Anina Peens" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:51Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Illegal D-Day | 6932" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:56Z)
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: Red Hot Summer | 6933" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:58:57Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Red Hot Summer - Anina Peens" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:05Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Red Hot Summer | 6933" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "New Proposal: Durban:March Or Else - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:08Z)
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:12Z)
+[2026-06-21 13:10:22] Skipping duplicate: "S39 | New Commission: Durban:March Or Else | 6934" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T09:59:13Z)
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: New Proposal: Durban:March Or Else - Carol Albertyn Christie" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping backend spam/quarantine email: "Undeliverable: S39 | New Commission: Durban:March Or Else | 6934" from postmaster@e-purifier.com <postmaster@e-purifier.com>
+[2026-06-21 13:10:22] Skipping duplicate: "My story to tell: Millanie" from Milana Van Rooyen <millanielaflor@gmail.com> (received: 2026-06-19T13:04:04Z)
+[2026-06-21 13:10:22] Skipping blocked sender email: "Re: How Is Your Current Process Working?#" from jayden thomas <jatden.nic@outlook.com>
+[2026-06-21 13:10:22] Skipping duplicate: "[Spam Report] Submission Reported as Spam: "Re: How Is Your Current Process Working?#"" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T13:33:32Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T14:51:11Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Two Oceans aquarium demands only Muslim food come in" from Tonetha Jay <drtonijay@gmail.com> (received: 2026-06-19T14:59:23Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Clanwilliam Cedar Restoration - Aired on Sunday night 14 June 2026" from rasheeddesai <rasheeddesai@mweb.co.za> (received: 2026-06-19T15:08:06Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:45:37Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T15:46:26Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Story tip-off: SA Embassy in Vietnam left so under-staffed its emergency line went unanswered GÇô sick employee is sole cover" from Ruan van der westhuizen <ruanvanderwesthuizen96@gmail.com> (received: 2026-06-19T15:47:53Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Re: Far East Hospital" from Douw van Niekerk <douwlin@gmail.com> (received: 2026-06-19T16:07:23Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T16:46:44Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Global Wellness Enterprises" from Louise Van Heerden <louisevanheerden82@gmail.com> (received: 2026-06-19T17:37:54Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-19T17:50:07Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Insert Footage Declaration: James Ketchell 2 (#6931)" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T20:05:54Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Insert Footage Declaration: James Ketchell 2 (#6931)" from Submissions <story@combinedartists.co.za> (received: 2026-06-19T20:05:56Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Pholosong Hospital" from Sindisiwe Maseko <sindisiwe.maseko88@yahoo.com> (received: 2026-06-19T23:23:03Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Re: Cmr East London URGENT" from Taryn Fox <tarynfox545@gmail.com> (received: 2026-06-20T00:36:06Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:18:47Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:18:48Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:24:35Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:25:30Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T04:31:49Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Request for Investigation into the Situation of Pakistani Workers in South Africa" from Christelle Calisse <christelle.grobler2@gmail.com> (received: 2026-06-20T06:56:43Z)
+[2026-06-21 13:10:22] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T07:00:33Z)
+[2026-06-21 13:10:22] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T07:00:35Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Re: Story Tip GÇö Alleged Fraud & Racketeering: V-Rentals (Merzy Agencies CC) | Johannesburg & Durban" from Francois Boshoff <davidfrancoisboshoff@gmail.com> (received: 2026-06-20T08:07:46Z)
+[2026-06-21 13:10:22] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T10:43:52Z)
+[2026-06-21 13:10:22] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T10:43:55Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Insert Footage Declaration: Eight Meters from Grace (#6921)" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T17:22:42Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Insert Footage Declaration: Eight Meters from Grace (#6921)" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T17:22:44Z)
+[2026-06-21 13:10:22] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T20:05:43Z)
+[2026-06-21 13:10:22] Skipping duplicate: "CALL SHEET for 6932 Illegal D-Day" from Submissions <story@combinedartists.co.za> (received: 2026-06-20T20:05:44Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-06-20T23:09:29Z)
+[2026-06-21 13:10:22] Skipping duplicate: "Assault case" from Khethiwe Chelemu <khethwe.chelemu@gmail.com> (received: 2026-06-21T08:03:35Z)
+[2026-06-21 13:10:22] 
+[2026-06-21 13:10:22] Microsoft Graph email import cycle completed successfully.
+[2026-06-21 13:10:22] Changes detected. Syncing...
