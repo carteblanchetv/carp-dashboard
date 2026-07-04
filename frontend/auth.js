@@ -33,9 +33,44 @@ const firebaseConfig = {
   appId: "1:705555810335:web:b10f7fc0fca566f1fc535b"
 };
 
+// Self-healing mechanism for corrupted Firebase Auth persistence state
+if (typeof window !== 'undefined') {
+    window.addEventListener('unhandledrejection', (event) => {
+        const err = event.reason;
+        if (err && (err.name === 'FirebaseError' || err.message?.includes('Firebase')) && 
+            (err.code === 'auth/internal-error' || err.message?.includes('persistence') || err.message?.includes('fromJSON'))) {
+            console.error("[Auth] Self-healing: Detected corrupted Firebase persistence. Clearing databases...", err);
+            try {
+                localStorage.clear();
+                sessionStorage.clear();
+                indexedDB.deleteDatabase("firebaseLocalStorageDb");
+                indexedDB.deleteDatabase("firestore/[DEFAULT]/cb-deliverables/main");
+            } catch (clearErr) {
+                console.error("[Auth] Clear failed:", clearErr);
+            }
+            setTimeout(() => {
+                window.location.reload();
+            }, 300);
+        }
+    });
+}
+
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+let auth;
+try {
+    auth = getAuth(app);
+} catch (e) {
+    console.error("[Auth] Firebase getAuth failed, clearing corrupted persistence databases:", e);
+    try {
+        localStorage.clear();
+        sessionStorage.clear();
+        indexedDB.deleteDatabase("firebaseLocalStorageDb");
+    } catch (clearErr) {
+        console.error("[Auth] Failed to clear storage:", clearErr);
+    }
+    window.location.reload();
+}
 
 // --- Turnstile Setup (Soft Security Only) ---
 // Note: App Check enforcement is temporarily disabled to resolve 401 handshake errors on Firefox.
