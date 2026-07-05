@@ -29,7 +29,7 @@
             
             try {
                 loadingOverlay.classList.add('active');
-                const res = await fetchWithAuth('/api/my-submissions');
+                const res = await fetchWithAuth('/api/my-submissions?formType=episode_footage');
                 const result = await res.json();
                 
                 if (result.success) {

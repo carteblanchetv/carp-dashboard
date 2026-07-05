@@ -1941,20 +1941,27 @@ app.post('/api/delete-file', async (req, res) => {
 app.get('/api/my-submissions', async (req, res) => {
   try {
     const isAdmin = AUTHORIZED_ADMIN_ROLES.includes(req.user.role);
+    const formType = req.query.formType;
     let query = admin.firestore().collection('submissions');
     
     if (!isAdmin) {
       query = query.where('submittedBy', '==', req.user.uid);
     }
     
+    if (formType) {
+      query = query.where('formType', '==', formType);
+    } else {
+      // Default fallback: Exclude public viewer submissions/tip-offs to prevent query flooding
+      query = query.where('formType', 'in', ['control_sheet', 'episode_footage', 'insert_footage']);
+    }
+    
     const snapshot = await query
       .orderBy('submittedAt', 'desc')
-      .limit(isAdmin ? 100 : 20)
+      .limit(formType ? 100 : (isAdmin ? 100 : 20))
       .get();
     
     const subs = snapshot.docs.map(doc => {
       const data = doc.data();
-      // Decrypt if present
       if (data.caseStudies && data.caseStudies._encrypted) {
         try { data.caseStudies = JSON.parse(decrypt(data.caseStudies)); } catch (e) {}
       }
