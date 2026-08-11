@@ -309,6 +309,121 @@ app.post('/api/send-footage-agreement', async (req, res, next) => {
   }
 });
 
+app.post('/api/send-participant-release', async (req, res, next) => {
+  try {
+    const { fields, file } = await parseMultipart(req);
+    if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
+
+    const { fullName, idNumber, phone, email, storyName } = fields;
+    const mailOptions = {
+        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+        to: process.env.TARGET_EMAIL,
+        subject: `Participant Release - ${fullName} - ${storyName}`,
+        html: `<h2>PARTICIPANT RELEASE FORM</h2><ul><li><strong>Participant:</strong> ${fullName}</li><li><strong>ID/Passport:</strong> ${idNumber}</li><li><strong>Phone:</strong> ${phone}</li><li><strong>Email:</strong> ${email}</li><li><strong>Story:</strong> ${storyName}</li></ul>`,
+        attachments: [{ filename: `ParticipantRelease_${fullName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+    };
+
+    await transporter.sendMail(mailOptions);
+    await saveSubmission(req, 'participant_release', `ParticipantRelease_${fullName.replace(/\s+/g, '_')}.pdf`, file, { fullName, idNumber, phone, email, storyName });
+    res.status(200).json({ success: true, message: 'Participant release sent successfully!' });
+  } catch (error) {
+    console.error('Error sending participant release:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/send-minor-release', async (req, res, next) => {
+  try {
+    const { fields, file } = await parseMultipart(req);
+    if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
+
+    const { guardianName, guardianId, phone, email, minorName, minorAge, storyName } = fields;
+    const mailOptions = {
+        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+        to: process.env.TARGET_EMAIL,
+        subject: `Minor Release - ${minorName} - ${storyName}`,
+        html: `<h2>MINOR RELEASE FORM</h2><ul><li><strong>Minor Name:</strong> ${minorName}</li><li><strong>Age:</strong> ${minorAge}</li><li><strong>Guardian Name:</strong> ${guardianName}</li><li><strong>Guardian ID:</strong> ${guardianId}</li><li><strong>Phone:</strong> ${phone}</li><li><strong>Email:</strong> ${email}</li><li><strong>Story:</strong> ${storyName}</li></ul>`,
+        attachments: [{ filename: `MinorRelease_${minorName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+    };
+
+    await transporter.sendMail(mailOptions);
+    await saveSubmission(req, 'minor_release', `MinorRelease_${minorName.replace(/\s+/g, '_')}.pdf`, file, { guardianName, guardianId, phone, email, minorName, minorAge, storyName });
+    res.status(200).json({ success: true, message: 'Minor release sent successfully!' });
+  } catch (error) {
+    console.error('Error sending minor release:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/send-location-agreement', async (req, res, next) => {
+  try {
+    const { fields, file } = await parseMultipart(req);
+    if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
+
+    const { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName } = fields;
+    const mailOptions = {
+        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+        to: process.env.TARGET_EMAIL,
+        subject: `Location Agreement - ${propertyAddress} - ${storyName}`,
+        html: `<h2>LOCATION AGREEMENT</h2><ul><li><strong>Owner/Rep:</strong> ${ownerName}</li><li><strong>ID:</strong> ${ownerId}</li><li><strong>Address:</strong> ${propertyAddress}</li><li><strong>Filming Date:</strong> ${filmingDate}</li><li><strong>Phone:</strong> ${phone}</li><li><strong>Email:</strong> ${email}</li><li><strong>Story:</strong> ${storyName}</li></ul>`,
+        attachments: [{ filename: `LocationAgreement_${ownerName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+    };
+
+    await transporter.sendMail(mailOptions);
+    await saveSubmission(req, 'location_agreement', `LocationAgreement_${ownerName.replace(/\s+/g, '_')}.pdf`, file, { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName });
+    res.status(200).json({ success: true, message: 'Location agreement sent successfully!' });
+  } catch (error) {
+    console.error('Error sending location agreement:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/send-music-agreement', async (req, res, next) => {
+  try {
+    const { fields, file } = await parseMultipart(req);
+    if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
+
+    const { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName } = fields;
+    const mailOptions = {
+        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+        to: process.env.TARGET_EMAIL,
+        subject: `Music Agreement - ${trackTitle} - ${storyName}`,
+        html: `<h2>MUSIC AGREEMENT</h2><ul><li><strong>Artist/Composer:</strong> ${artistName}</li><li><strong>Publisher:</strong> ${publisherName || 'N/A'}</li><li><strong>Track Title:</strong> ${trackTitle}</li><li><strong>Duration:</strong> ${trackDuration}</li><li><strong>Phone:</strong> ${phone}</li><li><strong>Email:</strong> ${email}</li><li><strong>Story:</strong> ${storyName}</li></ul>`,
+        attachments: [{ filename: `MusicAgreement_${trackTitle.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+    };
+
+    await transporter.sendMail(mailOptions);
+    await saveSubmission(req, 'music_agreement', `MusicAgreement_${trackTitle.replace(/\s+/g, '_')}.pdf`, file, { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName });
+    res.status(200).json({ success: true, message: 'Music agreement sent successfully!' });
+  } catch (error) {
+    console.error('Error sending music agreement:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/send-travel-booking', async (req, res, next) => {
+  try {
+    const { fields, file } = await parseMultipart(req);
+    if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
+
+    const { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes } = fields;
+    const mailOptions = {
+        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+        to: process.env.TARGET_EMAIL,
+        subject: `Travel Booking - ${travelerName} - ${storyName}`,
+        html: `<h2>TRAVEL BOOKING REQUEST</h2><ul><li><strong>Traveler Name:</strong> ${travelerName}</li><li><strong>ID/Passport:</strong> ${idNumber}</li><li><strong>Departure Airport:</strong> ${departureAirport}</li><li><strong>Destination Airport:</strong> ${destinationAirport}</li><li><strong>Departure Date:</strong> ${departureDate}</li><li><strong>Return Date:</strong> ${returnDate}</li><li><strong>Accommodation Required:</strong> ${accommodationRequired}</li><li><strong>Car Hire Required:</strong> ${carHireRequired}</li><li><strong>Special Requests:</strong> ${additionalNotes || 'None'}</li><li><strong>Phone:</strong> ${phone}</li><li><strong>Email:</strong> ${email}</li><li><strong>Story:</strong> ${storyName}</li></ul>`,
+        attachments: [{ filename: `TravelRequest_${travelerName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+    };
+
+    await transporter.sendMail(mailOptions);
+    await saveSubmission(req, 'travel_booking', `TravelRequest_${travelerName.replace(/\s+/g, '_')}.pdf`, file, { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes });
+    res.status(200).json({ success: true, message: 'Travel booking request sent successfully!' });
+  } catch (error) {
+    console.error('Error sending travel booking request:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.post('/api/send-insert-footage', async (req, res, next) => {
   try {
     const { fields, file } = await parseMultipart(req);

@@ -30,7 +30,7 @@ const quickLinksHtml = `
         <section class="quick-links-section" style="margin-top: 1rem; margin-bottom: 3rem; animation: fadeIn 0.5s ease-out;">
             <h3 style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; padding-left: 0.2rem;">Legal &amp; Admin Forms</h3>
             <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
-                <a href="https://www.jotform.com/sign/260763371107050/invite/01km0dqb2232a24be7490f0a04" target="_blank" class="quick-link-btn">
+                <a href="https://www.jotform.com/sign/260763371107050/invite/01kzr1r06c7a0ada078cd83d70" target="_blank" class="quick-link-btn">
                     <span>📄</span> Participant Release Form 2026
                 </a>
                 <a href="https://www.jotform.com/sign/260762990035056/invite/01km0d8mgn4e71c19b68f949e7" target="_blank" class="quick-link-btn">

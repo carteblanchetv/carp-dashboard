@@ -300,6 +300,17 @@ export function checkAuth(redirectIfNotLogged = true) {
                         try {
                             userDoc = await fetchDoc(user.uid);
                             lookupSucceeded = true;
+                            
+                            // Fallback to email lookup if UID doc doesn't exist (e.g. brand new user added by admin)
+                            if (userDoc && (!userDoc.exists || !userDoc.exists())) {
+                                console.log("[Auth] UID-based profile not found, falling back to email lookup...");
+                                if (user.email) {
+                                    const emailDoc = await fetchDoc(user.email.toLowerCase());
+                                    if (emailDoc && (emailDoc.exists && emailDoc.exists())) {
+                                        userDoc = emailDoc;
+                                    }
+                                }
+                            }
                         } catch (e) {
                             console.warn("[Auth] UID-based profile lookup failed:", e.message);
                             

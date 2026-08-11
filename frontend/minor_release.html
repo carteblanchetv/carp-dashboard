@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Minor Release Form</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    <script src="js/branding.js?v=5.1.1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script type="module">
+        import { checkAuth } from './auth.js?v=5.1.1';
+        checkAuth().then(user => {
+            if (user) {
+                window.auth.initNavBar(user);
+            }
+        });
+    </script>
+    <style>
+        .sig-tab.active {
+            background: var(--primary) !important;
+            color: white !important;
+            border-color: var(--primary) !important;
+        }
+        .signature-pad-container {
+            border: 2px dashed var(--border);
+            border-radius: 6px;
+            background: #fff;
+            position: relative;
+            margin-top: 0.5rem;
+        }
+        :root.dark-mode .signature-pad-container {
+            background: #1e293b;
+        }
+        .signature-pad {
+            display: block;
+            width: 100%;
+            height: 150px;
+            cursor: crosshair;
+        }
+        .clear-sig-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="form-body">
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <h2 style="color: var(--primary);">Submitting Release Form...</h2>
+        <p>Please wait, uploading encrypted documents.</p>
+    </div>
+
+    <div class="form-wrapper" style="max-width: 700px; margin: 2rem auto;">
+        <header class="form-header">
+            <div class="logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
+            </div>
+            <h1>Minor Release Form 2026</h1>
+        </header>
+
+        <form id="minorReleaseForm" class="modern-form">
+            <section class="form-section">
+                <h2 class="section-title">Parent / Guardian Details</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="guardianName">Parent / Guardian Full Name</label>
+                        <input type="text" id="guardianName" name="guardianName" required placeholder="Enter full name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="guardianId">ID / Passport Number</label>
+                        <input type="text" id="guardianId" name="guardianId" required placeholder="Enter ID/Passport...">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="e.g. +27 82 123 4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="name@example.com">
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2 class="section-title">Minor Details</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="minorName">Minor Full Name</label>
+                        <input type="text" id="minorName" name="minorName" required placeholder="Enter minor's name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="minorAge">Minor Age</label>
+                        <input type="number" id="minorAge" name="minorAge" required min="0" max="17" placeholder="e.g. 12">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="storyName">Story / Project Name</label>
+                        <input type="text" id="storyName" name="storyName" required placeholder="e.g. Hot Soup">
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2 class="section-title">Declaration & Consent</h2>
+                <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-main); margin-bottom: 1rem;">
+                    I hereby confirm that I am the parent or legal guardian of the minor named above. I grant Combined Artists and Carte Blanche the absolute right and permission to film, record, and use the minor's name, voice, image, and likeness for the purposes of this television program. I understand this material may be edited and broadcast globally.
+                </p>
+                <div style="display: flex; gap: 0.5rem; align-items: flex-start; margin-bottom: 1.5rem;">
+                    <input type="checkbox" id="consentCheckbox" required style="width: auto; margin-top: 0.3rem;">
+                    <label for="consentCheckbox" style="font-size: 0.9rem; cursor: pointer;">
+                        I agree to the minor release terms and confirm that I have legal authority to sign.
+                    </label>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Parent / Guardian Signature</label>
+                    <div class="signature-tabs" style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <button type="button" id="tabDraw" class="sig-tab active" style="padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-card); color: var(--text-main); cursor: pointer; font-size: 0.85rem; font-weight: 600;">Draw Signature</button>
+                        <button type="button" id="tabType" class="sig-tab" style="padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-card); color: var(--text-main); cursor: pointer; font-size: 0.85rem; font-weight: 600;">Type Signature</button>
+                    </div>
+                    
+                    <div id="typeSignatureControls" style="margin-bottom: 0.5rem; display: none;">
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <input type="text" id="typeSigInput" placeholder="Type your name here..." style="flex: 1; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem;">
+                            <select id="typeSigFont" style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; cursor: pointer;">
+                                <option value="Caveat">Caveat (Cursive)</option>
+                                <option value="Dancing Script">Dancing Script (Elegant)</option>
+                                <option value="Great Vibes">Great Vibes (Classic)</option>
+                                <option value="Pacifico">Pacifico (Retro)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="signature-pad-container">
+                        <canvas id="signatureCanvas" class="signature-pad" width="600" height="150"></canvas>
+                        <button type="button" id="clearSigBtn" class="clear-sig-btn">Clear</button>
+                    </div>
+                </div>
+            </section>
+
+            <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                <a href="index.html" class="btn-soft" style="text-decoration: none; display: flex; align-items: center;">Cancel</a>
+                <button type="submit" class="add-btn" style="margin-top: 0; background: var(--primary); color: white; border: none; padding: 0.75rem 2rem; font-weight: 600; border-radius: 6px; cursor: pointer;">Submit Form</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Success Dialog -->
+    <div id="successDialog" class="dialog-overlay hidden">
+        <div class="dialog-box">
+            <h2>Form Submitted Successfully</h2>
+            <p>Your Minor Release form has been submitted and stored.</p>
+            <button id="dialogCloseBtn" class="add-btn">Return to Dashboard</button>
+        </div>
+    </div>
+
+    <script src="minor_release.js"></script>
+</body>
+</html>

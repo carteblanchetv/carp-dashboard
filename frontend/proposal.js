@@ -1505,6 +1505,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Show form for editing
                 form.classList.remove('hidden');
 
+                // Hide Save Draft button if already submitted (status is not draft)
+                const saveDraftBtn = document.getElementById('saveDraftBtn');
+                if (saveDraftBtn) {
+                    if (sub.status && sub.status !== 'draft') {
+                        saveDraftBtn.classList.add('hidden');
+                        saveDraftBtn.style.display = 'none';
+                    } else {
+                        saveDraftBtn.classList.remove('hidden');
+                        saveDraftBtn.style.display = '';
+                    }
+                }
+
                 // Setup Story Deliverables Bar
                 const isCommissioned = (sub.status || '').toLowerCase() === 'accepted' || (sub.status || '').toLowerCase() === 'paid';
                 setupDeliverablesBar(sub, linkedAssets, isReadOnly);

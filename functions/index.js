@@ -23,10 +23,21 @@ function hasAdminAccess(user) {
     return AUTHORIZED_ADMIN_ROLES.includes(user.role) || (user.adminRole && AUTHORIZED_ADMIN_ROLES.includes(user.adminRole));
 }
 
+function isOwnerOfData(data, user) {
+    if (!data || !user) return false;
+    const ownerId = data.submittedBy;
+    const ownerEmail = data.submittedByEmail;
+    
+    if (ownerId && ownerId === user.uid) return true;
+    if (user.email && ownerId && ownerId.toLowerCase() === user.email.toLowerCase()) return true;
+    if (user.email && ownerEmail && ownerEmail.toLowerCase() === user.email.toLowerCase()) return true;
+    
+    return false;
+}
+
 function canEditProposal(proposalData, user) {
     if (hasAdminAccess(user)) return true;
-    const ownerId = proposalData.submittedBy;
-    return ownerId === user.uid || (user.email && ownerId === user.email.toLowerCase());
+    return isOwnerOfData(proposalData, user);
 }
 
 /**
@@ -1330,6 +1341,199 @@ app.post('/api/send-footage-agreement', async (req, res) => {
   }
 });
 
+app.post('/api/send-participant-release', async (req, res) => {
+  try {
+    const { fields, files } = await parseMultipart(req);
+    if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
+
+    const { fullName, idNumber, phone, email, storyName } = fields;
+    const [dbResult] = await Promise.all([
+      processMultiFileStorageAndFirestore(
+        req, 'participant_release', 'participant_release', files,
+        { fullName, idNumber, phone, email, storyName }
+      ),
+      notifyRelevantUsers(
+        'participant_release',
+        `Carte Blanche - Participant Release - ${fullName} - ${storyName}`,
+        `<p><b>CARTE BLANCHE</b><br><b>PARTICIPANT RELEASE FORM</b></p>
+         <ul>
+           <li><b>Participant:</b> ${fullName}</li>
+           <li><b>ID/Passport:</b> ${idNumber}</li>
+           <li><b>Phone:</b> ${phone}</li>
+           <li><b>Email:</b> ${email}</li>
+           <li><b>Story:</b> ${storyName}</li>
+         </ul>`,
+        files.map(f => ({
+          filename: f.filename,
+          content: f.buffer,
+          contentType: f.mimeType
+        }))
+      )
+    ]);
+    res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
+  } catch (error) {
+    console.error('Submission failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/send-minor-release', async (req, res) => {
+  try {
+    const { fields, files } = await parseMultipart(req);
+    if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
+
+    const { guardianName, guardianId, phone, email, minorName, minorAge, storyName } = fields;
+    const [dbResult] = await Promise.all([
+      processMultiFileStorageAndFirestore(
+        req, 'minor_release', 'minor_release', files,
+        { guardianName, guardianId, phone, email, minorName, minorAge, storyName }
+      ),
+      notifyRelevantUsers(
+        'minor_release',
+        `Carte Blanche - Minor Release - ${minorName} - ${storyName}`,
+        `<p><b>CARTE BLANCHE</b><br><b>MINOR RELEASE FORM</b></p>
+         <ul>
+           <li><b>Minor Name:</b> ${minorName}</li>
+           <li><b>Age:</b> ${minorAge}</li>
+           <li><b>Guardian Name:</b> ${guardianName}</li>
+           <li><b>Guardian ID:</b> ${guardianId}</li>
+           <li><b>Phone:</b> ${phone}</li>
+           <li><b>Email:</b> ${email}</li>
+           <li><b>Story:</b> ${storyName}</li>
+         </ul>`,
+        files.map(f => ({
+          filename: f.filename,
+          content: f.buffer,
+          contentType: f.mimeType
+        }))
+      )
+    ]);
+    res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
+  } catch (error) {
+    console.error('Submission failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/send-location-agreement', async (req, res) => {
+  try {
+    const { fields, files } = await parseMultipart(req);
+    if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
+
+    const { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName } = fields;
+    const [dbResult] = await Promise.all([
+      processMultiFileStorageAndFirestore(
+        req, 'location_agreement', 'location_agreement', files,
+        { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName }
+      ),
+      notifyRelevantUsers(
+        'location_agreement',
+        `Carte Blanche - Location Agreement - ${propertyAddress} - ${storyName}`,
+        `<p><b>CARTE BLANCHE</b><br><b>LOCATION AGREEMENT</b></p>
+         <ul>
+           <li><b>Property Owner/Rep:</b> ${ownerName}</li>
+           <li><b>Owner ID:</b> ${ownerId}</li>
+           <li><b>Address:</b> ${propertyAddress}</li>
+           <li><b>Filming Date:</b> ${filmingDate}</li>
+           <li><b>Phone:</b> ${phone}</li>
+           <li><b>Email:</b> ${email}</li>
+           <li><b>Story:</b> ${storyName}</li>
+         </ul>`,
+        files.map(f => ({
+          filename: f.filename,
+          content: f.buffer,
+          contentType: f.mimeType
+        }))
+      )
+    ]);
+    res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
+  } catch (error) {
+    console.error('Submission failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/send-music-agreement', async (req, res) => {
+  try {
+    const { fields, files } = await parseMultipart(req);
+    if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
+
+    const { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName } = fields;
+    const [dbResult] = await Promise.all([
+      processMultiFileStorageAndFirestore(
+        req, 'music_agreement', 'music_agreement', files,
+        { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName }
+      ),
+      notifyRelevantUsers(
+        'music_agreement',
+        `Carte Blanche - Music Agreement - ${trackTitle} - ${storyName}`,
+        `<p><b>CARTE BLANCHE</b><br><b>MUSIC AGREEMENT</b></p>
+         <ul>
+           <li><b>Artist/Composer:</b> ${artistName}</li>
+           <li><b>Publisher/Company:</b> ${publisherName || 'N/A'}</li>
+           <li><b>Track Title:</b> ${trackTitle}</li>
+           <li><b>Duration:</b> ${trackDuration}</li>
+           <li><b>Phone:</b> ${phone}</li>
+           <li><b>Email:</b> ${email}</li>
+           <li><b>Story:</b> ${storyName}</li>
+         </ul>`,
+        files.map(f => ({
+          filename: f.filename,
+          content: f.buffer,
+          contentType: f.mimeType
+        }))
+      )
+    ]);
+    res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
+  } catch (error) {
+    console.error('Submission failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/send-travel-booking', async (req, res) => {
+  try {
+    const { fields, files } = await parseMultipart(req);
+    if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
+
+    const { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes } = fields;
+    const [dbResult] = await Promise.all([
+      processMultiFileStorageAndFirestore(
+        req, 'travel_booking', 'travel_booking', files,
+        { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes }
+      ),
+      notifyRelevantUsers(
+        'travel_booking',
+        `Carte Blanche - Travel Booking - ${travelerName} - ${storyName}`,
+        `<p><b>CARTE BLANCHE</b><br><b>TRAVEL BOOKING REQUEST</b></p>
+         <ul>
+           <li><b>Traveler Name:</b> ${travelerName}</li>
+           <li><b>ID/Passport:</b> ${idNumber}</li>
+           <li><b>Departure Airport:</b> ${departureAirport}</li>
+           <li><b>Destination Airport:</b> ${destinationAirport}</li>
+           <li><b>Departure Date:</b> ${departureDate}</li>
+           <li><b>Return Date:</b> ${returnDate}</li>
+           <li><b>Accommodation Required:</b> ${accommodationRequired}</li>
+           <li><b>Car Hire Required:</b> ${carHireRequired}</li>
+           <li><b>Special Requests:</b> ${additionalNotes || 'None'}</li>
+           <li><b>Phone:</b> ${phone}</li>
+           <li><b>Email:</b> ${email}</li>
+           <li><b>Story:</b> ${storyName}</li>
+         </ul>`,
+        files.map(f => ({
+          filename: f.filename,
+          content: f.buffer,
+          contentType: f.mimeType
+        }))
+      )
+    ]);
+    res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
+  } catch (error) {
+    console.error('Submission failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.get('/api/list-producers', async (req, res) => {
   try {
     const snapshot = await admin.firestore().collection('users')
@@ -1619,7 +1823,7 @@ app.get('/api/get-submission/:id', async (req, res) => {
     }
 
     const isAdmin = hasAdminAccess(req.user);
-    const isOwner = data.submittedBy === req.user.uid || (req.user.email && data.submittedBy === req.user.email.toLowerCase());
+    const isOwner = isOwnerOfData(data, req.user);
     const isProducer = (req.user.role || '').toLowerCase() === 'producer';
 
     if (!isOwner && !isAdmin && !isProducer) {
@@ -1726,7 +1930,7 @@ app.post('/api/update-submission', async (req, res) => {
     
     const data = doc.data();
     const isAdmin = AUTHORIZED_ADMIN_ROLES.includes(req.user.role);
-    if (data.submittedBy !== req.user.uid && !isAdmin) return res.status(403).json({ success: false, error: 'Unauthorized' });
+    if (!isOwnerOfData(data, req.user) && !isAdmin) return res.status(403).json({ success: false, error: 'Unauthorized' });
 
     const timestamp = Date.now();
     const submissionPath = data.submissionPath || `submissions/${formType}/${timestamp}`;
@@ -1921,7 +2125,7 @@ app.post('/api/delete-file', async (req, res) => {
     
     const data = doc.data();
     const isAdmin = AUTHORIZED_ADMIN_ROLES.includes(req.user.role);
-    if (data.submittedBy !== req.user.uid && !isAdmin) return res.status(403).json({ success: false, error: 'Unauthorized' });
+    if (!isOwnerOfData(data, req.user) && !isAdmin) return res.status(403).json({ success: false, error: 'Unauthorized' });
 
     // 1. Delete from Storage
     try {
@@ -2149,7 +2353,7 @@ app.get('/api/get-file', async (req, res) => {
     
     const data = doc.data();
     const isAdmin = hasAdminAccess(req.user);
-    if (data.submittedBy !== req.user.uid && !isAdmin) {
+    if (!isOwnerOfData(data, req.user) && !isAdmin) {
       return res.status(403).json({ success: false, error: 'Access denied' });
     }
 
@@ -2649,7 +2853,7 @@ app.get('/api/get-call-sheet-file', async (req, res) => {
     
     const data = doc.data();
     const isAdmin = hasAdminAccess(req.user);
-    if (data.submittedBy !== req.user.uid && !isAdmin) {
+    if (!isOwnerOfData(data, req.user) && !isAdmin) {
       return res.status(403).json({ success: false, error: 'Access denied' });
     }
 
@@ -2922,7 +3126,7 @@ app.get('/api/search', async (req, res) => {
     // 5. Finalize output
     const isProducerRole = (req.user.role || '').toLowerCase() === 'producer';
     const results = scoredResults.map(({ proposal: p }) => {
-        const isOwner = p.submittedBy === req.user.uid || (req.user.email && p.submittedBy === req.user.email.toLowerCase());
+        const isOwner = isOwnerOfData(p, req.user);
         const isRestricted = !isOwner && !isAdmin && isProducerRole;
         
         return {

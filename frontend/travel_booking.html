@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Travel Booking Form</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    <script src="js/branding.js?v=5.1.1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script type="module">
+        import { checkAuth } from './auth.js?v=5.1.1';
+        checkAuth().then(user => {
+            if (user) {
+                window.auth.initNavBar(user);
+            }
+        });
+    </script>
+</head>
+<body class="form-body">
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <h2 style="color: var(--primary);">Submitting Travel Booking...</h2>
+        <p>Please wait, uploading encrypted documents.</p>
+    </div>
+
+    <div class="form-wrapper" style="max-width: 800px; margin: 2rem auto;">
+        <header class="form-header">
+            <div class="logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
+            </div>
+            <h1>Travel Booking Form 2026</h1>
+        </header>
+
+        <form id="travelBookingForm" class="modern-form">
+            <section class="form-section">
+                <h2 class="section-title">Traveler Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="travelerName">Traveler Full Name (As in Passport/ID)</label>
+                        <input type="text" id="travelerName" name="travelerName" required placeholder="Enter full name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="idNumber">ID / Passport Number</label>
+                        <input type="text" id="idNumber" name="idNumber" required placeholder="Enter ID/Passport...">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="e.g. +27 82 123 4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="name@example.com">
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2 class="section-title">Flight & Destination Details</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="departureAirport">Departure Airport</label>
+                        <input type="text" id="departureAirport" name="departureAirport" required placeholder="e.g. O.R. Tambo (JNB)">
+                    </div>
+                    <div class="form-group">
+                        <label for="destinationAirport">Destination Airport</label>
+                        <input type="text" id="destinationAirport" name="destinationAirport" required placeholder="e.g. Cape Town (CPT)">
+                    </div>
+                    <div class="form-group">
+                        <label for="departureDate">Departure Date</label>
+                        <input type="date" id="departureDate" name="departureDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="returnDate">Return Date</label>
+                        <input type="date" id="returnDate" name="returnDate" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="storyName">Story / Project Name & Code</label>
+                        <input type="text" id="storyName" name="storyName" required placeholder="e.g. Hot Soup">
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2 class="section-title">Accommodation & Car Hire</h2>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label for="accommodationRequired">Accommodation Required?</label>
+                            <select id="accommodationRequired" name="accommodationRequired" style="width: 100%;">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="flex: 1; min-width: 200px;">
+                            <label for="carHireRequired">Car Hire Required?</label>
+                            <select id="carHireRequired" name="carHireRequired" style="width: 100%;">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" style="width: 100%;">
+                        <label for="additionalNotes">Special Requests / Preferences</label>
+                        <textarea id="additionalNotes" name="additionalNotes" rows="3" placeholder="Specify airline, hotel preference, seating, dietary requirements..." style="width: 100%; box-sizing: border-box;"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                <a href="index.html" class="btn-soft" style="text-decoration: none; display: flex; align-items: center;">Cancel</a>
+                <button type="submit" class="add-btn" style="margin-top: 0; background: var(--primary); color: white; border: none; padding: 0.75rem 2rem; font-weight: 600; border-radius: 6px; cursor: pointer;">Submit Request</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Success Dialog -->
+    <div id="successDialog" class="dialog-overlay hidden">
+        <div class="dialog-box">
+            <h2>Travel Request Submitted</h2>
+            <p>Your Travel Booking request has been logged and the travel coordinator has been notified.</p>
+            <button id="dialogCloseBtn" class="add-btn">Return to Dashboard</button>
+        </div>
+    </div>
+
+    <script src="travel_booking.js"></script>
+</body>
+</html>
