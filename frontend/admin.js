@@ -160,6 +160,8 @@ async function loadProducers() {
 }
 
 
+let showAllEpisodes = false;
+
 function populateEpisodesSidebar(proposals) {
     const sidebarList = document.getElementById('episodesSidebarList');
     if (!sidebarList) return;
@@ -174,7 +176,7 @@ function populateEpisodesSidebar(proposals) {
         }
     });
 
-    const sortedDates = Array.from(txDates).sort((a, b) => new Date(b) - new Date(a)).slice(0, 10);
+    const sortedDates = Array.from(txDates).sort((a, b) => new Date(b) - new Date(a));
 
     sidebarList.innerHTML = '';
     
@@ -183,7 +185,9 @@ function populateEpisodesSidebar(proposals) {
         return;
     }
 
-    sortedDates.forEach(date => {
+    const datesToShow = showAllEpisodes ? sortedDates : sortedDates.slice(0, 10);
+
+    datesToShow.forEach(date => {
         const li = document.createElement('li');
         const btn = document.createElement('button');
         btn.textContent = date;
@@ -191,6 +195,29 @@ function populateEpisodesSidebar(proposals) {
         li.appendChild(btn);
         sidebarList.appendChild(li);
     });
+
+    if (sortedDates.length > 10) {
+        const li = document.createElement('li');
+        const btn = document.createElement('button');
+        if (showAllEpisodes) {
+            btn.textContent = 'Show Less';
+            btn.onclick = () => {
+                showAllEpisodes = false;
+                populateEpisodesSidebar(proposals);
+            };
+        } else {
+            btn.textContent = 'View All Episodes';
+            btn.onclick = () => {
+                showAllEpisodes = true;
+                populateEpisodesSidebar(proposals);
+            };
+        }
+        btn.style.color = 'var(--primary)';
+        btn.style.fontWeight = '600';
+        btn.style.textAlign = 'center';
+        li.appendChild(btn);
+        sidebarList.appendChild(li);
+    }
 }
 
 function renderCommNumberHtml(commNum) {

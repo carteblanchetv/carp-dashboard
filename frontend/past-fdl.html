@@ -93,13 +93,9 @@
             const res = await fetchWithAuth(url);
             if (res.ok) {
                 const blob = await res.blob();
-                const blobUrl = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = blobUrl;
-                a.download = path.split('/').pop();
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
+                const file = new Blob([blob], { type: 'application/pdf' });
+                const blobUrl = URL.createObjectURL(file);
+                window.open(blobUrl, '_blank');
             } else {
                 alert("Failed to retrieve file.");
             }

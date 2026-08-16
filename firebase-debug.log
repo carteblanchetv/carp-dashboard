@@ -1,0 +1,42 @@
+[debug] [2026-08-16T18:01:29.904Z] ----------------------------------------------------------------------
+[debug] [2026-08-16T18:01:29.908Z] Command:       /Users/liz/.nvm/versions/node/v24.15.0/bin/node /Users/liz/.nvm/versions/node/v24.15.0/bin/firebase deploy
+[debug] [2026-08-16T18:01:29.908Z] CLI Version:   15.15.0
+[debug] [2026-08-16T18:01:29.908Z] Platform:      darwin
+[debug] [2026-08-16T18:01:29.908Z] Node Version:  v24.15.0
+[debug] [2026-08-16T18:01:29.909Z] Time:          Sun Aug 16 2026 20:01:29 GMT+0200 (South Africa Standard Time)
+[debug] [2026-08-16T18:01:29.909Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-08-16T18:01:30.704Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-08-16T18:01:30.704Z] > authorizing via signed-in user (carteblanche.tv101@gmail.com)
+[debug] [2026-08-16T18:01:30.704Z] [iam] checking project cb-deliverables for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2026-08-16T18:01:30.705Z] Checked if tokens are valid: false, expires at: 1786900924773
+[debug] [2026-08-16T18:01:30.705Z] Checked if tokens are valid: false, expires at: 1786900924773
+[debug] [2026-08-16T18:01:30.705Z] > refreshing access token with scopes: []
+[debug] [2026-08-16T18:01:30.706Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-08-16T18:01:30.706Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-08-16T18:01:31.117Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-08-16T18:01:31.117Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-08-16T18:01:31.129Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cb-deliverables:testIamPermissions [none]
+[debug] [2026-08-16T18:01:31.129Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cb-deliverables:testIamPermissions  x-goog-user-project=cb-deliverables
+[debug] [2026-08-16T18:01:31.129Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cb-deliverables:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2026-08-16T18:01:32.782Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cb-deliverables:testIamPermissions 200
+[debug] [2026-08-16T18:01:32.782Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cb-deliverables:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2026-08-16T18:01:32.783Z] Checked if tokens are valid: true, expires at: 1786906890117
+[debug] [2026-08-16T18:01:32.783Z] Checked if tokens are valid: true, expires at: 1786906890117
+[debug] [2026-08-16T18:01:32.783Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/cb-deliverables/serviceAccounts/cb-deliverables@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2026-08-16T18:01:32.783Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/cb-deliverables/serviceAccounts/cb-deliverables@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2026-08-16T18:01:34.575Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/cb-deliverables/serviceAccounts/cb-deliverables@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2026-08-16T18:01:34.575Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/cb-deliverables/serviceAccounts/cb-deliverables@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2026-08-16T18:01:34.576Z] Checked if tokens are valid: true, expires at: 1786906890117
+[debug] [2026-08-16T18:01:34.576Z] Checked if tokens are valid: true, expires at: 1786906890117
+[debug] [2026-08-16T18:01:34.576Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/cb-deliverables [none]
+[debug] [2026-08-16T18:01:35.210Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/cb-deliverables 200
+[debug] [2026-08-16T18:01:35.210Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/cb-deliverables {"projectId":"cb-deliverables","projectNumber":"705555810335","displayName":"Carte Blanche Deliverables","name":"projects/cb-deliverables","resources":{"hostingSite":"cb-deliverables"},"state":"ACTIVE","labels":{"firebase":"enabled","firebase/storage-default-bucket":"created"},"etag":"1_af7046db-4bd5-4fbd-88b6-bdd44317de6a"}
+[info] 
+[info] === Deploying to 'cb-deliverables'...
+[info] 
+[info] i  deploying storage, firestore, functions, hosting 
+[info] i  storage: ensuring required API firebasestorage.googleapis.com is enabled... 
+[debug] [2026-08-16T18:01:35.215Z] Checked if tokens are valid: true, expires at: 1786906890117
+[debug] [2026-08-16T18:01:35.215Z] Checked if tokens are valid: true, expires at: 1786906890117
+[debug] [2026-08-16T18:01:35.215Z] >>> [apiv2][query] GET https://firebasestorage.googleapis.com/v1alpha/projects/cb-deliverables/defaultBucket [none]
