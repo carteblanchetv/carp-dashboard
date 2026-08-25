@@ -2245,7 +2245,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         dialogIcon.style.color = 'var(--success)';
                     }
                     dTitle.textContent = "Submitted";
-                    dMsg.textContent = "Your call sheet has been successfully submitted.";
+                    dMsg.textContent = "Your proposal has been updated.";
                     dialogActions.innerHTML = `<button type="button" class="submit-btn" id="dialogCloseBtn" style="height: 42px !important; border-radius: 8px !important; font-size: 0.8rem !important; font-weight: 700 !important; letter-spacing: 0.05em !important; justify-content: center;">OK</button>`;
                     document.getElementById('dialogCloseBtn').onclick = () => window.location.href = `proposal.html?id=${proposalId}&view=preview`;
                 }
