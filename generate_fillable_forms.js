@@ -227,22 +227,40 @@ class FlowLayout {
   }
 }
 
-function drawHeader(page, logoImg, title, subtitle) {
-  const logoW = 65;
-  const logoH = (logoW / logoImg.width) * logoImg.height; // ~44.75
-  const logoY = 752;
+function drawHeader(page, cbLogoImg, caLogoImg, title, subtitle) {
+  const cbH = 44;
+  const cbW = (cbH / cbLogoImg.height) * cbLogoImg.width;
+  const caH = 26;
+  const caW = (caH / caLogoImg.height) * caLogoImg.width;
 
-  page.drawImage(logoImg, {
-    x: RIGHT_X - logoW,
-    y: logoY,
-    width: logoW,
-    height: logoH
+  const cbX = RIGHT_X - cbW;
+  const cbY = 758;
+
+  const gap = 16;
+  const caX = cbX - gap - caW;
+  const caY = cbY + (cbH - caH) / 2;
+
+  page.drawImage(caLogoImg, {
+    x: caX,
+    y: caY,
+    width: caW,
+    height: caH
   });
+
+  page.drawImage(cbLogoImg, {
+    x: cbX,
+    y: cbY,
+    width: cbW,
+    height: cbH
+  });
+
+  const availableTitleW = caX - MARGIN_X - 16;
+  const titleSize = page.docBoldFont.widthOfTextAtSize(title, 17) > availableTitleW ? 15.5 : 17;
 
   page.drawText(title, {
     x: MARGIN_X,
     y: 775,
-    size: 19,
+    size: titleSize,
     font: page.docBoldFont,
     color: COLOR_PRIMARY
   });
@@ -294,7 +312,7 @@ function drawFooter(page, refCode, pageStr = '') {
 // ----------------------------------------------------
 // 1. PARTICIPANT RELEASE FORM 2026
 // ----------------------------------------------------
-async function generateParticipantRelease(logoImg) {
+async function generateParticipantRelease(cbBytes, caBytes) {
   const doc = await PDFDocument.create();
   const page = doc.addPage([PAGE_W, PAGE_H]);
   const form = doc.getForm();
@@ -303,7 +321,10 @@ async function generateParticipantRelease(logoImg) {
   page.docBoldFont = await doc.embedFont(StandardFonts.HelveticaBold);
   page.docItalicFont = await doc.embedFont(StandardFonts.HelveticaOblique);
 
-  drawHeader(page, logoImg, 'PARTICIPANT RELEASE FORM', 'Carte Blanche & M-Net  •  Official Consent & Recording Agreement');
+  const cbLogoImg = await doc.embedPng(cbBytes);
+  const caLogoImg = await doc.embedPng(caBytes);
+
+  drawHeader(page, cbLogoImg, caLogoImg, 'PARTICIPANT RELEASE FORM', 'Carte Blanche & M-Net  •  Official Consent & Recording Agreement');
 
   const layout = new FlowLayout(page, form, 726);
 
@@ -372,7 +393,7 @@ async function generateParticipantRelease(logoImg) {
 // ----------------------------------------------------
 // 2. MINOR RELEASE FORM 2026
 // ----------------------------------------------------
-async function generateMinorRelease(logoImg) {
+async function generateMinorRelease(cbBytes, caBytes) {
   const doc = await PDFDocument.create();
   const page = doc.addPage([PAGE_W, PAGE_H]);
   const form = doc.getForm();
@@ -381,7 +402,10 @@ async function generateMinorRelease(logoImg) {
   page.docBoldFont = await doc.embedFont(StandardFonts.HelveticaBold);
   page.docItalicFont = await doc.embedFont(StandardFonts.HelveticaOblique);
 
-  drawHeader(page, logoImg, 'MINOR RELEASE FORM', 'Carte Blanche & M-Net  •  Parental / Legal Guardian Consent Agreement');
+  const cbLogoImg = await doc.embedPng(cbBytes);
+  const caLogoImg = await doc.embedPng(caBytes);
+
+  drawHeader(page, cbLogoImg, caLogoImg, 'MINOR RELEASE FORM', 'Carte Blanche & M-Net  •  Parental / Legal Guardian Consent Agreement');
 
   const layout = new FlowLayout(page, form, 726);
 
@@ -458,7 +482,7 @@ async function generateMinorRelease(logoImg) {
 // ----------------------------------------------------
 // 3. LOCATION AGREEMENT 2026
 // ----------------------------------------------------
-async function generateLocationAgreement(logoImg) {
+async function generateLocationAgreement(cbBytes, caBytes) {
   const doc = await PDFDocument.create();
   const page = doc.addPage([PAGE_W, PAGE_H]);
   const form = doc.getForm();
@@ -467,7 +491,10 @@ async function generateLocationAgreement(logoImg) {
   page.docBoldFont = await doc.embedFont(StandardFonts.HelveticaBold);
   page.docItalicFont = await doc.embedFont(StandardFonts.HelveticaOblique);
 
-  drawHeader(page, logoImg, 'LOCATION AGREEMENT', 'Carte Blanche & M-Net  •  Filming Location Access & Permissions Agreement');
+  const cbLogoImg = await doc.embedPng(cbBytes);
+  const caLogoImg = await doc.embedPng(caBytes);
+
+  drawHeader(page, cbLogoImg, caLogoImg, 'LOCATION AGREEMENT', 'Carte Blanche & M-Net  •  Filming Location Access & Permissions Agreement');
 
   const layout = new FlowLayout(page, form, 726);
 
@@ -549,7 +576,7 @@ async function generateLocationAgreement(logoImg) {
 // ----------------------------------------------------
 // 4. FOOTAGE AGREEMENT 2026
 // ----------------------------------------------------
-async function generateFootageAgreement(logoImg) {
+async function generateFootageAgreement(cbBytes, caBytes) {
   const doc = await PDFDocument.create();
   const page = doc.addPage([PAGE_W, PAGE_H]);
   const form = doc.getForm();
@@ -558,7 +585,10 @@ async function generateFootageAgreement(logoImg) {
   page.docBoldFont = await doc.embedFont(StandardFonts.HelveticaBold);
   page.docItalicFont = await doc.embedFont(StandardFonts.HelveticaOblique);
 
-  drawHeader(page, logoImg, 'FOOTAGE AGREEMENT', 'Carte Blanche & M-Net  •  Video & Archival Material Licence Agreement');
+  const cbLogoImg = await doc.embedPng(cbBytes);
+  const caLogoImg = await doc.embedPng(caBytes);
+
+  drawHeader(page, cbLogoImg, caLogoImg, 'FOOTAGE AGREEMENT', 'Carte Blanche & M-Net  •  Video & Archival Material Licence Agreement');
 
   const layout = new FlowLayout(page, form, 726);
 
@@ -637,7 +667,7 @@ async function generateFootageAgreement(logoImg) {
 // ----------------------------------------------------
 // 5. MUSIC AGREEMENT 2026
 // ----------------------------------------------------
-async function generateMusicAgreement(logoImg) {
+async function generateMusicAgreement(cbBytes, caBytes) {
   const doc = await PDFDocument.create();
   const page = doc.addPage([PAGE_W, PAGE_H]);
   const form = doc.getForm();
@@ -646,7 +676,10 @@ async function generateMusicAgreement(logoImg) {
   page.docBoldFont = await doc.embedFont(StandardFonts.HelveticaBold);
   page.docItalicFont = await doc.embedFont(StandardFonts.HelveticaOblique);
 
-  drawHeader(page, logoImg, 'MUSIC AGREEMENT', 'Carte Blanche & M-Net  •  Music Synchronisation & Broadcast Licence Agreement');
+  const cbLogoImg = await doc.embedPng(cbBytes);
+  const caLogoImg = await doc.embedPng(caBytes);
+
+  drawHeader(page, cbLogoImg, caLogoImg, 'MUSIC AGREEMENT', 'Carte Blanche & M-Net  •  Music Synchronisation & Broadcast Licence Agreement');
 
   const layout = new FlowLayout(page, form, 726);
 
@@ -725,13 +758,16 @@ async function generateMusicAgreement(logoImg) {
 // ----------------------------------------------------
 // 6. INSERT SHEET 2026 (Multi-page: 10 Pages)
 // ----------------------------------------------------
-async function generateInsertSheet(logoImg) {
+async function generateInsertSheet(cbBytes, caBytes) {
   const doc = await PDFDocument.create();
   const form = doc.getForm();
 
   const fontRegular = await doc.embedFont(StandardFonts.Helvetica);
   const fontBold = await doc.embedFont(StandardFonts.HelveticaBold);
   const fontItalic = await doc.embedFont(StandardFonts.HelveticaOblique);
+
+  const cbLogoImg = await doc.embedPng(cbBytes);
+  const caLogoImg = await doc.embedPng(caBytes);
 
   const TOTAL_PAGES = 10;
   let creditCounter = 1;
@@ -743,7 +779,7 @@ async function generateInsertSheet(logoImg) {
     page.docBoldFont = fontBold;
     page.docItalicFont = fontItalic;
 
-    drawHeader(page, logoImg, 'INSERT SHEET', 'Carte Blanche  •  Official Post-Production Graphics & Credits Delivery');
+    drawHeader(page, cbLogoImg, caLogoImg, 'INSERT SHEET', 'Carte Blanche  •  Official Post-Production Graphics & Credits Delivery');
 
     const layout = new FlowLayout(page, form, 726);
 
@@ -931,32 +967,34 @@ async function main() {
   const outDir = path.join(__dirname, 'frontend', 'templates');
   if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
-  const logoBytes = fs.readFileSync(path.join(__dirname, 'frontend', 'assets', 'cb_wordmark_highres.png'));
-  const tmpDoc = await PDFDocument.create();
-  const logoImg = await tmpDoc.embedPng(logoBytes);
+  const cbBytes = fs.readFileSync(path.join(__dirname, 'frontend', 'assets', 'carte_blanche_logo.png'));
+  const caForPdfPath = path.join(__dirname, 'frontend', 'assets', 'combined_artists_logo_for_pdf.png');
+  const caBytes = fs.existsSync(caForPdfPath)
+    ? fs.readFileSync(caForPdfPath)
+    : fs.readFileSync(path.join(__dirname, 'frontend', 'assets', 'combined_artists_logo.png'));
 
   console.log('1. Generating Participant Release Form 2026...');
-  const prBytes = await generateParticipantRelease(logoImg);
+  const prBytes = await generateParticipantRelease(cbBytes, caBytes);
   fs.writeFileSync(path.join(outDir, 'Carte_Blanche_Participant_Release_Form_2026.pdf'), prBytes);
 
   console.log('2. Generating Minor Release Form 2026...');
-  const mrBytes = await generateMinorRelease(logoImg);
+  const mrBytes = await generateMinorRelease(cbBytes, caBytes);
   fs.writeFileSync(path.join(outDir, 'Carte_Blanche_Minor_Release_Form_2026.pdf'), mrBytes);
 
   console.log('3. Generating Location Agreement 2026...');
-  const laBytes = await generateLocationAgreement(logoImg);
+  const laBytes = await generateLocationAgreement(cbBytes, caBytes);
   fs.writeFileSync(path.join(outDir, 'Carte_Blanche_Location_Agreement_2026.pdf'), laBytes);
 
   console.log('4. Generating Footage Agreement 2026...');
-  const faBytes = await generateFootageAgreement(logoImg);
+  const faBytes = await generateFootageAgreement(cbBytes, caBytes);
   fs.writeFileSync(path.join(outDir, 'Carte_Blanche_Footage_Agreement_2026.pdf'), faBytes);
 
   console.log('5. Generating Music Agreement 2026...');
-  const maBytes = await generateMusicAgreement(logoImg);
+  const maBytes = await generateMusicAgreement(cbBytes, caBytes);
   fs.writeFileSync(path.join(outDir, 'Carte_Blanche_Music_Agreement_2026.pdf'), maBytes);
 
   console.log('6. Generating Insert Sheet 2026...');
-  const isBytes = await generateInsertSheet(logoImg);
+  const isBytes = await generateInsertSheet(cbBytes, caBytes);
   fs.writeFileSync(path.join(outDir, 'Carte_Blanche_Insert_Sheet_2026.pdf'), isBytes);
 
   console.log('All 6 fillable PDFs successfully generated!');
