@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Legal & Production Forms - CARP Dashboard</title>
+    <link rel="stylesheet" href="style.css?v=5.1.2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    <script type="module">
+        import { checkAuth } from './auth.js?v=5.1.1';
+        checkAuth().then(user => {
+            if (user) {
+                window.auth.initNavBar(user);
+            }
+        });
+    </script>
+    <style>
+        .forms-hub-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+        .hub-hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .hub-hero h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            font-weight: 800;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .hub-hero p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+        .hub-search-bar {
+            max-width: 600px;
+            margin: 1.5rem auto 2.5rem;
+            position: relative;
+        }
+        .hub-search-input {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.75rem;
+            font-size: 0.95rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-main);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+        }
+        .hub-search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+        .hub-search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+        .hub-section-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-main);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .forms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 3rem;
+        }
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .form-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .form-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .form-card-icon {
+            font-size: 2rem;
+            line-height: 1;
+            padding: 0.6rem;
+            border-radius: var(--radius-sm);
+            background: rgba(0, 143, 190, 0.08);
+            border: 1px solid rgba(0, 143, 190, 0.15);
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        .form-card-title-group h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0 0 0.35rem 0;
+            line-height: 1.3;
+        }
+        .form-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            background: rgba(0, 143, 190, 0.1);
+            color: var(--primary);
+        }
+        .form-card-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        .form-card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+        .btn-fill-online {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-fill-online:hover {
+            background: var(--primary-hover);
+            color: white;
+        }
+        .btn-download-empty {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-download-empty:hover {
+            background: rgba(0, 143, 190, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .btn-full-width {
+            grid-column: span 2;
+        }
+        .back-nav {
+            margin-bottom: 1.5rem;
+        }
+        .back-nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .back-nav a:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+    <!-- GLOBAL TOP NAV -->
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <a href="index.html" class="gnav-btn" title="Back to Dashboard">
+                    <span>🏠</span>
+                    <span>DASHBOARD</span>
+                </a>
+                <a href="user_management.html" id="gnavAdminBtn" class="gnav-btn" style="display: none;">
+                    <span>👥</span>
+                    <span>USER MANAGEMENT</span>
+                </a>
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Masquerade Banner -->
+    <div id="masqueradeBanner" class="masquerade-banner">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 1.25rem;">🎭</span>
+            <div style="display: flex; flex-direction: column; gap: 0.1rem;">
+                <div style="line-height: 1.2;"><b>Masquerade Mode:</b> <span id="masqueradeName"></span></div>
+                <div style="opacity: 0.9; font-size: 0.8em; line-height: 1.2;">Perspective: <span id="masqueradeRole" style="text-transform: uppercase; font-weight: bold;"></span></div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <div id="masqueradeViewAction"></div>
+            <button onclick="window.auth.stopMasquerade()" class="btn-soft" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.4); padding: 0.4rem 0.8rem; font-size: 0.75rem; border-radius: 6px; cursor: pointer;">Stop Masquerade</button>
+        </div>
+    </div>
+
+    <div class="forms-hub-container">
+        <div class="back-nav">
+            <a href="index.html">← Back to Dashboard</a>
+        </div>
+
+        <header class="hub-hero">
+            <div class="logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
+            </div>
+            <h1>Legal &amp; Production Forms</h1>
+            <p>Access official Carte Blanche release forms, licensing agreements, and production templates. Fill them online or download neat, fillable blank PDFs with interactive fields for mobile and desktop.</p>
+
+            <div class="hub-search-bar">
+                <span class="hub-search-icon">🔍</span>
+                <input type="text" id="formSearchInput" class="hub-search-input" placeholder="Search forms by name, role, or type (e.g. participant, minor, music)...">
+            </div>
+        </header>
+
+        <!-- SECTION: LEGAL & RELEASE FORMS -->
+        <div class="hub-section-title">
+            <span>📄</span> Legal Release Forms &amp; Rights Agreements
+        </div>
+        <div class="forms-grid" id="legalFormsGrid">
+            
+            <!-- Participant Release Form -->
+            <div class="form-card" data-keywords="participant adult consent release interview camera 2026">
+                <div>
+                    <div class="form-card-header">
+                        <div class="form-card-icon">👤</div>
+                        <div class="form-card-title-group">
+                            <span class="form-tag">Consent &bull; Adult</span>
+                            <h3>Participant Release Form 2026</h3>
+                        </div>
+                    </div>
+                    <p class="form-card-desc">Standard release giving consent to M-Net and Carte Blanche to film interviewees, record voices, and broadcast on all platforms.</p>
+                </div>
+                <div class="form-card-actions">
+                    <a href="participant_release.html" class="btn-fill-online">
+                        <span>📝</span> Fill Online
+                    </a>
+                    <a href="templates/Carte_Blanche_Participant_Release_Form_2026.pdf" download="Carte_Blanche_Participant_Release_Form_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                        <span>📥</span> Blank PDF
+                    </a>
+                </div>
+            </div>
+
+            <!-- Minor Release Form -->
+            <div class="form-card" data-keywords="minor child children parent guardian consent release 2026">
+                <div>
+                    <div class="form-card-header">
+                        <div class="form-card-icon" style="background: rgba(168, 85, 247, 0.08); border-color: rgba(168, 85, 247, 0.2); color: #a855f7;">🧒</div>
+                        <div class="form-card-title-group">
+                            <span class="form-tag" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">Consent &bull; Minor</span>
+                            <h3>Minor Release Form 2026</h3>
+                        </div>
+                    </div>
+                    <p class="form-card-desc">Parental or legal guardian permission for interviewing, filming, and broadcasting children under 18 on Carte Blanche.</p>
+                </div>
+                <div class="form-card-actions">
+                    <a href="minor_release.html" class="btn-fill-online" style="background: #9333ea;">
+                        <span>📝</span> Fill Online
+                    </a>
+                    <a href="templates/Carte_Blanche_Minor_Release_Form_2026.pdf" download="Carte_Blanche_Minor_Release_Form_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                        <span>📥</span> Blank PDF
+                    </a>
+                </div>
+            </div>
+
+            <!-- Location Agreement -->
+            <div class="form-card" data-keywords="location premises property venue filming agreement 2026">
+                <div>
+                    <div class="form-card-header">
+                        <div class="form-card-icon" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2); color: #10b981;">📍</div>
+                        <div class="form-card-title-group">
+                            <span class="form-tag" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">Premises &bull; Property</span>
+                            <h3>Location Agreement 2026</h3>
+                        </div>
+                    </div>
+                    <p class="form-card-desc">Permission from property owners/managers to enter premises, bring equipment, and film scenes for Carte Blanche.</p>
+                </div>
+                <div class="form-card-actions">
+                    <a href="location_agreement.html" class="btn-fill-online" style="background: #10b981;">
+                        <span>📝</span> Fill Online
+                    </a>
+                    <a href="templates/Carte_Blanche_Location_Agreement_2026.pdf" download="Carte_Blanche_Location_Agreement_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                        <span>📥</span> Blank PDF
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footage Agreement -->
+            <div class="form-card" data-keywords="footage video archive licensing rights owner 2026">
+                <div>
+                    <div class="form-card-header">
+                        <div class="form-card-icon" style="background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.2); color: #f59e0b;">🎞️</div>
+                        <div class="form-card-title-group">
+                            <span class="form-tag" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">Licence &bull; Footage</span>
+                            <h3>Footage Agreement 2026</h3>
+                        </div>
+                    </div>
+                    <p class="form-card-desc">Permission from rights holders to incorporate third-party or user-submitted video footage/images into stories.</p>
+                </div>
+                <div class="form-card-actions">
+                    <a href="footage_release_agreement.html" class="btn-fill-online" style="background: #d97706;">
+                        <span>📝</span> Fill Online
+                    </a>
+                    <a href="templates/Carte_Blanche_Footage_Agreement_2026.pdf" download="Carte_Blanche_Footage_Agreement_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                        <span>📥</span> Blank PDF
+                    </a>
+                </div>
+            </div>
+
+            <!-- Music Agreement -->
+            <div class="form-card" data-keywords="music composition audio soundtrack licensing rights 2026">
+                <div>
+                    <div class="form-card-header">
+                        <div class="form-card-icon" style="background: rgba(236, 72, 153, 0.08); border-color: rgba(236, 72, 153, 0.2); color: #ec4899;">🎵</div>
+                        <div class="form-card-title-group">
+                            <span class="form-tag" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">Licence &bull; Music</span>
+                            <h3>Music Agreement 2026</h3>
+                        </div>
+                    </div>
+                    <p class="form-card-desc">Music synchronisation agreement granting permission to use compositions and recordings in Carte Blanche broadcasts.</p>
+                </div>
+                <div class="form-card-actions">
+                    <a href="music_agreement.html" class="btn-fill-online" style="background: #db2777;">
+                        <span>📝</span> Fill Online
+                    </a>
+                    <a href="templates/Carte_Blanche_Music_Agreement_2026.pdf" download="Carte_Blanche_Music_Agreement_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                        <span>📥</span> Blank PDF
+                    </a>
+                </div>
+            </div>
+
+            <!-- Insert Sheet -->
+            <div class="form-card" data-keywords="insert sheet graphics supers credits names 2026">
+                <div>
+                    <div class="form-card-header">
+                        <div class="form-card-icon" style="background: rgba(99, 102, 241, 0.08); border-color: rgba(99, 102, 241, 0.2); color: #6366f1;">📝</div>
+                        <div class="form-card-title-group">
+                            <span class="form-tag" style="background: rgba(99, 102, 241, 0.1); color: #6366f1;">Production &bull; Graphics</span>
+                            <h3>Insert Sheet 2026</h3>
+                        </div>
+                    </div>
+                    <p class="form-card-desc">Official insert sheet document for specifying lower thirds, guest titles, on-screen supers, and photo credits.</p>
+                </div>
+                <div class="form-card-actions">
+                    <a href="insert_sheet.html" class="btn-fill-online" style="background: #4f46e5;">
+                        <span>📝</span> Fill Online
+                    </a>
+                    <a href="templates/Carte_Blanche_Insert_Sheet_2026.pdf" download="Carte_Blanche_Insert_Sheet_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                        <span>📥</span> Blank PDF
+                    </a>
+                </div>
+            </div>
+
+            <!-- Travel Booking Form -->
+            <div class="form-card" data-keywords="travel flight car hotel booking logistics 2026">
+                <div>
+                    <div class="form-card-header">
+                        <div class="form-card-icon" style="background: rgba(14, 165, 233, 0.08); border-color: rgba(14, 165, 233, 0.2); color: #0ea5e9;">✈️</div>
+                        <div class="form-card-title-group">
+                            <span class="form-tag" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9;">Logistics &bull; Crew</span>
+                            <h3>Travel Booking Form 2026</h3>
+                        </div>
+                    </div>
+                    <p class="form-card-desc">Production travel and logistics booking portal for crew flights, accommodation, and rental car arrangements.</p>
+                </div>
+                <div class="form-card-actions">
+                    <a href="travel_booking.html" class="btn-fill-online btn-full-width" style="background: #0284c7;">
+                        <span>✈️</span> Fill Online &amp; Submit &rarr;
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Quick filter script -->
+    <script>
+        document.getElementById('formSearchInput').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.form-card');
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                const keywords = card.getAttribute('data-keywords') || '';
+                if (!query || text.includes(query) || keywords.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
