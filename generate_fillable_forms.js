@@ -256,25 +256,22 @@ function drawHeader(page, cbLogoImg, caLogoImg, title, subtitle) {
 
   const availableTitleW = caX - MARGIN_X - 16;
   const titleSize = page.docBoldFont.widthOfTextAtSize(title, 17) > availableTitleW ? 15.5 : 17;
-  const titleY = subtitle ? 775 : 765;
 
   page.drawText(title, {
     x: MARGIN_X,
-    y: titleY,
+    y: 775,
     size: titleSize,
     font: page.docBoldFont,
     color: COLOR_PRIMARY
   });
 
-  if (subtitle) {
-    page.drawText(subtitle, {
-      x: MARGIN_X,
-      y: 758,
-      size: 8.5,
-      font: page.docRegularFont,
-      color: COLOR_TEXT_MUTED
-    });
-  }
+  page.drawText(subtitle, {
+    x: MARGIN_X,
+    y: 758,
+    size: 8.5,
+    font: page.docRegularFont,
+    color: COLOR_TEXT_MUTED
+  });
 
   page.drawLine({
     start: { x: MARGIN_X, y: 742 },
@@ -682,64 +679,60 @@ async function generateMusicAgreement(cbBytes, caBytes) {
   const cbLogoImg = await doc.embedPng(cbBytes);
   const caLogoImg = await doc.embedPng(caBytes);
 
-  drawHeader(page, cbLogoImg, caLogoImg, 'MUSIC AGREEMENT', '');
+  drawHeader(page, cbLogoImg, caLogoImg, 'MUSIC AGREEMENT', 'Carte Blanche & M-Net  •  Music Synchronisation & Broadcast Licence Agreement');
 
   const layout = new FlowLayout(page, form, 726);
 
-  // Preamble & Parties
-  layout.addParagraph(
-    "This Agreement is entered into by and between Carte Blanche and M-Net ('the producer') and:",
-    page.docBoldFont,
-    7.8
-  );
-
-  const halfW = (CONTENT_W - 12) / 2;
-  layout.addFieldRow([
-    { id: 'ownerName', label: 'Music Owner Name and Surname', width: halfW },
-    { id: 'ownerCompany', label: "On Behalf Of (Music Owner Company) ('owner')", width: halfW, gap: 0 }
-  ]);
+  // Preamble
+  layout.addParagraph('This Agreement is entered into by and between:', page.docBoldFont, 7.8);
+  layout.addParagraph('Electronic Media Network Proprietary Limited ("M-Net") and Combined Artistic Productions CC ("the producer") and the Composer, Artist, or Rights Holder named below ("the owner").', page.docRegularFont, 7.5);
 
   layout.addDivider();
 
   // Section 1: Terms
-  layout.addHeading('1. TERMS OF MUSIC PERMISSION');
+  layout.addHeading('1. TERMS OF MUSIC SYNCHRONISATION & BROADCAST LICENCE');
 
   const terms = [
-    'The owner hereby gives the producer permission to use portions of the following music compositions (“the music”) in the story titled below to be broadcast on Carte Blanche on M-Net on the date below and on any other MultiChoice platform as M-Net sees fit, in perpetuity.',
-    'The producer undertakes to use the music fairly to illustrate issues pertaining to the story.',
-    'The producer will not pay the owner for the use of the footage.',
-    'The program in its completed form is the property of M-Net and Carte Blanche.'
+    '1. Grant of Synchronisation Licence: The owner hereby grants the producer a non-exclusive, worldwide licence to synchronise, incorporate and use portions of the musical compositions and sound recordings described below ("the music") in the story specified below, for broadcast on Carte Blanche on M-Net, and across any MultiChoice platform or digital service as M-Net sees fit, in perpetuity.',
+    '2. Editorial & Story Illustration: The producer undertakes to use the music fairly to underscore and illustrate issues pertaining to the story in accordance with professional broadcast standards.',
+    '3. Royalty-Free Synchronisation: The owner confirms that this synchronisation licence is granted on a royalty-free basis and the producer will not pay the owner a fee for the broadcast synchronisation of the music.',
+    '4. Ownership of Programme: The television programme in its completed broadcast form is the exclusive property of M-Net and Carte Blanche.',
+    '5. Protection of Musical Work: The music in its entirety remains the copyright property of the owner, and Carte Blanche & M-Net shall not share, copy, or distribute the standalone audio recordings outside the context of the programme.',
+    '6. Warranties: The owner warrants that they are the sole creator, rights holder, or authorised representative with full legal authority to grant these synchronisation rights without infringing third-party rights.'
   ];
 
   for (const t of terms) {
-    layout.addParagraph(t, page.docRegularFont, 7.5, COLOR_TEXT_BODY, 10);
+    layout.addParagraph(t, page.docRegularFont, 7.2, COLOR_TEXT_BODY, 9.2);
     layout.addSpace(1);
   }
 
-  // Section 2: Music Track Titles
+  // Section 2: Music Track Description
   layout.addDivider();
-  layout.addHeading('2. MUSIC TRACK TITLES');
+  layout.addHeading('2. MUSIC TRACK DETAILS & COMPOSITION CREDITS');
 
   layout.addFieldRow([
-    { id: 'musicTracks', label: 'Music Track Title(s)', width: CONTENT_W, height: 44, multiline: true, gap: 0 }
+    { id: 'musicTracks', label: 'Track Title(s), Duration, Artist, Composer, Publisher & Record Label', width: CONTENT_W, height: 38, multiline: true, gap: 0 }
   ]);
 
-  layout.addParagraph(
-    'The music in its entirety remains the property of the owner and Carte Blanche & M-Net cannot share/copy/send the footage to any other news organisations or persons.',
-    page.docItalicFont,
-    7.2,
-    COLOR_TEXT_MUTED,
-    9.5
-  );
-
-  // Section 3: Production Details
-  layout.addDivider();
-  layout.addHeading('3. PRODUCTION DETAILS');
-
   layout.addFieldRow([
-    { id: 'storyTitle', label: 'Story Title', width: CONTENT_W - 244 },
-    { id: 'commissionNumber', label: 'Commission Number', width: 116 },
-    { id: 'broadcastDate', label: 'Anticipated Broadcast Date', width: 116, gap: 0 }
+    { id: 'courtesyCredit', label: 'Requested Music Credit (e.g. "Music: Artist Name / Track Title")', width: CONTENT_W, gap: 0 }
+  ]);
+
+  // Section 3: Artist & Production Details
+  layout.addDivider();
+  layout.addHeading('3. ARTIST, COMPOSER & PRODUCTION DETAILS');
+
+  const halfW = (CONTENT_W - 12) / 2;
+  layout.addFieldRow([
+    { id: 'artistName', label: 'Artist / Composer Full Name', width: halfW },
+    { id: 'publisherName', label: 'Publisher / Record Label / On Behalf Of', width: halfW, gap: 0 }
+  ]);
+
+  const thirdW = (CONTENT_W - 16) / 3;
+  layout.addFieldRow([
+    { id: 'storyTitle', label: 'Story Title / Working Name', width: thirdW },
+    { id: 'commissionNumber', label: 'Commission Number', width: thirdW },
+    { id: 'broadcastDate', label: 'Anticipated Broadcast Date', width: thirdW, gap: 0 }
   ]);
 
   // Section 4: Signatures
@@ -747,7 +740,7 @@ async function generateMusicAgreement(cbBytes, caBytes) {
   layout.addHeading('4. AUTHORISED SIGNATURES');
 
   layout.addFieldRow([
-    { id: 'ownerSignature', label: 'Rights Holder / Music Owner Signature', width: halfW, height: 38, subtext: 'Type full name or tap to sign digitally' },
+    { id: 'ownerSignature', label: 'Rights Holder / Artist Signature', width: halfW, height: 38, subtext: 'Type full name or tap to sign digitally' },
     { id: 'producerSignature', label: 'Producer Signature (On behalf of M-Net)', width: halfW, height: 38, subtext: 'Type full name or tap to sign digitally', gap: 0 }
   ]);
 
@@ -786,7 +779,7 @@ async function generateInsertSheet(cbBytes, caBytes) {
     page.docBoldFont = fontBold;
     page.docItalicFont = fontItalic;
 
-    drawHeader(page, cbLogoImg, caLogoImg, 'INSERT SHEET', '');
+    drawHeader(page, cbLogoImg, caLogoImg, 'INSERT SHEET', 'Carte Blanche  •  Official Post-Production Graphics & Credits Delivery');
 
     const layout = new FlowLayout(page, form, 726);
 
@@ -794,7 +787,7 @@ async function generateInsertSheet(cbBytes, caBytes) {
 
     layout.addFieldRow([
       { id: 'commNum', label: 'Commission Number', width: 150 },
-      { id: 'storyName', label: 'Story Name', width: CONTENT_W - 162, gap: 0 }
+      { id: 'storyName', label: 'Story Name / Working Title', width: CONTENT_W - 162, gap: 0 }
     ], 19);
 
     const halfW = (CONTENT_W - 12) / 2;
@@ -819,7 +812,7 @@ async function generateInsertSheet(cbBytes, caBytes) {
     ], 19);
 
     layout.addFieldRow([
-      { id: 'thirdPartyFootage', label: '3rd Party Footage', width: CONTENT_W, gap: 0 }
+      { id: 'thirdPartyFootage', label: '3rd Party Footage / Archival Material Used (Specify Yes/No & Details)', width: CONTENT_W, gap: 0 }
     ], 19);
 
     layout.addDivider();
@@ -862,7 +855,7 @@ async function generateInsertSheet(cbBytes, caBytes) {
     });
 
     // Reference Story Name / Comm # on subsequent pages
-    addStandaloneField(form, page, `storyName_p${p}`, 'Story Name', MARGIN_X, headY - 30, CONTENT_W - 160, 18, { fontSize: 9 });
+    addStandaloneField(form, page, `storyName_p${p}`, 'Story Name / Working Title', MARGIN_X, headY - 30, CONTENT_W - 160, 18, { fontSize: 9 });
     addStandaloneField(form, page, `commNum_p${p}`, 'Commission #', RIGHT_X - 150, headY - 30, 150, 18, { fontSize: 9 });
 
     page.drawLine({
@@ -956,7 +949,7 @@ function drawCreditBlock(form, page, num, x, y, width) {
 
   // Title / Super Column: Right
   const titleX = nameX + colW + colGap;
-  page.drawText('TITLE: CASE STUDY / EXPERT TITLE', {
+  page.drawText('TITLE / DESIGNATION / LOWER THIRD', {
     x: titleX,
     y: y - 39,
     size: 7,
