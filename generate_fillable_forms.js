@@ -256,22 +256,25 @@ function drawHeader(page, cbLogoImg, caLogoImg, title, subtitle) {
 
   const availableTitleW = caX - MARGIN_X - 16;
   const titleSize = page.docBoldFont.widthOfTextAtSize(title, 17) > availableTitleW ? 15.5 : 17;
+  const titleY = subtitle ? 775 : 765;
 
   page.drawText(title, {
     x: MARGIN_X,
-    y: 775,
+    y: titleY,
     size: titleSize,
     font: page.docBoldFont,
     color: COLOR_PRIMARY
   });
 
-  page.drawText(subtitle, {
-    x: MARGIN_X,
-    y: 758,
-    size: 8.5,
-    font: page.docRegularFont,
-    color: COLOR_TEXT_MUTED
-  });
+  if (subtitle) {
+    page.drawText(subtitle, {
+      x: MARGIN_X,
+      y: 758,
+      size: 8.5,
+      font: page.docRegularFont,
+      color: COLOR_TEXT_MUTED
+    });
+  }
 
   page.drawLine({
     start: { x: MARGIN_X, y: 742 },
@@ -779,7 +782,7 @@ async function generateInsertSheet(cbBytes, caBytes) {
     page.docBoldFont = fontBold;
     page.docItalicFont = fontItalic;
 
-    drawHeader(page, cbLogoImg, caLogoImg, 'INSERT SHEET', 'Carte Blanche  •  Official Post-Production Graphics & Credits Delivery');
+    drawHeader(page, cbLogoImg, caLogoImg, 'INSERT SHEET', '');
 
     const layout = new FlowLayout(page, form, 726);
 
@@ -787,7 +790,7 @@ async function generateInsertSheet(cbBytes, caBytes) {
 
     layout.addFieldRow([
       { id: 'commNum', label: 'Commission Number', width: 150 },
-      { id: 'storyName', label: 'Story Name / Working Title', width: CONTENT_W - 162, gap: 0 }
+      { id: 'storyName', label: 'Story Name', width: CONTENT_W - 162, gap: 0 }
     ], 19);
 
     const halfW = (CONTENT_W - 12) / 2;
@@ -812,7 +815,7 @@ async function generateInsertSheet(cbBytes, caBytes) {
     ], 19);
 
     layout.addFieldRow([
-      { id: 'thirdPartyFootage', label: '3rd Party Footage / Archival Material Used (Specify Yes/No & Details)', width: CONTENT_W, gap: 0 }
+      { id: 'thirdPartyFootage', label: '3rd Party Footage', width: CONTENT_W, gap: 0 }
     ], 19);
 
     layout.addDivider();
@@ -855,7 +858,7 @@ async function generateInsertSheet(cbBytes, caBytes) {
     });
 
     // Reference Story Name / Comm # on subsequent pages
-    addStandaloneField(form, page, `storyName_p${p}`, 'Story Name / Working Title', MARGIN_X, headY - 30, CONTENT_W - 160, 18, { fontSize: 9 });
+    addStandaloneField(form, page, `storyName_p${p}`, 'Story Name', MARGIN_X, headY - 30, CONTENT_W - 160, 18, { fontSize: 9 });
     addStandaloneField(form, page, `commNum_p${p}`, 'Commission #', RIGHT_X - 150, headY - 30, 150, 18, { fontSize: 9 });
 
     page.drawLine({
@@ -949,7 +952,7 @@ function drawCreditBlock(form, page, num, x, y, width) {
 
   // Title / Super Column: Right
   const titleX = nameX + colW + colGap;
-  page.drawText('TITLE / DESIGNATION / LOWER THIRD', {
+  page.drawText('TITLE: CASE STUDY / EXPERT TITLE', {
     x: titleX,
     y: y - 39,
     size: 7,
