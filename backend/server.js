@@ -26,20 +26,47 @@ app.use(cors({ origin: true }));
  */
 async function validateFirebaseIdToken(req, res, next) {
   console.log(`[LOCAL AUTH] ${req.method} ${req.url}`);
-  
-  if (!req.headers.authorization || !req.headers.authorization.startsWith('Bearer ')) {
+
+  const publicFormRoutes = [
+    '/api/send-participant-release',
+    '/api/send-minor-release',
+    '/api/send-location-agreement',
+    '/api/send-music-agreement',
+    '/api/send-travel-booking'
+  ];
+
+  const isPublicFormRoute = publicFormRoutes.some(route => req.path.startsWith(route) || req.url.startsWith(route));
+
+  let idToken;
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    const rawToken = req.headers.authorization.split('Bearer ')[1];
+    if (rawToken && rawToken !== 'null' && rawToken !== 'undefined') {
+      idToken = rawToken;
+    }
+  } else if (req.query && req.query.token && req.query.token !== 'null' && req.query.token !== 'undefined') {
+    idToken = req.query.token;
+  }
+
+  if (!idToken && isPublicFormRoute) {
+    // Guest participant access allowed without login
+    return next();
+  }
+
+  if (!idToken) {
     console.error('No Firebase ID token was passed as a Bearer token in the Authorization header.');
     res.status(403).json({ success: false, error: 'Unauthorized: No token provided.' });
     return;
   }
 
-  let idToken = req.headers.authorization.split('Bearer ')[1];
   try {
     const decodedIdToken = await admin.auth().verifyIdToken(idToken);
     req.user = decodedIdToken;
-    next();
-    return;
+    return next();
   } catch (error) {
+    if (isPublicFormRoute) {
+      console.warn('[LOCAL AUTH] Optional token verify failed on public form, continuing as guest:', error.message);
+      return next();
+    }
     console.error('Error while verifying Firebase ID token:', error);
     res.status(403).json({ success: false, error: 'Unauthorized: Invalid token.' });
     return;
@@ -115,6 +142,75 @@ const transporter = nodemailer.createTransport({
 
 const { formatDisplayDate } = require('./utils');
 
+// Helper to route form submissions to designated recipients + submitter + producer
+function getFormRecipients(formType, submitterEmail, extraEmail) {
+  const recipients = new Set();
+  if (formType === 'travel_booking') {
+    recipients.add('carteb@embassytravel.co.za');
+    recipients.add('nombuson@combinedartists.co.za');
+  } else {
+    // Participant Release, Minor Release, Location Agreement, Footage Agreement, Music Agreement, Insert Sheet, Insert Footage
+    recipients.add('release@carteblanche.co.za');
+  }
+  [submitterEmail, extraEmail].forEach(email => {
+    if (email && typeof email === 'string' && email.includes('@')) {
+      recipients.add(email.toLowerCase().trim());
+    }
+  });
+  return Array.from(recipients).join(', ');
+}
+
+function getProducerName(req, fields) {
+  if (fields && (fields.producerName || fields.producer)) {
+    return (fields.producerName || fields.producer).trim();
+  }
+  if (req && req.user) {
+    const fullName = `${req.user.firstName || ''} ${req.user.lastName || ''}`.trim();
+    if (fullName) return fullName;
+    if (req.user.name) return req.user.name;
+    if (req.user.email) return req.user.email;
+  }
+  if (fields && (fields.submittedByName || fields.submittedByEmail)) {
+    return (fields.submittedByName || fields.submittedByEmail).trim();
+  }
+  return 'Producer';
+}
+
+function getFormEmoji(formTitle = '') {
+  const lower = formTitle.toLowerCase();
+  if (lower.includes('travel')) return '✈️';
+  if (lower.includes('minor')) return '🧒';
+  if (lower.includes('participant')) return '👤';
+  if (lower.includes('location')) return '📍';
+  if (lower.includes('footage')) return '🎞️';
+  if (lower.includes('music')) return '🎵';
+  if (lower.includes('insert')) return '📝';
+  return '📋';
+}
+
+function buildFormEmailDetails({ formTitle, commissionNumber, storyTitle, producerName }) {
+  const comm = commissionNumber || 'N/A';
+  const story = storyTitle || 'N/A';
+  const prod = producerName || 'N/A';
+  const title = formTitle || 'Form Submission';
+  const emoji = getFormEmoji(title);
+
+  // Format: [Commission Number] - [Story Title] - [Form Title] - [Producer Name]
+  const subject = `${comm} - ${story} - ${title} - ${prod}`;
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1e293b; max-width: 600px;">
+      <h2 style="color: #008fbe; margin-top: 0; margin-bottom: 16px; font-size: 19px; font-weight: 700;">${emoji ? `${emoji} ` : ''}CARTE BLANCHE &bull; ${title.toUpperCase()}</h2>
+      <ul style="margin: 0 0 16px 0; padding-left: 20px; font-size: 15px; line-height: 1.6; color: #1e293b;">
+        <li style="margin-bottom: 6px;"><b>Commission Number:</b> ${comm}</li>
+        <li style="margin-bottom: 6px;"><b>Story Title:</b> ${story}</li>
+        <li style="margin-bottom: 6px;"><b>Producer:</b> ${prod}</li>
+      </ul>
+      <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #1e293b;">Please find the completed ${title} attached to this email.</p>
+    </div>
+  `.trim();
+
+  return { subject, html };
+}
 
 // Helper to save submission to Storage and Firestore
 async function saveSubmission(req, formType, filename, pdfBuffer, metadata) {
@@ -151,8 +247,8 @@ async function saveSubmission(req, formType, filename, pdfBuffer, metadata) {
       formType,
       filename,
       storagePath: finalStoragePath,
-      submittedBy: req.user ? req.user.uid : 'unknown',
-      submittedByEmail: req.user ? req.user.email : 'unknown',
+      submittedBy: req.user ? req.user.uid : 'guest_participant',
+      submittedByEmail: (req.user && req.user.email) || metadata.email || 'guest_participant',
       submittedAt: admin.firestore.FieldValue.serverTimestamp(),
       ...metadata
     };
@@ -257,29 +353,28 @@ app.post('/api/send-footage-agreement', async (req, res, next) => {
     }
 
     const { tx_date, season, episode, uid_number, total_duration } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const toRecipients = getFormRecipients('footage_agreement', submitterEmail);
     const pdfBuffer = file;
     const displayDate = formatDisplayDate(tx_date);
     console.log(`Received Episode Footage Declaration S${season}E${episode}. Size: ${(pdfBuffer.length / 1024 / 1024).toFixed(2)} MB`);
 
-    const subject = `S${season || '?'}E${episode || '?'} Episode Footage Declaration - Carte Blanche TX${displayDate}`;
+    const commissionNumber = fields.commissionNumber || fields.commission_number || uid_number || 'N/A';
+    const storyTitle = fields.storyTitle || fields.storyName || (season && episode ? `S${season} E${episode}` : 'Footage Agreement');
+    const producerName = getProducerName(req, fields);
 
-    const htmlBody = `
-      <h2>EPISODE FOOTAGE DECLARATION</h2>
-      <ul>
-        <li><strong>TX Date:</strong> ${displayDate}</li>
-        <li><strong>Season:</strong> ${season || 'N/A'}</li>
-        <li><strong>Episode:</strong> ${episode || 'N/A'}</li>
-        <li><strong>UID:</strong> ${uid_number || 'N/A'}</li>
-        <li><strong>Total Episode Duration:</strong> ${total_duration || 'N/A'}</li>
-      </ul>
-      <p>Please find the Episode Footage Declaration PDF attached.</p>
-    `;
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Footage Agreement',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
 
     const mailOptions = {
         from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
-        to: process.env.TARGET_EMAIL,
+        to: toRecipients,
         subject,
-        html: htmlBody,
+        html,
         attachments: [
             {
                 filename: `S${season || '?'}E${episode || '?'}_EpisodeFootageDeclaration_TX${(tx_date || 'Date').replace(/\s+/g, '_')}.pdf`,
@@ -298,7 +393,10 @@ app.post('/api/send-footage-agreement', async (req, res, next) => {
       episode,
       txDate: tx_date,
       uid: uid_number,
-      duration: total_duration
+      duration: total_duration,
+      commissionNumber,
+      storyTitle,
+      producerName
     });
 
     res.status(200).json({ success: true, message: 'Footage declaration sent successfully!' });
@@ -315,16 +413,31 @@ app.post('/api/send-participant-release', async (req, res, next) => {
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
     const { fullName, idNumber, phone, email, storyName } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+    const toRecipients = getFormRecipients('participant_release', submitterEmail, producerEmail);
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Participant Release Form',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
+
     const mailOptions = {
         from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
-        to: process.env.TARGET_EMAIL,
-        subject: `Participant Release - ${fullName} - ${storyName}`,
-        html: `<h2>PARTICIPANT RELEASE FORM</h2><ul><li><strong>Participant:</strong> ${fullName}</li><li><strong>ID/Passport:</strong> ${idNumber}</li><li><strong>Phone:</strong> ${phone}</li><li><strong>Email:</strong> ${email}</li><li><strong>Story:</strong> ${storyName}</li></ul>`,
+        to: toRecipients,
+        subject,
+        html,
         attachments: [{ filename: `ParticipantRelease_${fullName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'participant_release', `ParticipantRelease_${fullName.replace(/\s+/g, '_')}.pdf`, file, { fullName, idNumber, phone, email, storyName });
+    await saveSubmission(req, 'participant_release', `ParticipantRelease_${fullName.replace(/\s+/g, '_')}.pdf`, file, { fullName, idNumber, phone, email, storyName, commissionNumber, producerName });
     res.status(200).json({ success: true, message: 'Participant release sent successfully!' });
   } catch (error) {
     console.error('Error sending participant release:', error);
@@ -338,16 +451,31 @@ app.post('/api/send-minor-release', async (req, res, next) => {
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
     const { guardianName, guardianId, phone, email, minorName, minorAge, storyName } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+    const toRecipients = getFormRecipients('minor_release', submitterEmail, producerEmail);
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Minor Release Form',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
+
     const mailOptions = {
         from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
-        to: process.env.TARGET_EMAIL,
-        subject: `Minor Release - ${minorName} - ${storyName}`,
-        html: `<h2>MINOR RELEASE FORM</h2><ul><li><strong>Minor Name:</strong> ${minorName}</li><li><strong>Age:</strong> ${minorAge}</li><li><strong>Guardian Name:</strong> ${guardianName}</li><li><strong>Guardian ID:</strong> ${guardianId}</li><li><strong>Phone:</strong> ${phone}</li><li><strong>Email:</strong> ${email}</li><li><strong>Story:</strong> ${storyName}</li></ul>`,
+        to: toRecipients,
+        subject,
+        html,
         attachments: [{ filename: `MinorRelease_${minorName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'minor_release', `MinorRelease_${minorName.replace(/\s+/g, '_')}.pdf`, file, { guardianName, guardianId, phone, email, minorName, minorAge, storyName });
+    await saveSubmission(req, 'minor_release', `MinorRelease_${minorName.replace(/\s+/g, '_')}.pdf`, file, { guardianName, guardianId, phone, email, minorName, minorAge, storyName, commissionNumber, producerName });
     res.status(200).json({ success: true, message: 'Minor release sent successfully!' });
   } catch (error) {
     console.error('Error sending minor release:', error);
@@ -361,16 +489,31 @@ app.post('/api/send-location-agreement', async (req, res, next) => {
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
     const { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+    const toRecipients = getFormRecipients('location_agreement', submitterEmail, producerEmail);
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Location Agreement',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
+
     const mailOptions = {
         from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
-        to: process.env.TARGET_EMAIL,
-        subject: `Location Agreement - ${propertyAddress} - ${storyName}`,
-        html: `<h2>LOCATION AGREEMENT</h2><ul><li><strong>Owner/Rep:</strong> ${ownerName}</li><li><strong>ID:</strong> ${ownerId}</li><li><strong>Address:</strong> ${propertyAddress}</li><li><strong>Filming Date:</strong> ${filmingDate}</li><li><strong>Phone:</strong> ${phone}</li><li><strong>Email:</strong> ${email}</li><li><strong>Story:</strong> ${storyName}</li></ul>`,
+        to: toRecipients,
+        subject,
+        html,
         attachments: [{ filename: `LocationAgreement_${ownerName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'location_agreement', `LocationAgreement_${ownerName.replace(/\s+/g, '_')}.pdf`, file, { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName });
+    await saveSubmission(req, 'location_agreement', `LocationAgreement_${ownerName.replace(/\s+/g, '_')}.pdf`, file, { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName, commissionNumber, producerName });
     res.status(200).json({ success: true, message: 'Location agreement sent successfully!' });
   } catch (error) {
     console.error('Error sending location agreement:', error);
@@ -384,16 +527,31 @@ app.post('/api/send-music-agreement', async (req, res, next) => {
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
     const { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+    const toRecipients = getFormRecipients('music_agreement', submitterEmail, producerEmail);
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Music Agreement',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
+
     const mailOptions = {
         from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
-        to: process.env.TARGET_EMAIL,
-        subject: `Music Agreement - ${trackTitle} - ${storyName}`,
-        html: `<h2>MUSIC AGREEMENT</h2><ul><li><strong>Artist/Composer:</strong> ${artistName}</li><li><strong>Publisher:</strong> ${publisherName || 'N/A'}</li><li><strong>Track Title:</strong> ${trackTitle}</li><li><strong>Duration:</strong> ${trackDuration}</li><li><strong>Phone:</strong> ${phone}</li><li><strong>Email:</strong> ${email}</li><li><strong>Story:</strong> ${storyName}</li></ul>`,
+        to: toRecipients,
+        subject,
+        html,
         attachments: [{ filename: `MusicAgreement_${trackTitle.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'music_agreement', `MusicAgreement_${trackTitle.replace(/\s+/g, '_')}.pdf`, file, { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName });
+    await saveSubmission(req, 'music_agreement', `MusicAgreement_${trackTitle.replace(/\s+/g, '_')}.pdf`, file, { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName, commissionNumber, producerName });
     res.status(200).json({ success: true, message: 'Music agreement sent successfully!' });
   } catch (error) {
     console.error('Error sending music agreement:', error);
@@ -407,16 +565,31 @@ app.post('/api/send-travel-booking', async (req, res, next) => {
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
     const { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+    const toRecipients = getFormRecipients('travel_booking', submitterEmail, producerEmail);
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Travel Booking Form',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
+
     const mailOptions = {
-        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
-        to: process.env.TARGET_EMAIL,
-        subject: `Travel Booking - ${travelerName} - ${storyName}`,
-        html: `<h2>TRAVEL BOOKING REQUEST</h2><ul><li><strong>Traveler Name:</strong> ${travelerName}</li><li><strong>ID/Passport:</strong> ${idNumber}</li><li><strong>Departure Airport:</strong> ${departureAirport}</li><li><strong>Destination Airport:</strong> ${destinationAirport}</li><li><strong>Departure Date:</strong> ${departureDate}</li><li><strong>Return Date:</strong> ${returnDate}</li><li><strong>Accommodation Required:</strong> ${accommodationRequired}</li><li><strong>Car Hire Required:</strong> ${carHireRequired}</li><li><strong>Special Requests:</strong> ${additionalNotes || 'None'}</li><li><strong>Phone:</strong> ${phone}</li><li><strong>Email:</strong> ${email}</li><li><strong>Story:</strong> ${storyName}</li></ul>`,
+        from: `"Travel Booking" <${process.env.EMAIL_USER}>`,
+        to: toRecipients,
+        subject,
+        html,
         attachments: [{ filename: `TravelRequest_${travelerName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'travel_booking', `TravelRequest_${travelerName.replace(/\s+/g, '_')}.pdf`, file, { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes });
+    await saveSubmission(req, 'travel_booking', `TravelRequest_${travelerName.replace(/\s+/g, '_')}.pdf`, file, { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes, commissionNumber, producerName });
     res.status(200).json({ success: true, message: 'Travel booking request sent successfully!' });
   } catch (error) {
     console.error('Error sending travel booking request:', error);
@@ -433,27 +606,24 @@ app.post('/api/send-insert-footage', async (req, res, next) => {
     }
 
     const { commission_number, story_name, producer_name, delivery_date } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+    const toRecipients = getFormRecipients('insert_footage', submitterEmail, producerEmail);
     const pdfBuffer = file;
     console.log(`Received Insert Footage for ${story_name}. Size: ${(pdfBuffer.length / 1024 / 1024).toFixed(2)} MB`);
 
-    const subject = `Insert Footage ${commission_number ? '#' + commission_number : ''} ${story_name || 'Unknown Story'} ${producer_name || ''} - Carte Blanche`.replace(/\s+/g, ' ');
-
-    const htmlBody = `
-      <h2>INSERT FOOTAGE DECLARATION</h2>
-      <ul>
-        <li><strong>Commission Number:</strong> ${commission_number || 'N/A'}</li>
-        <li><strong>Story Name:</strong> ${story_name || 'N/A'}</li>
-        <li><strong>Producer:</strong> ${producer_name || 'N/A'}</li>
-        <li><strong>Delivery Date:</strong> ${formatDisplayDate(delivery_date)}</li>
-      </ul>
-      <p>Please find the Insert Footage Declaration PDF attached.</p>
-    `;
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Insert Sheet / Footage Declaration',
+      commissionNumber: commission_number || 'N/A',
+      storyTitle: story_name || 'Story',
+      producerName: producer_name || getProducerName(req, fields)
+    });
 
     const mailOptions = {
         from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
-        to: process.env.TARGET_EMAIL,
+        to: toRecipients,
         subject,
-        html: htmlBody,
+        html,
         attachments: [
             {
                 filename: `InsertFootage_${(story_name || 'Story').replace(/\s+/g, '_')}.pdf`,
@@ -517,6 +687,46 @@ app.post('/api/send-insert-footage', async (req, res, next) => {
   } catch (error) {
     console.error('Error sending insert footage:', error);
     res.status(500).json({ success: false, error: 'Failed to send insert footage.', details: error.message });
+  }
+});
+
+app.post('/api/send-insert-sheet', async (req, res, next) => {
+  try {
+    const { fields, file } = await parseMultipart(req);
+    if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
+
+    const storyName = fields.storyName || fields.story_name || fields.storyTitle || 'Story';
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const producerName = getProducerName(req, fields);
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const toRecipients = getFormRecipients('insert_sheet', submitterEmail);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Insert Sheet',
+      commissionNumber,
+      storyTitle: storyName,
+      producerName
+    });
+
+    const mailOptions = {
+      from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+      to: toRecipients,
+      subject,
+      html,
+      attachments: [{ filename: `InsertSheet_${storyName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+    };
+
+    await transporter.sendMail(mailOptions);
+    await saveSubmission(req, 'insert_sheet', `InsertSheet_${storyName.replace(/\s+/g, '_')}.pdf`, file, {
+      storyName,
+      commissionNumber,
+      producerName,
+      ...fields
+    });
+    res.status(200).json({ success: true, message: 'Insert sheet sent successfully!' });
+  } catch (error) {
+    console.error('Error sending insert sheet:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

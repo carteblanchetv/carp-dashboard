@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
+    <script src="js/share_form.js?v=5.1.1"></script>
     <script type="module">
         import { checkAuth } from './auth.js?v=5.1.1';
         checkAuth().then(user => {
@@ -276,6 +277,11 @@
             </div>
             <h1>Legal &amp; Production Forms</h1>
             <p>Access official Carte Blanche release forms, licensing agreements, and production templates. Fill them online or download neat, fillable blank PDFs with interactive fields for mobile and desktop.</p>
+            <div style="margin-top: 0.75rem;">
+                <a href="guide.html#forms-hub" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 600; color: var(--primary); text-decoration: none; padding: 0.3rem 0.75rem; border-radius: 20px; background: rgba(0, 143, 190, 0.08); border: 1px solid rgba(0, 143, 190, 0.2); transition: all 0.2s;">
+                    <span>📖</span> Need help with online forms or blank PDFs? View Guide &rarr;
+                </a>
+            </div>
 
             <div class="hub-search-bar">
                 <span class="hub-search-icon">🔍</span>
@@ -290,13 +296,13 @@
         <div class="forms-grid" id="legalFormsGrid">
             
             <!-- Participant Release Form -->
-            <div class="form-card" data-keywords="participant adult consent release interview camera 2026">
+            <div class="form-card" data-keywords="participant adult consent release interview camera">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon">👤</div>
                         <div class="form-card-title-group">
                             <span class="form-tag">Consent &bull; Adult</span>
-                            <h3>Participant Release Form 2026</h3>
+                            <h3>Participant Release Form</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Standard release giving consent to M-Net and Carte Blanche to film interviewees, record voices, and broadcast on all platforms.</p>
@@ -305,20 +311,23 @@
                     <a href="participant_release.html" class="btn-fill-online">
                         <span>📝</span> Fill Online
                     </a>
-                    <a href="templates/Carte_Blanche_Participant_Release_Form_2026.pdf" download="Carte_Blanche_Participant_Release_Form_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                    <a href="templates/Carte_Blanche_Participant_Release_Form_2026.pdf" download="Carte_Blanche_Participant_Release_Form.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
                         <span>📥</span> Blank PDF
                     </a>
+                    <button type="button" class="btn-share-online" onclick="window.shareForm.openModal({ formTitle: 'Participant Release Form', formUrl: 'participant_release.html', icon: '👤' })">
+                        <span>🔗</span> Share Online Form with Participant
+                    </button>
                 </div>
             </div>
 
             <!-- Minor Release Form -->
-            <div class="form-card" data-keywords="minor child children parent guardian consent release 2026">
+            <div class="form-card" data-keywords="minor child children parent guardian consent release">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(168, 85, 247, 0.08); border-color: rgba(168, 85, 247, 0.2); color: #a855f7;">🧒</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">Consent &bull; Minor</span>
-                            <h3>Minor Release Form 2026</h3>
+                            <h3>Minor Release Form</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Parental or legal guardian permission for interviewing, filming, and broadcasting children under 18 on Carte Blanche.</p>
@@ -327,20 +336,23 @@
                     <a href="minor_release.html" class="btn-fill-online" style="background: #9333ea;">
                         <span>📝</span> Fill Online
                     </a>
-                    <a href="templates/Carte_Blanche_Minor_Release_Form_2026.pdf" download="Carte_Blanche_Minor_Release_Form_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                    <a href="templates/Carte_Blanche_Minor_Release_Form_2026.pdf" download="Carte_Blanche_Minor_Release_Form.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
                         <span>📥</span> Blank PDF
                     </a>
+                    <button type="button" class="btn-share-online" onclick="window.shareForm.openModal({ formTitle: 'Minor Release Form', formUrl: 'minor_release.html', icon: '🧒' })">
+                        <span>🔗</span> Share Online Form with Parent / Guardian
+                    </button>
                 </div>
             </div>
 
             <!-- Location Agreement -->
-            <div class="form-card" data-keywords="location premises property venue filming agreement 2026">
+            <div class="form-card" data-keywords="location premises property venue filming agreement">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2); color: #10b981;">📍</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">Premises &bull; Property</span>
-                            <h3>Location Agreement 2026</h3>
+                            <h3>Location Agreement</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Permission from property owners/managers to enter premises, bring equipment, and film scenes for Carte Blanche.</p>
@@ -349,20 +361,23 @@
                     <a href="location_agreement.html" class="btn-fill-online" style="background: #10b981;">
                         <span>📝</span> Fill Online
                     </a>
-                    <a href="templates/Carte_Blanche_Location_Agreement_2026.pdf" download="Carte_Blanche_Location_Agreement_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                    <a href="templates/Carte_Blanche_Location_Agreement_2026.pdf" download="Carte_Blanche_Location_Agreement.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
                         <span>📥</span> Blank PDF
                     </a>
+                    <button type="button" class="btn-share-online" onclick="window.shareForm.openModal({ formTitle: 'Location Agreement', formUrl: 'location_agreement.html', icon: '📍' })">
+                        <span>🔗</span> Share Online Form with Property Owner
+                    </button>
                 </div>
             </div>
 
             <!-- Footage Agreement -->
-            <div class="form-card" data-keywords="footage video archive licensing rights owner 2026">
+            <div class="form-card" data-keywords="footage video archive licensing rights owner">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.2); color: #f59e0b;">🎞️</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">Licence &bull; Footage</span>
-                            <h3>Footage Agreement 2026</h3>
+                            <h3>Footage Agreement</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Permission from rights holders to incorporate third-party or user-submitted video footage/images into stories.</p>
@@ -371,20 +386,20 @@
                     <a href="footage_release_agreement.html" class="btn-fill-online" style="background: #d97706;">
                         <span>📝</span> Fill Online
                     </a>
-                    <a href="templates/Carte_Blanche_Footage_Agreement_2026.pdf" download="Carte_Blanche_Footage_Agreement_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                    <a href="templates/Carte_Blanche_Footage_Agreement_2026.pdf" download="Carte_Blanche_Footage_Agreement.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
                         <span>📥</span> Blank PDF
                     </a>
                 </div>
             </div>
 
             <!-- Music Agreement -->
-            <div class="form-card" data-keywords="music composition audio soundtrack licensing rights 2026">
+            <div class="form-card" data-keywords="music composition audio soundtrack licensing rights">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(236, 72, 153, 0.08); border-color: rgba(236, 72, 153, 0.2); color: #ec4899;">🎵</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">Licence &bull; Music</span>
-                            <h3>Music Agreement 2026</h3>
+                            <h3>Music Agreement</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Music synchronisation agreement granting permission to use compositions and recordings in Carte Blanche broadcasts.</p>
@@ -393,20 +408,23 @@
                     <a href="music_agreement.html" class="btn-fill-online" style="background: #db2777;">
                         <span>📝</span> Fill Online
                     </a>
-                    <a href="templates/Carte_Blanche_Music_Agreement_2026.pdf" download="Carte_Blanche_Music_Agreement_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                    <a href="templates/Carte_Blanche_Music_Agreement_2026.pdf" download="Carte_Blanche_Music_Agreement.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
                         <span>📥</span> Blank PDF
                     </a>
+                    <button type="button" class="btn-share-online" onclick="window.shareForm.openModal({ formTitle: 'Music Agreement', formUrl: 'music_agreement.html', icon: '🎵' })">
+                        <span>🔗</span> Share Online Form with Licensor / Artist
+                    </button>
                 </div>
             </div>
 
             <!-- Insert Sheet -->
-            <div class="form-card" data-keywords="insert sheet graphics supers credits names 2026">
+            <div class="form-card" data-keywords="insert sheet graphics supers credits names">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(99, 102, 241, 0.08); border-color: rgba(99, 102, 241, 0.2); color: #6366f1;">📝</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(99, 102, 241, 0.1); color: #6366f1;">Production &bull; Graphics</span>
-                            <h3>Insert Sheet 2026</h3>
+                            <h3>Insert Sheet</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Official insert sheet document for specifying lower thirds, guest titles, on-screen supers, and photo credits.</p>
@@ -415,28 +433,34 @@
                     <a href="insert_sheet.html" class="btn-fill-online" style="background: #4f46e5;">
                         <span>📝</span> Fill Online
                     </a>
-                    <a href="templates/Carte_Blanche_Insert_Sheet_2026.pdf" download="Carte_Blanche_Insert_Sheet_2026.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                    <a href="templates/Carte_Blanche_Insert_Sheet_2026.pdf" download="Carte_Blanche_Insert_Sheet.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
                         <span>📥</span> Blank PDF
                     </a>
                 </div>
             </div>
 
             <!-- Travel Booking Form -->
-            <div class="form-card" data-keywords="travel flight car hotel booking logistics 2026">
+            <div class="form-card" data-keywords="travel flight car hotel booking logistics">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(14, 165, 233, 0.08); border-color: rgba(14, 165, 233, 0.2); color: #0ea5e9;">✈️</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9;">Logistics &bull; Crew</span>
-                            <h3>Travel Booking Form 2026</h3>
+                            <h3>Travel Booking Form</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Production travel and logistics booking portal for crew flights, accommodation, and rental car arrangements.</p>
                 </div>
                 <div class="form-card-actions">
-                    <a href="travel_booking.html" class="btn-fill-online btn-full-width" style="background: #0284c7;">
-                        <span>✈️</span> Fill Online &amp; Submit &rarr;
+                    <a href="travel_booking.html" class="btn-fill-online" style="background: #0284c7;">
+                        <span>✈️</span> Fill Online
                     </a>
+                    <a href="templates/Carte_Blanche_Travel_Booking_Form_2026.pdf" download="Carte_Blanche_Travel_Booking_Form.pdf" class="btn-download-empty" title="Download fillable blank PDF (mobile and desktop compatible)">
+                        <span>📥</span> Blank PDF
+                    </a>
+                    <button type="button" class="btn-share-online" onclick="window.shareForm.openModal({ formTitle: 'Travel Booking Form', formUrl: 'travel_booking.html', icon: '✈️' })">
+                        <span>🔗</span> Share Online Form with Traveler
+                    </button>
                 </div>
             </div>
 

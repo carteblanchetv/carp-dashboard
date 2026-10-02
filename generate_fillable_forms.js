@@ -228,6 +228,18 @@ class FlowLayout {
 }
 
 function drawHeader(page, cbLogoImg, caLogoImg, title, subtitle) {
+  // Bold top notice as requested
+  const topNotice = 'Email the completed form to release@carteblanche.co.za';
+  const topNoticeSize = 9.5;
+  const topNoticeW = page.docBoldFont.widthOfTextAtSize(topNotice, topNoticeSize);
+  page.drawText(topNotice, {
+    x: (PAGE_W - topNoticeW) / 2,
+    y: 814,
+    size: topNoticeSize,
+    font: page.docBoldFont,
+    color: COLOR_TEXT_DARK
+  });
+
   const cbH = 44;
   const cbW = (cbH / cbLogoImg.height) * cbLogoImg.width;
   const caH = 26;
@@ -835,6 +847,16 @@ async function generateInsertSheet(cbBytes, caBytes) {
     page.docItalicFont = fontItalic;
 
     // Running Header
+    const topNotice = 'Email the completed form to release@carteblanche.co.za';
+    const topNoticeW = fontBold.widthOfTextAtSize(topNotice, 9.5);
+    page.drawText(topNotice, {
+      x: (PAGE_W - topNoticeW) / 2,
+      y: 814,
+      size: 9.5,
+      font: fontBold,
+      color: COLOR_TEXT_DARK
+    });
+
     const headY = 798;
     page.drawText('CARTE BLANCHE  •  INSERT SHEET (ON-SCREEN CREDITS)', {
       x: MARGIN_X,
@@ -960,6 +982,86 @@ function drawCreditBlock(form, page, num, x, y, width) {
 }
 
 // ----------------------------------------------------
+// 7. TRAVEL BOOKING FORM (A4 Fillable)
+// ----------------------------------------------------
+async function generateTravelBooking(cbBytes, caBytes) {
+  const doc = await PDFDocument.create();
+  const page = doc.addPage([PAGE_W, PAGE_H]);
+  const form = doc.getForm();
+
+  page.docRegularFont = await doc.embedFont(StandardFonts.Helvetica);
+  page.docBoldFont = await doc.embedFont(StandardFonts.HelveticaBold);
+  page.docItalicFont = await doc.embedFont(StandardFonts.HelveticaOblique);
+
+  const cbLogoImg = await doc.embedPng(cbBytes);
+  const caLogoImg = await doc.embedPng(caBytes);
+
+  drawHeader(page, cbLogoImg, caLogoImg, 'TRAVEL BOOKING REQUEST', 'Carte Blanche & Combined Artists  •  Official Travel & Logistics Request');
+
+  const layout = new FlowLayout(page, form, 726);
+
+  // Section 1: Details
+  layout.addHeading('1. PRODUCTION & TRAVELER DETAILS');
+  layout.addFieldRow([
+    { id: 'commissionNumber', label: 'Commission Number', width: 150 },
+    { id: 'storyName', label: 'Story Name / Working Title', width: CONTENT_W - 162, gap: 0 }
+  ]);
+
+  const halfW = (CONTENT_W - 12) / 2;
+  layout.addFieldRow([
+    { id: 'travelerName', label: 'Traveler Full Name (as per ID/Passport)', width: halfW },
+    { id: 'idNumber', label: 'ID / Passport Number', width: halfW, gap: 0 }
+  ]);
+
+  layout.addFieldRow([
+    { id: 'phone', label: 'Contact Phone Number', width: halfW },
+    { id: 'email', label: 'Email Address', width: halfW, gap: 0 }
+  ]);
+
+  // Section 2: Flights
+  layout.addDivider();
+  layout.addHeading('2. FLIGHT ITINERARY');
+  layout.addFieldRow([
+    { id: 'departureAirport', label: 'Departure Airport (e.g. JNB)', width: halfW },
+    { id: 'destinationAirport', label: 'Destination Airport (e.g. CPT)', width: halfW, gap: 0 }
+  ]);
+
+  layout.addFieldRow([
+    { id: 'departureDate', label: 'Departure Date (DD/MM/YYYY)', width: halfW },
+    { id: 'returnDate', label: 'Return Date (DD/MM/YYYY)', width: halfW, gap: 0 }
+  ]);
+
+  // Section 3: Accommodation & Logistics
+  layout.addDivider();
+  layout.addHeading('3. ACCOMMODATION & VEHICLE LOGISTICS');
+  layout.addFieldRow([
+    { id: 'accommodationRequired', label: 'Accommodation Required (Yes/No & Details)', width: halfW },
+    { id: 'carHireRequired', label: 'Car Hire Required (Yes/No & Category)', width: halfW, gap: 0 }
+  ]);
+
+  layout.addFieldRow([
+    { id: 'additionalNotes', label: 'Preferences / Special Requests (Airline, Hotel, Dietary)', width: CONTENT_W, height: 28, multiline: true, gap: 0 }
+  ]);
+
+  // Section 4: Execution & Authorization
+  layout.addDivider();
+  layout.addHeading('4. EXECUTION & AUTHORIZATION');
+  layout.addFieldRow([
+    { id: 'producerName', label: 'Submitted By (Producer Name)', width: halfW },
+    { id: 'submissionDate', label: 'Date Submitted (DD/MM/YYYY)', width: halfW, gap: 0 }
+  ]);
+
+  layout.addFieldRow([
+    { id: 'signature', label: 'Digital Signature / Sign-off', width: halfW },
+    { id: 'routingStatus', label: 'Routing / Dispatch Status', width: halfW, gap: 0 }
+  ]);
+
+  drawFooter(page, 'Form Ref: CB-TRF');
+
+  return await doc.save();
+}
+
+// ----------------------------------------------------
 // MAIN EXECUTION
 // ----------------------------------------------------
 async function main() {
@@ -997,7 +1099,11 @@ async function main() {
   const isBytes = await generateInsertSheet(cbBytes, caBytes);
   fs.writeFileSync(path.join(outDir, 'Carte_Blanche_Insert_Sheet_2026.pdf'), isBytes);
 
-  console.log('All 6 fillable PDFs successfully generated!');
+  console.log('7. Generating Travel Booking Form 2026...');
+  const tbBytes = await generateTravelBooking(cbBytes, caBytes);
+  fs.writeFileSync(path.join(outDir, 'Carte_Blanche_Travel_Booking_Form_2026.pdf'), tbBytes);
+
+  console.log('All 7 fillable PDFs successfully generated!');
 }
 
 main().catch(err => {

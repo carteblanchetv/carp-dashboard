@@ -414,6 +414,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const margin = 15;
         const y = 15;
         
+        // 0. Top Instruction Note
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8.5);
+        doc.setTextColor(15, 23, 42);
+        doc.text('Email the completed form to release@carteblanche.co.za', pageWidth / 2, 8, { align: 'center' });
+
         // 1. BRANDING LOGOS
         if (typeof getBlackLogo === 'function') {
             const blackLogo = getBlackLogo();

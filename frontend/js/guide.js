@@ -12,27 +12,73 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuItems = document.querySelectorAll('.menu-item');
     const sections = document.querySelectorAll('.guide-section');
 
+    function switchSection(targetSectionId) {
+        if (!targetSectionId) return;
+
+        // Remove active class from all menu items and add to clicked one
+        menuItems.forEach(mi => {
+            if (mi.getAttribute('data-section') === targetSectionId) {
+                mi.classList.add('active');
+            } else {
+                mi.classList.remove('active');
+            }
+        });
+
+        // Remove active class from all sections and add to target one
+        sections.forEach(sec => sec.classList.remove('active'));
+        const targetSection = document.getElementById(targetSectionId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+            // Scroll to top of content card on mobile/tab switching
+            const contentCard = document.querySelector('.guide-content-card');
+            if (contentCard && window.innerWidth <= 900) {
+                contentCard.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }
+
     menuItems.forEach(item => {
         item.addEventListener('click', () => {
             const targetSectionId = item.getAttribute('data-section');
             if (!targetSectionId) return;
-
-            // Remove active class from all menu items and add to clicked one
-            menuItems.forEach(mi => mi.classList.remove('active'));
-            item.classList.add('active');
-
-            // Remove active class from all sections and add to target one
-            sections.forEach(sec => sec.classList.remove('active'));
-            const targetSection = document.getElementById(targetSectionId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-                // Scroll to top of content card on mobile/tab switching
-                const contentCard = document.querySelector('.guide-content-card');
-                if (contentCard && window.innerWidth <= 900) {
-                    contentCard.scrollIntoView({ behavior: 'smooth' });
-                }
+            switchSection(targetSectionId);
+            try {
+                history.pushState(null, '', '#' + targetSectionId);
+            } catch (e) {
+                window.location.hash = targetSectionId;
             }
         });
+    });
+
+    // Check URL hash on page load
+    const initialHash = window.location.hash.replace('#', '');
+    if (initialHash && document.getElementById(initialHash)) {
+        switchSection(initialHash);
+    }
+
+    // Handle back/forward hash navigation
+    window.addEventListener('hashchange', () => {
+        const currentHash = window.location.hash.replace('#', '');
+        if (currentHash && document.getElementById(currentHash)) {
+            switchSection(currentHash);
+        }
+    });
+
+    // Support any in-page anchor links with href="#section-id"
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a[href^="#"]');
+        if (link) {
+            const targetId = link.getAttribute('href').replace('#', '');
+            if (document.getElementById(targetId)) {
+                e.preventDefault();
+                switchSection(targetId);
+                try {
+                    history.pushState(null, '', '#' + targetId);
+                } catch (err) {
+                    window.location.hash = targetId;
+                }
+            }
+        }
     });
 
     // 3. Theme-aware screenshot swapping

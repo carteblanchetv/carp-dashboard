@@ -134,46 +134,81 @@ document.addEventListener('DOMContentLoaded', () => {
             // Generate PDF
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const margin = 20;
 
+            // 0. Top Instruction Note
             doc.setFont('helvetica', 'bold');
-            doc.setFontSize(20);
-            doc.text('LOCATION AGREEMENT 2026', 20, 25);
+            doc.setFontSize(8.5);
+            doc.setTextColor(15, 23, 42);
+            doc.text('Email the completed form to release@carteblanche.co.za', pageWidth / 2, 8, { align: 'center' });
+
+            // 1. Branding Logos
+            const caLogo = (typeof getBlackLogo === 'function' ? getBlackLogo() : (typeof CAP_LOGO_B64 !== 'undefined' ? CAP_LOGO_B64 : null));
+            if (caLogo) {
+                const props = doc.getImageProperties(caLogo);
+                const caWidth = 38;
+                const caHeight = caWidth * (props.height / props.width);
+                doc.addImage(caLogo, 'PNG', margin, 12, caWidth, caHeight);
+            }
+            if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
+                const props = doc.getImageProperties(CB_LOGO_B64);
+                const cbWidth = 22;
+                const cbHeight = cbWidth * (props.height / props.width);
+                doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, 11, cbWidth, cbHeight);
+            }
+
+            // 2. Title & Header Line
+            doc.setTextColor(0, 143, 190);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(18);
+            doc.text('LOCATION AGREEMENT', margin, 38);
 
             doc.setDrawColor(0, 143, 190);
-            doc.setLineWidth(1);
-            doc.line(20, 30, 190, 30);
+            doc.setLineWidth(0.8);
+            doc.line(margin, 42, pageWidth - margin, 42);
 
-            doc.setFontSize(12);
+            // Property Owner / Representative Details
+            doc.setTextColor(15, 23, 42);
+            doc.setFontSize(11);
             doc.setFont('helvetica', 'bold');
-            doc.text('Property Owner / Representative Details', 20, 45);
+            doc.text('Property Owner / Representative Details', margin, 52);
 
             doc.setFont('helvetica', 'normal');
-            doc.text(`Full Name: ${ownerName}`, 20, 55);
-            doc.text(`ID/Passport Number: ${ownerId}`, 20, 65);
-            doc.text(`Phone Number: ${phone}`, 20, 75);
-            doc.text(`Email Address: ${email}`, 20, 85);
+            doc.setFontSize(10);
+            doc.text(`Full Name: ${ownerName}`, margin, 60);
+            doc.text(`ID/Passport Number: ${ownerId}`, margin, 68);
+            doc.text(`Phone Number: ${phone}`, margin, 76);
+            doc.text(`Email Address: ${email}`, margin, 84);
 
             doc.setFont('helvetica', 'bold');
-            doc.text('Location & Filming Details', 20, 100);
+            doc.setFontSize(11);
+            doc.text('Location & Filming Details', margin, 96);
             doc.setFont('helvetica', 'normal');
-            doc.text(`Property Address: ${propertyAddress}`, 20, 110);
-            doc.text(`Filming Date: ${filmingDate}`, 20, 120);
-            doc.text(`Story / Project: ${storyName}`, 20, 130);
+            doc.setFontSize(10);
+            doc.text(`Property Address: ${propertyAddress}`, margin, 104);
+            doc.text(`Filming Date: ${filmingDate}`, margin, 112);
+            doc.text(`Story / Project: ${storyName}`, margin, 120);
 
             doc.setFont('helvetica', 'bold');
-            doc.text('Grant of Rights', 20, 145);
+            doc.setFontSize(11);
+            doc.text('Grant of Rights', margin, 134);
             doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9.5);
             const declarationText = 'I hereby grant Combined Artists and Carte Blanche and their assignees the right to enter and film on the property described above. This includes the right to photograph and record both interior and exterior scenes, and to use the recordings in any manner worldwide, in perpetuity.';
             const splitText = doc.splitTextToSize(declarationText, 170);
-            doc.text(splitText, 20, 155);
+            doc.text(splitText, margin, 142);
 
             // Add signature image to PDF
             const sigImgData = canvas.toDataURL('image/png');
             doc.setFont('helvetica', 'bold');
-            doc.text('Signature:', 20, 185);
-            doc.addImage(sigImgData, 'PNG', 20, 190, 80, 20);
+            doc.setFontSize(11);
+            doc.text('Signature:', margin, 175);
+            doc.addImage(sigImgData, 'PNG', margin, 180, 80, 20);
 
-            doc.text(`Date: ${new Date().toLocaleDateString('en-ZA')}`, 20, 220);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.text(`Date: ${new Date().toLocaleDateString('en-ZA')}`, margin, 210);
 
             const pdfBlob = doc.output('blob');
 
@@ -188,10 +223,38 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('storyName', storyName);
             formData.append('location_pdf', pdfBlob, `LocationAgreement_${ownerName.replace(/\s+/g, '_')}_${Date.now()}.pdf`);
 
-            const token = await window.auth.getIdToken();
+            // Append metadata from share link if present
+            const commInput = document.getElementById('commissionNumber');
+            const prodNameInput = document.getElementById('producerName');
+            const prodEmailInput = document.getElementById('producerEmail');
+            if (commInput && commInput.value) formData.append('commissionNumber', commInput.value);
+            if (prodNameInput && prodNameInput.value) formData.append('producerName', prodNameInput.value);
+            if (prodEmailInput && prodEmailInput.value) formData.append('producerEmail', prodEmailInput.value);
+
+            // Fallback for staff users submitting directly without share link
+            if (!formData.get('producerName')) {
+                try {
+                    const userStr = localStorage.getItem('user_profile_cache') || Object.keys(localStorage).find(k => k.startsWith('user_profile_'));
+                    if (userStr) {
+                        const u = JSON.parse(localStorage.getItem(userStr) || '{}');
+                        const name = u.displayName || `${u.firstName || ''} ${u.lastName || ''}`.trim();
+                        if (name) formData.append('producerName', name);
+                        if (u.email) formData.append('producerEmail', u.email);
+                    }
+                } catch (e) {}
+            }
+
+            const token = (window.auth && typeof window.auth.getIdToken === 'function')
+                ? await window.auth.getIdToken().catch(() => null)
+                : null;
+            const headers = {};
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
             const response = await fetch('/api/send-location-agreement', {
                 method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
+                headers: headers,
                 body: formData
             });
 
@@ -201,7 +264,20 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingOverlay.classList.remove('active');
             const dialog = document.getElementById('successDialog');
             dialog.classList.remove('hidden');
-            document.getElementById('dialogCloseBtn').onclick = () => window.location.href = 'index.html';
+            const isGuest = !(window.auth && window.auth.currentUser);
+            const closeBtn = document.getElementById('dialogCloseBtn');
+            if (isGuest) {
+                const p = dialog.querySelector('p');
+                if (p) p.textContent = 'Your signed Location Agreement has been submitted and sent to Carte Blanche Legal & Production. You may now close this window.';
+                closeBtn.textContent = 'Done / Close Window';
+                closeBtn.onclick = () => {
+                    closeBtn.disabled = true;
+                    closeBtn.textContent = 'Submitted ✓';
+                    try { window.close(); } catch (e) {}
+                };
+            } else {
+                closeBtn.onclick = () => window.location.href = 'index.html';
+            }
 
         } catch (error) {
             console.error('CRITICAL ERROR:', error);

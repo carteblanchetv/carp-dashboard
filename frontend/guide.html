@@ -257,6 +257,97 @@
             color: var(--text-main);
         }
 
+        /* Forms Hub Component Styling */
+        .forms-options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0 2rem;
+        }
+
+        .forms-option-card {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .light-mode .forms-option-card {
+            background-color: rgba(0, 0, 0, 0.015);
+        }
+
+        .forms-option-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .forms-option-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .forms-option-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.25rem 0.6rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .badge-online {
+            background-color: rgba(0, 143, 190, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(0, 143, 190, 0.3);
+        }
+
+        .badge-offline {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .forms-feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        .forms-feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+        }
+
+        .forms-feature-list li strong {
+            color: var(--text-main);
+        }
+
+        .forms-preview-container {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .dark-mode .forms-preview-container {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
@@ -344,6 +435,9 @@
                         </li>
                         <li class="menu-item" data-section="viewer-submissions">
                             <span>📬</span> Viewer Submissions
+                        </li>
+                        <li class="menu-item" data-section="forms-hub">
+                            <span>📄</span> Forms Hub
                         </li>
                     </ul>
                 </div>
@@ -454,7 +548,7 @@
                         <div class="step-item">
                             <div class="step-badge">3</div>
                             <div class="step-text">
-                                <strong>Legal &amp; Admin Forms:</strong> The dashboard includes quick-access links to all legal and administrative documents required for production. These links take you directly to the relevant <strong>JotForm</strong> documents, including <strong>Release Forms</strong>, <strong>Footage Agreements</strong>, and more — without needing to search for them separately.
+                                <strong>Legal &amp; Production Forms (Forms Hub):</strong> The dashboard includes an action card and quick-access toolbar links leading directly to the central <strong>Forms Hub</strong>. From here, you can access all release forms, location agreements, footage, and music licences — with options to either <strong>Fill Online</strong> (with automatic routing to <code>release@carteblanche.co.za</code> and your inbox) or download interactive <strong>Blank PDFs</strong> for offline and WhatsApp completion. See <a href="#forms-hub" style="color: var(--primary); font-weight: 700; text-decoration: underline;">Section 9: Forms Hub</a> for complete details.
                             </div>
                         </div>
                     </div>
@@ -464,7 +558,7 @@
                             <span class="bar-dot dot-red"></span>
                             <span class="bar-dot dot-yellow"></span>
                             <span class="bar-dot dot-green"></span>
-                            <span class="screenshot-url">Legal &amp; Admin JotForms List</span>
+                            <span class="screenshot-url">Legal &amp; Admin Forms Quick Links</span>
                         </div>
                         <img src="assets/Forms_List.png" data-dark="assets/Forms_List.png" data-light="assets/Forms_List_light.png" alt="Legal and Admin Forms Quick-Access List Screenshot">
                     </div>
@@ -1062,6 +1156,351 @@
                         <span class="callout-icon">⚠️</span>
                         <div>
                             <strong>Use with care:</strong> Reporting as spam is a permanent action that triggers a block request. Only use it for clearly unsolicited or malicious messages — not for legitimate tips you simply aren't interested in pursuing.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 9: FORMS HUB -->
+                <section id="forms-hub" class="guide-section">
+                    <span class="section-eyebrow">Section 9</span>
+                    <h2 class="section-title">Forms Hub: Release Forms &amp; Production Agreements</h2>
+
+                    <p class="guide-paragraph">
+                        The <strong>Forms Hub</strong> is the dedicated central repository for all Carte Blanche legal release forms, contributor permissions, licensing agreements, and production templates. Whether you are on shoot in the field or working from your desk, the Forms Hub ensures all required legal documents can be completed quickly, securely, and seamlessly.
+                    </p>
+
+                    <p class="guide-paragraph">
+                        You can access the hub directly from the main Dashboard by clicking the <strong>Legal &amp; Production Forms</strong> card, or via the <strong>Forms Hub &amp; Blank PDFs</strong> button in the Quick Links toolbar.
+                    </p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1.25rem;">Two Ways to Complete Forms: Fill Online &amp; Blank PDF</h3>
+                    <p class="guide-paragraph">
+                        Every agreement in the Forms Hub gives producers two flexible completion options tailored to different production environments:
+                    </p>
+
+                    <!-- Comparative Options Grid -->
+                    <div class="forms-options-grid">
+                        <div class="forms-option-card">
+                            <div class="forms-option-header">
+                                <h4 style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>📝</span> Fill Online
+                                </h4>
+                                <span class="forms-option-badge badge-online">Paperless &bull; In-Browser</span>
+                            </div>
+                            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
+                                Complete and digitally sign agreements directly in any web browser on desktop, tablet, or smartphone without installing extra software.
+                            </p>
+                            <ul class="forms-feature-list">
+                                <li>
+                                    <span>✍️</span>
+                                    <span><strong>Digital Signatures:</strong> Contributors can sign directly on-screen using a touch screen, mouse, or typed verified signature.</span>
+                                </li>
+                                <li>
+                                    <span>📬</span>
+                                    <span><strong>Automatic Delivery to Legal:</strong> Submitting a form automatically routes the completed PDF to <strong>release@carteblanche.co.za</strong>.</span>
+                                </li>
+                                <li>
+                                    <span>📧</span>
+                                    <span><strong>Producer Email Copy:</strong> The producer automatically receives a copy of the completed form via email for their records.</span>
+                                </li>
+                                <li>
+                                    <span>⚡</span>
+                                    <span><strong>Instant Compliance:</strong> No printing, physical scanning, or manual attachment emailing required.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="forms-option-card">
+                            <div class="forms-option-header">
+                                <h4 style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>📥</span> Blank PDF
+                                </h4>
+                                <span class="forms-option-badge badge-offline">Offline &bull; WhatsApp Ready</span>
+                            </div>
+                            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
+                                Download neat, fillable PDF documents with interactive form fields designed for mobile and desktop readers.
+                            </p>
+                            <ul class="forms-feature-list">
+                                <li>
+                                    <span>💬</span>
+                                    <span><strong>Send via WhatsApp or Email:</strong> Easily send the blank form directly to your case studies, sources, or contributors to complete on their devices.</span>
+                                </li>
+                                <li>
+                                    <span>📶</span>
+                                    <span><strong>100% Offline Completion:</strong> Forms can be opened, filled out, and signed even while completely offline without an active internet connection.</span>
+                                </li>
+                                <li>
+                                    <span>📱</span>
+                                    <span><strong>Save on Phone Anytime:</strong> If you anticipate connectivity issues, you can save a blank version of the document on your phone to be accessed anytime.</span>
+                                </li>
+                                <li>
+                                    <span>📍</span>
+                                    <span><strong>Shoot-Ready:</strong> Perfect for deep-field investigations, rural locations, basements, and areas experiencing network outages.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Callout: Email Confirmation -->
+                    <div class="callout-box success">
+                        <span class="callout-icon">📬</span>
+                        <div>
+                            <strong>Automatic Email Routing &amp; Confirmation:</strong> When they submit a form, it will go to <strong>release@carteblanche.co.za</strong> and the producer will receive a copy of the completed form via email.
+                        </div>
+                    </div>
+
+                    <!-- Callout: Offline & Connectivity Tip -->
+                    <div class="callout-box info">
+                        <span class="callout-icon">📱</span>
+                        <div>
+                            <strong>Offline &amp; WhatsApp Workflow:</strong> When downloading a blank form, you can easily send it to your case studies or sources via WhatsApp or email to be completed, even while offline. If you anticipate connectivity issues, you can save a blank version of the document on your phone to be accessed anytime.
+                        </div>
+                    </div>
+
+                    <!-- Interactive Visual Mockup Frame -->
+                    <div class="forms-preview-container">
+                        <div style="font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span>👁️</span> Forms Hub Card Example (As seen in the Forms Hub)
+                        </div>
+                        <div style="max-width: 500px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm);">
+                            <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 0.75rem;">
+                                <div style="font-size: 1.8rem; line-height: 1; padding: 0.5rem; border-radius: var(--radius-sm); background: rgba(0, 143, 190, 0.08); border: 1px solid rgba(0, 143, 190, 0.15); color: var(--primary);">👤</div>
+                                <div>
+                                    <span style="display: inline-block; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.15rem 0.45rem; border-radius: 4px; background: rgba(0, 143, 190, 0.1); color: var(--primary);">Consent &bull; Adult</span>
+                                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin: 0.25rem 0 0;">Participant Release Form</h3>
+                                </div>
+                            </div>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 1.25rem;">
+                                Standard release giving consent to M-Net and Carte Blanche to film interviewees, record voices, and broadcast on all platforms.
+                            </p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                                <div style="text-align: center;">
+                                    <div style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.6rem 0.8rem; font-size: 0.8rem; font-weight: 700; background: var(--primary); color: white; border-radius: var(--radius-sm); width: 100%; box-sizing: border-box;">
+                                        <span>📝</span> Fill Online
+                                    </div>
+                                    <span style="display: block; font-size: 0.7rem; color: var(--text-muted); margin-top: 0.4rem;">Digital sign &bull; Routes to release@carteblanche.co.za</span>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.6rem 0.8rem; font-size: 0.8rem; font-weight: 700; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); border-radius: var(--radius-sm); width: 100%; box-sizing: border-box;">
+                                        <span>📥</span> Blank PDF
+                                    </div>
+                                    <span style="display: block; font-size: 0.7rem; color: var(--text-muted); margin-top: 0.4rem;">Download &bull; WhatsApp/email &bull; Works offline</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step-by-Step Instructions -->
+                    <h3 style="margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1.25rem;">Workflow 1: Filling &amp; Submitting Online</h3>
+                    <p class="guide-paragraph">
+                        Follow these steps when you or your contributor have an internet connection and want immediate paperless filing:
+                    </p>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-badge" style="background: var(--primary);">1</div>
+                            <div class="step-text">
+                                Open the <strong>Forms Hub</strong> from your dashboard and locate the required form (e.g. <em>Participant Release Form</em>, <em>Minor Release Form</em>, or <em>Location Agreement</em>).
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: var(--primary);">2</div>
+                            <div class="step-text">
+                                Click the blue <strong>📝 Fill Online</strong> button on the form card.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: var(--primary);">3</div>
+                            <div class="step-text">
+                                Enter the participant or location details (Full Name, ID/Passport Number, Phone Number, Email Address, and Story Name).
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: var(--primary);">4</div>
+                            <div class="step-text">
+                                Have the interviewee provide their signature using the digital signature pad. They can draw using their finger or mouse, or click the <em>Type</em> tab to type their signature.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: var(--primary);">5</div>
+                            <div class="step-text">
+                                Click <strong>Submit</strong>. The system automatically compiles the official PDF, transmits it directly to <strong>release@carteblanche.co.za</strong>, and sends a confirmation copy to your producer email inbox.
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2.5rem; margin-bottom: 0.75rem; font-size: 1.25rem;">Workflow 2: Sharing Online Forms with Participants (WhatsApp, Email &amp; QR Code)</h3>
+                    <p class="guide-paragraph">
+                        Producers can generate and share online forms directly with interviewees, parents, or property owners so they can complete and digitally sign on their own mobile phone or computer &mdash; <strong>no account or staff login required</strong>:
+                    </p>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-badge" style="background: #008fbe;">1</div>
+                            <div class="step-text">
+                                On any form card in the Forms Hub (or via the <strong>🔗 Share with Participant</strong> button at the top of an online form), click <strong>Share Online Form with Participant</strong>.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: #008fbe;">2</div>
+                            <div class="step-text">
+                                In the sharing popup, enter the <strong>Story Title</strong>, optional <strong>Commission #</strong>, your <strong>Producer Name</strong>, and your <strong>Producer Email</strong> (where you will receive a signed copy). You can also type the participant's name to pre-fill it for them.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: #008fbe;">3</div>
+                            <div class="step-text">
+                                Choose your preferred sharing channel:
+                                <ul style="margin: 0.5rem 0 0 1.25rem; font-size: 0.9rem; line-height: 1.6;">
+                                    <li><strong>WhatsApp:</strong> Launches WhatsApp with a polite pre-written message and direct link.</li>
+                                    <li><strong>Copy Link:</strong> Copies the instant-access link to your clipboard.</li>
+                                    <li><strong>Email:</strong> Opens a pre-addressed email draft in your default email client.</li>
+                                    <li><strong>QR Code:</strong> Displays an on-screen QR code for the contributor to scan instantly with their phone camera on shoot.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: #008fbe;">4</div>
+                            <div class="step-text">
+                                The participant opens the link directly on their mobile device or desktop without having to sign in. They see an official Carte Blanche invitation banner, review the pre-filled story info, draw or type their signature, and submit.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: #008fbe;">5</div>
+                            <div class="step-text">
+                                Upon submission, the completed PDF is instantly transmitted to <strong>release@carteblanche.co.za</strong>, sent to the producer's inbox, and sent to the participant's email.
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2.5rem; margin-bottom: 0.75rem; font-size: 1.25rem;">Workflow 3: Downloading &amp; Using Blank PDFs Offline</h3>
+                    <p class="guide-paragraph">
+                        Follow these steps when filming on location, sending paperwork to sources in advance, or working in areas with weak cellular reception:
+                    </p>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-badge" style="background: #10b981;">1</div>
+                            <div class="step-text">
+                                On any form card in the Forms Hub, click the <strong>📥 Blank PDF</strong> button to download the fillable interactive PDF template.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: #10b981;">2</div>
+                            <div class="step-text">
+                                <strong>Save in advance:</strong> If you anticipate connectivity issues or are heading to a remote location, save a blank version of the document directly on your phone's storage or Files app before leaving so it can be accessed anytime.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: #10b981;">3</div>
+                            <div class="step-text">
+                                <strong>Share with sources:</strong> You can easily send the blank form to your case studies or sources via <strong>WhatsApp</strong> or <strong>email</strong> to be completed, even while offline.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: #10b981;">4</div>
+                            <div class="step-text">
+                                <strong>Complete offline:</strong> The contributor fills in their particulars and signs the interactive document directly in their mobile PDF reader (such as Adobe Acrobat or Apple Books) <strong>without requiring an internet connection</strong>.
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-badge" style="background: #10b981;">5</div>
+                            <div class="step-text">
+                                Once you or your source regain network connectivity, forward the signed PDF to <strong>release@carteblanche.co.za</strong> and keep a copy in your story folder.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Available Forms in the Hub -->
+                    <h3 style="margin-top: 2.5rem; margin-bottom: 0.75rem; font-size: 1.25rem;">Available Forms in the Suite</h3>
+                    <p class="guide-paragraph">
+                        The Forms Hub currently provides access to the following official documents:
+                    </p>
+
+                    <div class="glossary-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-top: 1rem; margin-bottom: 2rem;">
+                        <div class="step-item" style="padding: 1.25rem; flex-direction: column; gap: 0.4rem; align-items: flex-start;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: var(--primary); text-transform: uppercase;">👤 Consent &bull; Adult</span>
+                            <div class="step-text" style="font-size: 0.88rem;">
+                                <strong>Participant Release Form:</strong> Grants Carte Blanche and M-Net permission to film, record voices, and broadcast interviewees worldwide.
+                            </div>
+                        </div>
+                        <div class="step-item" style="padding: 1.25rem; flex-direction: column; gap: 0.4rem; align-items: flex-start;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #a855f7; text-transform: uppercase;">🧒 Consent &bull; Minor</span>
+                            <div class="step-text" style="font-size: 0.88rem;">
+                                <strong>Minor Release Form:</strong> Parental or legal guardian consent required for interviewing, filming, and broadcasting children under 18.
+                            </div>
+                        </div>
+                        <div class="step-item" style="padding: 1.25rem; flex-direction: column; gap: 0.4rem; align-items: flex-start;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #10b981; text-transform: uppercase;">📍 Premises &bull; Property</span>
+                            <div class="step-text" style="font-size: 0.88rem;">
+                                <strong>Location Agreement:</strong> Permission from property owners or managers to enter private property, bring crew/gear, and film.
+                            </div>
+                        </div>
+                        <div class="step-item" style="padding: 1.25rem; flex-direction: column; gap: 0.4rem; align-items: flex-start;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #f59e0b; text-transform: uppercase;">🎞️ Licence &bull; Footage</span>
+                            <div class="step-text" style="font-size: 0.88rem;">
+                                <strong>Footage Agreement:</strong> Legal clearance from rights holders to incorporate third-party, archival, or user video and imagery.
+                            </div>
+                        </div>
+                        <div class="step-item" style="padding: 1.25rem; flex-direction: column; gap: 0.4rem; align-items: flex-start;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #ec4899; text-transform: uppercase;">🎵 Licence &bull; Music</span>
+                            <div class="step-text" style="font-size: 0.88rem;">
+                                <strong>Music Agreement:</strong> Synchronisation clearance granting permission to use compositions and sound recordings in broadcasts.
+                            </div>
+                        </div>
+                        <div class="step-item" style="padding: 1.25rem; flex-direction: column; gap: 0.4rem; align-items: flex-start;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #6366f1; text-transform: uppercase;">📝 Production &bull; Graphics</span>
+                            <div class="step-text" style="font-size: 0.88rem;">
+                                <strong>Insert Sheet:</strong> Specification document for lower thirds, on-screen supers, guest credentials, and photo credits.
+                            </div>
+                        </div>
+                        <div class="step-item" style="padding: 1.25rem; flex-direction: column; gap: 0.4rem; align-items: flex-start;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #0ea5e9; text-transform: uppercase;">✈️ Logistics &bull; Crew</span>
+                            <div class="step-text" style="font-size: 0.88rem;">
+                                <strong>Travel Booking Form:</strong> Direct logistics booking portal for crew flights, hotel accommodation, and rental vehicles.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Routing & Distribution -->
+                    <h3 style="margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1.25rem;">Automated Email Routing &amp; Distribution</h3>
+                    <p class="guide-paragraph">
+                        Whenever a form is submitted online through CARP, an email with the completed PDF attached is automatically routed to the designated recipients:
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1rem 0 1.5rem;">
+                        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem;">
+                                <span style="font-size: 1.25rem;">✈️</span>
+                                <strong style="color: var(--text-main); font-size: 0.95rem;">Travel Booking Form</strong>
+                            </div>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.4;">
+                                Completed travel requests and PDFs are immediately dispatched to:
+                            </p>
+                            <ul style="font-size: 0.82rem; color: var(--text-main); margin: 0; padding-left: 1.2rem; line-height: 1.6;">
+                                <li><strong>carteb@embassytravel.co.za</strong> (Embassy Travel)</li>
+                                <li><strong>nombuson@combinedartists.co.za</strong> (Nombuso Nkosi)</li>
+                                <li><strong>The user who submitted the form</strong> (confirmation copy)</li>
+                            </ul>
+                        </div>
+                        <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem;">
+                                <span style="font-size: 1.25rem;">📋</span>
+                                <strong style="color: var(--text-main); font-size: 0.95rem;">Releases, Agreements &amp; Insert Sheets</strong>
+                            </div>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.5rem; line-height: 1.4;">
+                                Participant Releases, Minor Releases, Location, Footage, Music Agreements, and Insert Sheets are dispatched to:
+                            </p>
+                            <ul style="font-size: 0.82rem; color: var(--text-main); margin: 0; padding-left: 1.2rem; line-height: 1.6;">
+                                <li><strong>release@carteblanche.co.za</strong> (Clearances &amp; Legal)</li>
+                                <li><strong>The user who submitted the form</strong> (confirmation copy)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="callout-box warning">
+                        <span class="callout-icon">⚠️</span>
+                        <div>
+                            <strong>Broadcast Clearance Notice:</strong> An approved, signed release form is mandatory for every featured participant, minor, and private venue prior to broadcast. Never air an insert without ensuring all releases have been secured and routed to <strong>release@carteblanche.co.za</strong>.
                         </div>
                     </div>
                 </section>

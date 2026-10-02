@@ -11,13 +11,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
     <script src="js/branding.js?v=5.1.1"></script>
+    <script src="js/share_form.js?v=5.1.1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script type="module">
         import { checkAuth } from './auth.js?v=5.1.1';
-        checkAuth().then(user => {
+        checkAuth(false).then(user => {
             if (user) {
                 window.auth.initNavBar(user);
+            } else {
+                // Participant / Guest Mode: Hide staff navigation bar and staff actions
+                const nav = document.querySelector('.global-top-nav');
+                if (nav) nav.style.display = 'none';
+                const backHub = document.querySelector('.btn-back-hub');
+                if (backHub) backHub.style.display = 'none';
+                const cancelBtn = document.querySelector('a.btn-soft');
+                if (cancelBtn) cancelBtn.style.display = 'none';
             }
         });
     </script>
@@ -90,7 +99,7 @@
                 <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
                 <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
             </div>
-            <h1>Location Agreement 2026</h1>
+            <h1>Location Agreement</h1>
         </header>
 
         <form id="locationAgreementForm" class="modern-form">

@@ -11,13 +11,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
     <script src="js/branding.js?v=5.1.1"></script>
+    <script src="js/share_form.js?v=5.1.1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script type="module">
         import { checkAuth } from './auth.js?v=5.1.1';
-        checkAuth().then(user => {
+        checkAuth(false).then(user => {
             if (user) {
                 window.auth.initNavBar(user);
+            } else {
+                // Participant / Guest Mode: Hide staff navigation bar and staff actions
+                const nav = document.querySelector('.global-top-nav');
+                if (nav) nav.style.display = 'none';
+                const backHub = document.querySelector('.btn-back-hub');
+                if (backHub) backHub.style.display = 'none';
+                const cancelBtn = document.querySelector('a.btn-soft');
+                if (cancelBtn) cancelBtn.style.display = 'none';
             }
         });
     </script>
@@ -55,7 +64,7 @@
                 <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
                 <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
             </div>
-            <h1>Travel Booking Form 2026</h1>
+            <h1>Travel Booking Form</h1>
         </header>
 
         <form id="travelBookingForm" class="modern-form">
@@ -109,26 +118,24 @@
 
             <section class="form-section">
                 <h2 class="section-title">Accommodation & Car Hire</h2>
-                <div style="display: flex; flex-direction: column; gap: 1rem;">
-                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <div class="form-group" style="flex: 1; min-width: 200px;">
-                            <label for="accommodationRequired">Accommodation Required?</label>
-                            <select id="accommodationRequired" name="accommodationRequired" style="width: 100%;">
-                                <option value="No">No</option>
-                                <option value="Yes">Yes</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="flex: 1; min-width: 200px;">
-                            <label for="carHireRequired">Car Hire Required?</label>
-                            <select id="carHireRequired" name="carHireRequired" style="width: 100%;">
-                                <option value="No">No</option>
-                                <option value="Yes">Yes</option>
-                            </select>
-                        </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="accommodationRequired">Accommodation Required?</label>
+                        <select id="accommodationRequired" name="accommodationRequired">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
                     </div>
-                    <div class="form-group" style="width: 100%;">
+                    <div class="form-group">
+                        <label for="carHireRequired">Car Hire Required?</label>
+                        <select id="carHireRequired" name="carHireRequired">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
                         <label for="additionalNotes">Special Requests / Preferences</label>
-                        <textarea id="additionalNotes" name="additionalNotes" rows="3" placeholder="Specify airline, hotel preference, seating, dietary requirements..." style="width: 100%; box-sizing: border-box;"></textarea>
+                        <textarea id="additionalNotes" name="additionalNotes" rows="3" placeholder="Specify airline, hotel preference, seating, dietary requirements..."></textarea>
                     </div>
                 </div>
             </section>

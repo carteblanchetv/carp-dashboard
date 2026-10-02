@@ -47,10 +47,6 @@ function renderDashboardUI(user) {
     // Reveal Grid smoothly
     const mainGrid = document.getElementById('mainCardsGrid');
     if (mainGrid) mainGrid.style.opacity = '1';
-    
-    // Reveal Quick Links smoothly
-    const quickLinks = document.getElementById('quickLinksSection');
-    if (quickLinks) quickLinks.style.opacity = '1';
 }
 
 checkAuth().then(user => {

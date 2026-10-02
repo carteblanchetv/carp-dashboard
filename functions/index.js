@@ -301,15 +301,17 @@ function deserializeAttachments(serialized) {
 /**
  * Sends a notification email utilizing the three-tier failover system
  */
-async function sendNotificationEmail(fromName, subject, html, recipientList, attachments = []) {
+async function sendNotificationEmail(fromName, subject, html, recipientList, attachments = [], directTo = false) {
     let lastError = null;
     let sentViaGraph = false;
 
     if (process.env.MICROSOFT_CLIENT_ID) {
         try {
-            console.log(`[NOTIFY] Using Microsoft Graph API to send email to bcc: ${recipientList}`);
+            console.log(`[NOTIFY] Using Microsoft Graph API to send email (directTo: ${directTo}) to: ${recipientList}`);
             const mailbox = process.env.MICROSOFT_MAILBOX_EMAIL || 'story@combinedartists.co.za';
-            await sendEmailViaGraph(`[${fromName}] ${subject}`, html, mailbox, recipientList, attachments);
+            const toRecipients = directTo ? recipientList : mailbox;
+            const bccRecipients = directTo ? '' : recipientList;
+            await sendEmailViaGraph(`[${fromName}] ${subject}`, html, toRecipients, bccRecipients, attachments);
             console.log(`[NOTIFY] Graph API email sent successfully.`);
             sentViaGraph = true;
             return;
@@ -320,11 +322,11 @@ async function sendNotificationEmail(fromName, subject, html, recipientList, att
     }
 
     if (!sentViaGraph) {
-        console.log(`[NOTIFY] Using legacy SMTP to send email to: ${recipientList}`);
+        console.log(`[NOTIFY] Using legacy SMTP to send email (directTo: ${directTo}) to: ${recipientList}`);
         const mailOptions = {
             from: `"${fromName}" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER,
-            bcc: recipientList,
+            to: directTo ? recipientList : process.env.EMAIL_USER,
+            bcc: directTo ? undefined : recipientList,
             subject: subject,
             html: html,
             attachments: attachments
@@ -349,8 +351,8 @@ async function sendNotificationEmail(fromName, subject, html, recipientList, att
                 });
                 const o365MailOptions = {
                     from: `"${fromName}" <${process.env.IMAP_USER || 'story@combinedartists.co.za'}>`,
-                    to: process.env.IMAP_USER || 'story@combinedartists.co.za',
-                    bcc: recipientList,
+                    to: directTo ? recipientList : (process.env.IMAP_USER || 'story@combinedartists.co.za'),
+                    bcc: directTo ? undefined : recipientList,
                     subject: subject,
                     html: html,
                     attachments: attachments
@@ -403,42 +405,78 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
         console.log(`[NOTIFY] Resolving recipients for type: ${type}`);
         const recipients = new Set();
         
-        // Always include Lezanne as a safety fallback/audit
-        recipients.add('lezanne@carteblanche.co.za'.toLowerCase().trim());
+        const releaseFormTypes = [
+            'participant_release',
+            'minor_release',
+            'location_agreement',
+            'footage_agreement',
+            'episode_footage',
+            'music_agreement',
+            'insert_footage',
+            'insert_sheet'
+        ];
 
-        // 2. Query Firestore for users who have this notification enabled
-        const userSnapshot = await admin.firestore().collection('users')
-            .where('isEnabled', '==', true)
-            .get();
+        let directTo = false;
 
-        userSnapshot.forEach(doc => {
-            const data = doc.data();
-            const prefs = data.notifications || {};
-            
-            // Check if user has this specific notification enabled
-            if (prefs[type] === true) {
-                let rawEmail = decrypt(data.email);
-                if (rawEmail && typeof rawEmail === 'object') {
-                    rawEmail = doc.id.includes('@') ? doc.id : null;
-                }
-                if (!rawEmail) {
-                    rawEmail = data.email && typeof data.email === 'string' ? data.email : (doc.id.includes('@') ? doc.id : null);
-                }
-                if (typeof rawEmail === 'string' && rawEmail.includes('@')) {
-                    const normalized = rawEmail.toLowerCase().trim();
-                    recipients.add(normalized);
-                    console.log(`[NOTIFY] Added preference-based recipient: ${normalized}`);
-                }
+        if (type === 'travel_booking') {
+            directTo = true;
+            recipients.add('carteb@embassytravel.co.za'.toLowerCase().trim());
+            recipients.add('nombuson@combinedartists.co.za'.toLowerCase().trim());
+            if (Array.isArray(extraRecipients)) {
+                extraRecipients.forEach(email => {
+                    if (email && typeof email === 'string' && email.includes('@')) {
+                        recipients.add(email.toLowerCase().trim());
+                    }
+                });
             }
-        });
-        
-        // 3. Add any extra recipients requested
-        if (Array.isArray(extraRecipients)) {
-            extraRecipients.forEach(email => {
-                if (email && email.includes('@')) {
-                    recipients.add(email.toLowerCase().trim());
+        } else if (releaseFormTypes.includes(type)) {
+            directTo = true;
+            recipients.add('release@carteblanche.co.za'.toLowerCase().trim());
+            if (Array.isArray(extraRecipients)) {
+                extraRecipients.forEach(email => {
+                    if (email && typeof email === 'string' && email.includes('@')) {
+                        recipients.add(email.toLowerCase().trim());
+                    }
+                });
+            }
+        } else {
+            // Always include Lezanne as a safety fallback/audit
+            recipients.add('lezanne@carteblanche.co.za'.toLowerCase().trim());
+
+            // 2. Query Firestore for users who have this notification enabled
+            const userSnapshot = await admin.firestore().collection('users')
+                .where('isEnabled', '==', true)
+                .get();
+
+            userSnapshot.forEach(doc => {
+                const data = doc.data();
+                const prefs = data.notifications || {};
+                
+                // Check if user has this specific notification enabled
+                if (prefs[type] === true) {
+                    let rawEmail = decrypt(data.email);
+                    if (rawEmail && typeof rawEmail === 'object') {
+                        rawEmail = doc.id.includes('@') ? doc.id : null;
+                    }
+                    if (!rawEmail) {
+                        rawEmail = data.email && typeof data.email === 'string' ? data.email : (doc.id.includes('@') ? doc.id : null);
+                    }
+                    if (typeof rawEmail === 'string' && rawEmail.includes('@')) {
+                        const normalized = rawEmail.toLowerCase().trim();
+                        recipients.add(normalized);
+                        console.log(`[NOTIFY] Added preference-based recipient: ${normalized}`);
+                    }
                 }
             });
+            
+            // 3. Add any extra recipients requested
+            if (Array.isArray(extraRecipients)) {
+                extraRecipients.forEach(email => {
+                    if (email && typeof email === 'string' && email.includes('@')) {
+                        recipients.add(email.toLowerCase().trim());
+                    }
+                });
+            }
         }
 
         if (recipients.size === 0) {
@@ -447,10 +485,12 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
         }
 
         const recipientList = Array.from(recipients).join(', ');
-        const fromName = type === 'call_sheet' ? "Call Sheets" : (type === 'editorial_leave' ? "Editorial Leave Calendar" : "CARP Dashboard");
+        const fromName = type === 'call_sheet' ? "Call Sheets" : 
+                         (type === 'editorial_leave' ? "Editorial Leave Calendar" : 
+                         (type === 'travel_booking' ? "Travel Booking" : "Carte Blanche Deliverables"));
 
         try {
-            await sendNotificationEmail(fromName, subject, html, recipientList, attachments);
+            await sendNotificationEmail(fromName, subject, html, recipientList, attachments, directTo);
         } catch (sendErr) {
             console.error(`[NOTIFY] All email attempts failed for type '${type}': ${sendErr.message}. Queuing in Firestore...`);
             await queueFailedEmail(type, subject, html, attachments, recipientList, sendErr.message);
@@ -460,6 +500,57 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
     }
 }
 
+function getProducerName(req, fields) {
+  if (fields && (fields.producerName || fields.producer)) {
+    return (fields.producerName || fields.producer).trim();
+  }
+  if (req && req.user) {
+    const fullName = `${req.user.firstName || ''} ${req.user.lastName || ''}`.trim();
+    if (fullName) return fullName;
+    if (req.user.name) return req.user.name;
+    if (req.user.email) return req.user.email;
+  }
+  if (fields && (fields.submittedByName || fields.submittedByEmail)) {
+    return (fields.submittedByName || fields.submittedByEmail).trim();
+  }
+  return 'Producer';
+}
+
+function getFormEmoji(formTitle = '') {
+  const lower = formTitle.toLowerCase();
+  if (lower.includes('travel')) return '✈️';
+  if (lower.includes('minor')) return '🧒';
+  if (lower.includes('participant')) return '👤';
+  if (lower.includes('location')) return '📍';
+  if (lower.includes('footage')) return '🎞️';
+  if (lower.includes('music')) return '🎵';
+  if (lower.includes('insert')) return '📝';
+  return '📋';
+}
+
+function buildFormEmailDetails({ formTitle, commissionNumber, storyTitle, producerName }) {
+  const comm = commissionNumber || 'N/A';
+  const story = storyTitle || 'N/A';
+  const prod = producerName || 'N/A';
+  const title = formTitle || 'Form Submission';
+  const emoji = getFormEmoji(title);
+
+  // Format: [Commission Number] - [Story Title] - [Form Title] - [Producer Name]
+  const subject = `${comm} - ${story} - ${title} - ${prod}`;
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1e293b; max-width: 600px;">
+      <h2 style="color: #008fbe; margin-top: 0; margin-bottom: 16px; font-size: 19px; font-weight: 700;">${emoji ? `${emoji} ` : ''}CARTE BLANCHE &bull; ${title.toUpperCase()}</h2>
+      <ul style="margin: 0 0 16px 0; padding-left: 20px; font-size: 15px; line-height: 1.6; color: #1e293b;">
+        <li style="margin-bottom: 6px;"><b>Commission Number:</b> ${comm}</li>
+        <li style="margin-bottom: 6px;"><b>Story Title:</b> ${story}</li>
+        <li style="margin-bottom: 6px;"><b>Producer:</b> ${prod}</li>
+      </ul>
+      <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #1e293b;">Please find the completed ${title} attached to this email.</p>
+    </div>
+  `.trim();
+
+  return { subject, html };
+}
 
 const app = express();
 app.use(cors({ origin: true }));
@@ -552,12 +643,33 @@ app.delete('/api/delete-editorial-leave/:id', async (req, res) => {
  */
 async function validateFirebaseIdToken(req, res, next) {
   console.log(`[AUTH] Checking token for ${req.method} ${req.url}`);
+
+  const publicFormRoutes = [
+    '/api/send-participant-release',
+    '/api/send-minor-release',
+    '/api/send-location-agreement',
+    '/api/send-music-agreement',
+    '/api/send-travel-booking'
+  ];
+
+  const isPublicFormRoute = publicFormRoutes.some(route => req.path.startsWith(route) || req.url.startsWith(route));
+
   let idToken;
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
-    idToken = req.headers.authorization.split('Bearer ')[1];
-  } else if (req.query.token) {
+    const rawToken = req.headers.authorization.split('Bearer ')[1];
+    if (rawToken && rawToken !== 'null' && rawToken !== 'undefined') {
+      idToken = rawToken;
+    }
+  } else if (req.query && req.query.token && req.query.token !== 'null' && req.query.token !== 'undefined') {
     idToken = req.query.token;
-  } else {
+  }
+
+  if (!idToken && isPublicFormRoute) {
+    // Guest participant submission allowed without token
+    return next();
+  }
+
+  if (!idToken) {
     console.warn('[AUTH] Missing or malformed Authorization header');
     res.status(403).json({ success: false, error: 'Unauthorized: Missing token.' });
     return;
@@ -667,6 +779,10 @@ async function validateFirebaseIdToken(req, res, next) {
 
     next();
   } catch (error) {
+    if (isPublicFormRoute) {
+      console.warn('[AUTH] Token verification failed on public form route, proceeding as guest participant:', error.message);
+      return next();
+    }
     console.error('[AUTH] Token verification failed:', error.message);
     res.status(403).json({ success: false, error: `Unauthorized: ${error.message}` });
   }
@@ -1242,8 +1358,8 @@ async function processMultiFileStorageAndFirestore(req, formType, subfolder, fil
     formType,
     files: fileRecords,
     submissionPath,
-    submittedBy: req.user.uid,
-    submittedByEmail: req.user.email,
+    submittedBy: (req.user && req.user.uid) || 'guest_participant',
+    submittedByEmail: (req.user && req.user.email) || metadata.submittedByEmail || metadata.email || 'participant@guest',
     submittedAt: admin.firestore.FieldValue.serverTimestamp(),
     ...encryptedMetadata
   });
@@ -1306,34 +1422,38 @@ app.post('/api/send-footage-agreement', async (req, res) => {
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
     const { tx_date, season, episode, uid_number, total_duration } = fields;
-    // 1 & 2. Run Database/Storage and Email notifications in PARALLEL
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || uid_number || 'N/A';
+    const storyTitle = fields.storyTitle || fields.storyName || (season && episode ? `S${season} E${episode}` : 'Footage Agreement');
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Footage Agreement',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
+
     const [dbResult] = await Promise.all([
       processMultiFileStorageAndFirestore(
         req, 'episode_footage', 'episode_footage', files,
-        { season, episode, txDate: tx_date, uid: uid_number, duration: total_duration, stories: fields.stories || "[]" }
+        { season, episode, txDate: tx_date, uid: uid_number, duration: total_duration, stories: fields.stories || "[]", commissionNumber, storyTitle, producerName }
       ),
       notifyRelevantUsers(
-        'episode_footage',
-        `Carte Blanche - FDL - S${season} E${episode} - ${uid_number}`,
-        `<p><b>CARTE BLANCHE</b><br><b>MASTER FOOTAGE DECLARATION (FDL)</b></p>
-         <ul>
-           <li><b>Season:</b> ${season}</li>
-           <li><b>Episode:</b> ${episode}</li>
-           <li><b>TX Date:</b> ${tx_date}</li>
-           <li><b>UID:</b> ${uid_number}</li>
-           <li><b>Duration:</b> ${total_duration}</li>
-         </ul>
-         <p>The Master Footage Declaration is attached to this email. Contact Nombuso Nkosi for any queries.</p>`,
+        'footage_agreement',
+        subject,
+        html,
         files.map(f => ({
           filename: f.filename,
           content: f.buffer,
           contentType: f.mimeType
-        }))
+        })),
+        [submitterEmail]
       )
     ]);
 
-    const { firestoreDocId, fileRecords } = dbResult;
-
+    const { firestoreDocId } = dbResult;
     res.status(200).json({ success: true, firestoreDocId });
   } catch (error) {
     console.error('Submission failed:', error);
@@ -1347,27 +1467,35 @@ app.post('/api/send-participant-release', async (req, res) => {
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
     const { fullName, idNumber, phone, email, storyName } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Participant Release Form',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
+
     const [dbResult] = await Promise.all([
       processMultiFileStorageAndFirestore(
         req, 'participant_release', 'participant_release', files,
-        { fullName, idNumber, phone, email, storyName }
+        { fullName, idNumber, phone, email, storyName, commissionNumber, producerName }
       ),
       notifyRelevantUsers(
         'participant_release',
-        `Carte Blanche - Participant Release - ${fullName} - ${storyName}`,
-        `<p><b>CARTE BLANCHE</b><br><b>PARTICIPANT RELEASE FORM</b></p>
-         <ul>
-           <li><b>Participant:</b> ${fullName}</li>
-           <li><b>ID/Passport:</b> ${idNumber}</li>
-           <li><b>Phone:</b> ${phone}</li>
-           <li><b>Email:</b> ${email}</li>
-           <li><b>Story:</b> ${storyName}</li>
-         </ul>`,
+        subject,
+        html,
         files.map(f => ({
           filename: f.filename,
           content: f.buffer,
           contentType: f.mimeType
-        }))
+        })),
+        [submitterEmail, producerEmail].filter(Boolean)
       )
     ]);
     res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
@@ -1383,29 +1511,35 @@ app.post('/api/send-minor-release', async (req, res) => {
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
     const { guardianName, guardianId, phone, email, minorName, minorAge, storyName } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Minor Release Form',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
+
     const [dbResult] = await Promise.all([
       processMultiFileStorageAndFirestore(
         req, 'minor_release', 'minor_release', files,
-        { guardianName, guardianId, phone, email, minorName, minorAge, storyName }
+        { guardianName, guardianId, phone, email, minorName, minorAge, storyName, commissionNumber, producerName }
       ),
       notifyRelevantUsers(
         'minor_release',
-        `Carte Blanche - Minor Release - ${minorName} - ${storyName}`,
-        `<p><b>CARTE BLANCHE</b><br><b>MINOR RELEASE FORM</b></p>
-         <ul>
-           <li><b>Minor Name:</b> ${minorName}</li>
-           <li><b>Age:</b> ${minorAge}</li>
-           <li><b>Guardian Name:</b> ${guardianName}</li>
-           <li><b>Guardian ID:</b> ${guardianId}</li>
-           <li><b>Phone:</b> ${phone}</li>
-           <li><b>Email:</b> ${email}</li>
-           <li><b>Story:</b> ${storyName}</li>
-         </ul>`,
+        subject,
+        html,
         files.map(f => ({
           filename: f.filename,
           content: f.buffer,
           contentType: f.mimeType
-        }))
+        })),
+        [submitterEmail, producerEmail].filter(Boolean)
       )
     ]);
     res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
@@ -1421,29 +1555,35 @@ app.post('/api/send-location-agreement', async (req, res) => {
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
     const { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Location Agreement',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
+
     const [dbResult] = await Promise.all([
       processMultiFileStorageAndFirestore(
         req, 'location_agreement', 'location_agreement', files,
-        { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName }
+        { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName, commissionNumber, producerName }
       ),
       notifyRelevantUsers(
         'location_agreement',
-        `Carte Blanche - Location Agreement - ${propertyAddress} - ${storyName}`,
-        `<p><b>CARTE BLANCHE</b><br><b>LOCATION AGREEMENT</b></p>
-         <ul>
-           <li><b>Property Owner/Rep:</b> ${ownerName}</li>
-           <li><b>Owner ID:</b> ${ownerId}</li>
-           <li><b>Address:</b> ${propertyAddress}</li>
-           <li><b>Filming Date:</b> ${filmingDate}</li>
-           <li><b>Phone:</b> ${phone}</li>
-           <li><b>Email:</b> ${email}</li>
-           <li><b>Story:</b> ${storyName}</li>
-         </ul>`,
+        subject,
+        html,
         files.map(f => ({
           filename: f.filename,
           content: f.buffer,
           contentType: f.mimeType
-        }))
+        })),
+        [submitterEmail, producerEmail].filter(Boolean)
       )
     ]);
     res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
@@ -1459,29 +1599,35 @@ app.post('/api/send-music-agreement', async (req, res) => {
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
     const { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Music Agreement',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
+
     const [dbResult] = await Promise.all([
       processMultiFileStorageAndFirestore(
         req, 'music_agreement', 'music_agreement', files,
-        { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName }
+        { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName, commissionNumber, producerName }
       ),
       notifyRelevantUsers(
         'music_agreement',
-        `Carte Blanche - Music Agreement - ${trackTitle} - ${storyName}`,
-        `<p><b>CARTE BLANCHE</b><br><b>MUSIC AGREEMENT</b></p>
-         <ul>
-           <li><b>Artist/Composer:</b> ${artistName}</li>
-           <li><b>Publisher/Company:</b> ${publisherName || 'N/A'}</li>
-           <li><b>Track Title:</b> ${trackTitle}</li>
-           <li><b>Duration:</b> ${trackDuration}</li>
-           <li><b>Phone:</b> ${phone}</li>
-           <li><b>Email:</b> ${email}</li>
-           <li><b>Story:</b> ${storyName}</li>
-         </ul>`,
+        subject,
+        html,
         files.map(f => ({
           filename: f.filename,
           content: f.buffer,
           contentType: f.mimeType
-        }))
+        })),
+        [submitterEmail, producerEmail].filter(Boolean)
       )
     ]);
     res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
@@ -1497,34 +1643,35 @@ app.post('/api/send-travel-booking', async (req, res) => {
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
     const { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Travel Booking Form',
+      commissionNumber,
+      storyTitle,
+      producerName
+    });
+
     const [dbResult] = await Promise.all([
       processMultiFileStorageAndFirestore(
         req, 'travel_booking', 'travel_booking', files,
-        { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes }
+        { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes, commissionNumber, producerName }
       ),
       notifyRelevantUsers(
         'travel_booking',
-        `Carte Blanche - Travel Booking - ${travelerName} - ${storyName}`,
-        `<p><b>CARTE BLANCHE</b><br><b>TRAVEL BOOKING REQUEST</b></p>
-         <ul>
-           <li><b>Traveler Name:</b> ${travelerName}</li>
-           <li><b>ID/Passport:</b> ${idNumber}</li>
-           <li><b>Departure Airport:</b> ${departureAirport}</li>
-           <li><b>Destination Airport:</b> ${destinationAirport}</li>
-           <li><b>Departure Date:</b> ${departureDate}</li>
-           <li><b>Return Date:</b> ${returnDate}</li>
-           <li><b>Accommodation Required:</b> ${accommodationRequired}</li>
-           <li><b>Car Hire Required:</b> ${carHireRequired}</li>
-           <li><b>Special Requests:</b> ${additionalNotes || 'None'}</li>
-           <li><b>Phone:</b> ${phone}</li>
-           <li><b>Email:</b> ${email}</li>
-           <li><b>Story:</b> ${storyName}</li>
-         </ul>`,
+        subject,
+        html,
         files.map(f => ({
           filename: f.filename,
           content: f.buffer,
           contentType: f.mimeType
-        }))
+        })),
+        [submitterEmail, producerEmail].filter(Boolean)
       )
     ]);
     res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
@@ -1786,17 +1933,65 @@ app.post('/api/send-insert-footage', async (req, res) => {
         }
     }
 
-    // [UPDATED] Send to relevant users based on preferences
+    // [UPDATED] Send to release@carteblanche.co.za and submitter
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Insert Sheet / Footage Declaration',
+      commissionNumber: commissionNumber || 'N/A',
+      storyTitle: storyName || 'Story',
+      producerName: producerName || 'N/A'
+    });
     await notifyRelevantUsers(
         'insert_footage',
-        `Insert Footage Declaration: ${storyName} (#${commissionNumber})`,
-        `<p>A new <b>Footage Declaration</b> has been submitted for: <b>${storyName}</b>.</p>
-         <p><b>Producer:</b> ${producerName}<br><b>Commission #:</b> ${commissionNumber}</p>
-         <p>The PDF declaration is attached. Supporting documents are available in the Dashboard.</p>`,
-        files.filter(f => f.fieldname === 'declaration').map(f => ({ filename: f.filename, content: f.buffer }))
+        subject,
+        html,
+        files.filter(f => f.fieldname === 'declaration' || f.filename.endsWith('.pdf')).map(f => ({ filename: f.filename, content: f.buffer, contentType: f.mimeType || 'application/pdf' })),
+        [submitterEmail]
     );
 
     res.status(200).json({ success: true, firestoreDocId });
+  } catch (error) {
+    console.error('Submission failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/send-insert-sheet', async (req, res) => {
+  try {
+    const { fields, files } = await parseMultipart(req);
+    if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
+
+    const storyName = fields.storyName || fields.story_name || fields.storyTitle || 'Story';
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const producerName = getProducerName(req, fields);
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Insert Sheet',
+      commissionNumber,
+      storyTitle: storyName,
+      producerName
+    });
+
+    const [dbResult] = await Promise.all([
+      processMultiFileStorageAndFirestore(
+        req, 'insert_sheet', 'insert_sheet', files,
+        { ...fields, storyName, commissionNumber, producerName }
+      ),
+      notifyRelevantUsers(
+        'insert_sheet',
+        subject,
+        html,
+        files.map(f => ({
+          filename: f.filename,
+          content: f.buffer,
+          contentType: f.mimeType || 'application/pdf'
+        })),
+        [submitterEmail]
+      )
+    ]);
+
+    res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
   } catch (error) {
     console.error('Submission failed:', error);
     res.status(500).json({ success: false, error: error.message });
