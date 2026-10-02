@@ -485,9 +485,7 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
         }
 
         const recipientList = Array.from(recipients).join(', ');
-        const fromName = type === 'call_sheet' ? "Call Sheets" : 
-                         (type === 'editorial_leave' ? "Editorial Leave Calendar" : 
-                         (type === 'travel_booking' ? "Travel Booking" : "Carte Blanche Deliverables"));
+        const fromName = getFormFromName(type);
 
         try {
             await sendNotificationEmail(fromName, subject, html, recipientList, attachments, directTo);
@@ -526,6 +524,29 @@ function getFormEmoji(formTitle = '') {
   if (lower.includes('music')) return '🎵';
   if (lower.includes('insert')) return '📝';
   return '📋';
+}
+
+// Build PDF filename: [CommissionNumber]-[StoryTitle]-[FormTitle]-[YYYY-MM-DD].pdf
+function buildPdfFilename(commissionNumber, storyTitle, formTitle) {
+  const today = new Date().toISOString().slice(0, 10);
+  const safe = str => (str || 'Unknown').replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  return `${safe(commissionNumber)}-${safe(storyTitle)}-${safe(formTitle)}-${today}.pdf`;
+}
+
+// Map form type to display sender name
+function getFormFromName(type) {
+  const map = {
+    travel_booking:       'Travel Booking - Carte Blanche',
+    participant_release:  'Participant Release - Carte Blanche',
+    minor_release:        'Minor Release - Carte Blanche',
+    location_agreement:   'Location Agreement - Carte Blanche',
+    footage_agreement:    'Footage Agreement - Carte Blanche',
+    music_agreement:      'Music Agreement - Carte Blanche',
+    insert_sheet:         'Insert Sheet - Carte Blanche',
+    call_sheet:           'Call Sheets',
+    editorial_leave:      'Editorial Leave Calendar',
+  };
+  return map[type] || 'Carte Blanche Deliverables';
 }
 
 function buildFormEmailDetails({ formTitle, commissionNumber, storyTitle, producerName }) {
@@ -1445,7 +1466,7 @@ app.post('/api/send-footage-agreement', async (req, res) => {
         subject,
         html,
         files.map(f => ({
-          filename: f.filename,
+          filename: buildPdfFilename(commissionNumber, storyTitle, 'Footage Agreement'),
           content: f.buffer,
           contentType: f.mimeType
         })),
@@ -1491,7 +1512,7 @@ app.post('/api/send-participant-release', async (req, res) => {
         subject,
         html,
         files.map(f => ({
-          filename: f.filename,
+          filename: buildPdfFilename(commissionNumber, storyTitle, 'Participant Release Form'),
           content: f.buffer,
           contentType: f.mimeType
         })),
@@ -1535,7 +1556,7 @@ app.post('/api/send-minor-release', async (req, res) => {
         subject,
         html,
         files.map(f => ({
-          filename: f.filename,
+          filename: buildPdfFilename(commissionNumber, storyTitle, 'Minor Release Form'),
           content: f.buffer,
           contentType: f.mimeType
         })),
@@ -1579,7 +1600,7 @@ app.post('/api/send-location-agreement', async (req, res) => {
         subject,
         html,
         files.map(f => ({
-          filename: f.filename,
+          filename: buildPdfFilename(commissionNumber, storyTitle, 'Location Agreement'),
           content: f.buffer,
           contentType: f.mimeType
         })),
@@ -1623,7 +1644,7 @@ app.post('/api/send-music-agreement', async (req, res) => {
         subject,
         html,
         files.map(f => ({
-          filename: f.filename,
+          filename: buildPdfFilename(commissionNumber, storyTitle, 'Music Agreement'),
           content: f.buffer,
           contentType: f.mimeType
         })),
@@ -1667,7 +1688,7 @@ app.post('/api/send-travel-booking', async (req, res) => {
         subject,
         html,
         files.map(f => ({
-          filename: f.filename,
+          filename: buildPdfFilename(commissionNumber, storyTitle, 'Travel Booking Form'),
           content: f.buffer,
           contentType: f.mimeType
         })),
@@ -1983,7 +2004,7 @@ app.post('/api/send-insert-sheet', async (req, res) => {
         subject,
         html,
         files.map(f => ({
-          filename: f.filename,
+          filename: buildPdfFilename(commissionNumber, storyName, 'Insert Sheet'),
           content: f.buffer,
           contentType: f.mimeType || 'application/pdf'
         })),

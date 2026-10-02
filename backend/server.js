@@ -188,6 +188,18 @@ function getFormEmoji(formTitle = '') {
   return '📋';
 }
 
+// Build PDF filename: [CommissionNumber]-[StoryTitle]-[FormTitle]-[YYYY-MM-DD].pdf
+function buildPdfFilename(commissionNumber, storyTitle, formTitle) {
+  const today = new Date().toISOString().slice(0, 10);
+  const safe = str => (str || 'Unknown').replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  return `${safe(commissionNumber)}-${safe(storyTitle)}-${safe(formTitle)}-${today}.pdf`;
+}
+
+// Build sender display name: [Form Short Name] - Carte Blanche
+function buildFromName(formTitle) {
+  return `"${formTitle} - Carte Blanche" <${process.env.EMAIL_USER}>`;
+}
+
 function buildFormEmailDetails({ formTitle, commissionNumber, storyTitle, producerName }) {
   const comm = commissionNumber || 'N/A';
   const story = storyTitle || 'N/A';
@@ -371,13 +383,13 @@ app.post('/api/send-footage-agreement', async (req, res, next) => {
     });
 
     const mailOptions = {
-        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+        from: buildFromName('Footage Agreement'),
         to: toRecipients,
         subject,
         html,
         attachments: [
             {
-                filename: `S${season || '?'}E${episode || '?'}_EpisodeFootageDeclaration_TX${(tx_date || 'Date').replace(/\s+/g, '_')}.pdf`,
+                filename: buildPdfFilename(commissionNumber, storyTitle, 'Footage Agreement'),
                 content: pdfBuffer,
                 contentType: 'application/pdf'
             }
@@ -388,7 +400,7 @@ app.post('/api/send-footage-agreement', async (req, res, next) => {
     console.log('Footage Declaration Email sent: ' + info.response);
     
     // Save to Firebase
-    await saveSubmission(req, 'episode_footage', `S${season || '?'}E${episode || '?'}_EpisodeFootageDeclaration.pdf`, pdfBuffer, {
+    await saveSubmission(req, 'episode_footage', buildPdfFilename(commissionNumber, storyTitle, 'Footage Agreement'), pdfBuffer, {
       season,
       episode,
       txDate: tx_date,
@@ -429,15 +441,15 @@ app.post('/api/send-participant-release', async (req, res, next) => {
     });
 
     const mailOptions = {
-        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+        from: buildFromName('Participant Release'),
         to: toRecipients,
         subject,
         html,
-        attachments: [{ filename: `ParticipantRelease_${fullName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+        attachments: [{ filename: buildPdfFilename(commissionNumber, storyTitle, 'Participant Release Form'), content: file, contentType: 'application/pdf' }]
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'participant_release', `ParticipantRelease_${fullName.replace(/\s+/g, '_')}.pdf`, file, { fullName, idNumber, phone, email, storyName, commissionNumber, producerName });
+    await saveSubmission(req, 'participant_release', buildPdfFilename(commissionNumber, storyTitle, 'Participant Release Form'), file, { fullName, idNumber, phone, email, storyName, commissionNumber, producerName });
     res.status(200).json({ success: true, message: 'Participant release sent successfully!' });
   } catch (error) {
     console.error('Error sending participant release:', error);
@@ -467,15 +479,15 @@ app.post('/api/send-minor-release', async (req, res, next) => {
     });
 
     const mailOptions = {
-        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+        from: buildFromName('Minor Release'),
         to: toRecipients,
         subject,
         html,
-        attachments: [{ filename: `MinorRelease_${minorName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+        attachments: [{ filename: buildPdfFilename(commissionNumber, storyTitle, 'Minor Release Form'), content: file, contentType: 'application/pdf' }]
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'minor_release', `MinorRelease_${minorName.replace(/\s+/g, '_')}.pdf`, file, { guardianName, guardianId, phone, email, minorName, minorAge, storyName, commissionNumber, producerName });
+    await saveSubmission(req, 'minor_release', buildPdfFilename(commissionNumber, storyTitle, 'Minor Release Form'), file, { guardianName, guardianId, phone, email, minorName, minorAge, storyName, commissionNumber, producerName });
     res.status(200).json({ success: true, message: 'Minor release sent successfully!' });
   } catch (error) {
     console.error('Error sending minor release:', error);
@@ -505,15 +517,15 @@ app.post('/api/send-location-agreement', async (req, res, next) => {
     });
 
     const mailOptions = {
-        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+        from: buildFromName('Location Agreement'),
         to: toRecipients,
         subject,
         html,
-        attachments: [{ filename: `LocationAgreement_${ownerName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+        attachments: [{ filename: buildPdfFilename(commissionNumber, storyTitle, 'Location Agreement'), content: file, contentType: 'application/pdf' }]
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'location_agreement', `LocationAgreement_${ownerName.replace(/\s+/g, '_')}.pdf`, file, { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName, commissionNumber, producerName });
+    await saveSubmission(req, 'location_agreement', buildPdfFilename(commissionNumber, storyTitle, 'Location Agreement'), file, { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName, commissionNumber, producerName });
     res.status(200).json({ success: true, message: 'Location agreement sent successfully!' });
   } catch (error) {
     console.error('Error sending location agreement:', error);
@@ -543,15 +555,15 @@ app.post('/api/send-music-agreement', async (req, res, next) => {
     });
 
     const mailOptions = {
-        from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+        from: buildFromName('Music Agreement'),
         to: toRecipients,
         subject,
         html,
-        attachments: [{ filename: `MusicAgreement_${trackTitle.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+        attachments: [{ filename: buildPdfFilename(commissionNumber, storyTitle, 'Music Agreement'), content: file, contentType: 'application/pdf' }]
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'music_agreement', `MusicAgreement_${trackTitle.replace(/\s+/g, '_')}.pdf`, file, { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName, commissionNumber, producerName });
+    await saveSubmission(req, 'music_agreement', buildPdfFilename(commissionNumber, storyTitle, 'Music Agreement'), file, { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName, commissionNumber, producerName });
     res.status(200).json({ success: true, message: 'Music agreement sent successfully!' });
   } catch (error) {
     console.error('Error sending music agreement:', error);
@@ -581,15 +593,15 @@ app.post('/api/send-travel-booking', async (req, res, next) => {
     });
 
     const mailOptions = {
-        from: `"Travel Booking" <${process.env.EMAIL_USER}>`,
+        from: buildFromName('Travel Booking'),
         to: toRecipients,
         subject,
         html,
-        attachments: [{ filename: `TravelRequest_${travelerName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+        attachments: [{ filename: buildPdfFilename(commissionNumber, storyTitle, 'Travel Booking Form'), content: file, contentType: 'application/pdf' }]
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'travel_booking', `TravelRequest_${travelerName.replace(/\s+/g, '_')}.pdf`, file, { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes, commissionNumber, producerName });
+    await saveSubmission(req, 'travel_booking', buildPdfFilename(commissionNumber, storyTitle, 'Travel Booking Form'), file, { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes, commissionNumber, producerName });
     res.status(200).json({ success: true, message: 'Travel booking request sent successfully!' });
   } catch (error) {
     console.error('Error sending travel booking request:', error);
@@ -709,15 +721,15 @@ app.post('/api/send-insert-sheet', async (req, res, next) => {
     });
 
     const mailOptions = {
-      from: `"Carte Blanche Deliverables" <${process.env.EMAIL_USER}>`,
+      from: buildFromName('Insert Sheet'),
       to: toRecipients,
       subject,
       html,
-      attachments: [{ filename: `InsertSheet_${storyName.replace(/\s+/g, '_')}.pdf`, content: file, contentType: 'application/pdf' }]
+      attachments: [{ filename: buildPdfFilename(commissionNumber, storyName, 'Insert Sheet'), content: file, contentType: 'application/pdf' }]
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'insert_sheet', `InsertSheet_${storyName.replace(/\s+/g, '_')}.pdf`, file, {
+    await saveSubmission(req, 'insert_sheet', buildPdfFilename(commissionNumber, storyName, 'Insert Sheet'), file, {
       storyName,
       commissionNumber,
       producerName,

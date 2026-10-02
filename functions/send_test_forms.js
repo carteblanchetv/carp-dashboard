@@ -253,6 +253,13 @@ async function createFilledInsertSheetPdf(templatesDir) {
   return Buffer.from(await doc.save());
 }
 
+// Build PDF filename: [CommissionNumber]-[StoryTitle]-[FormTitle]-[YYYY-MM-DD].pdf
+function buildPdfFilename(commissionNumber, storyTitle, formTitle) {
+  const today = new Date().toISOString().slice(0, 10);
+  const safe = str => (str || 'Unknown').replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  return `${safe(commissionNumber)}-${safe(storyTitle)}-${safe(formTitle)}-${today}.pdf`;
+}
+
 async function sendAllTestEmails() {
   console.log(`Starting mock completed test email dispatch to: ${TARGET_EMAIL}`);
 
@@ -279,13 +286,12 @@ async function sendAllTestEmails() {
   console.log('All 7 completed mock PDFs generated successfully.');
 
   // Subject line format: [Commission Number] - [Story Title] - [Form Title] - [Producer Name]
-  // Body copy: ONLY Form Title, Commission Number, Story Title, Producer
   const testCases = [
     {
       name: 'Travel Booking Form',
-      fromName: 'Travel Booking',
+      fromName: 'Travel Booking - Carte Blanche',
       subject: 'CB-2026-033 - Kalahari Renewable Power Investigation - Travel Booking Form - Lezanne van Zyl',
-      filename: 'TravelRequest_Completed_JohnDoe.pdf',
+      filename: buildPdfFilename('CB-2026-033', 'Kalahari Renewable Power Investigation', 'Travel Booking Form'),
       pdfBuffer: travelPdf,
       html: formatFormEmailBody(
         'Travel Booking Form',
@@ -296,9 +302,9 @@ async function sendAllTestEmails() {
     },
     {
       name: 'Participant Release Form',
-      fromName: 'Carte Blanche Deliverables',
+      fromName: 'Participant Release - Carte Blanche',
       subject: 'CB-2026-089 - State of Hospitals - Participant Release Form - Lezanne van Zyl',
-      filename: 'ParticipantRelease_Completed_SiphoDlamini.pdf',
+      filename: buildPdfFilename('CB-2026-089', 'State of Hospitals', 'Participant Release Form'),
       pdfBuffer: participantPdf,
       html: formatFormEmailBody(
         'Participant Release Form',
@@ -309,9 +315,9 @@ async function sendAllTestEmails() {
     },
     {
       name: 'Minor Release Form',
-      fromName: 'Carte Blanche Deliverables',
+      fromName: 'Minor Release - Carte Blanche',
       subject: 'CB-2026-092 - Youth Choir National Tour - Minor Release Form - Lezanne van Zyl',
-      filename: 'MinorRelease_Completed_LeratoKhumalo.pdf',
+      filename: buildPdfFilename('CB-2026-092', 'Youth Choir National Tour', 'Minor Release Form'),
       pdfBuffer: minorPdf,
       html: formatFormEmailBody(
         'Minor Release Form',
@@ -322,9 +328,9 @@ async function sendAllTestEmails() {
     },
     {
       name: 'Location Agreement',
-      fromName: 'Carte Blanche Deliverables',
+      fromName: 'Location Agreement - Carte Blanche',
       subject: 'CB-2026-077 - Corporate Investigation - Location Agreement - Lezanne van Zyl',
-      filename: 'LocationAgreement_Completed_45WestStreet.pdf',
+      filename: buildPdfFilename('CB-2026-077', 'Corporate Investigation', 'Location Agreement'),
       pdfBuffer: locationPdf,
       html: formatFormEmailBody(
         'Location Agreement',
@@ -335,9 +341,9 @@ async function sendAllTestEmails() {
     },
     {
       name: 'Footage Agreement',
-      fromName: 'Carte Blanche Deliverables',
+      fromName: 'Footage Agreement - Carte Blanche',
       subject: 'CB-2026-064 - Wildlife Documentary Special - Footage Agreement - Lezanne van Zyl',
-      filename: 'FootageAgreement_Completed_WildlifeSpecial.pdf',
+      filename: buildPdfFilename('CB-2026-064', 'Wildlife Documentary Special', 'Footage Agreement'),
       pdfBuffer: footagePdf,
       html: formatFormEmailBody(
         'Footage Agreement',
@@ -348,9 +354,9 @@ async function sendAllTestEmails() {
     },
     {
       name: 'Music Agreement',
-      fromName: 'Carte Blanche Deliverables',
+      fromName: 'Music Agreement - Carte Blanche',
       subject: 'CB-2026-051 - Feature Story Insert - Music Agreement - Lezanne van Zyl',
-      filename: 'MusicAgreement_Completed_SunsetHorizons.pdf',
+      filename: buildPdfFilename('CB-2026-051', 'Feature Story Insert', 'Music Agreement'),
       pdfBuffer: musicPdf,
       html: formatFormEmailBody(
         'Music Agreement',
@@ -361,9 +367,9 @@ async function sendAllTestEmails() {
     },
     {
       name: 'Insert Sheet',
-      fromName: 'Carte Blanche Deliverables',
+      fromName: 'Insert Sheet - Carte Blanche',
       subject: 'CB-2026-042 - Green Energy Transition - Insert Sheet - Lezanne van Zyl',
-      filename: 'InsertSheet_Completed_GreenEnergy.pdf',
+      filename: buildPdfFilename('CB-2026-042', 'Green Energy Transition', 'Insert Sheet'),
       pdfBuffer: insertPdf,
       html: formatFormEmailBody(
         'Insert Sheet',
