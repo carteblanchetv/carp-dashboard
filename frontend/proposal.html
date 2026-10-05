@@ -254,6 +254,40 @@
         </div>
     </div>
 
+    <!-- Story Sensitivity Modal (Admin / Editorial) -->
+    <div id="adminSensitivityModal" class="modal-backdrop">
+        <div class="modal-card" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Story Sensitivity Settings</h3>
+                <button type="button" class="close-modal" id="adminSensModalCloseBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-subtitle" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                    Control access to this story. When marked as sensitive, only designated reviewers and Super Admins can view it.
+                </p>
+                <form id="adminSensitivityForm">
+                    <input type="hidden" id="adminSensProposalId">
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-weight: 600; color: var(--text-main);">
+                            <input type="checkbox" id="adminSensIsSensitive" style="width: 1.15rem; height: 1.15rem; accent-color: var(--primary); cursor: pointer;">
+                            <span>🔒 Mark as Sensitive Story</span>
+                        </label>
+                    </div>
+                    <div id="adminSensReviewerWrapper" class="hidden" style="margin-top: 1rem; padding: 1rem; background: rgba(0, 0, 0, 0.03); border: 1px solid var(--border); border-radius: 8px;">
+                        <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem;">Permitted Reviewers</label>
+                        <div id="adminSensReviewerList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+                    <div class="modal-actions" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; justify-content: flex-end;">
+                        <button type="button" class="btn-soft" id="adminSensModalCancelBtn">Cancel</button>
+                        <button type="submit" class="submit-btn" style="padding: 0.65rem 1.25rem;">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Loading Overlay -->
 
     <div id="loadingOverlay" class="loading-overlay">
@@ -298,6 +332,7 @@
                     <button type="button" id="topEditCallSheetBtn" class="submit-btn hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0; background: var(--success) !important; border: 1px solid var(--success) !important;">Edit Call Sheet</button>
                     <button type="button" id="topDownloadCallSheetBtn" onclick="downloadCallSheetPDF()" class="submit-btn hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0; background: var(--success) !important; border: 1px solid var(--success) !important;">Download Call Sheet PDF</button>
                     <button type="button" id="topDownloadProposalBtn" onclick="downloadProposalPDF()" class="submit-btn" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0;">Download Proposal as PDF</button>
+                    <button type="button" id="topSensitivityBtn" class="btn-soft hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0; border: 1px solid var(--border) !important; color: var(--text-main); font-weight: 700; border-radius: 6px; cursor: pointer;">🔒 Sensitivity</button>
                     <a id="topEditProposalBtn" href="#" class="submit-btn hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; margin-top: 0; background: #eab308 !important; border: 1px solid #eab308 !important; color: #0f172a !important; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: 700;">Edit Proposal</a>
                     <a id="backToProposalBtn" href="#" class="btn-soft hidden" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; border: 1px solid var(--border) !important; color: var(--text-main); border-radius: 8px; text-decoration: none; font-weight: 700; transition: all 0.2s;">← Back to Proposal</a>
                 </div>

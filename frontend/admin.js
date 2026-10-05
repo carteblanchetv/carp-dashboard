@@ -868,6 +868,33 @@ const dCancel = document.getElementById('deliveryModalCancelBtn');
 if (dClose) dClose.onclick = () => deliveryModal.classList.remove('active');
 if (dCancel) dCancel.onclick = () => deliveryModal.classList.remove('active');
 
+// --- REVIEWER LOADER HELPER ---
+async function loadReviewersList(targetContainerId, selectedUids = [], checkboxName = 'permittedReviewers') {
+    const container = document.getElementById(targetContainerId);
+    if (!container) return;
+    if (!window.reviewersCache) {
+        try {
+            const token = await window.auth.getIdToken();
+            const res = await fetch('/api/list-reviewers', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (data.success) {
+                window.reviewersCache = data.reviewers || [];
+            }
+        } catch (e) {
+            console.error("Failed to load reviewers:", e);
+        }
+    }
+    const reviewers = window.reviewersCache || [];
+    container.innerHTML = reviewers.map(r => `
+        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.4rem 0.6rem; background: var(--bg-light); border: 1px solid var(--border); border-radius: 4px; cursor: pointer;">
+            <input type="checkbox" name="${checkboxName}" value="${r.uid}" ${selectedUids.includes(r.uid) ? 'checked' : ''}>
+            <span>${r.name} ${r.surname}</span>
+        </label>
+    `).join('');
+}
+
 // --- ACCEPTANCE MODAL LOGIC ---
 const acceptanceModal = document.getElementById('acceptanceModal');
 const acceptanceForm = document.getElementById('acceptanceForm');
@@ -923,6 +950,26 @@ window.openAcceptanceModal = (id) => {
         if (legalNo) legalNo.checked = true;
     }
     
+    // Populate Sensitivity
+    const accSensCheckbox = document.getElementById('acceptanceIsSensitive');
+    const accSensWrapper = document.getElementById('acceptanceReviewerWrapper');
+    if (accSensCheckbox && accSensWrapper) {
+        accSensCheckbox.checked = proposal.isSensitive === true;
+        if (accSensCheckbox.checked) {
+            accSensWrapper.classList.remove('hidden');
+        } else {
+            accSensWrapper.classList.add('hidden');
+        }
+        loadReviewersList('acceptanceReviewerList', proposal.permittedUids || [], 'acceptancePermittedReviewers');
+        accSensCheckbox.onchange = () => {
+            if (accSensCheckbox.checked) {
+                accSensWrapper.classList.remove('hidden');
+            } else {
+                accSensWrapper.classList.add('hidden');
+            }
+        };
+    }
+
     // Default Delivery Date to +14 days if not set
     const future = new Date();
     future.setDate(future.getDate() + 14);
@@ -944,6 +991,8 @@ if (acceptanceForm) {
         const contractAccepted = document.getElementById('acceptanceAgreement').checked;
         const presenter = document.getElementById('acceptancePresenter').value;
         const legal_req = document.querySelector('input[name="acceptanceLegalReq"]:checked')?.value || 'no';
+        const isSensitive = document.getElementById('acceptanceIsSensitive')?.checked || false;
+        const permittedUids = Array.from(document.querySelectorAll('input[name="acceptancePermittedReviewers"]:checked')).map(cb => cb.value);
         
         const liveStudioInterview = (storyType === 'Studio');
         const liveStudioSeason = liveStudioInterview ? document.getElementById('acceptanceSeasonNum')?.value || null : null;
@@ -961,7 +1010,9 @@ if (acceptanceForm) {
             legal_req,
             liveStudioInterview,
             liveStudioSeason,
-            liveStudioEpisode
+            liveStudioEpisode,
+            isSensitive,
+            permittedUids
         });
 
         if (res && res.success) {
@@ -998,6 +1049,26 @@ window.openEditCommissionModal = (id) => {
     const legalReq = acc.legal_req || proposal.legal_req || 'no';
     const legalRadio = document.querySelector(`input[name="editCommLegalReq"][value="${legalReq}"]`);
     if (legalRadio) legalRadio.checked = true;
+
+    // Populate Sensitivity
+    const editSensCheckbox = document.getElementById('editCommIsSensitive');
+    const editSensWrapper = document.getElementById('editCommReviewerWrapper');
+    if (editSensCheckbox && editSensWrapper) {
+        editSensCheckbox.checked = proposal.isSensitive === true;
+        if (editSensCheckbox.checked) {
+            editSensWrapper.classList.remove('hidden');
+        } else {
+            editSensWrapper.classList.add('hidden');
+        }
+        loadReviewersList('editCommReviewerList', proposal.permittedUids || [], 'editCommPermittedReviewers');
+        editSensCheckbox.onchange = () => {
+            if (editSensCheckbox.checked) {
+                editSensWrapper.classList.remove('hidden');
+            } else {
+                editSensWrapper.classList.add('hidden');
+            }
+        };
+    }
 
     // Populate Producers Dropdown
     const producerSelect = document.getElementById('editCommProducer');
@@ -1059,6 +1130,8 @@ if (editCommissionForm) {
         const presenter = document.getElementById('editCommPresenter').value;
         const legal_req = document.querySelector('input[name="editCommLegalReq"]:checked')?.value || 'no';
         const newProducerId = document.getElementById('editCommProducer')?.value || '';
+        const isSensitive = document.getElementById('editCommIsSensitive')?.checked || false;
+        const permittedUids = Array.from(document.querySelectorAll('input[name="editCommPermittedReviewers"]:checked')).map(cb => cb.value);
 
         editCommissionModal.classList.remove('active');
         await executeProposalAction(id, 'edit-commission', { 
@@ -1068,7 +1141,9 @@ if (editCommissionForm) {
             rate, 
             presenter, 
             legal_req,
-            newProducerId
+            newProducerId,
+            isSensitive,
+            permittedUids
         });
     };
 }

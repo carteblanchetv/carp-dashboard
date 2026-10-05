@@ -3123,6 +3123,13 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
         }
       };
 
+      if (req.body.isSensitive !== undefined) {
+        updateData.isSensitive = req.body.isSensitive === true || req.body.isSensitive === 'true';
+      }
+      if (req.body.permittedUids !== undefined) {
+        updateData.permittedUids = Array.isArray(req.body.permittedUids) ? req.body.permittedUids : [];
+      }
+
       await docRef.update(updateData);
 
       // --- EMAIL NOTIFICATION FOR NEW COMMISSION ---
@@ -3254,6 +3261,13 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
       if (presenter !== undefined) updatePayload['acceptanceDetails.presenter'] = presenter || null;
       if (legal_req !== undefined) updatePayload['acceptanceDetails.legal_req'] = legal_req || null;
       
+      if (req.body.isSensitive !== undefined) {
+        updatePayload.isSensitive = req.body.isSensitive === true || req.body.isSensitive === 'true';
+      }
+      if (req.body.permittedUids !== undefined) {
+        updatePayload.permittedUids = Array.isArray(req.body.permittedUids) ? req.body.permittedUids : [];
+      }
+      
       if (newProducerId) {
           const uDoc = await admin.firestore().collection('users').doc(newProducerId).get();
           if (uDoc.exists) {
@@ -3325,6 +3339,15 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
         txDate: null
       });
       res.json({ success: true });
+    } else if (action === 'update-sensitivity') {
+      const { isSensitive, permittedUids } = req.body;
+      const updatePayload = {
+        isSensitive: isSensitive === true || isSensitive === 'true',
+        permittedUids: Array.isArray(permittedUids) ? permittedUids : [],
+        lastUpdatedAt: admin.firestore.FieldValue.serverTimestamp()
+      };
+      await docRef.update(updatePayload);
+      res.json({ success: true, isSensitive: updatePayload.isSensitive, permittedUids: updatePayload.permittedUids });
     } else {
       await docRef.update({ status: 'rejected' });
       res.json({ success: true });
@@ -3890,10 +3913,10 @@ app.get('/api/list-reviewers', async (req, res) => {
 
     const permittedEmails = ['stenette@carteblanche.co.za', 'rudi@combinedartists.co.za'];
 
-    // Filter duplicates and select only permitted reviewer emails
+    // Filter duplicates and select permitted reviewer emails or authorized admin/editorial roles
     const reviewers = allDocs
       .filter(u => !u.isEmailKey || !emailsWithUidDoc.has(u.email))
-      .filter(u => permittedEmails.includes(u.email))
+      .filter(u => permittedEmails.includes(u.email) || AUTHORIZED_ADMIN_ROLES.includes(u.role))
       .map(u => ({
         uid: u.id,
         name: u.name,

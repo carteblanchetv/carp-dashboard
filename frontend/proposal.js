@@ -1608,10 +1608,36 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('phase2Container').classList.remove('hidden');
                     // Commission number is now part of the title - hide the separate badge
                     if (commNumBadgeTop) commNumBadgeTop.classList.add('hidden');
-                    const sensSection = document.getElementById('sensitivitySection');
-                    if (sensSection) sensSection.classList.add('hidden');
                     document.getElementById('displayCommNum').textContent = sub.commissionNumber;
                     form.submitBtn.textContent = 'Update Details';
+                }
+
+                // Sensitivity Section
+                const sensSection = document.getElementById('sensitivitySection');
+                const isUserAdminOrEditorial = loggedInUser && (isAdmin(loggedInUser) || isSuperAdmin(loggedInUser) || isEditorialProduction(loggedInUser));
+                
+                if (isCommissioned && !isUserAdminOrEditorial) {
+                    if (sensSection) sensSection.classList.add('hidden');
+                } else {
+                    if (sensSection) sensSection.classList.remove('hidden');
+                    const sensToggle = document.getElementById('isSensitive');
+                    if (sensToggle) {
+                        sensToggle.checked = sub.isSensitive === true;
+                        const reviewerWrapper = document.getElementById('reviewerSelectionWrapper');
+                        if (sub.isSensitive) {
+                            if (reviewerWrapper) reviewerWrapper.classList.remove('hidden');
+                            loadReviewers().then(() => {
+                                if (sub.permittedUids && Array.isArray(sub.permittedUids)) {
+                                    document.querySelectorAll('input[name="permittedReviewers"]').forEach(cb => {
+                                        cb.checked = sub.permittedUids.includes(cb.value);
+                                    });
+                                }
+                            });
+                        } else {
+                            if (reviewerWrapper) reviewerWrapper.classList.add('hidden');
+                        }
+                    }
+                }
                     
                     if (sub.details) {
                         // Populate Presenter(s)
@@ -2354,6 +2380,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        const topSensitivityBtn = document.getElementById('topSensitivityBtn');
+        if (topSensitivityBtn) {
+            const canManageSensitivity = loggedInUser && (isAdmin(loggedInUser) || isSuperAdmin(loggedInUser) || isEditorialProduction(loggedInUser));
+            if (canManageSensitivity && !sub._isRestrictedView) {
+                topSensitivityBtn.classList.remove('hidden');
+                topSensitivityBtn.style.display = 'inline-flex';
+                topSensitivityBtn.innerHTML = sub.isSensitive ? '🔒 Sensitive' : '🔓 Standard';
+                topSensitivityBtn.style.background = sub.isSensitive ? 'rgba(239, 68, 68, 0.15)' : 'rgba(0, 0, 0, 0.05)';
+                topSensitivityBtn.style.color = sub.isSensitive ? 'var(--danger)' : 'var(--text-main)';
+                topSensitivityBtn.style.borderColor = sub.isSensitive ? 'var(--danger)' : 'var(--border)';
+                topSensitivityBtn.onclick = () => window.openAdminSensitivityModal(sub);
+            } else {
+                topSensitivityBtn.classList.add('hidden');
+                topSensitivityBtn.style.display = 'none';
+            }
+        }
+
         // Setup Story Deliverables Bar (Visible in Preview too)
         setupDeliverablesBar(sub, linkedAssets, isReadOnly);
         
@@ -2716,6 +2759,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Location</span><span style="font-weight: 700;">${locationDisplay}</span></div>
                     ${acc.duration ? `<div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Duration</span><span style="font-weight: 700;">${acc.duration}</span></div>` : ''}
                     ${(deliveryDate && !sub._isRestrictedView) ? `<div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Delivery Date</span><span style="font-weight: 700;">${deliveryDate}</span></div>` : ''}
+                    ${(loggedInUser && (isAdmin(loggedInUser) || isSuperAdmin(loggedInUser) || isEditorialProduction(loggedInUser)) && !sub._isRestrictedView) ? `
+                    <div>
+                        <span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Sensitivity</span>
+                        <span style="font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
+                            ${sub.isSensitive ? '<span style="color: var(--danger);">🔒 Sensitive</span>' : '<span style="color: #10b981;">🔓 Standard</span>'}
+                            <a href="#" onclick="event.preventDefault(); window.openAdminSensitivityModal();" style="font-size: 0.75rem; color: var(--primary); text-decoration: underline; margin-left: 0.25rem;">(Change)</a>
+                        </span>
+                    </div>` : ''}
                 </div>
                 
                 <!-- Edit Proposal button moved to top header -->
@@ -3046,6 +3097,103 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingOverlay.classList.remove('active');
         }
     }
+
+    // --- STORY SENSITIVITY MODAL (ADMIN / EDITORIAL) ---
+    window.openAdminSensitivityModal = openAdminSensitivityModal;
+    function openAdminSensitivityModal(subData) {
+        const sub = subData || window.currentProposal;
+        if (!sub) return;
+
+        const modal = document.getElementById('adminSensitivityModal');
+        const isSensCheckbox = document.getElementById('adminSensIsSensitive');
+        const reviewerWrapper = document.getElementById('adminSensReviewerWrapper');
+        const reviewerList = document.getElementById('adminSensReviewerList');
+        const idInput = document.getElementById('adminSensProposalId');
+
+        if (!modal) return;
+
+        idInput.value = sub.id;
+        isSensCheckbox.checked = sub.isSensitive === true;
+        if (isSensCheckbox.checked) {
+            reviewerWrapper.classList.remove('hidden');
+        } else {
+            reviewerWrapper.classList.add('hidden');
+        }
+
+        // Load reviewers
+        reviewerList.innerHTML = '<p style="font-size: 0.8rem; color: var(--text-muted);">Loading reviewers...</p>';
+        fetchWithAuth('/api/list-reviewers')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.reviewers) {
+                    const currentUids = sub.permittedUids || [];
+                    reviewerList.innerHTML = data.reviewers.map(r => `
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.4rem 0.6rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; cursor: pointer;">
+                            <input type="checkbox" name="adminSensPermittedReviewers" value="${r.uid}" ${currentUids.includes(r.uid) ? 'checked' : ''}>
+                            <span>${r.name} ${r.surname}</span>
+                        </label>
+                    `).join('');
+                } else {
+                    reviewerList.innerHTML = '<p style="color: var(--danger); font-size: 0.8rem;">Failed to load reviewers.</p>';
+                }
+            })
+            .catch(err => {
+                reviewerList.innerHTML = `<p style="color: var(--danger); font-size: 0.8rem;">Error: ${err.message}</p>`;
+            });
+
+        isSensCheckbox.onchange = () => {
+            if (isSensCheckbox.checked) {
+                reviewerWrapper.classList.remove('hidden');
+            } else {
+                reviewerWrapper.classList.add('hidden');
+            }
+        };
+
+        modal.classList.add('active');
+    }
+
+    const adminSensForm = document.getElementById('adminSensitivityForm');
+    if (adminSensForm) {
+        adminSensForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('adminSensProposalId').value;
+            const isSensitive = document.getElementById('adminSensIsSensitive').checked;
+            const permittedUids = Array.from(document.querySelectorAll('input[name="adminSensPermittedReviewers"]:checked')).map(cb => cb.value);
+
+            const modal = document.getElementById('adminSensitivityModal');
+            try {
+                const response = await fetchWithAuth('/api/admin/handle-proposal', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id,
+                        action: 'update-sensitivity',
+                        isSensitive,
+                        permittedUids
+                    })
+                });
+                const res = await response.json();
+                if (res.success) {
+                    modal.classList.remove('active');
+                    if (window.currentProposal) {
+                        window.currentProposal.isSensitive = res.isSensitive;
+                        window.currentProposal.permittedUids = res.permittedUids;
+                    }
+                    alert(`Proposal sensitivity updated to: ${res.isSensitive ? 'Sensitive (Restricted)' : 'Standard (Not Sensitive)'}`);
+                    window.location.reload();
+                } else {
+                    throw new Error(res.error || 'Failed to update sensitivity.');
+                }
+            } catch (err) {
+                alert("Error: " + err.message);
+            }
+        };
+    }
+
+    const sensClose = document.getElementById('adminSensModalCloseBtn');
+    const sensCancel = document.getElementById('adminSensModalCancelBtn');
+    if (sensClose) sensClose.onclick = () => document.getElementById('adminSensitivityModal')?.classList.remove('active');
+    if (sensCancel) sensCancel.onclick = () => document.getElementById('adminSensitivityModal')?.classList.remove('active');
 
     // --- COMMISSION MODAL (pModal) ---
     window.openPModal = openPModal;
