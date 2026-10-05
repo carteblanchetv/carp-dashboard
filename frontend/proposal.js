@@ -281,11 +281,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (mainTitle) mainTitle.classList.add('hidden');
             if (csTitle) csTitle.classList.remove('hidden');
+            const btnProposal = document.getElementById('btnStoryProposal');
+            if (btnProposal) btnProposal.classList.remove('hidden');
+            const btnCS = document.getElementById('btnCallSheet');
+            if (btnCS) {
+                btnCS.style.background = 'var(--success)';
+                btnCS.style.color = 'white';
+            }
+
             if (backBtn) {
                 console.log("[DEBUG] Unhiding Back to Proposal button");
                 backBtn.classList.remove('hidden');
                 backBtn.style.display = 'inline-block';
-                backBtn.href = `proposal.html?id=${proposalId}&view=preview`;
+                const targetView = isAdminView ? 'admin' : (isPreviewView ? 'preview' : '');
+                backBtn.href = targetView ? `proposal.html?id=${proposalId}&view=${targetView}` : `proposal.html?id=${proposalId}`;
+                backBtn.onclick = (e) => {
+                    e.preventDefault();
+                    history.pushState(null, "", window.location.pathname + window.location.search);
+                    checkStandaloneMode();
+                    window.scrollTo(0, 0);
+                };
             }
             if (productionBar) productionBar.classList.remove('hidden'); // Keep the tools visible
             const floatingBar = document.getElementById('floatingAdminBar');
@@ -296,21 +311,50 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             console.log("[DEBUG] Activating Proposal View");
             toggleCallSheetRequired(false);
-            const summaryDiv = document.getElementById('proposalSummary');
-            if (summaryDiv && isReadOnly) {
-                summaryDiv.classList.remove('hidden');
-                summaryDiv.style.display = 'block';
+
+            const btnProposal = document.getElementById('btnStoryProposal');
+            if (btnProposal) btnProposal.classList.add('hidden');
+            const btnCS = document.getElementById('btnCallSheet');
+            if (btnCS) {
+                btnCS.style.background = 'rgba(16, 185, 129, 0.05)';
+                btnCS.style.color = 'var(--success)';
             }
+
+            const csPdfBtn = document.getElementById('topDownloadCallSheetBtn');
+            if (csPdfBtn) {
+                csPdfBtn.classList.add('hidden');
+                csPdfBtn.style.display = 'none';
+            }
+            const topEditCsBtn = document.getElementById('topEditCallSheetBtn');
+            if (topEditCsBtn) {
+                topEditCsBtn.classList.add('hidden');
+                topEditCsBtn.style.display = 'none';
+            }
+            if (backBtn) {
+                backBtn.classList.add('hidden');
+                backBtn.style.display = 'none';
+            }
+            if (mainTitle) mainTitle.classList.remove('hidden');
+            if (csTitle) csTitle.classList.add('hidden');
+
+            const summaryDiv = document.getElementById('proposalSummary');
             if (proposalContent) proposalContent.classList.remove('hidden');
             if (callSheetSec) {
                 callSheetSec.classList.add('hidden');
                 callSheetSec.style.borderTop = '2px solid var(--success)';
                 callSheetSec.style.marginTop = '3rem';
             }
-            if (mainTitle) mainTitle.classList.remove('hidden');
-            if (csTitle) csTitle.classList.add('hidden');
-            if (backBtn) backBtn.classList.add('hidden');
-            document.title = (isEditMode ? "Edit Proposal" : "New Proposal") + " - Carte Blanche";
+
+            const assetsSec = document.getElementById('projectAssetsSection');
+            if (assetsSec && (isAdminView || isPreviewView)) assetsSec.classList.remove('hidden');
+
+            if (window.currentProposal && isReadOnly) {
+                showProposalPreview(window.currentProposal, window.linkedAssets || []);
+            } else if (summaryDiv && isReadOnly) {
+                summaryDiv.classList.remove('hidden');
+                summaryDiv.style.display = 'block';
+            }
+            document.title = (window.currentProposal?.story_title || (isEditMode ? "Edit Proposal" : "New Proposal")) + " - Carte Blanche";
         }
     }
     window.addEventListener('hashchange', checkStandaloneMode);
@@ -3513,9 +3557,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = url;
             };
             
+            const btnStoryProposal = document.getElementById('btnStoryProposal');
+            if (btnStoryProposal) {
+                btnStoryProposal.onclick = () => {
+                    history.pushState(null, "", window.location.pathname + window.location.search);
+                    checkStandaloneMode();
+                    window.scrollTo(0, 0);
+                };
+            }
+
             document.getElementById('btnCallSheet').onclick = () => {
-                window.location.hash = '#CallSheet';
-                window.scrollTo(0,0);
+                if (window.location.hash === '#CallSheet' || window.location.hash === '#CallSheetEdit') {
+                    history.pushState(null, "", window.location.pathname + window.location.search);
+                    checkStandaloneMode();
+                } else {
+                    window.location.hash = '#CallSheet';
+                }
+                window.scrollTo(0, 0);
             };
             
             document.getElementById('btnFinalScript').onclick = () => {
@@ -3884,7 +3942,14 @@ function showCallSheetPreview(sub, assets) {
     if (backBtn) {
         backBtn.classList.remove('hidden');
         backBtn.style.display = 'inline-block';
-        backBtn.href = `proposal.html?id=${sub.id}&view=preview`;
+        const targetView = isAdminView ? 'admin' : (isPreviewView ? 'preview' : '');
+        backBtn.href = targetView ? `proposal.html?id=${sub.id}&view=${targetView}` : `proposal.html?id=${sub.id}`;
+        backBtn.onclick = (e) => {
+            e.preventDefault();
+            history.pushState(null, "", window.location.pathname + window.location.search);
+            checkStandaloneMode();
+            window.scrollTo(0, 0);
+        };
     }
 }
 
