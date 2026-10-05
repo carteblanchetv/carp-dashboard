@@ -1841,7 +1841,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (document.getElementById('dopList') && document.getElementById('dopList').children.length === 0) addDopRow();
                     if (document.getElementById('soundList') && document.getElementById('soundList').children.length === 0) addSoundRow();
                     if (document.getElementById('crewList').children.length === 0) addCrewRow();
-                }
             } else {
                 // If the API call itself was not successful
                 throw new Error(result.error || "Failed to load proposal data.");
