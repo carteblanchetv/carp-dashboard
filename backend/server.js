@@ -31,8 +31,12 @@ async function validateFirebaseIdToken(req, res, next) {
     '/api/send-participant-release',
     '/api/send-minor-release',
     '/api/send-location-agreement',
+    '/api/send-footage-release-agreement',
     '/api/send-music-agreement',
-    '/api/send-travel-booking'
+    '/api/send-travel-booking',
+    '/api/send-insert-sheet',
+    '/api/get-form-for-countersign',
+    '/api/countersign-form'
   ];
 
   const isPublicFormRoute = publicFormRoutes.some(route => req.path.startsWith(route) || req.url.startsWith(route));
@@ -224,6 +228,82 @@ function buildFormEmailDetails({ formTitle, commissionNumber, storyTitle, produc
   return { subject, html };
 }
 
+async function sendCountersignNotification({
+  submissionId,
+  formType,
+  formTitle,
+  commissionNumber,
+  storyTitle,
+  producerName,
+  producerEmail,
+  contributorName,
+  req
+}) {
+  if (!producerEmail) return;
+  const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
+  const protocol = (req && req.get('x-forwarded-proto')) || 'https';
+  const baseUrl = `${protocol}://${host}`;
+
+  const formPageMap = {
+    participant_release: 'participant_release.html',
+    minor_release: 'minor_release.html',
+    location_agreement: 'location_agreement.html',
+    footage_agreement: 'footage_release_agreement.html',
+    footage_release_agreement: 'footage_release_agreement.html',
+    music_agreement: 'music_agreement.html'
+  };
+
+  const formPage = formPageMap[formType] || 'forms_hub.html';
+  const countersignUrl = `${baseUrl}/${formPage}?id=${submissionId}&action=countersign`;
+  const comm = commissionNumber || 'N/A';
+  const story = storyTitle || 'Story';
+  const contrib = contributorName || 'Contributor';
+  const prod = producerName || 'Producer';
+
+  const subject = `ACTION REQUIRED: Countersign ${formTitle} - ${story} (${comm})`;
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+      <div style="background: #008fbe; padding: 24px; text-align: center;">
+        <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 0.5px;">CARTE BLANCHE</h1>
+        <p style="color: #e0f2fe; margin: 6px 0 0 0; font-size: 13px; font-weight: 600;">COUNTERSIGNATURE REQUIRED</p>
+      </div>
+      <div style="padding: 24px;">
+        <p style="font-size: 15px; margin: 0 0 16px 0;">Dear <strong>${prod}</strong>,</p>
+        <p style="font-size: 14px; line-height: 1.5; margin: 0 0 16px 0;">
+          <strong>${contrib}</strong> has completed and digitally signed the <strong>${formTitle}</strong>.
+        </p>
+        <div style="background: #f8fafc; border-left: 4px solid #008fbe; padding: 14px 18px; margin: 0 0 20px 0; border-radius: 0 6px 6px 0;">
+          <p style="margin: 0 0 6px 0; font-size: 13px;"><b>Story:</b> ${story}</p>
+          <p style="margin: 0 0 6px 0; font-size: 13px;"><b>Commission #:</b> ${comm}</p>
+          <p style="margin: 0; font-size: 13px;"><b>Contributor:</b> ${contrib}</p>
+        </div>
+        <p style="font-size: 13px; line-height: 1.5; color: #475569; margin: 0 0 24px 0;">
+          Per legal requirements, this agreement will only be dispatched to <strong>release@carteblanche.co.za</strong> once your producer counter-signature has been recorded.
+        </p>
+        <div style="text-align: center; margin: 28px 0;">
+          <a href="${countersignUrl}" style="background-color: #008fbe; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px; display: inline-block;">
+            ✍️ Review &amp; Countersign Agreement
+          </a>
+        </div>
+        <p style="font-size: 12px; color: #94a3b8; line-height: 1.4; word-break: break-all; margin: 20px 0 0 0;">
+          Direct link: <a href="${countersignUrl}" style="color: #008fbe;">${countersignUrl}</a>
+        </p>
+      </div>
+      <div style="background: #f1f5f9; padding: 12px 24px; text-align: center; border-top: 1px solid #e2e8f0;">
+        <p style="margin: 0; font-size: 11px; color: #64748b;">Carte Blanche Digital Release System &bull; Confidential</p>
+      </div>
+    </div>
+  `.trim();
+
+  const mailOptions = {
+    from: buildFromName('Countersign Request'),
+    to: producerEmail,
+    subject,
+    html
+  };
+  await transporter.sendMail(mailOptions);
+}
+
 // Helper to save submission to Storage and Firestore
 async function saveSubmission(req, formType, filename, pdfBuffer, metadata) {
   // We try multiple possible default bucket names to resolve potential 404s
@@ -264,8 +344,9 @@ async function saveSubmission(req, formType, filename, pdfBuffer, metadata) {
       submittedAt: admin.firestore.FieldValue.serverTimestamp(),
       ...metadata
     };
-    await admin.firestore().collection('submissions').add(docData);
-    console.log(`Saved submission ${formType} to Firestore.`);
+    const docRef = await admin.firestore().collection('submissions').add(docData);
+    console.log(`Saved submission ${formType} to Firestore with ID ${docRef.id}.`);
+    return { firestoreDocId: docRef.id };
   } catch (error) {
     console.error(`Error saving Firestore document:`, error);
     throw error;
@@ -452,6 +533,98 @@ app.post('/api/send-footage-agreement', async (req, res, next) => {
   }
 });
 
+app.get('/api/get-form-for-countersign/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ success: false, error: 'Submission ID is required.' });
+
+    const doc = await admin.firestore().collection('submissions').doc(id).get();
+    if (!doc.exists) {
+      return res.status(404).json({ success: false, error: 'Agreement record not found.' });
+    }
+
+    const data = doc.data();
+    res.json({
+      success: true,
+      submission: {
+        id: doc.id,
+        ...data
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching agreement for countersign:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/countersign-form', async (req, res) => {
+  try {
+    const { fields, file } = await parseMultipart(req);
+    const { submissionId, producerSignature, producerName, producerEmail } = fields;
+
+    if (!submissionId) {
+      return res.status(400).json({ success: false, error: 'Missing submission ID for countersignature.' });
+    }
+
+    const subDocRef = admin.firestore().collection('submissions').doc(submissionId);
+    const subDoc = await subDocRef.get();
+    if (!subDoc.exists) {
+      return res.status(404).json({ success: false, error: 'Original agreement submission not found.' });
+    }
+
+    const subData = subDoc.data();
+    const formType = subData.formType || 'participant_release';
+    const formTitleMap = {
+      participant_release: 'Participant Release Form',
+      minor_release: 'Minor Release Form',
+      location_agreement: 'Location Agreement',
+      footage_agreement: 'Footage Agreement',
+      footage_release_agreement: 'Footage Agreement',
+      music_agreement: 'Music Agreement'
+    };
+    const formTitle = formTitleMap[formType] || 'Release Agreement';
+
+    const pName = producerName || subData.producerName || 'Producer';
+    const pEmail = producerEmail || subData.producerEmail || '';
+    const commNum = subData.commissionNumber || 'N/A';
+    const storyTitle = subData.storyName || subData.storyTitle || 'Story';
+    const submitterEmail = subData.submittedByEmail || subData.email || '';
+
+    // Update Firestore submission record
+    await subDocRef.update({
+      status: 'completed',
+      producerSignature: producerSignature || null,
+      producerName: pName,
+      producerEmail: pEmail,
+      countersignedAt: admin.firestore.FieldValue.serverTimestamp(),
+      completedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    // Build finalized email details
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: formTitle,
+      commissionNumber: commNum,
+      storyTitle: storyTitle,
+      producerName: pName
+    });
+
+    const toRecipients = getFormRecipients(formType, submitterEmail, pEmail);
+    const mailOptions = {
+      from: buildFromName(formTitle),
+      to: toRecipients,
+      subject,
+      html,
+      attachments: file ? [{ filename: buildPdfFilename(commNum, storyTitle, formTitle), content: file, contentType: 'application/pdf' }] : []
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, status: 'completed', message: 'Agreement successfully countersigned and dispatched.' });
+  } catch (error) {
+    console.error('Error countersigning agreement:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.post('/api/send-footage-release-agreement', async (req, res, next) => {
   try {
     const { fields, file } = await parseMultipart(req);
@@ -460,32 +633,55 @@ app.post('/api/send-footage-release-agreement', async (req, res, next) => {
     const { licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName, commissionNumber, broadcastDate } = fields;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
-    const toRecipients = getFormRecipients('footage_agreement', submitterEmail, producerEmail);
 
     const commNum = commissionNumber || fields.commission_number || 'N/A';
     const storyTitle = storyName || fields.storyTitle || 'Story';
     const producerName = getProducerName(req, fields);
 
-    const { subject, html } = buildFormEmailDetails({
-      formTitle: 'Footage Agreement',
-      commissionNumber: commNum,
-      storyTitle,
-      producerName
+    const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
+    const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
+
+    const dbResult = await saveSubmission(req, 'footage_agreement', buildPdfFilename(commNum, storyTitle, 'Footage Agreement'), file, {
+      licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit,
+      storyName: storyTitle, commissionNumber: commNum, broadcastDate, producerName, producerEmail,
+      status: formStatus,
+      participantSignature: fields.participantSignature || null,
+      producerSignature: hasProducerSig ? fields.producerSignature : null,
+      completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null,
+      ...fields
     });
 
-    const mailOptions = {
-      from: buildFromName('Footage Agreement'),
-      to: toRecipients,
-      subject,
-      html,
-      attachments: [{ filename: buildPdfFilename(commNum, storyTitle, 'Footage Agreement'), content: file, contentType: 'application/pdf' }]
-    };
+    if (hasProducerSig) {
+      const { subject, html } = buildFormEmailDetails({
+        formTitle: 'Footage Agreement',
+        commissionNumber: commNum,
+        storyTitle,
+        producerName
+      });
+      const toRecipients = getFormRecipients('footage_agreement', submitterEmail, producerEmail);
+      const mailOptions = {
+        from: buildFromName('Footage Agreement'),
+        to: toRecipients,
+        subject,
+        html,
+        attachments: [{ filename: buildPdfFilename(commNum, storyTitle, 'Footage Agreement'), content: file, contentType: 'application/pdf' }]
+      };
+      await transporter.sendMail(mailOptions);
+    } else {
+      await sendCountersignNotification({
+        submissionId: dbResult.firestoreDocId,
+        formType: 'footage_agreement',
+        formTitle: 'Footage Agreement',
+        commissionNumber: commNum,
+        storyTitle,
+        producerName,
+        producerEmail,
+        contributorName: licensorName,
+        req
+      });
+    }
 
-    await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'footage_agreement', buildPdfFilename(commNum, storyTitle, 'Footage Agreement'), file, {
-      licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName: storyTitle, commissionNumber: commNum, broadcastDate, producerName, ...fields
-    });
-    res.status(200).json({ success: true, message: 'Footage agreement sent successfully!' });
+    res.status(200).json({ success: true, status: formStatus, firestoreDocId: dbResult ? dbResult.firestoreDocId : null });
   } catch (error) {
     console.error('Error sending footage agreement:', error);
     res.status(500).json({ success: false, error: error.message });
@@ -500,30 +696,53 @@ app.post('/api/send-participant-release', async (req, res, next) => {
     const { fullName, idNumber, phone, email, storyName } = fields;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
-    const toRecipients = getFormRecipients('participant_release', submitterEmail, producerEmail);
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
     const storyTitle = storyName || fields.storyTitle || 'Story';
     const producerName = getProducerName(req, fields);
 
-    const { subject, html } = buildFormEmailDetails({
-      formTitle: 'Participant Release Form',
-      commissionNumber,
-      storyTitle,
-      producerName
+    const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
+    const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
+
+    const dbResult = await saveSubmission(req, 'participant_release', buildPdfFilename(commissionNumber, storyTitle, 'Participant Release Form'), file, {
+      fullName, idNumber, phone, email, storyName, commissionNumber, producerName, producerEmail,
+      status: formStatus,
+      participantSignature: fields.participantSignature || null,
+      producerSignature: hasProducerSig ? fields.producerSignature : null,
+      completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null
     });
 
-    const mailOptions = {
+    if (hasProducerSig) {
+      const { subject, html } = buildFormEmailDetails({
+        formTitle: 'Participant Release Form',
+        commissionNumber,
+        storyTitle,
+        producerName
+      });
+      const toRecipients = getFormRecipients('participant_release', submitterEmail, producerEmail);
+      const mailOptions = {
         from: buildFromName('Participant Release'),
         to: toRecipients,
         subject,
         html,
         attachments: [{ filename: buildPdfFilename(commissionNumber, storyTitle, 'Participant Release Form'), content: file, contentType: 'application/pdf' }]
-    };
+      };
+      await transporter.sendMail(mailOptions);
+    } else {
+      await sendCountersignNotification({
+        submissionId: dbResult.firestoreDocId,
+        formType: 'participant_release',
+        formTitle: 'Participant Release Form',
+        commissionNumber,
+        storyTitle,
+        producerName,
+        producerEmail,
+        contributorName: fullName,
+        req
+      });
+    }
 
-    await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'participant_release', buildPdfFilename(commissionNumber, storyTitle, 'Participant Release Form'), file, { fullName, idNumber, phone, email, storyName, commissionNumber, producerName });
-    res.status(200).json({ success: true, message: 'Participant release sent successfully!' });
+    res.status(200).json({ success: true, status: formStatus, firestoreDocId: dbResult ? dbResult.firestoreDocId : null });
   } catch (error) {
     console.error('Error sending participant release:', error);
     res.status(500).json({ success: false, error: error.message });
@@ -538,30 +757,53 @@ app.post('/api/send-minor-release', async (req, res, next) => {
     const { guardianName, guardianId, phone, email, minorName, minorAge, storyName } = fields;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
-    const toRecipients = getFormRecipients('minor_release', submitterEmail, producerEmail);
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
     const storyTitle = storyName || fields.storyTitle || 'Story';
     const producerName = getProducerName(req, fields);
 
-    const { subject, html } = buildFormEmailDetails({
-      formTitle: 'Minor Release Form',
-      commissionNumber,
-      storyTitle,
-      producerName
+    const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
+    const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
+
+    const dbResult = await saveSubmission(req, 'minor_release', buildPdfFilename(commissionNumber, storyTitle, 'Minor Release Form'), file, {
+      guardianName, guardianId, phone, email, minorName, minorAge, storyName, commissionNumber, producerName, producerEmail,
+      status: formStatus,
+      guardianSignature: fields.guardianSignature || fields.participantSignature || null,
+      producerSignature: hasProducerSig ? fields.producerSignature : null,
+      completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null
     });
 
-    const mailOptions = {
+    if (hasProducerSig) {
+      const { subject, html } = buildFormEmailDetails({
+        formTitle: 'Minor Release Form',
+        commissionNumber,
+        storyTitle,
+        producerName
+      });
+      const toRecipients = getFormRecipients('minor_release', submitterEmail, producerEmail);
+      const mailOptions = {
         from: buildFromName('Minor Release'),
         to: toRecipients,
         subject,
         html,
         attachments: [{ filename: buildPdfFilename(commissionNumber, storyTitle, 'Minor Release Form'), content: file, contentType: 'application/pdf' }]
-    };
+      };
+      await transporter.sendMail(mailOptions);
+    } else {
+      await sendCountersignNotification({
+        submissionId: dbResult.firestoreDocId,
+        formType: 'minor_release',
+        formTitle: 'Minor Release Form',
+        commissionNumber,
+        storyTitle,
+        producerName,
+        producerEmail,
+        contributorName: `${guardianName} (Parent/Guardian of ${minorName})`,
+        req
+      });
+    }
 
-    await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'minor_release', buildPdfFilename(commissionNumber, storyTitle, 'Minor Release Form'), file, { guardianName, guardianId, phone, email, minorName, minorAge, storyName, commissionNumber, producerName });
-    res.status(200).json({ success: true, message: 'Minor release sent successfully!' });
+    res.status(200).json({ success: true, status: formStatus, firestoreDocId: dbResult ? dbResult.firestoreDocId : null });
   } catch (error) {
     console.error('Error sending minor release:', error);
     res.status(500).json({ success: false, error: error.message });
@@ -576,30 +818,53 @@ app.post('/api/send-location-agreement', async (req, res, next) => {
     const { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName } = fields;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
-    const toRecipients = getFormRecipients('location_agreement', submitterEmail, producerEmail);
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
     const storyTitle = storyName || fields.storyTitle || 'Story';
     const producerName = getProducerName(req, fields);
 
-    const { subject, html } = buildFormEmailDetails({
-      formTitle: 'Location Agreement',
-      commissionNumber,
-      storyTitle,
-      producerName
+    const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
+    const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
+
+    const dbResult = await saveSubmission(req, 'location_agreement', buildPdfFilename(commissionNumber, storyTitle, 'Location Agreement'), file, {
+      ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName, commissionNumber, producerName, producerEmail,
+      status: formStatus,
+      ownerSignature: fields.ownerSignature || fields.participantSignature || null,
+      producerSignature: hasProducerSig ? fields.producerSignature : null,
+      completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null
     });
 
-    const mailOptions = {
+    if (hasProducerSig) {
+      const { subject, html } = buildFormEmailDetails({
+        formTitle: 'Location Agreement',
+        commissionNumber,
+        storyTitle,
+        producerName
+      });
+      const toRecipients = getFormRecipients('location_agreement', submitterEmail, producerEmail);
+      const mailOptions = {
         from: buildFromName('Location Agreement'),
         to: toRecipients,
         subject,
         html,
         attachments: [{ filename: buildPdfFilename(commissionNumber, storyTitle, 'Location Agreement'), content: file, contentType: 'application/pdf' }]
-    };
+      };
+      await transporter.sendMail(mailOptions);
+    } else {
+      await sendCountersignNotification({
+        submissionId: dbResult.firestoreDocId,
+        formType: 'location_agreement',
+        formTitle: 'Location Agreement',
+        commissionNumber,
+        storyTitle,
+        producerName,
+        producerEmail,
+        contributorName: ownerName,
+        req
+      });
+    }
 
-    await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'location_agreement', buildPdfFilename(commissionNumber, storyTitle, 'Location Agreement'), file, { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName, commissionNumber, producerName });
-    res.status(200).json({ success: true, message: 'Location agreement sent successfully!' });
+    res.status(200).json({ success: true, status: formStatus, firestoreDocId: dbResult ? dbResult.firestoreDocId : null });
   } catch (error) {
     console.error('Error sending location agreement:', error);
     res.status(500).json({ success: false, error: error.message });
@@ -614,30 +879,53 @@ app.post('/api/send-music-agreement', async (req, res, next) => {
     const { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName } = fields;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
-    const toRecipients = getFormRecipients('music_agreement', submitterEmail, producerEmail);
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
     const storyTitle = storyName || fields.storyTitle || 'Story';
     const producerName = getProducerName(req, fields);
 
-    const { subject, html } = buildFormEmailDetails({
-      formTitle: 'Music Agreement',
-      commissionNumber,
-      storyTitle,
-      producerName
+    const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
+    const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
+
+    const dbResult = await saveSubmission(req, 'music_agreement', buildPdfFilename(commissionNumber, storyTitle, 'Music Agreement'), file, {
+      artistName, publisherName, phone, email, trackTitle, trackDuration, storyName, commissionNumber, producerName, producerEmail,
+      status: formStatus,
+      artistSignature: fields.artistSignature || fields.participantSignature || null,
+      producerSignature: hasProducerSig ? fields.producerSignature : null,
+      completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null
     });
 
-    const mailOptions = {
+    if (hasProducerSig) {
+      const { subject, html } = buildFormEmailDetails({
+        formTitle: 'Music Agreement',
+        commissionNumber,
+        storyTitle,
+        producerName
+      });
+      const toRecipients = getFormRecipients('music_agreement', submitterEmail, producerEmail);
+      const mailOptions = {
         from: buildFromName('Music Agreement'),
         to: toRecipients,
         subject,
         html,
         attachments: [{ filename: buildPdfFilename(commissionNumber, storyTitle, 'Music Agreement'), content: file, contentType: 'application/pdf' }]
-    };
+      };
+      await transporter.sendMail(mailOptions);
+    } else {
+      await sendCountersignNotification({
+        submissionId: dbResult.firestoreDocId,
+        formType: 'music_agreement',
+        formTitle: 'Music Agreement',
+        commissionNumber,
+        storyTitle,
+        producerName,
+        producerEmail,
+        contributorName: artistName,
+        req
+      });
+    }
 
-    await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'music_agreement', buildPdfFilename(commissionNumber, storyTitle, 'Music Agreement'), file, { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName, commissionNumber, producerName });
-    res.status(200).json({ success: true, message: 'Music agreement sent successfully!' });
+    res.status(200).json({ success: true, status: formStatus, firestoreDocId: dbResult ? dbResult.firestoreDocId : null });
   } catch (error) {
     console.error('Error sending music agreement:', error);
     res.status(500).json({ success: false, error: error.message });
