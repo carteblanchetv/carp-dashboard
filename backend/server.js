@@ -364,6 +364,39 @@ app.post('/api/send-footage-agreement', async (req, res, next) => {
       return res.status(400).json({ success: false, error: 'No PDF file provided.' });
     }
 
+    // Handle individual Footage Agreement (rights holder / licensor)
+    if (fields.licensorName || fields.footageDescription) {
+      const { licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName, commissionNumber, broadcastDate } = fields;
+      const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
+      const producerEmail = fields.producerEmail || fields.producer_email;
+      const toRecipients = getFormRecipients('footage_agreement', submitterEmail, producerEmail);
+
+      const commNum = commissionNumber || fields.commission_number || 'N/A';
+      const storyTitle = storyName || fields.storyTitle || 'Story';
+      const producerName = getProducerName(req, fields);
+
+      const { subject, html } = buildFormEmailDetails({
+        formTitle: 'Footage Agreement',
+        commissionNumber: commNum,
+        storyTitle,
+        producerName
+      });
+
+      const mailOptions = {
+        from: buildFromName('Footage Agreement'),
+        to: toRecipients,
+        subject,
+        html,
+        attachments: [{ filename: buildPdfFilename(commNum, storyTitle, 'Footage Agreement'), content: file, contentType: 'application/pdf' }]
+      };
+
+      await transporter.sendMail(mailOptions);
+      await saveSubmission(req, 'footage_agreement', buildPdfFilename(commNum, storyTitle, 'Footage Agreement'), file, {
+        licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName: storyTitle, commissionNumber: commNum, broadcastDate, producerName, ...fields
+      });
+      return res.status(200).json({ success: true, message: 'Footage agreement sent successfully!' });
+    }
+
     const { tx_date, season, episode, uid_number, total_duration } = fields;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
     const toRecipients = getFormRecipients('footage_agreement', submitterEmail);
@@ -416,6 +449,46 @@ app.post('/api/send-footage-agreement', async (req, res, next) => {
   } catch (error) {
     console.error('Error sending footage declaration:', error);
     res.status(500).json({ success: false, error: 'Failed to send agreement due to an internal error.', details: error.message });
+  }
+});
+
+app.post('/api/send-footage-release-agreement', async (req, res, next) => {
+  try {
+    const { fields, file } = await parseMultipart(req);
+    if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
+
+    const { licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName, commissionNumber, broadcastDate } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+    const toRecipients = getFormRecipients('footage_agreement', submitterEmail, producerEmail);
+
+    const commNum = commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Footage Agreement',
+      commissionNumber: commNum,
+      storyTitle,
+      producerName
+    });
+
+    const mailOptions = {
+      from: buildFromName('Footage Agreement'),
+      to: toRecipients,
+      subject,
+      html,
+      attachments: [{ filename: buildPdfFilename(commNum, storyTitle, 'Footage Agreement'), content: file, contentType: 'application/pdf' }]
+    };
+
+    await transporter.sendMail(mailOptions);
+    await saveSubmission(req, 'footage_agreement', buildPdfFilename(commNum, storyTitle, 'Footage Agreement'), file, {
+      licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName: storyTitle, commissionNumber: commNum, broadcastDate, producerName, ...fields
+    });
+    res.status(200).json({ success: true, message: 'Footage agreement sent successfully!' });
+  } catch (error) {
+    console.error('Error sending footage agreement:', error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

@@ -1442,6 +1442,43 @@ app.post('/api/send-footage-agreement', async (req, res) => {
     const { fields, files } = await parseMultipart(req);
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
+    // Handle individual Footage Agreement (licence from rights holder)
+    if (fields.licensorName || fields.footageDescription) {
+      const { licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName, commissionNumber, broadcastDate } = fields;
+      const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+      const producerEmail = fields.producerEmail || fields.producer_email;
+
+      const commNum = commissionNumber || fields.commission_number || 'N/A';
+      const storyTitle = storyName || fields.storyTitle || 'Story';
+      const producerName = getProducerName(req, fields);
+
+      const { subject, html } = buildFormEmailDetails({
+        formTitle: 'Footage Agreement',
+        commissionNumber: commNum,
+        storyTitle,
+        producerName
+      });
+
+      const [dbResult] = await Promise.all([
+        processMultiFileStorageAndFirestore(
+          req, 'footage_agreement', 'footage_agreement', files,
+          { licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName: storyTitle, commissionNumber: commNum, broadcastDate, producerName, ...fields }
+        ),
+        notifyRelevantUsers(
+          'footage_agreement',
+          subject,
+          html,
+          files.map(f => ({
+            filename: buildPdfFilename(commNum, storyTitle, 'Footage Agreement'),
+            content: f.buffer,
+            contentType: f.mimeType
+          })),
+          [submitterEmail, producerEmail].filter(Boolean)
+        )
+      ]);
+      return res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
+    }
+
     const { tx_date, season, episode, uid_number, total_duration } = fields;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
 
@@ -1476,6 +1513,50 @@ app.post('/api/send-footage-agreement', async (req, res) => {
 
     const { firestoreDocId } = dbResult;
     res.status(200).json({ success: true, firestoreDocId });
+  } catch (error) {
+    console.error('Submission failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/send-footage-release-agreement', async (req, res) => {
+  try {
+    const { fields, files } = await parseMultipart(req);
+    if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
+
+    const { licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName, commissionNumber, broadcastDate } = fields;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const producerEmail = fields.producerEmail || fields.producer_email;
+
+    const commNum = commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const producerName = getProducerName(req, fields);
+
+    const { subject, html } = buildFormEmailDetails({
+      formTitle: 'Footage Agreement',
+      commissionNumber: commNum,
+      storyTitle,
+      producerName
+    });
+
+    const [dbResult] = await Promise.all([
+      processMultiFileStorageAndFirestore(
+        req, 'footage_agreement', 'footage_agreement', files,
+        { licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName: storyTitle, commissionNumber: commNum, broadcastDate, producerName, ...fields }
+      ),
+      notifyRelevantUsers(
+        'footage_agreement',
+        subject,
+        html,
+        files.map(f => ({
+          filename: buildPdfFilename(commNum, storyTitle, 'Footage Agreement'),
+          content: f.buffer,
+          contentType: f.mimeType
+        })),
+        [submitterEmail, producerEmail].filter(Boolean)
+      )
+    ]);
+    res.status(200).json({ success: true, firestoreDocId: dbResult.firestoreDocId });
   } catch (error) {
     console.error('Submission failed:', error);
     res.status(500).json({ success: false, error: error.message });

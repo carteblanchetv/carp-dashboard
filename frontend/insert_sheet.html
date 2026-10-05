@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Insert Sheet - Carte Blanche</title>
+    <link rel="stylesheet" href="style.css?v=5.1.2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    <script src="js/branding.js?v=5.1.1"></script>
+    <script src="js/share_form.js?v=5.1.1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script type="module">
+        import { checkAuth } from './auth.js?v=5.1.1';
+        checkAuth(false).then(user => {
+            if (user) {
+                window.auth.initNavBar(user);
+            } else {
+                // Guest / Shared mode
+                const nav = document.querySelector('.global-top-nav');
+                if (nav) nav.style.display = 'none';
+                const backHub = document.querySelector('.btn-back-hub');
+                if (backHub) backHub.style.display = 'none';
+            }
+        });
+    </script>
+    <style>
+        .credit-block-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+        .credit-block-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: var(--shadow-md);
+        }
+        .credit-block-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.85rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .credit-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #4f46e5;
+            background: rgba(99, 102, 241, 0.1);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .btn-remove-credit {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: background 0.2s;
+        }
+        .btn-remove-credit:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .btn-add-credit-row {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.85rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #4f46e5;
+            background: rgba(99, 102, 241, 0.05);
+            border: 2px dashed rgba(99, 102, 241, 0.35);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .btn-add-credit-row:hover {
+            background: rgba(99, 102, 241, 0.12);
+            border-color: #4f46e5;
+        }
+    </style>
+</head>
+<body class="form-body">
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <a href="index.html" class="gnav-btn" title="Back to Dashboard">
+                    <span>🏠</span>
+                    <span>DASHBOARD</span>
+                </a>
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <h2 style="color: #4f46e5;">Generating &amp; Submitting Insert Sheet...</h2>
+        <p>Please wait, processing graphics and delivery documentation.</p>
+    </div>
+
+    <div class="form-wrapper" style="max-width: 820px; margin: 2rem auto;">
+        <header class="form-header">
+            <div class="logo-group">
+                <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
+                <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
+            </div>
+            <h1>Insert Sheet</h1>
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+                Carte Blanche &bull; Official Post-Production Graphics, Lower Thirds &amp; Credits Delivery
+            </p>
+        </header>
+
+        <form id="insertSheetForm" class="modern-form">
+            <!-- SECTION 1: PRODUCTION & TECHNICAL CREW DETAILS -->
+            <section class="form-section">
+                <h2 class="section-title">1. Production &amp; Technical Crew Details</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="commissionNumber">Commission Number</label>
+                        <input type="text" id="commissionNumber" name="commissionNumber" required placeholder="e.g. CB-2026-042">
+                    </div>
+                    <div class="form-group">
+                        <label for="storyName">Story Name / Working Title</label>
+                        <input type="text" id="storyName" name="storyName" required placeholder="e.g. Green Energy Transition">
+                    </div>
+                    <div class="form-group">
+                        <label for="producer">Producer</label>
+                        <input type="text" id="producer" name="producer" required placeholder="Producer full name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="presenter">Presenter</label>
+                        <input type="text" id="presenter" name="presenter" required placeholder="Presenter full name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="dop">DOP / Camera Operator</label>
+                        <input type="text" id="dop" name="dop" placeholder="Camera Operator full name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="camAssist">Camera Assistant</label>
+                        <input type="text" id="camAssist" name="camAssist" placeholder="Camera Assistant full name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="editor">Editor</label>
+                        <input type="text" id="editor" name="editor" placeholder="Editor full name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="finalMix">Final Mix Operator</label>
+                        <input type="text" id="finalMix" name="finalMix" placeholder="Sound Studio / Operator...">
+                    </div>
+                    <div class="form-group">
+                        <label for="deliveryDate">Delivery Date</label>
+                        <input type="date" id="deliveryDate" name="deliveryDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="insertDuration">Insert Duration (HH:MM:SS)</label>
+                        <input type="text" id="insertDuration" name="insertDuration" placeholder="e.g. 00:12:45" pattern="^\d{2}:\d{2}(:\d{2})?$" title="Format: MM:SS or HH:MM:SS">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="thirdPartyFootage">3rd Party Footage / Archival Material Used</label>
+                        <input type="text" id="thirdPartyFootage" name="thirdPartyFootage" placeholder="Specify Yes/No and details (e.g. Yes - CCTV clip licensed from rights holder)">
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: ON-SCREEN SUPERS & LOWER THIRDS (CREDITS) -->
+            <section class="form-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h2 class="section-title" style="margin-bottom: 0;">2. On-Screen Supers &amp; Lower Thirds (Credits)</h2>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;" id="creditCounterDisplay">3 Credits</span>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                    Specify lower thirds, guest titles, on-screen supers, locations, and photo credits with exact broadcast timecodes.
+                </p>
+
+                <div id="creditRowsContainer">
+                    <!-- Dynamic Credit Cards are rendered here -->
+                </div>
+
+                <button type="button" id="btnAddCreditRow" class="btn-add-credit-row">
+                    <span>➕</span> Add Another Credit Row
+                </button>
+            </section>
+
+            <!-- SUBMISSION ACTIONS -->
+            <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                <a href="forms_hub.html" class="btn-soft" style="text-decoration: none; display: flex; align-items: center;">Cancel</a>
+                <button type="submit" class="add-btn" style="margin-top: 0; background: #4f46e5; color: white; border: none; padding: 0.75rem 2rem; font-weight: 700; border-radius: 6px; cursor: pointer;">Submit Insert Sheet</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Success Dialog -->
+    <div id="successDialog" class="dialog-overlay hidden">
+        <div class="dialog-box">
+            <h2>Insert Sheet Submitted</h2>
+            <p>Your Insert Sheet has been generated and dispatched to Carte Blanche Legal &amp; Production.</p>
+            <button id="dialogCloseBtn" class="add-btn">Return to Forms Hub</button>
+        </div>
+    </div>
+
+    <script src="insert_sheet.js"></script>
+</body>
+</html>
