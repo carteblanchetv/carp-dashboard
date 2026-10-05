@@ -2381,9 +2381,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const topSensitivityBtn = document.getElementById('topSensitivityBtn');
+        const canManageSensitivity = (isAdminView || (loggedInUser && (isAdmin(loggedInUser) || isSuperAdmin(loggedInUser) || isEditorialProduction(loggedInUser)))) && !sub._isRestrictedView;
         if (topSensitivityBtn) {
-            const canManageSensitivity = loggedInUser && (isAdmin(loggedInUser) || isSuperAdmin(loggedInUser) || isEditorialProduction(loggedInUser));
-            if (canManageSensitivity && !sub._isRestrictedView) {
+            if (canManageSensitivity) {
                 topSensitivityBtn.classList.remove('hidden');
                 topSensitivityBtn.style.display = 'inline-flex';
                 topSensitivityBtn.innerHTML = sub.isSensitive ? '🔒 Sensitive' : '🔓 Standard';
@@ -2521,12 +2521,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const commBadge = document.getElementById('commNumBadgeTop');
                 const displayCommNum = document.getElementById('displayCommNum');
                 const editBtn = document.getElementById('adminEditCommBtn');
+                const commSensBtn = document.getElementById('adminCommSensitivityBtn');
 
                 if (commBadge && displayCommNum) {
                     commBadge.classList.remove('hidden');
                     displayCommNum.textContent = sub.commissionNumber || '—';
                     
-                    if (window.auth.isAdmin(loggedInUser)) {
+                    if (window.auth.isAdmin(loggedInUser) || isAdminView) {
                         editBtn.style.display = 'inline-block';
                         editBtn.onclick = () => {
                             const current = sub.commissionNumber || '';
@@ -2535,6 +2536,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                 updateCommissionNumber(sub.id, newVal);
                             }
                         };
+                    }
+
+                    if (commSensBtn && canManageSensitivity) {
+                        commSensBtn.style.display = 'inline-block';
+                        commSensBtn.innerHTML = sub.isSensitive ? '🔒 Sensitive' : '🔓 Sensitivity';
+                        commSensBtn.style.background = sub.isSensitive ? 'rgba(239, 68, 68, 0.15)' : 'rgba(0, 0, 0, 0.05)';
+                        commSensBtn.style.color = sub.isSensitive ? 'var(--danger)' : 'var(--text-main)';
+                        commSensBtn.style.borderColor = sub.isSensitive ? 'var(--danger)' : 'var(--border)';
+                        commSensBtn.onclick = () => window.openAdminSensitivityModal(sub);
                     }
                 }
             }
@@ -2759,7 +2769,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Location</span><span style="font-weight: 700;">${locationDisplay}</span></div>
                     ${acc.duration ? `<div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Duration</span><span style="font-weight: 700;">${acc.duration}</span></div>` : ''}
                     ${(deliveryDate && !sub._isRestrictedView) ? `<div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Delivery Date</span><span style="font-weight: 700;">${deliveryDate}</span></div>` : ''}
-                    ${(loggedInUser && (isAdmin(loggedInUser) || isSuperAdmin(loggedInUser) || isEditorialProduction(loggedInUser)) && !sub._isRestrictedView) ? `
+                    ${((isAdminView || (loggedInUser && (isAdmin(loggedInUser) || isSuperAdmin(loggedInUser) || isEditorialProduction(loggedInUser)))) && !sub._isRestrictedView) ? `
                     <div>
                         <span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Sensitivity</span>
                         <span style="font-weight: 700; display: inline-flex; align-items: center; gap: 0.35rem;">
@@ -3247,6 +3257,49 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             if (legalNo) legalNo.checked = true;
         }
+
+        // Sensitivity in Commission Modal
+        const isSensCheckbox = document.getElementById('pModalIsSensitive');
+        const reviewerWrapper = document.getElementById('pModalReviewerWrapper');
+        const reviewerList = document.getElementById('pModalReviewerList');
+        if (isSensCheckbox) {
+            isSensCheckbox.checked = (existingData && existingData.isSensitive) || prop.isSensitive === true;
+            if (isSensCheckbox.checked) {
+                if (reviewerWrapper) reviewerWrapper.classList.remove('hidden');
+            } else {
+                if (reviewerWrapper) reviewerWrapper.classList.add('hidden');
+            }
+
+            if (reviewerList) {
+                reviewerList.innerHTML = '<p style="font-size: 0.8rem; color: var(--text-muted);">Loading reviewers...</p>';
+                fetchWithAuth('/api/list-reviewers')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && data.reviewers) {
+                            const currentUids = (existingData && existingData.permittedUids) || prop.permittedUids || [];
+                            reviewerList.innerHTML = data.reviewers.map(r => `
+                                <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; padding: 0.4rem 0.6rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; cursor: pointer;">
+                                    <input type="checkbox" name="pModalPermittedReviewers" value="${r.uid}" ${currentUids.includes(r.uid) ? 'checked' : ''}>
+                                    <span>${r.name} ${r.surname}</span>
+                                </label>
+                            `).join('');
+                        } else {
+                            reviewerList.innerHTML = '<p style="color: var(--danger); font-size: 0.8rem;">Failed to load reviewers.</p>';
+                        }
+                    })
+                    .catch(err => {
+                        reviewerList.innerHTML = `<p style="color: var(--danger); font-size: 0.8rem;">Error: ${err.message}</p>`;
+                    });
+            }
+
+            isSensCheckbox.onchange = () => {
+                if (isSensCheckbox.checked) {
+                    if (reviewerWrapper) reviewerWrapper.classList.remove('hidden');
+                } else {
+                    if (reviewerWrapper) reviewerWrapper.classList.add('hidden');
+                }
+            };
+        }
         
         const backdrop = document.getElementById('pModalBackdrop');
         backdrop.style.display = 'flex';
@@ -3273,6 +3326,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const presenter = document.getElementById('pModalPresenter')?.value || '';
         const legal_req = document.querySelector('input[name="pModalLegalReq"]:checked')?.value || 'no';
         const manualCommissionNumber = document.getElementById('pModalCommNum').value.trim();
+        const isSensitive = document.getElementById('pModalIsSensitive')?.checked || false;
+        const permittedUids = Array.from(document.querySelectorAll('input[name="pModalPermittedReviewers"]:checked')).map(cb => cb.value);
 
         const metadata = {
             manualCommissionNumber: storyType === 'TFU' ? null : (manualCommissionNumber || null),
@@ -3285,7 +3340,9 @@ document.addEventListener('DOMContentLoaded', () => {
             legal_req,
             liveStudioInterview,
             liveStudioSeason,
-            liveStudioEpisode
+            liveStudioEpisode,
+            isSensitive,
+            permittedUids
         };
         closePModal();
         await handleAdminAction(id, 'accept', metadata);

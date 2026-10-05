@@ -239,6 +239,19 @@
                     </div>
 
                     <div class="form-group" style="margin-top: 1.5rem;">
+                        <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-weight: 600; color: var(--text-main);">
+                            <input type="checkbox" id="pModalIsSensitive" style="width: 1.15rem; height: 1.15rem; accent-color: var(--primary); cursor: pointer;">
+                            <span>🔒 Mark as Sensitive Story</span>
+                        </label>
+                    </div>
+                    <div id="pModalReviewerWrapper" class="hidden" style="margin-top: 1rem; padding: 1rem; background: rgba(0, 0, 0, 0.03); border: 1px solid var(--border); border-radius: 8px;">
+                        <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem;">Permitted Reviewers</label>
+                        <div id="pModalReviewerList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
                         <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
                             <input type="checkbox" id="pModalContract" required>
                             <span style="font-size: 0.9rem; font-weight: 600;">I agree with the CAP Contractual Agreement</span>
@@ -341,6 +354,7 @@
             <div id="commNumBadgeTop" class="hidden" style="margin-top: 1rem; display: flex; align-items: center; gap: 0.75rem;">
                 <div class="status-badge success">Approved - Commission #<span id="displayCommNum"></span></div>
                 <button type="button" id="adminEditCommBtn" class="btn-soft" style="padding: 0.25rem 0.6rem; font-size: 0.7rem; border: 1px solid var(--border) !important; display: none;">Edit #</button>
+                <button type="button" id="adminCommSensitivityBtn" class="btn-soft" style="padding: 0.25rem 0.6rem; font-size: 0.7rem; border: 1px solid var(--border) !important; display: none; cursor: pointer; border-radius: 6px; font-weight: 600;">🔒 Sensitivity</button>
             </div>
         </header>
 
@@ -965,6 +979,6 @@
         </div>
     </div>
 
-    <script type="module" src="proposal.js?v=5.3.8"></script>
+    <script type="module" src="proposal.js?v=5.4.0"></script>
 </body>
 </html>
