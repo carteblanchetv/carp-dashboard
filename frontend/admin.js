@@ -1267,6 +1267,10 @@ function debounce(func, wait) {
     let timeout;
     return function(...args) {
         clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
 window.viewStoryLegalForms = async (proposalId, commNum, storyTitle) => {
     const overlay = document.createElement('div');
     overlay.className = 'share-modal-overlay';
