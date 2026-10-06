@@ -46,6 +46,9 @@
         const pageStory = defaultStory || (document.getElementById('storyName') ? document.getElementById('storyName').value : '');
         const pageComm = defaultComm || (document.getElementById('commissionNumber') ? document.getElementById('commissionNumber').value : '');
 
+        // Prevent background scrolling while modal is active
+        document.body.style.overflow = 'hidden';
+
         const modalOverlay = document.createElement('div');
         modalOverlay.id = 'shareFormModalOverlay';
         modalOverlay.className = 'share-modal-overlay';
@@ -210,21 +213,30 @@
                 qrContainer.style.display = 'block';
                 qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(urlDisplay.value)}`;
                 qrBtn.innerHTML = '<span>❌</span> Hide QR';
+                setTimeout(() => {
+                    qrContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }, 50);
             } else {
                 qrContainer.style.display = 'none';
                 qrBtn.innerHTML = '<span>📱</span> Show QR Code';
             }
         });
 
-        // Close handlers
-        closeBtn.addEventListener('click', () => {
-            modalOverlay.remove();
+        // Close handlers (clean up overlay and restore background scroll)
+        function closeModal() {
+            if (modalOverlay) modalOverlay.remove();
             currentModal = null;
-        });
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                modalOverlay.remove();
-                currentModal = null;
+            if (e.target === modalOverlay) closeModal();
+        });
+        document.addEventListener('keydown', function escHandler(e) {
+            if (e.key === 'Escape' && currentModal === modalOverlay) {
+                closeModal();
+                document.removeEventListener('keydown', escHandler);
             }
         });
     }

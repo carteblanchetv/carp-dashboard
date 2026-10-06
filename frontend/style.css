@@ -3430,13 +3430,16 @@ textarea:user-invalid {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(15, 23, 42, 0.7);
+    background: rgba(15, 23, 42, 0.75);
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 99999;
     padding: 1rem;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     animation: shareFadeIn 0.2s ease-out;
 }
 
@@ -3451,12 +3454,17 @@ textarea:user-invalid {
     border-radius: var(--radius-lg, 12px);
     width: 100%;
     max-width: 580px;
+    max-height: calc(100vh - 2.5rem);
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     color: var(--text-main);
+    margin: auto;
 }
 
 .share-modal-header {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -3510,6 +3518,9 @@ textarea:user-invalid {
 .share-modal-body {
     padding: 1.5rem;
     background: var(--bg-card);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .share-modal-intro {
