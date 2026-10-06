@@ -3446,14 +3446,14 @@ textarea:user-invalid {
 }
 
 .share-modal-container {
-    background: var(--bg-card, #ffffff);
-    border: 1px solid var(--border, #cbd5e1);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg, 12px);
     width: 100%;
     max-width: 580px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.15);
     overflow: hidden;
-    color: var(--text-main, #0f172a);
+    color: var(--text-main);
 }
 
 .share-modal-header {
@@ -3461,8 +3461,8 @@ textarea:user-invalid {
     align-items: center;
     justify-content: space-between;
     padding: 1.25rem 1.5rem;
-    background: rgba(0, 143, 190, 0.06);
-    border-bottom: 1px solid var(--border, #cbd5e1);
+    background: rgba(0, 143, 190, 0.08);
+    border-bottom: 1px solid var(--border);
 }
 
 .share-modal-title-group {
@@ -3480,7 +3480,7 @@ textarea:user-invalid {
     margin: 0;
     font-size: 1.15rem;
     font-weight: 700;
-    color: var(--text-main, #0f172a);
+    color: var(--text-main);
 }
 
 .share-modal-subtitle {
@@ -3495,7 +3495,7 @@ textarea:user-invalid {
     border: none;
     font-size: 1.6rem;
     line-height: 1;
-    color: var(--text-muted, #64748b);
+    color: var(--text-muted);
     cursor: pointer;
     padding: 0.25rem 0.5rem;
     border-radius: 6px;
@@ -3503,17 +3503,18 @@ textarea:user-invalid {
 }
 
 .share-modal-close:hover {
-    color: var(--text-main, #0f172a);
-    background: rgba(0, 0, 0, 0.06);
+    color: var(--text-main);
+    background: rgba(148, 163, 184, 0.15);
 }
 
 .share-modal-body {
     padding: 1.5rem;
+    background: var(--bg-card);
 }
 
 .share-modal-intro {
     font-size: 0.88rem;
-    color: var(--text-muted, #64748b);
+    color: var(--text-muted);
     line-height: 1.5;
     margin: 0 0 1.25rem 0;
 }
@@ -3540,28 +3541,37 @@ textarea:user-invalid {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--text-muted, #64748b);
+    color: var(--text-muted);
 }
 
 .share-field input {
-    padding: 0.55rem 0.75rem;
-    border: 1px solid var(--border, #cbd5e1);
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--border);
     border-radius: 6px;
-    background: var(--bg-main, #f8fafc);
-    color: var(--text-main, #0f172a);
-    font-size: 0.85rem;
-    transition: border-color 0.2s;
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .share-field input:focus {
     outline: none;
-    border-color: var(--primary, #008fbe);
-    box-shadow: 0 0 0 3px rgba(0, 143, 190, 0.15);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+    background-color: var(--bg-card);
+}
+
+.share-field input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.7;
 }
 
 .share-link-section {
-    background: var(--bg-main, #f8fafc);
-    border: 1px solid var(--border, #cbd5e1);
+    background: var(--bg-light);
+    border: 1px solid var(--border);
     border-radius: 8px;
     padding: 0.85rem;
     margin-bottom: 1.25rem;
@@ -3573,7 +3583,7 @@ textarea:user-invalid {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--text-muted, #64748b);
+    color: var(--text-muted);
     margin-bottom: 0.4rem;
 }
 
@@ -3584,15 +3594,21 @@ textarea:user-invalid {
 
 .share-link-bar input {
     flex: 1;
-    padding: 0.5rem 0.7rem;
-    font-size: 0.8rem;
-    font-family: monospace;
-    background: var(--bg-card, #ffffff);
-    border: 1px solid var(--border, #cbd5e1);
+    padding: 0.55rem 0.75rem;
+    font-size: 0.82rem;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 6px;
-    color: var(--text-main, #0f172a);
+    color: var(--text-main);
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.share-link-bar input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .btn-copy-link {
@@ -3612,14 +3628,14 @@ textarea:user-invalid {
 }
 
 .btn-copy-link:hover {
-    background: #00779e;
+    background: var(--primary-hover, #00779e);
 }
 
 .copy-feedback-toast {
     margin-top: 0.4rem;
     font-size: 0.78rem;
     font-weight: 700;
-    color: #10b981;
+    color: var(--success, #10b981);
 }
 
 .share-actions-row {
@@ -3657,9 +3673,9 @@ textarea:user-invalid {
     padding: 0.65rem 0.85rem;
     font-size: 0.82rem;
     font-weight: 700;
-    background: var(--bg-card, #ffffff);
-    color: var(--text-main, #0f172a);
-    border: 1px solid var(--border, #cbd5e1);
+    background: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
@@ -3667,8 +3683,9 @@ textarea:user-invalid {
 }
 
 .share-btn-email:hover {
-    background: var(--bg-main, #f8fafc);
-    border-color: var(--primary, #008fbe);
+    background: var(--bg-light);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .share-btn-qr {
@@ -3679,9 +3696,9 @@ textarea:user-invalid {
     padding: 0.65rem 0.85rem;
     font-size: 0.82rem;
     font-weight: 700;
-    background: var(--bg-card, #ffffff);
-    color: var(--text-main, #0f172a);
-    border: 1px solid var(--border, #cbd5e1);
+    background: var(--bg-card);
+    color: var(--text-main);
+    border: 1px solid var(--border);
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
@@ -3689,15 +3706,16 @@ textarea:user-invalid {
 }
 
 .share-btn-qr:hover {
-    background: var(--bg-main, #f8fafc);
-    border-color: var(--primary, #008fbe);
+    background: var(--bg-light);
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .share-qr-container {
     margin-top: 1rem;
     padding: 1rem;
-    background: var(--bg-main, #f8fafc);
-    border: 1px solid var(--border, #cbd5e1);
+    background: var(--bg-light);
+    border: 1px solid var(--border);
     border-radius: 8px;
     text-align: center;
 }
