@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const minorName = document.getElementById('minorName').value;
         const minorAge = document.getElementById('minorAge').value;
         const storyName = document.getElementById('storyName').value;
+        const commissionNumber = document.getElementById('commissionNumber') ? document.getElementById('commissionNumber').value.trim() : '';
 
         // 0. Top Header Note
         doc.setFont('helvetica', 'bold');
@@ -178,18 +179,19 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.text(`Minor Name: ${minorName}`, margin, 104);
         doc.text(`Minor Age: ${minorAge}`, margin, 112);
         doc.text(`Story / Project: ${storyName}`, margin, 120);
+        doc.text(`Commission Number: ${commissionNumber || 'N/A'}`, margin, 128);
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(11);
-        doc.text('Declaration & Consent', margin, 134);
+        doc.text('Declaration & Consent', margin, 140);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(9.5);
         const declarationText = 'I hereby confirm that I am the parent or legal guardian of the minor named above. I grant Combined Artists and Carte Blanche the absolute right and permission to film, record, and use the minor\'s name, voice, image, and likeness for the purposes of this television program. I understand this material may be edited and broadcast globally.';
         const splitText = doc.splitTextToSize(declarationText, 170);
-        doc.text(splitText, margin, 142);
+        doc.text(splitText, margin, 148);
 
         // Signatures Section (Side by Side)
-        const sigY = 175;
+        const sigY = 178;
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(10);
         doc.text('Parent / Guardian Signature:', margin, sigY);

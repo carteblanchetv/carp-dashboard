@@ -3582,10 +3582,111 @@ document.addEventListener('DOMContentLoaded', () => {
                     : `final_script.html?id=${sub.id}`;
                 window.location.href = url;
             };
+
+            const btnReleases = document.getElementById('btnStoryReleases');
+            if (btnReleases) {
+                btnReleases.onclick = () => {
+                    window.viewStoryLegalForms(sub.id, sub.commissionNumber || '', sub.story_title || '');
+                };
+            }
         } else if (phaseBar) {
             phaseBar.classList.add('hidden');
         }
     }
+
+    // Modal to view all releases and legal forms associated with this story
+    window.viewStoryLegalForms = async (proposalId, commNum, storyTitle) => {
+        const overlay = document.createElement('div');
+        overlay.className = 'share-modal-overlay';
+        overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 1rem;';
+        overlay.innerHTML = `
+            <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border, #cbd5e1); border-radius: 12px; max-width: 650px; width: 100%; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);">
+                <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border, #e2e8f0); display: flex; justify-content: space-between; align-items: center; background: var(--bg-light, #f8fafc);">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.15rem; color: var(--text-main, #0f172a); font-weight: 700;">📑 Releases & Legal Forms</h3>
+                        <p style="margin: 0.25rem 0 0; font-size: 0.85rem; color: var(--text-muted, #64748b);"><strong>${commNum || 'No Comm #'}</strong> &bull; ${storyTitle}</p>
+                    </div>
+                    <button type="button" id="closeLegalModalBtn" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; line-height: 1;">&times;</button>
+                </div>
+                <div id="legalFormsListContainer" style="padding: 1.5rem; overflow-y: auto; flex: 1;">
+                    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        <div class="spinner-small" style="margin: 0 auto 0.75rem;"></div>
+                        Loading signed releases for this commission...
+                    </div>
+                </div>
+                <div style="padding: 1rem 1.5rem; border-top: 1px solid var(--border, #e2e8f0); background: var(--bg-light, #f8fafc); display: flex; justify-content: space-between; align-items: center;">
+                    <a href="forms_hub.html?story=${encodeURIComponent(storyTitle)}&comm=${encodeURIComponent(commNum)}" class="btn-soft" style="font-size: 0.85rem; text-decoration: none; padding: 0.5rem 0.9rem; background: var(--primary, #008fbe); color: white; border-radius: 6px;">
+                        ➕ Create New Release
+                    </a>
+                    <button type="button" id="closeLegalModalBtn2" class="btn-soft" style="font-size: 0.85rem; padding: 0.5rem 0.9rem;">Close</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        const close = () => overlay.remove();
+        overlay.querySelector('#closeLegalModalBtn').addEventListener('click', close);
+        overlay.querySelector('#closeLegalModalBtn2').addEventListener('click', close);
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+
+        try {
+            const url = `/api/proposal-legal-forms?proposalId=${encodeURIComponent(proposalId)}&commNum=${encodeURIComponent(commNum)}`;
+            const res = await fetchWithAuth(url);
+            const data = await res.json();
+            const container = overlay.querySelector('#legalFormsListContainer');
+
+            if (!data.success || !data.forms || data.forms.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+                        <p style="font-size: 2rem; margin: 0 0 0.5rem;">📄</p>
+                        <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No legal forms recorded yet</p>
+                        <p style="font-size: 0.85rem; max-width: 380px; margin: 0 auto 1.25rem;">When interviewees or contributors sign forms with commission <strong>${commNum || 'N/A'}</strong>, they will automatically appear here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    ${data.forms.map(f => {
+                        const isDone = f.status === 'completed';
+                        const badgeStyle = isDone 
+                            ? 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;'
+                            : 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
+                        const badgeLabel = isDone ? '✓ Completed' : '⏳ Awaiting Countersign';
+                        const formattedType = (f.formType || 'release').replace(/_/g, ' ').toUpperCase();
+
+                        return `
+                            <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border, #e2e8f0); border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                        <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">${f.contributorName}</span>
+                                        <span style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; ${badgeStyle}">${badgeLabel}</span>
+                                    </div>
+                                    <div style="font-size: 0.78rem; color: var(--text-muted);">
+                                        <strong>${formattedType}</strong> &bull; Producer: ${f.producerName || '—'}
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.4rem;">
+                                    ${!isDone ? `
+                                        <a href="${f.formType}.html?id=${f.id}&action=countersign" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #008fbe; color: white; border-radius: 4px;">
+                                            ✍️ Countersign
+                                        </a>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        } catch (err) {
+            overlay.querySelector('#legalFormsListContainer').innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--danger);">
+                    Error loading legal forms: ${err.message}
+                </div>
+            `;
+        }
+    };
 
 function renderProjectAssets(assets, proposal) {
     const section = document.getElementById('projectAssetsSection');

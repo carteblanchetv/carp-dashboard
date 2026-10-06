@@ -3,6 +3,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('travelBookingForm');
     const loadingOverlay = document.getElementById('loadingOverlay');
 
+    // Pre-fill from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialComm = urlParams.get('comm') || urlParams.get('commission') || urlParams.get('commissionNumber') || '';
+    const initialStory = urlParams.get('story') || urlParams.get('storyName') || '';
+    if (initialComm && document.getElementById('commissionNumber')) {
+        document.getElementById('commissionNumber').value = initialComm;
+    }
+    if (initialStory && document.getElementById('storyName')) {
+        document.getElementById('storyName').value = initialStory;
+    }
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -18,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const departureDate = document.getElementById('departureDate').value;
             const returnDate = document.getElementById('returnDate').value;
             const storyName = document.getElementById('storyName').value;
+            const commissionNumber = document.getElementById('commissionNumber') ? document.getElementById('commissionNumber').value.trim() : '';
             const accommodationRequired = document.getElementById('accommodationRequired').value;
             const carHireRequired = document.getElementById('carHireRequired').value;
             const additionalNotes = document.getElementById('additionalNotes').value;
@@ -82,16 +94,17 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.text(`Departure Date: ${departureDate}`, margin, 120);
             doc.text(`Return Date: ${returnDate}`, margin, 128);
             doc.text(`Story / Project: ${storyName}`, margin, 136);
+            doc.text(`Commission Number: ${commissionNumber || 'N/A'}`, margin, 144);
 
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(11);
-            doc.text('Additional Booking Options', margin, 148);
+            doc.text('Additional Booking Options', margin, 154);
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(10);
-            doc.text(`Accommodation Required: ${accommodationRequired}`, margin, 156);
-            doc.text(`Car Hire Required: ${carHireRequired}`, margin, 164);
+            doc.text(`Accommodation Required: ${accommodationRequired}`, margin, 162);
+            doc.text(`Car Hire Required: ${carHireRequired}`, margin, 170);
             
-            let currentY = 176;
+            let currentY = 182;
             if (additionalNotes) {
                 doc.setFont('helvetica', 'bold');
                 doc.setFontSize(11);

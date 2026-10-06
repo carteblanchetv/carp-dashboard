@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const propertyAddress = document.getElementById('propertyAddress').value;
         const filmingDate = document.getElementById('filmingDate').value;
         const storyName = document.getElementById('storyName').value;
+        const commissionNumber = document.getElementById('commissionNumber') ? document.getElementById('commissionNumber').value.trim() : '';
 
         // 0. Top Header Note
         doc.setFont('helvetica', 'bold');
@@ -178,18 +179,19 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.text(`Property Address: ${propertyAddress}`, margin, 104);
         doc.text(`Filming Date: ${filmingDate}`, margin, 112);
         doc.text(`Story / Project: ${storyName}`, margin, 120);
+        doc.text(`Commission Number: ${commissionNumber || 'N/A'}`, margin, 128);
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(11);
-        doc.text('Grant of Rights', margin, 134);
+        doc.text('Grant of Rights', margin, 140);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(9.5);
         const declarationText = 'I hereby grant Combined Artists and Carte Blanche and their assignees the right to enter and film on the property described above. This includes the right to photograph and record both interior and exterior scenes, and to use the recordings in any manner worldwide, in perpetuity.';
         const splitText = doc.splitTextToSize(declarationText, 170);
-        doc.text(splitText, margin, 142);
+        doc.text(splitText, margin, 148);
 
         // Signatures Section (Side by Side)
-        const sigY = 175;
+        const sigY = 178;
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(10);
         doc.text('Owner / Representative Signature:', margin, sigY);

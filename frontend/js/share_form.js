@@ -42,9 +42,10 @@
             }
         } catch (e) {}
 
-        // Fallback to currently entered form inputs on page if already filled
-        const pageStory = defaultStory || (document.getElementById('storyName') ? document.getElementById('storyName').value : '');
-        const pageComm = defaultComm || (document.getElementById('commissionNumber') ? document.getElementById('commissionNumber').value : '');
+        // Fallback to URL params or currently entered form inputs on page if already filled
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageStory = defaultStory || urlParams.get('story') || urlParams.get('storyName') || (document.getElementById('storyName') ? document.getElementById('storyName').value : '');
+        const pageComm = defaultComm || urlParams.get('comm') || urlParams.get('commission') || urlParams.get('commissionNumber') || (document.getElementById('commissionNumber') ? document.getElementById('commissionNumber').value : '');
 
         // Prevent background scrolling while modal is active
         document.body.style.overflow = 'hidden';
@@ -71,6 +72,12 @@
                     </p>
 
                     <div class="share-fields-grid">
+                        <div class="share-field full-width" id="storyPickerWrapper" style="display: none;">
+                            <label for="shareStorySelect">🔗 Link to Commissioned Story (Auto-Fill)</label>
+                            <select id="shareStorySelect" style="width: 100%; padding: 0.55rem 0.75rem; border-radius: var(--radius-sm, 6px); border: 1px solid var(--border, #cbd5e1); background: var(--bg-card, #ffffff); color: var(--text-main, #0f172a); font-size: 0.9rem;">
+                                <option value="">-- Choose Commissioned Story (Optional) --</option>
+                            </select>
+                        </div>
                         <div class="share-field">
                             <label for="shareStoryInput">Story / Project Title</label>
                             <input type="text" id="shareStoryInput" placeholder="e.g. State of Hospitals" value="${escapeHtml(pageStory)}">
@@ -146,6 +153,48 @@
         const qrContainer = modalOverlay.querySelector('#qrCodeContainer');
         const qrImg = modalOverlay.querySelector('#qrCodeImg');
         const closeBtn = modalOverlay.querySelector('#closeShareModalBtn');
+
+        const storyPickerWrapper = modalOverlay.querySelector('#storyPickerWrapper');
+        const storySelect = modalOverlay.querySelector('#shareStorySelect');
+
+        // Fetch commissioned stories if user is logged in
+        async function loadCommissionedStories() {
+            try {
+                let token = null;
+                const cachedUserStr = localStorage.getItem('user_profile_cache') || Object.keys(localStorage).find(k => k.startsWith('user_profile_'));
+                if (window.auth && typeof window.auth.getIdToken === 'function') {
+                    token = await window.auth.getIdToken();
+                }
+                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                const res = await fetch('/api/commissioned-stories', { headers });
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data.success && data.stories && data.stories.length > 0) {
+                    storyPickerWrapper.style.display = 'block';
+                    data.stories.forEach(s => {
+                        const opt = document.createElement('option');
+                        opt.value = JSON.stringify(s);
+                        opt.textContent = `${s.commissionNumber} — ${s.storyTitle}`;
+                        storySelect.appendChild(opt);
+                    });
+
+                    storySelect.addEventListener('change', () => {
+                        if (!storySelect.value) return;
+                        try {
+                            const selected = JSON.parse(storySelect.value);
+                            if (selected.storyTitle) storyInput.value = selected.storyTitle;
+                            if (selected.commissionNumber) commInput.value = selected.commissionNumber;
+                            if (selected.producerName && !prodInput.value) prodInput.value = selected.producerName;
+                            if (selected.producerEmail && !emailInput.value) emailInput.value = selected.producerEmail;
+                            updateUrl();
+                        } catch (e) {}
+                    });
+                }
+            } catch (err) {
+                // Ignore if not logged in or endpoint unavailable
+            }
+        }
+        loadCommissionedStories();
 
         function updateUrl() {
             const link = buildShareUrl(formUrl, {

@@ -609,12 +609,13 @@ async function sendCountersignNotification({
   const contrib = contributorName || 'Contributor';
   const prod = producerName || 'Producer';
 
-  const subject = `ACTION REQUIRED: Countersign ${formTitle} - ${story} (${comm})`;
+  const subject = `PLEASE SIGN: ${formTitle} - ${comm} - ${story}`;
   const html = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
       <div style="background: #008fbe; padding: 24px; text-align: center;">
         <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: 0.5px;">CARTE BLANCHE</h1>
-        <p style="color: #e0f2fe; margin: 6px 0 0 0; font-size: 13px; font-weight: 600;">COUNTERSIGNATURE REQUIRED</p>
+        <p style="color: #e0f2fe; margin: 6px 0 0 0; font-size: 14px; font-weight: 600;">Signature Required</p>
+        <p style="color: #ffffff; margin: 4px 0 0 0; font-size: 15px; font-weight: 700;">${formTitle}</p>
       </div>
       <div style="padding: 24px;">
         <p style="font-size: 15px; margin: 0 0 16px 0;">Dear <strong>${prod}</strong>,</p>
@@ -645,7 +646,7 @@ async function sendCountersignNotification({
   `.trim();
 
   await sendNotificationEmail(
-    'Carte Blanche Releases',
+    'Forms Hub - Carte Blanche',
     subject,
     html,
     producerEmail,
@@ -1460,7 +1461,7 @@ async function processMultiFileStorageAndFirestore(req, formType, subfolder, fil
   }
 
   // Save Metadata to Firestore
-  const docRef = await admin.firestore().collection('submissions').add({
+  const docData = {
     formType,
     files: fileRecords,
     submissionPath,
@@ -1468,9 +1469,30 @@ async function processMultiFileStorageAndFirestore(req, formType, subfolder, fil
     submittedByEmail: (req.user && req.user.email) || metadata.submittedByEmail || metadata.email || 'participant@guest',
     submittedAt: admin.firestore.FieldValue.serverTimestamp(),
     ...encryptedMetadata
-  });
+  };
+
+  // Attempt to associate with matching proposal if commissionNumber is provided
+  const commNum = metadata.commissionNumber || metadata.commission_number;
+  if (commNum && commNum.trim() && commNum.trim() !== 'N/A' && commNum.trim() !== '—') {
+    try {
+      const propSnap = await admin.firestore().collection('proposals')
+        .where('commissionNumber', '==', commNum.trim())
+        .limit(1)
+        .get();
+      if (!propSnap.empty) {
+        docData.proposalId = propSnap.docs[0].id;
+        docData.projectId = propSnap.docs[0].id;
+        docData.storyTitle = docData.storyTitle || propSnap.docs[0].data().story_title;
+        console.log(`[LEGAL-LINK] Form ${formType} linked to Proposal ${propSnap.docs[0].id} (Comm: ${commNum.trim()})`);
+      }
+    } catch (linkErr) {
+      console.warn(`[LEGAL-LINK] Could not link proposal by commNum:`, linkErr.message);
+    }
+  }
+
+  const docRef = await admin.firestore().collection('submissions').add(docData);
   
-  return { firestoreDocId: docRef.id, submissionPath, fileRecords };
+  return { firestoreDocId: docRef.id, submissionPath, fileRecords, proposalId: docData.proposalId || null };
 }
 
 // ------------------------------------------------------------------
@@ -1683,7 +1705,7 @@ app.post('/api/countersign-form', async (req, res) => {
     }
 
     // Update Firestore submission record
-    await subDocRef.update({
+    const updatePayload = {
       status: 'completed',
       producerSignature: producerSignature || null,
       producerName: pName,
@@ -1691,7 +1713,22 @@ app.post('/api/countersign-form', async (req, res) => {
       countersignedAt: admin.firestore.FieldValue.serverTimestamp(),
       completedAt: admin.firestore.FieldValue.serverTimestamp(),
       files: fileRecords
-    });
+    };
+
+    if (!subData.proposalId && commNum && commNum.trim() && commNum.trim() !== 'N/A' && commNum.trim() !== '—') {
+      try {
+        const propSnap = await admin.firestore().collection('proposals')
+          .where('commissionNumber', '==', commNum.trim())
+          .limit(1)
+          .get();
+        if (!propSnap.empty) {
+          updatePayload.proposalId = propSnap.docs[0].id;
+          updatePayload.projectId = propSnap.docs[0].id;
+        }
+      } catch (err) {}
+    }
+
+    await subDocRef.update(updatePayload);
 
     // Build finalized email details
     const { subject, html } = buildFormEmailDetails({
@@ -3553,6 +3590,115 @@ app.get('/api/proposals', async (req, res) => {
     });
     res.json({ success: true, proposals });
   } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * GET COMMISSIONED STORIES FOR FORMS HUB
+ * Returns commissioned stories for the current producer (or all if admin)
+ */
+app.get('/api/commissioned-stories', async (req, res) => {
+  try {
+    const isAdmin = hasAdminAccess(req.user);
+    let query = admin.firestore().collection('proposals');
+
+    if (!isAdmin) {
+      query = query.where(admin.firestore.Filter.or(
+        admin.firestore.Filter.where('submittedBy', '==', req.user.uid),
+        admin.firestore.Filter.where('submittedBy', '==', req.user.email)
+      ));
+    }
+
+    const snapshot = await query.get();
+    const stories = [];
+
+    snapshot.docs.forEach(doc => {
+      const data = doc.data();
+      const status = (data.status || '').toLowerCase();
+      const comm = (data.commissionNumber || '').toString().trim();
+      
+      // Filter for commissioned / accepted / paid stories that have a commission number
+      if (comm && comm !== 'N/A' && comm !== '—' && (status === 'accepted' || status === 'paid' || isAdmin)) {
+        stories.push({
+          id: doc.id,
+          storyTitle: data.story_title || 'Untitled Story',
+          commissionNumber: comm,
+          producerName: (data.submittedByName && data.submittedBySurname) 
+            ? `${data.submittedByName} ${data.submittedBySurname}` 
+            : (data.producer || ''),
+          producerEmail: data.submittedByEmail || data.submittedBy || ''
+        });
+      }
+    });
+
+    // Sort alphabetically by story title
+    stories.sort((a, b) => a.storyTitle.localeCompare(b.storyTitle));
+
+    res.json({ success: true, stories });
+  } catch (error) {
+    console.error('Error fetching commissioned stories:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * GET LINKED LEGAL FORMS FOR A STORY PROPOSAL
+ * Fetches all release forms / agreements linked by commissionNumber or proposalId
+ */
+app.get('/api/proposal-legal-forms', async (req, res) => {
+  try {
+    const { proposalId, commNum } = req.query;
+    if (!proposalId && !commNum) {
+      return res.status(400).json({ success: false, error: 'Provide proposalId or commNum' });
+    }
+
+    const db = admin.firestore();
+    let query = db.collection('submissions');
+
+    // Fetch by proposalId or commNum
+    if (proposalId && commNum) {
+      query = query.where(admin.firestore.Filter.or(
+        admin.firestore.Filter.where('proposalId', '==', proposalId),
+        admin.firestore.Filter.where('commissionNumber', '==', commNum.trim())
+      ));
+    } else if (proposalId) {
+      query = query.where('proposalId', '==', proposalId);
+    } else {
+      query = query.where('commissionNumber', '==', commNum.trim());
+    }
+
+    const snapshot = await query.get();
+    const forms = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        formType: data.formType,
+        storyTitle: data.storyName || data.storyTitle || '',
+        commissionNumber: data.commissionNumber || 'N/A',
+        contributorName: data.fullName || data.contributorName || data.ownerName || data.travelerName || 'Contributor',
+        producerName: data.producerName || '',
+        status: data.status || 'pending',
+        submittedAt: data.submittedAt || null,
+        completedAt: data.completedAt || data.countersignedAt || null,
+        files: (data.files || []).map(f => ({
+          filename: f.filename,
+          fieldname: f.fieldname,
+          storagePath: f.storagePath
+        }))
+      };
+    });
+
+    // Sort by latest submitted
+    forms.sort((a, b) => {
+      const tA = a.submittedAt ? (a.submittedAt._seconds || 0) : 0;
+      const tB = b.submittedAt ? (b.submittedAt._seconds || 0) : 0;
+      return tB - tA;
+    });
+
+    res.json({ success: true, forms });
+  } catch (error) {
+    console.error('Error fetching proposal legal forms:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

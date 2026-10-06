@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const trackTitle = document.getElementById('trackTitle').value;
         const trackDuration = document.getElementById('trackDuration').value;
         const storyName = document.getElementById('storyName').value;
+        const commissionNumber = document.getElementById('commissionNumber') ? document.getElementById('commissionNumber').value.trim() : '';
 
         // 0. Top Header Note
         doc.setFont('helvetica', 'bold');
@@ -178,18 +179,19 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.text(`Track Title: ${trackTitle}`, margin, 104);
         doc.text(`Usage Duration: ${trackDuration}`, margin, 112);
         doc.text(`Story / Project: ${storyName}`, margin, 120);
+        doc.text(`Commission Number: ${commissionNumber || 'N/A'}`, margin, 128);
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(11);
-        doc.text('Grant of Rights', margin, 134);
+        doc.text('Grant of Rights', margin, 140);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(9.5);
         const declarationText = 'I hereby grant Combined Artists and Carte Blanche the non-exclusive right to synchronize the music track listed above with the television program, for worldwide distribution and broadcast in all media in perpetuity.';
         const splitText = doc.splitTextToSize(declarationText, 170);
-        doc.text(splitText, margin, 142);
+        doc.text(splitText, margin, 148);
 
         // Signatures Section (Side by Side)
-        const sigY = 175;
+        const sigY = 178;
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(10);
         doc.text('Licensor Signature:', margin, sigY);

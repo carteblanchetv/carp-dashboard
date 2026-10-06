@@ -72,6 +72,32 @@
         } else {
             // Normal Mode: Check if logged in user is producer and show optional in-person countersign
             setupInPersonToggle();
+
+            // Pre-fill from URL parameters (when filling online or opening shared link)
+            const commParam = urlParams.get('comm') || urlParams.get('commission') || urlParams.get('commissionNumber') || urlParams.get('commission_number');
+            const storyParam = urlParams.get('story') || urlParams.get('storyName') || urlParams.get('story_title') || urlParams.get('project');
+            const prodParam = urlParams.get('producer') || urlParams.get('producerName');
+            const prodEmailParam = urlParams.get('producerEmail');
+            const nameParam = urlParams.get('name') || urlParams.get('participantName') || urlParams.get('fullName');
+
+            if (commParam && document.getElementById('commissionNumber')) {
+                document.getElementById('commissionNumber').value = commParam;
+            }
+            if (storyParam && document.getElementById('storyName')) {
+                document.getElementById('storyName').value = storyParam;
+            }
+            if (prodParam) {
+                if (document.getElementById('producerName')) document.getElementById('producerName').value = prodParam;
+                if (document.getElementById('prodSignerName')) document.getElementById('prodSignerName').value = prodParam;
+            }
+            if (prodEmailParam) {
+                if (document.getElementById('producerEmail')) document.getElementById('producerEmail').value = prodEmailParam;
+                if (document.getElementById('prodSignerEmail')) document.getElementById('prodSignerEmail').value = prodEmailParam;
+            }
+            if (nameParam) {
+                const nameInp = document.getElementById('fullName') || document.getElementById('guardianName') || document.getElementById('ownerName') || document.getElementById('licensorName') || document.getElementById('artistName');
+                if (nameInp) nameInp.value = nameParam;
+            }
         }
 
         // 4. Intercept form submit to handle dual signing or countersigning

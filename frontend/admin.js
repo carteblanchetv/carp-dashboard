@@ -338,6 +338,7 @@ function renderProposals(proposals, canDelete) {
                     <div style="display: flex; align-items: center; gap: 0.5rem;">
                         <a href="proposal?id=${p.id}&view=admin" class="story-title-link">${p.story_title}</a>
                         <a href="commission_agreement.html?id=${p.id}" target="_blank" title="Commission Agreement" style="text-decoration: none; font-size: 1.1rem; transition: opacity 0.2s; opacity: 0.85;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'">⚖️</a>
+                        <button type="button" onclick="window.viewStoryLegalForms('${p.id}', '${p.commissionNumber || ''}', '${(p.story_title || 'Untitled').replace(/'/g, "\\'")}')" title="View contributor releases and legal forms" style="background: none; border: none; font-size: 1.05rem; cursor: pointer; padding: 0; opacity: 0.85; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'">📑</button>
                     </div>
                 </td>
                 <td data-label="Producer" class="col-producer"><a href="#" class="producer-filter-link" onclick="event.preventDefault(); window.setProducerFilter('${p.submittedBy}', '${submitterDisplay.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">${submitterDisplay}</a></td>
@@ -1266,8 +1267,98 @@ function debounce(func, wait) {
     let timeout;
     return function(...args) {
         clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-}
+window.viewStoryLegalForms = async (proposalId, commNum, storyTitle) => {
+    const overlay = document.createElement('div');
+    overlay.className = 'share-modal-overlay';
+    overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 1rem;';
+    overlay.innerHTML = `
+        <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border, #cbd5e1); border-radius: 12px; max-width: 650px; width: 100%; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);">
+            <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border, #e2e8f0); display: flex; justify-content: space-between; align-items: center; background: var(--bg-light, #f8fafc);">
+                <div>
+                    <h3 style="margin: 0; font-size: 1.15rem; color: var(--text-main, #0f172a); font-weight: 700;">📑 Releases & Legal Forms</h3>
+                    <p style="margin: 0.25rem 0 0; font-size: 0.85rem; color: var(--text-muted, #64748b);"><strong>${commNum || 'No Comm #'}</strong> &bull; ${storyTitle}</p>
+                </div>
+                <button type="button" id="closeAdminLegalModalBtn" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; line-height: 1;">&times;</button>
+            </div>
+            <div id="adminLegalFormsListContainer" style="padding: 1.5rem; overflow-y: auto; flex: 1;">
+                <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                    <div class="spinner-small" style="margin: 0 auto 0.75rem;"></div>
+                    Loading signed releases for this story...
+                </div>
+            </div>
+            <div style="padding: 1rem 1.5rem; border-top: 1px solid var(--border, #e2e8f0); background: var(--bg-light, #f8fafc); display: flex; justify-content: space-between; align-items: center;">
+                <a href="forms_hub.html?story=${encodeURIComponent(storyTitle)}&comm=${encodeURIComponent(commNum)}" target="_blank" class="btn-soft" style="font-size: 0.85rem; text-decoration: none; padding: 0.5rem 0.9rem; background: var(--primary, #008fbe); color: white; border-radius: 6px;">
+                    ➕ Open Forms Hub for Story
+                </a>
+                <button type="button" id="closeAdminLegalModalBtn2" class="btn-soft" style="font-size: 0.85rem; padding: 0.5rem 0.9rem;">Close</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const close = () => overlay.remove();
+    overlay.querySelector('#closeAdminLegalModalBtn').addEventListener('click', close);
+    overlay.querySelector('#closeAdminLegalModalBtn2').addEventListener('click', close);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+
+    try {
+        const token = await window.auth.getIdToken();
+        const url = `/api/proposal-legal-forms?proposalId=${encodeURIComponent(proposalId)}&commNum=${encodeURIComponent(commNum)}`;
+        const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+        const data = await res.json();
+        const container = overlay.querySelector('#adminLegalFormsListContainer');
+
+        if (!data.success || !data.forms || data.forms.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+                    <p style="font-size: 2rem; margin: 0 0 0.5rem;">📄</p>
+                    <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No legal forms recorded yet</p>
+                    <p style="font-size: 0.85rem; max-width: 380px; margin: 0 auto 1.25rem;">Signed contributor and rights releases matching <strong>${commNum || 'this story'}</strong> will appear here automatically.</p>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = `
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                ${data.forms.map(f => {
+                    const isDone = f.status === 'completed';
+                    const badgeStyle = isDone 
+                        ? 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;'
+                        : 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
+                    const badgeLabel = isDone ? '✓ Completed' : '⏳ Awaiting Countersign';
+                    const formattedType = (f.formType || 'release').replace(/_/g, ' ').toUpperCase();
+
+                    return `
+                        <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border, #e2e8f0); border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                    <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">${f.contributorName}</span>
+                                    <span style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; ${badgeStyle}">${badgeLabel}</span>
+                                </div>
+                                <div style="font-size: 0.78rem; color: var(--text-muted);">
+                                    <strong>${formattedType}</strong> &bull; Producer: ${f.producerName || '—'}
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.4rem;">
+                                ${!isDone ? `
+                                    <a href="${f.formType}.html?id=${f.id}&action=countersign" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #008fbe; color: white; border-radius: 4px;">
+                                        ✍️ Countersign
+                                    </a>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+    } catch (err) {
+        overlay.querySelector('#adminLegalFormsListContainer').innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: var(--danger);">
+                Error loading legal forms: ${err.message}
+            </div>
+        `;
+    }
+};
 
 init();

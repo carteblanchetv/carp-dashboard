@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const phone = document.getElementById('phone').value;
         const email = document.getElementById('email').value;
         const storyName = document.getElementById('storyName').value;
+        const commissionNumber = document.getElementById('commissionNumber') ? document.getElementById('commissionNumber').value.trim() : '';
 
         // 0. Top Header Note
         doc.setFont('helvetica', 'bold');
@@ -168,18 +169,19 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.text(`Phone Number: ${phone}`, margin, 76);
         doc.text(`Email Address: ${email}`, margin, 84);
         doc.text(`Story / Project: ${storyName}`, margin, 92);
+        doc.text(`Commission Number: ${commissionNumber || 'N/A'}`, margin, 100);
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(11);
-        doc.text('Declaration & Consent', margin, 106);
+        doc.text('Declaration & Consent', margin, 112);
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(9.5);
         const declarationText = 'I hereby grant Combined Artists and Carte Blanche the absolute right and permission to film, record, and use my name, voice, image, and likeness for the purposes of this television program. I understand this material may be edited and broadcast globally.';
         const splitText = doc.splitTextToSize(declarationText, 170);
-        doc.text(splitText, margin, 114);
+        doc.text(splitText, margin, 120);
 
         // Signatures Section (Side by Side)
-        const sigY = 145;
+        const sigY = 148;
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(10);
         doc.text('Participant Signature:', margin, sigY);
