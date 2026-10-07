@@ -138,11 +138,11 @@
             <div class="form-grid" style="margin-bottom: 1rem;">
                 <div class="form-group">
                     <label for="prodSignerName">Producer Name</label>
-                    <input type="text" id="prodSignerName" placeholder="Producer full name..." required>
+                    <input type="text" id="prodSignerName" placeholder="Producer full name...">
                 </div>
                 <div class="form-group">
                     <label for="prodSignerEmail">Producer Email</label>
-                    <input type="email" id="prodSignerEmail" placeholder="producer@carteblanche.co.za" required>
+                    <input type="email" id="prodSignerEmail" placeholder="producer@carteblanche.co.za">
                 </div>
             </div>
             <div class="form-group full-width">
@@ -334,22 +334,28 @@
         const slider = toggleContainer.querySelector('.slider');
 
         function updateToggle() {
+            const nameInput = document.getElementById('prodSignerName');
+            const emailInput = document.getElementById('prodSignerEmail');
             if (checkbox.checked) {
                 slider.style.backgroundColor = 'var(--primary)';
                 producerSection.style.display = 'block';
+                if (nameInput) nameInput.required = true;
+                if (emailInput) emailInput.required = true;
                 producerSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } else {
                 slider.style.backgroundColor = 'var(--border)';
                 producerSection.style.display = 'none';
+                if (nameInput) nameInput.required = false;
+                if (emailInput) emailInput.required = false;
             }
         }
 
         checkbox.addEventListener('change', updateToggle);
         toggleContainer.addEventListener('click', (e) => {
-            if (e.target !== checkbox) {
-                checkbox.checked = !checkbox.checked;
-                updateToggle();
-            }
+            // Prevent double-toggle if clicking on the label/input/slider
+            if (e.target.closest('.switch')) return;
+            checkbox.checked = !checkbox.checked;
+            updateToggle();
         });
 
         producerSection.parentNode.insertBefore(toggleContainer, producerSection);
@@ -426,6 +432,10 @@
             producerSection.style.border = '2px solid var(--primary)';
             producerSection.style.borderRadius = '8px';
             producerSection.style.padding = '1.25rem';
+            const nameInput = document.getElementById('prodSignerName');
+            const emailInput = document.getElementById('prodSignerEmail');
+            if (nameInput) nameInput.required = true;
+            if (emailInput) emailInput.required = true;
         }
 
         // 6. Update Submit Button
