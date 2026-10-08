@@ -1,10 +1,26 @@
-// music_agreement.js - v5.3.3
+// music_agreement.js - v5.4.0
 function initMusicAgreement() {
     // -------------------------------------------------------------------------
-    // 1. Elements & Canvas Setup (Owner & Producer Signatures)
+    // 1. Auto-Fill Current Date Immediately (Owner, Producer, Broadcast Date)
+    // -------------------------------------------------------------------------
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const todayStr = `${year}-${month}-${day}`;
+
+    const ownerSignedDateEl = document.getElementById('ownerSignedDate');
+    const prodSignedDateEl = document.getElementById('producerSignedDate');
+    const broadcastDateInput = document.getElementById('broadcastDate') || document.getElementById('broadcastDated');
+    if (ownerSignedDateEl && !ownerSignedDateEl.value) ownerSignedDateEl.value = todayStr;
+    if (prodSignedDateEl && !prodSignedDateEl.value) prodSignedDateEl.value = todayStr;
+    if (broadcastDateInput && !broadcastDateInput.value) broadcastDateInput.value = todayStr;
+
+    // -------------------------------------------------------------------------
+    // 2. Elements & Canvas Setup (Owner & Producer Signatures)
     // -------------------------------------------------------------------------
     const canvas = document.getElementById('signatureCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas ? canvas.getContext('2d') : null;
     const clearBtn = document.getElementById('clearSigBtn');
     const form = document.getElementById('musicAgreementForm');
     const loadingOverlay = document.getElementById('loadingOverlay');
@@ -18,112 +34,234 @@ function initMusicAgreement() {
     const typeSigInput = document.getElementById('typeSigInput');
     const typeSigFont = document.getElementById('typeSigFont');
 
-    tabDraw.addEventListener('click', () => {
-        sigMethod = 'draw';
-        tabDraw.classList.add('active');
-        tabType.classList.remove('active');
-        typeSignatureControls.style.display = 'none';
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        canvas.style.pointerEvents = 'auto';
-    });
+    if (tabDraw) {
+        tabDraw.addEventListener('click', (e) => {
+            if (e) e.preventDefault();
+            sigMethod = 'draw';
+            tabDraw.classList.add('active');
+            if (tabType) tabType.classList.remove('active');
+            if (typeSignatureControls) typeSignatureControls.style.display = 'none';
+            if (canvas && ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                canvas.style.pointerEvents = 'auto';
+            }
+        });
+    }
 
-    tabType.addEventListener('click', () => {
-        sigMethod = 'type';
-        tabType.classList.add('active');
-        tabDraw.classList.remove('active');
-        typeSignatureControls.style.display = 'block';
-        canvas.style.pointerEvents = 'none';
-        if (!typeSigInput.value) {
-            const nameVal = document.getElementById('musicOwnerName')?.value || '';
-            if (nameVal) typeSigInput.value = nameVal;
-        }
-        renderTypedSignature();
-    });
+    if (tabType) {
+        tabType.addEventListener('click', (e) => {
+            if (e) e.preventDefault();
+            sigMethod = 'type';
+            tabType.classList.add('active');
+            if (tabDraw) tabDraw.classList.remove('active');
+            if (typeSignatureControls) typeSignatureControls.style.display = 'block';
+            if (canvas) canvas.style.pointerEvents = 'none';
+            if (typeSigInput) {
+                if (!typeSigInput.value) {
+                    const nameVal = document.getElementById('musicOwnerName')?.value || 
+                                    document.getElementById('ownerName')?.value || 
+                                    document.getElementById('fullName')?.value || '';
+                    if (nameVal) typeSigInput.value = nameVal;
+                }
+                renderTypedSignature();
+            }
+        });
+    }
 
     function renderTypedSignature() {
+        if (!canvas || !ctx || !typeSigInput) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const text = typeSigInput.value.trim();
         if (!text) return;
 
-        const font = typeSigFont.value;
+        const font = (typeSigFont && typeSigFont.value) || 'Caveat';
         ctx.font = `italic 40px "${font}", cursive`;
         ctx.fillStyle = '#000000';
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
         ctx.fillText(text, canvas.width / 2, canvas.height / 2);
     }
+    window.renderOwnerTypedSignature = renderTypedSignature;
 
-    typeSigInput.addEventListener('input', renderTypedSignature);
-    typeSigFont.addEventListener('change', renderTypedSignature);
+    if (typeSigInput) typeSigInput.addEventListener('input', renderTypedSignature);
+    if (typeSigFont) typeSigFont.addEventListener('change', renderTypedSignature);
 
     function getMousePos(canvasDom, touchOrMouseEvent) {
         const rect = canvasDom.getBoundingClientRect();
         const clientX = touchOrMouseEvent.touches ? touchOrMouseEvent.touches[0].clientX : touchOrMouseEvent.clientX;
         const clientY = touchOrMouseEvent.touches ? touchOrMouseEvent.touches[0].clientY : touchOrMouseEvent.clientY;
         return {
-            x: clientX - rect.left,
-            y: clientY - rect.top
+            x: (clientX - rect.left) * (canvasDom.width / rect.width),
+            y: (clientY - rect.top) * (canvasDom.height / rect.height)
         };
     }
 
-    canvas.addEventListener('mousedown', (e) => {
-        if (sigMethod !== 'draw') return;
-        drawing = true;
-        const pos = getMousePos(canvas, e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-    });
+    if (canvas && ctx) {
+        canvas.addEventListener('mousedown', (e) => {
+            if (sigMethod !== 'draw') return;
+            drawing = true;
+            const pos = getMousePos(canvas, e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        });
 
-    canvas.addEventListener('mousemove', (e) => {
-        if (sigMethod !== 'draw' || !drawing) return;
-        const pos = getMousePos(canvas, e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-    });
+        canvas.addEventListener('mousemove', (e) => {
+            if (sigMethod !== 'draw' || !drawing) return;
+            const pos = getMousePos(canvas, e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        });
 
-    canvas.addEventListener('mouseup', () => drawing = false);
-    canvas.addEventListener('mouseleave', () => drawing = false);
+        canvas.addEventListener('mouseup', () => drawing = false);
+        canvas.addEventListener('mouseleave', () => drawing = false);
 
-    canvas.addEventListener('touchstart', (e) => {
-        if (sigMethod !== 'draw') return;
-        e.preventDefault();
-        drawing = true;
-        const pos = getMousePos(canvas, e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-    }, { passive: false });
+        canvas.addEventListener('touchstart', (e) => {
+            if (sigMethod !== 'draw') return;
+            e.preventDefault();
+            drawing = true;
+            const pos = getMousePos(canvas, e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        }, { passive: false });
 
-    canvas.addEventListener('touchmove', (e) => {
-        if (sigMethod !== 'draw') return;
-        e.preventDefault();
-        if (!drawing) return;
-        const pos = getMousePos(canvas, e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-    }, { passive: false });
+        canvas.addEventListener('touchmove', (e) => {
+            if (sigMethod !== 'draw') return;
+            e.preventDefault();
+            if (!drawing) return;
+            const pos = getMousePos(canvas, e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        }, { passive: false });
 
-    canvas.addEventListener('touchend', () => drawing = false);
+        canvas.addEventListener('touchend', () => drawing = false);
+    }
 
-    clearBtn.addEventListener('click', () => {
-        if (sigMethod === 'draw') {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        } else {
-            typeSigInput.value = '';
-            renderTypedSignature();
+    if (clearBtn) {
+        clearBtn.addEventListener('click', (e) => {
+            if (e) e.preventDefault();
+            if (sigMethod === 'draw') {
+                if (canvas && ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+            } else {
+                if (typeSigInput) typeSigInput.value = '';
+                renderTypedSignature();
+            }
+        });
+    }
+
+    // Producer Canvas Elements
+    const producerCanvas = document.getElementById('producerSignatureCanvas');
+    const producerCtx = producerCanvas ? producerCanvas.getContext('2d') : null;
+    const clearProducerBtn = document.getElementById('clearProducerSigBtn');
+    let producerDrawing = false;
+    let producerSigMethod = 'draw';
+
+    const tabProducerDraw = document.getElementById('tabProducerDraw');
+    const tabProducerType = document.getElementById('tabProducerType');
+    const producerTypeSignatureControls = document.getElementById('producerTypeSignatureControls');
+    const producerTypeSigInput = document.getElementById('producerTypeSigInput');
+    const producerTypeSigFont = document.getElementById('producerTypeSigFont');
+
+    if (producerCanvas && producerCtx) {
+        if (tabProducerDraw && tabProducerType) {
+            tabProducerDraw.addEventListener('click', (e) => {
+                if (e) e.preventDefault();
+                producerSigMethod = 'draw';
+                tabProducerDraw.classList.add('active');
+                tabProducerType.classList.remove('active');
+                if (producerTypeSignatureControls) producerTypeSignatureControls.style.display = 'none';
+                producerCtx.clearRect(0, 0, producerCanvas.width, producerCanvas.height);
+                producerCanvas.style.pointerEvents = 'auto';
+            });
+
+            tabProducerType.addEventListener('click', (e) => {
+                if (e) e.preventDefault();
+                producerSigMethod = 'type';
+                tabProducerType.classList.add('active');
+                tabProducerDraw.classList.remove('active');
+                if (producerTypeSignatureControls) producerTypeSignatureControls.style.display = 'block';
+                producerCanvas.style.pointerEvents = 'none';
+                if (producerTypeSigInput && !producerTypeSigInput.value) {
+                    const prodName = document.getElementById('producerName')?.value || 
+                                     document.getElementById('prodSignerName')?.value || 
+                                     getActiveProducerName() || '';
+                    if (prodName) producerTypeSigInput.value = prodName;
+                }
+                renderProducerTypedSignature();
+            });
         }
-    });
+
+        function renderProducerTypedSignature() {
+            if (!producerCtx || !producerTypeSigInput) return;
+            producerCtx.clearRect(0, 0, producerCanvas.width, producerCanvas.height);
+            const text = producerTypeSigInput.value.trim();
+            if (!text) return;
+
+            const font = (producerTypeSigFont && producerTypeSigFont.value) || 'Caveat';
+            producerCtx.font = `italic 40px "${font}", cursive`;
+            producerCtx.fillStyle = '#000000';
+            producerCtx.textBaseline = 'middle';
+            producerCtx.textAlign = 'center';
+            producerCtx.fillText(text, producerCanvas.width / 2, producerCanvas.height / 2);
+        }
+        window.renderProducerTypedSignature = renderProducerTypedSignature;
+
+        if (producerTypeSigInput) producerTypeSigInput.addEventListener('input', renderProducerTypedSignature);
+        if (producerTypeSigFont) producerTypeSigFont.addEventListener('change', renderProducerTypedSignature);
+
+        producerCanvas.addEventListener('mousedown', (e) => {
+            if (producerSigMethod !== 'draw') return;
+            producerDrawing = true;
+            const pos = getMousePos(producerCanvas, e);
+            producerCtx.beginPath();
+            producerCtx.moveTo(pos.x, pos.y);
+        });
+
+        producerCanvas.addEventListener('mousemove', (e) => {
+            if (producerSigMethod !== 'draw' || !producerDrawing) return;
+            const pos = getMousePos(producerCanvas, e);
+            producerCtx.lineTo(pos.x, pos.y);
+            producerCtx.stroke();
+        });
+
+        producerCanvas.addEventListener('mouseup', () => producerDrawing = false);
+        producerCanvas.addEventListener('mouseleave', () => producerDrawing = false);
+
+        producerCanvas.addEventListener('touchstart', (e) => {
+            if (producerSigMethod !== 'draw') return;
+            e.preventDefault();
+            producerDrawing = true;
+            const pos = getMousePos(producerCanvas, e);
+            producerCtx.beginPath();
+            producerCtx.moveTo(pos.x, pos.y);
+        }, { passive: false });
+
+        producerCanvas.addEventListener('touchmove', (e) => {
+            if (producerSigMethod !== 'draw') return;
+            e.preventDefault();
+            if (!producerDrawing) return;
+            const pos = getMousePos(producerCanvas, e);
+            producerCtx.lineTo(pos.x, pos.y);
+            producerCtx.stroke();
+        }, { passive: false });
+
+        producerCanvas.addEventListener('touchend', () => producerDrawing = false);
+
+        if (clearProducerBtn) {
+            clearProducerBtn.addEventListener('click', (e) => {
+                if (e) e.preventDefault();
+                if (producerSigMethod === 'draw') {
+                    producerCtx.clearRect(0, 0, producerCanvas.width, producerCanvas.height);
+                } else {
+                    if (producerTypeSigInput) producerTypeSigInput.value = '';
+                    renderProducerTypedSignature();
+                }
+            });
+        }
+    }
 
     // -------------------------------------------------------------------------
-    // 2. Auto-Fill Defaults (Today's Date & Active Producer)
+    // 3. Active Producer Resolution
     // -------------------------------------------------------------------------
-    const todayStr = new Date().toISOString().split('T')[0];
-    const ownerSignedDateEl = document.getElementById('ownerSignedDate');
-    const prodSignedDateEl = document.getElementById('producerSignedDate');
-    const broadcastDateInput = document.getElementById('broadcastDate');
-    if (ownerSignedDateEl && !ownerSignedDateEl.value) ownerSignedDateEl.value = todayStr;
-    if (prodSignedDateEl && !prodSignedDateEl.value) prodSignedDateEl.value = todayStr;
-    if (broadcastDateInput && !broadcastDateInput.value) broadcastDateInput.value = todayStr;
-
     function getActiveProducerName() {
         try {
             const cacheKey = localStorage.getItem('user_profile_cache') ||

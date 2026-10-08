@@ -1,10 +1,26 @@
-// footage_release_agreement.js - v5.3.3
+// footage_release_agreement.js - v5.4.0
 function initFootageAgreement() {
     // -------------------------------------------------------------------------
-    // 1. Elements & Canvas Setup (Owner & Producer Signatures)
+    // 1. Auto-Fill Current Date Immediately (Owner, Producer, Broadcast Date)
+    // -------------------------------------------------------------------------
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const todayStr = `${year}-${month}-${day}`;
+
+    const ownerSignedDateEl = document.getElementById('ownerSignedDate');
+    const prodSignedDateEl = document.getElementById('producerSignedDate');
+    const broadcastDateInput = document.getElementById('broadcastDate') || document.getElementById('broadcastDated');
+    if (ownerSignedDateEl && !ownerSignedDateEl.value) ownerSignedDateEl.value = todayStr;
+    if (prodSignedDateEl && !prodSignedDateEl.value) prodSignedDateEl.value = todayStr;
+    if (broadcastDateInput && !broadcastDateInput.value) broadcastDateInput.value = todayStr;
+
+    // -------------------------------------------------------------------------
+    // 2. Elements & Canvas Setup (Owner & Producer Signatures)
     // -------------------------------------------------------------------------
     const canvas = document.getElementById('signatureCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas ? canvas.getContext('2d') : null;
     const clearBtn = document.getElementById('clearSigBtn');
     const form = document.getElementById('footageAgreementForm');
     const loadingOverlay = document.getElementById('loadingOverlay');
@@ -18,40 +34,54 @@ function initFootageAgreement() {
     const typeSigInput = document.getElementById('typeSigInput');
     const typeSigFont = document.getElementById('typeSigFont');
 
-    tabDraw.addEventListener('click', () => {
-        sigMethod = 'draw';
-        tabDraw.classList.add('active');
-        tabType.classList.remove('active');
-        typeSignatureControls.style.display = 'none';
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        canvas.style.pointerEvents = 'auto';
-    });
+    if (tabDraw) {
+        tabDraw.addEventListener('click', (e) => {
+            if (e) e.preventDefault();
+            sigMethod = 'draw';
+            tabDraw.classList.add('active');
+            if (tabType) tabType.classList.remove('active');
+            if (typeSignatureControls) typeSignatureControls.style.display = 'none';
+            if (canvas && ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                canvas.style.pointerEvents = 'auto';
+            }
+        });
+    }
 
-    tabType.addEventListener('click', () => {
-        sigMethod = 'type';
-        tabType.classList.add('active');
-        tabDraw.classList.remove('active');
-        typeSignatureControls.style.display = 'block';
-        canvas.style.pointerEvents = 'none';
-        if (!typeSigInput.value) {
-            const nameVal = document.getElementById('footageOwnerName')?.value || '';
-            if (nameVal) typeSigInput.value = nameVal;
-        }
-        renderTypedSignature();
-    });
+    if (tabType) {
+        tabType.addEventListener('click', (e) => {
+            if (e) e.preventDefault();
+            sigMethod = 'type';
+            tabType.classList.add('active');
+            if (tabDraw) tabDraw.classList.remove('active');
+            if (typeSignatureControls) typeSignatureControls.style.display = 'block';
+            if (canvas) canvas.style.pointerEvents = 'none';
+            if (typeSigInput) {
+                if (!typeSigInput.value) {
+                    const nameVal = document.getElementById('footageOwnerName')?.value || 
+                                    document.getElementById('ownerName')?.value || 
+                                    document.getElementById('fullName')?.value || '';
+                    if (nameVal) typeSigInput.value = nameVal;
+                }
+                renderTypedSignature();
+            }
+        });
+    }
 
     function renderTypedSignature() {
+        if (!canvas || !ctx || !typeSigInput) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const text = typeSigInput.value.trim();
         if (!text) return;
 
-        const font = typeSigFont.value;
+        const font = (typeSigFont && typeSigFont.value) || 'Caveat';
         ctx.font = `italic 40px "${font}", cursive`;
         ctx.fillStyle = '#000000';
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
         ctx.fillText(text, canvas.width / 2, canvas.height / 2);
     }
+    window.renderOwnerTypedSignature = renderTypedSignature;
 
     typeSigInput.addEventListener('input', renderTypedSignature);
     typeSigFont.addEventListener('change', renderTypedSignature);
@@ -137,12 +167,19 @@ function initFootageAgreement() {
                 producerCanvas.style.pointerEvents = 'auto';
             });
 
-            tabProducerType.addEventListener('click', () => {
+            tabProducerType.addEventListener('click', (e) => {
+                if (e) e.preventDefault();
                 producerSigMethod = 'type';
                 tabProducerType.classList.add('active');
                 tabProducerDraw.classList.remove('active');
                 if (producerTypeSignatureControls) producerTypeSignatureControls.style.display = 'block';
                 producerCanvas.style.pointerEvents = 'none';
+                if (producerTypeSigInput && !producerTypeSigInput.value) {
+                    const prodName = document.getElementById('producerName')?.value || 
+                                     document.getElementById('prodSignerName')?.value || 
+                                     getActiveProducerName() || '';
+                    if (prodName) producerTypeSigInput.value = prodName;
+                }
                 renderProducerTypedSignature();
             });
         }
@@ -160,6 +197,7 @@ function initFootageAgreement() {
             producerCtx.textAlign = 'center';
             producerCtx.fillText(text, producerCanvas.width / 2, producerCanvas.height / 2);
         }
+        window.renderProducerTypedSignature = renderProducerTypedSignature;
 
         if (producerTypeSigInput) producerTypeSigInput.addEventListener('input', renderProducerTypedSignature);
         if (producerTypeSigFont) producerTypeSigFont.addEventListener('change', renderProducerTypedSignature);
@@ -215,15 +253,8 @@ function initFootageAgreement() {
     }
 
     // -------------------------------------------------------------------------
-    // 2. Auto-Fill Defaults (Today's Date & Active Producer)
+    // 3. Active Producer Resolution
     // -------------------------------------------------------------------------
-    const todayStr = new Date().toISOString().split('T')[0];
-    const ownerSignedDateEl = document.getElementById('ownerSignedDate');
-    const prodSignedDateEl = document.getElementById('producerSignedDate');
-    const broadcastDateInput = document.getElementById('broadcastDate');
-    if (ownerSignedDateEl && !ownerSignedDateEl.value) ownerSignedDateEl.value = todayStr;
-    if (prodSignedDateEl && !prodSignedDateEl.value) prodSignedDateEl.value = todayStr;
-    if (broadcastDateInput && !broadcastDateInput.value) broadcastDateInput.value = todayStr;
 
     function getActiveProducerName() {
         try {
