@@ -32,6 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
             tabDraw.classList.remove('active');
             if (typeSignatureControls) typeSignatureControls.style.display = 'block';
             canvas.style.pointerEvents = 'none';
+            if (!typeSigInput.value) {
+                const nameVal = document.getElementById('parentName')?.value || '';
+                if (nameVal) typeSigInput.value = nameVal;
+            }
             renderTypedSignature();
         });
     }
