@@ -1545,6 +1545,7 @@ async function processStorageAndFirestore(req, formType, subfolder, filename, fi
 
   await defaultBucket.file(storagePath).save(encryptedBuffer, {
     contentType: file.mimeType || 'application/pdf',
+    resumable: false,
     metadata: { firebaseStorageDownloadTokens: timestamp.toString() }
   });
 
@@ -1595,6 +1596,7 @@ async function processMultiFileStorageAndFirestore(req, formType, subfolder, fil
 
     await defaultBucket.file(storagePath).save(encryptedBuffer, {
       contentType: file.mimeType || 'application/pdf',
+      resumable: false,
       metadata: { firebaseStorageDownloadTokens: timestamp.toString() }
     });
     fileRecords.push({
@@ -1857,6 +1859,7 @@ app.post('/api/countersign-form', async (req, res) => {
 
       await defaultBucket.file(storagePath).save(encryptedBuffer, {
         contentType: pdfFile.mimeType || 'application/pdf',
+        resumable: false,
         metadata: { firebaseStorageDownloadTokens: timestamp.toString() }
       });
 
@@ -2340,7 +2343,7 @@ app.post('/api/send-location-agreement', async (req, res) => {
         storyTitle,
         producerName,
         producerEmail,
-        contributorName: ownerName,
+        contributorName: locationOwnerName || 'Location Owner',
         req
       });
     }
@@ -2448,7 +2451,7 @@ app.post('/api/send-music-agreement', async (req, res) => {
         storyTitle,
         producerName,
         producerEmail,
-        contributorName: artistName,
+        contributorName: musicOwnerName || 'Music Owner',
         req
       });
     }
@@ -3003,7 +3006,8 @@ app.post('/api/update-submission', async (req, res) => {
       const encryptedBuffer = encryptBuffer(file.buffer);
 
       await defaultBucket.file(storagePath).save(encryptedBuffer, {
-        contentType: file.mimeType || 'application/pdf'
+        contentType: file.mimeType || 'application/pdf',
+        resumable: false
       });
       newFileRecords.push({
         filename: file.filename,
@@ -3956,6 +3960,7 @@ app.post('/api/upload-call-sheet-file', async (req, res) => {
     const encryptedBuffer = encryptBuffer(file.buffer);
     await defaultBucket.file(storagePath).save(encryptedBuffer, {
       contentType: file.mimeType || 'application/pdf',
+      resumable: false,
       metadata: { firebaseStorageDownloadTokens: timestamp.toString() }
     });
     res.json({ success: true, storagePath, filename: file.filename });
