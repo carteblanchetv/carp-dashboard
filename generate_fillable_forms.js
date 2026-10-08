@@ -1406,7 +1406,7 @@ function drawFlightBlock(form, page, fNum, x, y, width) {
 
 function drawCarRentalBlock(form, page, cNum, x, y, width) {
   const pad = 8;
-  const blockH = 88;
+  const blockH = 105;
   const innerW = width - (pad * 2);
 
   page.drawRectangle({
@@ -1444,17 +1444,20 @@ function drawCarRentalBlock(form, page, cNum, x, y, width) {
   const x2 = x1 + col1W + gap;
   const x3 = x2 + col2W + gap;
 
-  const row1Y = y - 41;
-  addStandaloneField(form, page, `car${cNum}_pickupLoc`, 'Pick-Up Location:', x1, row1Y, col1W, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_pickupDate`, 'Date:', x2, row1Y, col2W, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_pickupTime`, 'Time (HH:MM am/pm):', x3, row1Y, col3W, 14, { fontSize: 7.5 });
+  // Row 1 (Pick-Up): label baseline at y - 28 (top y - 22, 6pt below header bar)
+  const row1Y = y - 44;
+  addStandaloneField(form, page, `car${cNum}_pickupLoc`, 'Pick-Up Location:', x1, row1Y, col1W, 13, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_pickupDate`, 'Date:', x2, row1Y, col2W, 13, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_pickupTime`, 'Time (HH:MM am/pm):', x3, row1Y, col3W, 13, { fontSize: 7.5 });
 
-  const row2Y = y - 62;
-  addStandaloneField(form, page, `car${cNum}_dropoffLoc`, 'Drop-Off Location:', x1, row2Y, col1W, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_dropoffDate`, 'Date:', x2, row2Y, col2W, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_dropoffTime`, 'Time (HH:MM am/pm):', x3, row2Y, col3W, 14, { fontSize: 7.5 });
+  // Row 2 (Drop-Off): label baseline at y - 55 (top y - 49, 5pt below row 1 box y - 44)
+  const row2Y = y - 71;
+  addStandaloneField(form, page, `car${cNum}_dropoffLoc`, 'Drop-Off Location:', x1, row2Y, col1W, 13, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_dropoffDate`, 'Date:', x2, row2Y, col2W, 13, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_dropoffTime`, 'Time (HH:MM am/pm):', x3, row2Y, col3W, 13, { fontSize: 7.5 });
 
-  const row3Y = y - 79;
+  // Row 3 (Driver): label baseline at y - 82 (top y - 76, 5pt below row 2 box y - 71)
+  const row3Y = y - 98;
   addStandaloneField(form, page, `car${cNum}_driver`, 'Responsible Driver Name & Surname:', x1, row3Y, innerW, 13, { fontSize: 7.5 });
 
   return blockH;
@@ -1462,7 +1465,7 @@ function drawCarRentalBlock(form, page, cNum, x, y, width) {
 
 function drawLocationBlock(form, page, lNum, x, y, width) {
   const pad = 8;
-  const blockH = 94;
+  const blockH = 114;
   const innerW = width - (pad * 2);
 
   page.drawRectangle({
@@ -1502,15 +1505,17 @@ function drawLocationBlock(form, page, lNum, x, y, width) {
   const x3 = x2 + wHotel + gap;
   const x4 = x3 + wCheckIn + gap;
 
-  const row1Y = y - 39;
-  addStandaloneField(form, page, `loc${lNum}_where`, 'Where:', x1, row1Y, wWhere, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `loc${lNum}_hotel`, 'Hotel / B&B (if applicable):', x2, row1Y, wHotel, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `loc${lNum}_checkIn`, 'Check-In Date:', x3, row1Y, wCheckIn, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `loc${lNum}_checkOut`, 'Check-Out Date:', x4, row1Y, wCheckOut, 14, { fontSize: 7.5 });
+  // Row 1: label baseline at y - 25 (top y - 19, 3pt below header bar)
+  const row1Y = y - 41;
+  addStandaloneField(form, page, `loc${lNum}_where`, 'Where:', x1, row1Y, wWhere, 13, { fontSize: 7.5 });
+  addStandaloneField(form, page, `loc${lNum}_hotel`, 'Hotel / B&B (if applicable):', x2, row1Y, wHotel, 13, { fontSize: 7.5 });
+  addStandaloneField(form, page, `loc${lNum}_checkIn`, 'Check-In Date:', x3, row1Y, wCheckIn, 13, { fontSize: 7.5 });
+  addStandaloneField(form, page, `loc${lNum}_checkOut`, 'Check-Out Date:', x4, row1Y, wCheckOut, 13, { fontSize: 7.5 });
 
+  // Guest Info Heading
   page.drawText('GUEST INFO', {
     x: x + pad,
-    y: y - 50,
+    y: y - 53,
     size: 7.2,
     font: page.docBoldFont,
     color: rgb(13 / 255, 148 / 255, 136 / 255)
@@ -1525,8 +1530,15 @@ function drawLocationBlock(form, page, lNum, x, y, width) {
     x + pad + guestLabelW + 6 + (guestColW + 6) * 2
   ];
 
+  // Table header
+  const tHeadY = y - 64;
+  page.drawText('Guest', { x: colX[0], y: tHeadY, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
+  page.drawText('First Name', { x: colX[1], y: tHeadY, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
+  page.drawText('Surname', { x: colX[2], y: tHeadY, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
+  page.drawText('ID Number', { x: colX[3], y: tHeadY, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
+
   for (let g = 1; g <= 3; g++) {
-    const gY = y - 51 - (g * 12.5);
+    const gY = y - 65 - (g * 14);
     page.drawText(`Guest ${g}`, { x: colX[0], y: gY + 3, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_DARK });
     addStandaloneField(form, page, `loc${lNum}_guest${g}_firstName`, '', colX[1], gY, guestColW, 11, { fontSize: 7 });
     addStandaloneField(form, page, `loc${lNum}_guest${g}_surname`, '', colX[2], gY, guestColW, 11, { fontSize: 7 });
@@ -1705,55 +1717,55 @@ async function generateTravelBooking(cbBytes, caBytes) {
 
     // CAR RENTAL HEADING
     page.drawText('CAR RENTAL', { x: MARGIN_X, y: curY, size: 9, font: fontBold, color: COLOR_PRIMARY });
-    addStandaloneField(form, page, 'carRentalRequired', 'Car Rental Required: Yes / No', RIGHT_X - 180, curY - 14, 180, 14, { fontSize: 8 });
-    curY -= 22;
+    addStandaloneField(form, page, 'carRentalRequired', 'Car Rental Required? Y / N', RIGHT_X - 180, curY - 14, 180, 14, { fontSize: 8 });
+    curY -= 20;
 
     // CAR RENTAL 1 & 2
     const cr1H = drawCarRentalBlock(form, page, 1, MARGIN_X, curY, CONTENT_W);
-    curY -= (cr1H + 8);
+    curY -= (cr1H + 6);
 
     const cr2H = drawCarRentalBlock(form, page, 2, MARGIN_X, curY, CONTENT_W);
-    curY -= (cr2H + 14);
+    curY -= (cr2H + 10);
 
     // ACCOMMODATION HEADING
     page.drawText('ACCOMMODATION', { x: MARGIN_X, y: curY, size: 9, font: fontBold, color: COLOR_PRIMARY });
-    addStandaloneField(form, page, 'accommodationRequired', 'Accommodation Required: Yes / No', RIGHT_X - 180, curY - 14, 180, 14, { fontSize: 8 });
-    curY -= 22;
+    addStandaloneField(form, page, 'accommodationRequired', 'Accommodation Required? Y / N', RIGHT_X - 180, curY - 14, 180, 14, { fontSize: 8 });
+    curY -= 20;
 
     // LOCATION 1, 2, 3
     const loc1H = drawLocationBlock(form, page, 1, MARGIN_X, curY, CONTENT_W);
-    curY -= (loc1H + 6);
+    curY -= (loc1H + 5);
 
     const loc2H = drawLocationBlock(form, page, 2, MARGIN_X, curY, CONTENT_W);
-    curY -= (loc2H + 6);
+    curY -= (loc2H + 5);
 
     const loc3H = drawLocationBlock(form, page, 3, MARGIN_X, curY, CONTENT_W);
-    curY -= (loc3H + 10);
+    curY -= (loc3H + 6);
 
     // Special Requirements
     page.drawText('Special Requirements', { x: MARGIN_X, y: curY, size: 8, font: fontBold, color: COLOR_PRIMARY });
     page.drawText('(Example: SUV for crew & gear)', { x: MARGIN_X + 110, y: curY, size: 7.2, font: fontItalic, color: COLOR_TEXT_MUTED });
-    curY -= 6;
-    addStandaloneField(form, page, 'specialRequirements', '', MARGIN_X, curY - 32, CONTENT_W, 32, { multiline: true, fontSize: 8 });
-    curY -= 42;
+    curY -= 4;
+    addStandaloneField(form, page, 'specialRequirements', '', MARGIN_X, curY - 22, CONTENT_W, 22, { multiline: true, fontSize: 8 });
+    curY -= 32;
 
     // Checkboxes
     try {
       const cb1 = form.createCheckBox('confirmCorrect');
-      cb1.addToPage(page, { x: MARGIN_X, y: curY - 10, width: 10, height: 10 });
+      cb1.addToPage(page, { x: MARGIN_X, y: curY - 8, width: 10, height: 10 });
       page.drawText('I hereby confirm that the above information is correct.', {
         x: MARGIN_X + 16,
-        y: curY - 8,
+        y: curY - 6,
         size: 7.5,
         font: fontBold,
         color: COLOR_TEXT_DARK
       });
 
       const cb2 = form.createCheckBox('agreeInformManagement');
-      cb2.addToPage(page, { x: MARGIN_X, y: curY - 24, width: 10, height: 10 });
+      cb2.addToPage(page, { x: MARGIN_X, y: curY - 22, width: 10, height: 10 });
       page.drawText('I agree to inform management of any changes as soon as possible.', {
         x: MARGIN_X + 16,
-        y: curY - 22,
+        y: curY - 20,
         size: 7.5,
         font: fontBold,
         color: COLOR_TEXT_DARK
