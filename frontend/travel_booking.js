@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div class="form-group">
-                    <label for="depTime_${fNum}">Departure Time: <span style="font-weight: normal; color: var(--text-muted);">&lt;HH:MM am/pm&gt;</span></label>
+                    <label for="depTime_${fNum}">Departure Time: <span style="font-weight: normal; color: var(--text-muted);">(HH:MM am/pm)</span></label>
                     <input type="text" id="depTime_${fNum}" name="depTime_${fNum}" class="time-input" placeholder="e.g. 08:30 am">
                 </div>
 
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="date" id="car${cNum}_pickupDate" name="car${cNum}_pickupDate">
                 </div>
                 <div class="form-group">
-                    <label for="car${cNum}_pickupTime">Time: <span style="font-weight: normal; color: var(--text-muted);">&lt;HH:MM am/pm&gt;</span></label>
+                    <label for="car${cNum}_pickupTime">Time: <span style="font-weight: normal; color: var(--text-muted);">(HH:MM am/pm)</span></label>
                     <input type="text" id="car${cNum}_pickupTime" name="car${cNum}_pickupTime" class="time-input" placeholder="e.g. 09:00 am">
                 </div>
 
@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="date" id="car${cNum}_dropoffDate" name="car${cNum}_dropoffDate">
                 </div>
                 <div class="form-group">
-                    <label for="car${cNum}_dropoffTime">Time: <span style="font-weight: normal; color: var(--text-muted);">&lt;HH:MM am/pm&gt;</span></label>
+                    <label for="car${cNum}_dropoffTime">Time: <span style="font-weight: normal; color: var(--text-muted);">(HH:MM am/pm)</span></label>
                     <input type="text" id="car${cNum}_dropoffTime" name="car${cNum}_dropoffTime" class="time-input" placeholder="e.g. 05:00 pm">
                 </div>
 
@@ -674,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 doc.setTextColor(71, 85, 105);
                 doc.text('Departure Airport:', margin + 3, y + 9);
                 doc.text('Departure Date:', margin + 85, y + 9);
-                doc.text('Departure Time: <HH:MM am/pm>', margin + 130, y + 9);
+                doc.text('Departure Time (HH:MM am/pm):', margin + 130, y + 9);
 
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(7.5);
@@ -798,7 +798,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 doc.setTextColor(71, 85, 105);
                 doc.text('Pick-Up Location:', margin + 3, y + 8.5);
                 doc.text('Date:', margin + 85, y + 8.5);
-                doc.text('Time: <HH:MM am/pm>', margin + 130, y + 8.5);
+                doc.text('Time (HH:MM am/pm):', margin + 130, y + 8.5);
 
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(7);
@@ -813,7 +813,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 doc.setTextColor(71, 85, 105);
                 doc.text('Drop-Off Location:', margin + 3, y + 17);
                 doc.text('Date:', margin + 85, y + 17);
-                doc.text('Time: <HH:MM am/pm>', margin + 130, y + 17);
+                doc.text('Time (HH:MM am/pm):', margin + 130, y + 17);
 
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(7);

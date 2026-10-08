@@ -1081,7 +1081,7 @@ async function generateMusicAgreement(cbBytes, caBytes) {
 }
 
 // ----------------------------------------------------
-// 6. INSERT SHEET 2026 (Multi-page: 10 Pages)
+// 6. INSERT SHEET 2026 (Multi-page: 4 Pages, 20 Credits)
 // ----------------------------------------------------
 async function generateInsertSheet(cbBytes, caBytes) {
   const doc = await PDFDocument.create();
@@ -1094,10 +1094,10 @@ async function generateInsertSheet(cbBytes, caBytes) {
   const cbLogoImg = await doc.embedPng(cbBytes);
   const caLogoImg = await doc.embedPng(caBytes);
 
-  const TOTAL_PAGES = 10;
+  const TOTAL_PAGES = 4;
   let creditCounter = 1;
 
-  // PAGE 1: Header + Production Crew + First 3 Credits
+  // PAGE 1: Header + Production Crew + First 4 Credits
   {
     const page = doc.addPage([PAGE_W, PAGE_H]);
     page.docRegularFont = fontRegular;
@@ -1131,7 +1131,7 @@ async function generateInsertSheet(cbBytes, caBytes) {
 
     layout.addFieldRow([
       { id: 'deliveryDate', label: 'Delivery Date:', width: halfW },
-      { id: 'insertDuration', label: 'Insert Duration:', width: halfW, subtext: '<HH:MM:SS>', gap: 0 }
+      { id: 'insertDuration', label: 'Insert Duration:', width: halfW, subtext: 'HH:MM:SS', gap: 0 }
     ], 18);
 
     layout.addFieldRow([
@@ -1214,8 +1214,9 @@ async function generateInsertSheet(cbBytes, caBytes) {
 
     let curY = headY - 58;
 
-    // Draw 6 credit blocks per page (68pt each + 14pt gap)
-    for (let c = 0; c < 6; c++) {
+    // Draw credit blocks (up to 20 total)
+    const creditsOnThisPage = Math.min(6, 20 - creditCounter + 1);
+    for (let c = 0; c < creditsOnThisPage; c++) {
       drawCreditBlock(form, page, creditCounter++, MARGIN_X, curY, CONTENT_W);
       curY -= 82;
     }
@@ -1345,7 +1346,7 @@ function drawFlightBlock(form, page, fNum, x, y, width) {
   const fY1 = y - 38;
   addStandaloneField(form, page, `depAirport_${fNum}`, 'Departure Airport:', x + pad, fY1, 220, 16, { fontSize: 8 });
   addStandaloneField(form, page, `depDate_${fNum}`, 'Departure Date:', x + pad + 230, fY1, 140, 16, { fontSize: 8 });
-  addStandaloneField(form, page, `depTime_${fNum}`, 'Departure Time: <HH:MM am/pm>', x + pad + 380, fY1, 155, 16, { fontSize: 8 });
+  addStandaloneField(form, page, `depTime_${fNum}`, 'Departure Time (HH:MM am/pm):', x + pad + 380, fY1, 155, 16, { fontSize: 8 });
 
   // Flight details row 2: Arrival Airport (w: 220), Total Passengers (w: 140)
   const fY2 = y - 62;
@@ -1424,12 +1425,12 @@ function drawCarRentalBlock(form, page, cNum, x, y, width) {
   const row1Y = y - 34;
   addStandaloneField(form, page, `car${cNum}_pickupLoc`, 'Pick-Up Location:', x + pad, row1Y, 220, 14, { fontSize: 7.5 });
   addStandaloneField(form, page, `car${cNum}_pickupDate`, 'Date:', x + pad + 230, row1Y, 140, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_pickupTime`, 'Time: <HH:MM am/pm>', x + pad + 380, row1Y, 155, 14, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_pickupTime`, 'Time (HH:MM am/pm):', x + pad + 380, row1Y, 155, 14, { fontSize: 7.5 });
 
   const row2Y = y - 51;
   addStandaloneField(form, page, `car${cNum}_dropoffLoc`, 'Drop-Off Location:', x + pad, row2Y, 220, 14, { fontSize: 7.5 });
   addStandaloneField(form, page, `car${cNum}_dropoffDate`, 'Date:', x + pad + 230, row2Y, 140, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_dropoffTime`, 'Time: <HH:MM am/pm>', x + pad + 380, row2Y, 155, 14, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_dropoffTime`, 'Time (HH:MM am/pm):', x + pad + 380, row2Y, 155, 14, { fontSize: 7.5 });
 
   const row3Y = y - 66;
   addStandaloneField(form, page, `car${cNum}_driver`, 'Responsible Driver Name & Surname:', x + pad, row3Y, width - (pad * 2), 13, { fontSize: 7.5 });
