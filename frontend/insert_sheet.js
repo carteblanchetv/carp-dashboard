@@ -60,6 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (initialDelivery && document.getElementById('deliveryDate')) {
         document.getElementById('deliveryDate').value = initialDelivery;
+    } else if (document.getElementById('deliveryDate') && !document.getElementById('deliveryDate').value) {
+        document.getElementById('deliveryDate').value = new Date().toISOString().split('T')[0];
     }
 
     // Auto-detect logged-in user profile if producer field is empty

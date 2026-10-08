@@ -44,7 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Pre-fill from project
     if (projectComm) document.getElementById('commission_number').value = projectComm;
     if (projectStory) document.getElementById('story_name').value = decodeURIComponent(projectStory);
-    if (projectDelivery) document.getElementById('delivery_date').value = projectDelivery;
+    if (projectDelivery) {
+        document.getElementById('delivery_date').value = projectDelivery;
+    } else if (document.getElementById('delivery_date') && !document.getElementById('delivery_date').value) {
+        document.getElementById('delivery_date').value = new Date().toISOString().split('T')[0];
+    }
     
     // --- STORY DELIVERABLES BAR ---
     const loadProjectForBar = async () => {

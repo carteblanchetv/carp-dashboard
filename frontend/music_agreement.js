@@ -115,8 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const todayStr = new Date().toISOString().split('T')[0];
     const ownerSignedDateEl = document.getElementById('ownerSignedDate');
     const prodSignedDateEl = document.getElementById('producerSignedDate');
+    const broadcastDateInput = document.getElementById('broadcastDate');
     if (ownerSignedDateEl && !ownerSignedDateEl.value) ownerSignedDateEl.value = todayStr;
     if (prodSignedDateEl && !prodSignedDateEl.value) prodSignedDateEl.value = todayStr;
+    if (broadcastDateInput && !broadcastDateInput.value) broadcastDateInput.value = todayStr;
 
     function getActiveProducerName() {
         try {

@@ -74,6 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
         emailInput.value = initialEmail;
     }
 
+    const todayIso = new Date().toISOString().split('T')[0];
+
     // -------------------------------------------------------------------------
     // 2. Airport Select HTML Generator Helper
     // -------------------------------------------------------------------------
@@ -146,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 <div class="form-group">
                     <label for="depDate_${fNum}">Departure Date:</label>
-                    <input type="date" id="depDate_${fNum}" name="depDate_${fNum}">
+                    <input type="date" id="depDate_${fNum}" name="depDate_${fNum}" value="${todayIso}">
                 </div>
 
                 <div class="form-group">
@@ -302,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="form-group">
                     <label for="car${cNum}_pickupDate">Date:</label>
-                    <input type="date" id="car${cNum}_pickupDate" name="car${cNum}_pickupDate">
+                    <input type="date" id="car${cNum}_pickupDate" name="car${cNum}_pickupDate" value="${todayIso}">
                 </div>
                 <div class="form-group">
                     <label for="car${cNum}_pickupTime">Time: <span style="font-weight: normal; color: var(--text-muted);">(HH:MM am/pm)</span></label>
@@ -315,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="form-group">
                     <label for="car${cNum}_dropoffDate">Date:</label>
-                    <input type="date" id="car${cNum}_dropoffDate" name="car${cNum}_dropoffDate">
+                    <input type="date" id="car${cNum}_dropoffDate" name="car${cNum}_dropoffDate" value="${todayIso}">
                 </div>
                 <div class="form-group">
                     <label for="car${cNum}_dropoffTime">Time: <span style="font-weight: normal; color: var(--text-muted);">(HH:MM am/pm)</span></label>
@@ -384,11 +386,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="form-group">
                     <label for="loc${lNum}_checkIn">Check-In Date:</label>
-                    <input type="date" id="loc${lNum}_checkIn" name="loc${lNum}_checkIn">
+                    <input type="date" id="loc${lNum}_checkIn" name="loc${lNum}_checkIn" value="${todayIso}">
                 </div>
                 <div class="form-group">
                     <label for="loc${lNum}_checkOut">Check-Out Date:</label>
-                    <input type="date" id="loc${lNum}_checkOut" name="loc${lNum}_checkOut">
+                    <input type="date" id="loc${lNum}_checkOut" name="loc${lNum}_checkOut" value="${todayIso}">
                 </div>
             </div>
 
