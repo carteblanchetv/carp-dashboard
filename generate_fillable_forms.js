@@ -1197,18 +1197,14 @@ async function generateInsertSheet(cbBytes, caBytes) {
       color: COLOR_TEXT_MUTED
     });
 
-    // Reference Story Name / Comm # on subsequent pages
-    addStandaloneField(form, page, `storyName_p${p}`, 'Story Title:', MARGIN_X, headY - 30, CONTENT_W - 160, 18, { fontSize: 9 });
-    addStandaloneField(form, page, `commNum_p${p}`, 'Commission Number:', RIGHT_X - 150, headY - 30, 150, 18, { fontSize: 9 });
-
     page.drawLine({
-      start: { x: MARGIN_X, y: headY - 40 },
-      end: { x: RIGHT_X, y: headY - 40 },
+      start: { x: MARGIN_X, y: headY - 8 },
+      end: { x: RIGHT_X, y: headY - 8 },
       thickness: 1,
       color: COLOR_PRIMARY
     });
 
-    let curY = headY - 58;
+    let curY = headY - 26;
 
     // Draw credit blocks (up to 20 total)
     const creditsOnThisPage = Math.min(6, 20 - creditCounter + 1);
@@ -1645,17 +1641,14 @@ async function generateTravelBooking(cbBytes, caBytes) {
       color: COLOR_TEXT_MUTED
     });
 
-    addStandaloneField(form, page, 'storyName_p2', 'Story Name:', MARGIN_X, headY - 26, CONTENT_W - 160, 16, { fontSize: 8.5 });
-    addStandaloneField(form, page, 'commNum_p2', 'Commission Number:', RIGHT_X - 150, headY - 26, 150, 16, { fontSize: 8.5 });
-
     page.drawLine({
-      start: { x: MARGIN_X, y: headY - 34 },
-      end: { x: RIGHT_X, y: headY - 34 },
+      start: { x: MARGIN_X, y: headY - 8 },
+      end: { x: RIGHT_X, y: headY - 8 },
       thickness: 1,
       color: COLOR_PRIMARY
     });
 
-    let curY = headY - 44;
+    let curY = headY - 20;
 
     // FLIGHT 3
     const f3H = drawFlightBlock(form, page, 3, MARGIN_X, curY, CONTENT_W);
@@ -1699,17 +1692,14 @@ async function generateTravelBooking(cbBytes, caBytes) {
       color: COLOR_TEXT_MUTED
     });
 
-    addStandaloneField(form, page, 'storyName_p3', 'Story Name:', MARGIN_X, headY - 26, CONTENT_W - 160, 16, { fontSize: 8.5 });
-    addStandaloneField(form, page, 'commNum_p3', 'Commission Number:', RIGHT_X - 150, headY - 26, 150, 16, { fontSize: 8.5 });
-
     page.drawLine({
-      start: { x: MARGIN_X, y: headY - 34 },
-      end: { x: RIGHT_X, y: headY - 34 },
+      start: { x: MARGIN_X, y: headY - 8 },
+      end: { x: RIGHT_X, y: headY - 8 },
       thickness: 1,
       color: COLOR_PRIMARY
     });
 
-    let curY = headY - 44;
+    let curY = headY - 20;
 
     // CAR RENTAL HEADING
     page.drawText('CAR RENTAL', { x: MARGIN_X, y: curY, size: 9, font: fontBold, color: COLOR_PRIMARY });
