@@ -296,10 +296,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const col1X = margin;
         const col2X = margin + (contentW / 2) + 4;
         const rowH = 6;
-        let currY = 41.5;
+        let currY = 40.5;
 
-        // SECTION 1: Commission Number, Story Title, Producer
+        // SECTION 1
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(0, 143, 190);
+        doc.text('SECTION 1', col1X, currY);
+        currY += 5;
+
         // Row 1: Commission Number | Story Title
+        doc.setFontSize(8.5);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(71, 85, 105);
         doc.text('Commission Number:', col1X, currY);
@@ -329,9 +336,16 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.setLineWidth(0.4);
         doc.line(margin, currY, pageWidth - margin, currY);
 
-        // SECTION 2: Participant, ID Number, Contact Number
+        // SECTION 2
         currY += 5.5;
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(0, 143, 190);
+        doc.text('SECTION 2', col1X, currY);
+        currY += 5;
+
         // Row 3: Participant
+        doc.setFontSize(8.5);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(71, 85, 105);
         doc.text('Participant:', col1X, currY);
