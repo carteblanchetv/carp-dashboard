@@ -1,4 +1,4 @@
-// insert_sheet.js - v5.3.3
+// insert_sheet.js - v5.4.0
 function initInsertSheet() {
     const form = document.getElementById('insertSheetForm');
     const container = document.getElementById('creditRowsContainer');
@@ -243,13 +243,40 @@ function initInsertSheet() {
         const dialog = document.getElementById('successDialog');
         let isBgDone = false;
         let isNavigating = false;
+        let autoCloseTimer = null;
+        let bgSubmitPromise = null;
+
+        const handleModalNavigate = async (targetUrl = 'forms_hub.html') => {
+            if (autoCloseTimer) {
+                clearTimeout(autoCloseTimer);
+                autoCloseTimer = null;
+            }
+            if (isNavigating) return;
+            isNavigating = true;
+
+            // Immediately hide dialog so it disappears
+            if (dialog) dialog.classList.add('hidden');
+
+            if (!isBgDone && bgSubmitPromise) {
+                try {
+                    await Promise.race([
+                        bgSubmitPromise,
+                        new Promise(resolve => setTimeout(resolve, 3500))
+                    ]);
+                } catch (e) {
+                    console.warn('[INSERT-SHEET] Proceeding with navigation:', e);
+                }
+            }
+            window.location.href = targetUrl;
+        };
 
         const scheduleAutoClose = () => {
-            setTimeout(() => {
-                if (!isNavigating && dialog && !dialog.classList.contains('hidden')) {
-                    handleModalNavigate('index.html');
+            if (autoCloseTimer) clearTimeout(autoCloseTimer);
+            autoCloseTimer = setTimeout(() => {
+                if (!isNavigating) {
+                    handleModalNavigate('forms_hub.html');
                 }
-            }, 2500);
+            }, 2000);
         };
 
         if (dialog) {
@@ -257,26 +284,10 @@ function initInsertSheet() {
             const returnBtn = document.getElementById('dialogReturnBtn');
             const anotherBtn = document.getElementById('dialogAnotherBtn');
 
-            const handleModalNavigate = async (targetUrl) => {
-                if (isNavigating) return;
-                isNavigating = true;
-                if (!isBgDone && bgSubmitPromise) {
-                    try {
-                        await Promise.race([
-                            bgSubmitPromise,
-                            new Promise(resolve => setTimeout(resolve, 3500))
-                        ]);
-                    } catch (e) {
-                        console.warn('[INSERT-SHEET] Proceeding with navigation:', e);
-                    }
-                }
-                window.location.href = targetUrl;
-            };
-
             if (returnBtn) {
                 returnBtn.disabled = false;
-                returnBtn.textContent = 'Return to Dashboard';
-                returnBtn.onclick = () => handleModalNavigate('index.html');
+                returnBtn.textContent = 'Return to Forms Hub';
+                returnBtn.onclick = () => handleModalNavigate('forms_hub.html');
             }
             if (anotherBtn) {
                 anotherBtn.disabled = false;
@@ -287,7 +298,7 @@ function initInsertSheet() {
             scheduleAutoClose();
         }
 
-        const bgSubmitPromise = (async () => {
+        bgSubmitPromise = (async () => {
             try {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
@@ -492,13 +503,19 @@ function initInsertSheet() {
 
             } catch (error) {
                 console.error('[INSERT-SHEET] Background submission error:', error);
+                if (autoCloseTimer) {
+                    clearTimeout(autoCloseTimer);
+                    autoCloseTimer = null;
+                }
+                isNavigating = false;
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.textContent = submitBtn.dataset.originalText || 'Submit Insert Sheet';
                     submitBtn.style.opacity = '1';
                     submitBtn.style.cursor = 'pointer';
                 }
-                if (dialog && !isNavigating) {
+                if (dialog) {
+                    dialog.classList.remove('hidden');
                     const p = dialog.querySelector('p');
                     if (p) p.innerHTML += `<br><span style="color: #ef4444; font-size: 0.85rem;">Notice: Upload experienced an error (${escapeHtml(error.message)}). Please check your connection.</span>`;
                 }
