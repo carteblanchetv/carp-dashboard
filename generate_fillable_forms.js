@@ -686,19 +686,15 @@ async function generateLocationAgreement(cbBytes, caBytes) {
 
   const layout = new FlowLayout(page, form, 726);
 
-  // Preamble
-  layout.addParagraph('This Agreement is made by and between', page.docBoldFont, 8.5, COLOR_TEXT_DARK, 11);
-  layout.addParagraph('CARTE BLANCHE & M-NET', page.docBoldFont, 10, COLOR_PRIMARY, 12);
-  layout.addParagraph('(“the producer”)', page.docItalicFont, 8, COLOR_TEXT_MUTED, 11);
-  layout.addSpace(2);
-  layout.addParagraph('and', page.docBoldFont, 8.5, COLOR_TEXT_DARK, 11);
-  layout.addSpace(2);
+  // Centered Parties Block
+  layout.addCenteredParagraph('Location Agreement', page.docBoldFont, 10, COLOR_PRIMARY, 12);
+  layout.addCenteredParagraph('between', page.docBoldFont, 8, COLOR_TEXT_DARK, 10);
+  layout.addCenteredParagraph('CARTE BLANCHE & M-NET', page.docBoldFont, 9.5, COLOR_TEXT_DARK, 10);
+  layout.addCenteredParagraph('(“the producer”)', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 10);
+  layout.addCenteredParagraph('and', page.docBoldFont, 8, COLOR_TEXT_DARK, 11);
 
-  layout.addFieldRow([
-    { id: 'locationOwnerName', label: 'Location Owner/Manager Name & Surname:', width: CONTENT_W, subtext: '(“the owner”)', gap: 0 }
-  ]);
-
-  layout.addSpace(2);
+  layout.addCenteredField('locationOwnerName', 'Location Owner/Manager Name & Surname:', 320, 18);
+  layout.addCenteredParagraph('(“the owner”)', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 12);
 
   const halfW = (CONTENT_W - 12) / 2;
   layout.addFieldRow([
