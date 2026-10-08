@@ -7,6 +7,9 @@
     // Helper to get base URL
     function getBaseUrl() {
         const loc = window.location;
+        if (loc.protocol === 'file:' || !loc.host) {
+            return 'https://cb-deliverables.web.app/';
+        }
         const port = loc.port ? `:${loc.port}` : '';
         return `${loc.protocol}//${loc.host}${loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1)}`;
     }
@@ -14,7 +17,10 @@
     // Generate Shareable URL from options
     function buildShareUrl(formPath, params) {
         const base = getBaseUrl() + formPath;
-        const url = new URL(base, window.location.origin);
+        const origin = (window.location.origin && window.location.origin !== 'null' && window.location.protocol !== 'file:')
+            ? window.location.origin
+            : 'https://cb-deliverables.web.app';
+        const url = new URL(base, origin);
         if (params.story) url.searchParams.set('story', params.story.trim());
         if (params.comm) url.searchParams.set('comm', params.comm.trim());
         if (params.producer) url.searchParams.set('producer', params.producer.trim());
@@ -34,11 +40,29 @@
         let defaultProducer = '';
         let defaultProducerEmail = '';
         try {
-            const cachedUserStr = localStorage.getItem('user_profile_cache') || Object.keys(localStorage).find(k => k.startsWith('user_profile_'));
-            if (cachedUserStr) {
-                const userObj = JSON.parse(localStorage.getItem(cachedUserStr) || '{}');
-                defaultProducer = userObj.displayName || `${userObj.firstName || ''} ${userObj.lastName || ''}`.trim();
-                defaultProducerEmail = userObj.email || '';
+            if (window.auth && typeof window.auth.getCurrentUser === 'function') {
+                const u = window.auth.getCurrentUser();
+                if (u && u.email) {
+                    defaultProducer = u.displayName || `${u.firstName || ''} ${u.lastName || ''}`.trim() || u.email;
+                    defaultProducerEmail = u.email;
+                }
+            }
+            if (!defaultProducerEmail) {
+                const profileKey = Object.keys(localStorage).find(k => k.startsWith('user_profile_') && k.includes('@'));
+                if (profileKey) {
+                    defaultProducerEmail = profileKey.replace('user_profile_', '').trim();
+                    const raw = localStorage.getItem(profileKey);
+                    const parsed = raw ? JSON.parse(raw) : {};
+                    defaultProducer = parsed.displayName || `${parsed.firstName || ''} ${parsed.lastName || ''}`.trim() || parsed.name || '';
+                }
+            }
+            if (!defaultProducerEmail) {
+                const cached = localStorage.getItem('user_profile_cache') || sessionStorage.getItem('cb_user_profile');
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    defaultProducer = parsed.displayName || `${parsed.firstName || ''} ${parsed.lastName || ''}`.trim() || parsed.name || '';
+                    defaultProducerEmail = parsed.email || '';
+                }
             }
         } catch (e) {}
 

@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script src="js/share_form.js?v=5.1.3"></script>
+    <script src="js/share_form.js?v=5.2.9"></script>
     <script type="module">
         import { checkAuth } from './auth.js?v=5.1.1';
         checkAuth().then(user => {
@@ -490,7 +490,7 @@
                         <span>📥</span> Blank PDF
                     </button>
                     <button type="button" class="btn-share-online" onclick="window.handleHubShare('Travel Booking Form', 'travel_booking.html', '✈️')">
-                        <span>🔗</span> Share Online Form with Traveler
+                        <span>🔗</span> Share Online Form with Traveller
                     </button>
                 </div>
             </div>
@@ -533,10 +533,45 @@
                 if (clearBtn) clearBtn.style.display = 'none';
             }
 
-            // Update all Fill Online links with ?comm=...&story=...
+            // Extract producer name and email from selected story or cached profile
+            let prodName = '';
+            let prodEmail = '';
+            const storySelect = document.getElementById('hubStorySelect');
+            if (storySelect && storySelect.value) {
+                try {
+                    const sel = JSON.parse(storySelect.value);
+                    if (sel.producerName) prodName = sel.producerName;
+                    if (sel.producerEmail) prodEmail = sel.producerEmail;
+                } catch (e) {}
+            }
+            if (!prodEmail) {
+                try {
+                    const uCacheKey = Object.keys(localStorage).find(k => k.startsWith('user_profile_') && k.includes('@'));
+                    if (uCacheKey) {
+                        const parsed = JSON.parse(localStorage.getItem(uCacheKey) || '{}');
+                        prodEmail = parsed.email || uCacheKey.replace('user_profile_', '');
+                        if (!prodName) prodName = parsed.displayName || `${parsed.firstName || ''} ${parsed.lastName || ''}`.trim() || parsed.name || '';
+                    }
+                    if (!prodEmail && window.auth && typeof window.auth.getCurrentUser === 'function') {
+                        const cu = window.auth.getCurrentUser();
+                        if (cu && cu.email) {
+                            prodEmail = cu.email;
+                            if (!prodName) prodName = cu.displayName || cu.email;
+                        }
+                    }
+                } catch (e) {}
+            }
+            if (!prodEmail) {
+                prodEmail = 'lezanne@carteblanche.co.za';
+                if (!prodName) prodName = 'Lezanne';
+            }
+
+            // Update all Fill Online links with ?comm=...&story=...&producer=...&producerEmail=...
             const queryParams = new URLSearchParams();
             if (comm) queryParams.set('comm', comm);
             if (story) queryParams.set('story', story);
+            if (prodName) queryParams.set('producer', prodName);
+            if (prodEmail) queryParams.set('producerEmail', prodEmail);
             const queryStr = queryParams.toString();
 
             document.querySelectorAll('.btn-fill-online').forEach(btn => {
@@ -553,13 +588,27 @@
         window.handleHubShare = function(formTitle, formUrl, icon) {
             const activeComm = (document.getElementById('hubCommInput')?.value || '').trim();
             const activeStory = (document.getElementById('hubStoryInput')?.value || '').trim();
+
+            let prodName = '';
+            let prodEmail = '';
+            const storySelect = document.getElementById('hubStorySelect');
+            if (storySelect && storySelect.value) {
+                try {
+                    const sel = JSON.parse(storySelect.value);
+                    if (sel.producerName) prodName = sel.producerName;
+                    if (sel.producerEmail) prodEmail = sel.producerEmail;
+                } catch (e) {}
+            }
+
             if (window.shareForm && typeof window.shareForm.openModal === 'function') {
                 window.shareForm.openModal({
                     formTitle,
                     formUrl,
                     icon,
                     defaultStory: activeStory,
-                    defaultComm: activeComm
+                    defaultComm: activeComm,
+                    defaultProducer: prodName,
+                    defaultProducerEmail: prodEmail
                 });
             }
         };
@@ -608,6 +657,18 @@
                             try { const f = form.getTextField('producer'); if (f) f.setText(pName); } catch (e) {}
                         }
                     }
+                } catch (e) {}
+
+                // Fill Date fields with today's date
+                try {
+                    const todayIso = new Date().toISOString().split('T')[0];
+                    try { const f = form.getTextField('participantSignedDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
+                    try { const f = form.getTextField('parentSignedDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
+                    try { const f = form.getTextField('ownerSignedDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
+                    try { const f = form.getTextField('ownerDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
+                    try { const f = form.getTextField('signedDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
+                    try { const f = form.getTextField('producerSignedDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
+                    try { const f = form.getTextField('producerDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
                 } catch (e) {}
 
                 const modifiedBytes = await pdfDoc.save();

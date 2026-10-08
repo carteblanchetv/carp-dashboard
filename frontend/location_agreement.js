@@ -1,5 +1,8 @@
-// location_agreement.js
+// location_agreement.js - v5.3.0
 document.addEventListener('DOMContentLoaded', () => {
+    // -------------------------------------------------------------------------
+    // 1. Elements & Canvas Setup (Owner & Producer Signatures)
+    // -------------------------------------------------------------------------
     const canvas = document.getElementById('signatureCanvas');
     const ctx = canvas.getContext('2d');
     const clearBtn = document.getElementById('clearSigBtn');
@@ -49,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     typeSigInput.addEventListener('input', renderTypedSignature);
     typeSigFont.addEventListener('change', renderTypedSignature);
 
-    // Draw on Canvas
     function getMousePos(canvasDom, touchOrMouseEvent) {
         const rect = canvasDom.getBoundingClientRect();
         const clientX = touchOrMouseEvent.touches ? touchOrMouseEvent.touches[0].clientX : touchOrMouseEvent.clientX;
@@ -78,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.addEventListener('mouseup', () => drawing = false);
     canvas.addEventListener('mouseleave', () => drawing = false);
 
-    // Touch events for mobile compatibility
     canvas.addEventListener('touchstart', (e) => {
         if (sigMethod !== 'draw') return;
         e.preventDefault();
@@ -108,139 +109,372 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // -------------------------------------------------------------------------
+    // 2. Auto-Fill Defaults (Today's Date & Active Producer)
+    // -------------------------------------------------------------------------
+    const todayStr = new Date().toISOString().split('T')[0];
+    const ownerSignedDateEl = document.getElementById('ownerSignedDate');
+    const prodSignedDateEl = document.getElementById('producerSignedDate');
+    if (ownerSignedDateEl && !ownerSignedDateEl.value) ownerSignedDateEl.value = todayStr;
+    if (prodSignedDateEl && !prodSignedDateEl.value) prodSignedDateEl.value = todayStr;
+
+    function getActiveProducerName() {
+        try {
+            const cacheKey = localStorage.getItem('user_profile_cache') ||
+                Object.keys(localStorage).find(k => k.startsWith('user_profile_'));
+            if (cacheKey) {
+                const u = JSON.parse(localStorage.getItem(cacheKey) || '{}');
+                const n = u.displayName || `${u.firstName || ''} ${u.lastName || ''}`.trim();
+                if (n) return n;
+            }
+            if (window.auth && typeof window.auth.getCurrentUser === 'function') {
+                const cur = window.auth.getCurrentUser();
+                if (cur) return cur.displayName || cur.email || '';
+            }
+        } catch (e) {
+            console.warn('[LOCATION-FORM] Could not resolve active user name:', e);
+        }
+        return '';
+    }
+
+    const prodNameInput = document.getElementById('producerName');
+    if (prodNameInput && !prodNameInput.value) {
+        const activeName = getActiveProducerName();
+        if (activeName) prodNameInput.value = activeName;
+    }
+
+    // -------------------------------------------------------------------------
+    // 3. Bi-directional Synchronization with Legacy / Alias Fields
+    // -------------------------------------------------------------------------
+    const locationOwnerNameInput = document.getElementById('locationOwnerName');
+    const locationAddressInput = document.getElementById('locationAddress');
+    const dateOfFilmingInput = document.getElementById('dateOfFilming');
+    const storyTitleInput = document.getElementById('storyTitle');
+    const commissionNumberInput = document.getElementById('commissionNumber');
+    const ownerSignedAtInput = document.getElementById('ownerSignedAt');
+
+    const ownerNameAlias = document.getElementById('ownerName');
+    const fullNameAlias = document.getElementById('fullName');
+    const propertyAddressAlias = document.getElementById('propertyAddress');
+    const filmingDateAlias = document.getElementById('filmingDate');
+    const storyNameAlias = document.getElementById('storyName');
+    const signedAtAlias = document.getElementById('signedAt');
+    const signedDateAlias = document.getElementById('signedDate');
+
+    function syncLegacyFields() {
+        const ownerVal = (locationOwnerNameInput?.value || '').trim();
+        if (ownerNameAlias) ownerNameAlias.value = ownerVal;
+        if (fullNameAlias) fullNameAlias.value = ownerVal;
+
+        const addrVal = (locationAddressInput?.value || '').trim();
+        if (propertyAddressAlias) propertyAddressAlias.value = addrVal;
+
+        const filmDateVal = (dateOfFilmingInput?.value || '').trim();
+        if (filmingDateAlias) filmingDateAlias.value = filmDateVal;
+
+        const storyVal = (storyTitleInput?.value || '').trim();
+        if (storyNameAlias) storyNameAlias.value = storyVal;
+
+        const signedAtVal = (ownerSignedAtInput?.value || '').trim();
+        if (signedAtAlias) signedAtAlias.value = signedAtVal;
+
+        const signedDateVal = (ownerSignedDateEl?.value || '').trim();
+        if (signedDateAlias) signedDateAlias.value = signedDateVal;
+    }
+
+    [locationOwnerNameInput, locationAddressInput, dateOfFilmingInput, storyTitleInput, commissionNumberInput, ownerSignedAtInput].forEach(inp => {
+        if (inp) inp.addEventListener('input', syncLegacyFields);
+    });
+
+    // Initial sync
+    syncLegacyFields();
+
+    // -------------------------------------------------------------------------
+    // 4. Dual-Sign PDF Generator (buildDualPdf)
+    // -------------------------------------------------------------------------
     async function buildDualPdf({ contributorSigImg, producerSigImg, producerName, isCountersignMode }) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const margin = 20;
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const margin = 18;
+            const contentWidth = pageWidth - (margin * 2);
 
-        const ownerName = document.getElementById('ownerName').value;
-        const ownerId = document.getElementById('ownerId').value;
-        const phone = document.getElementById('phone').value;
-        const email = document.getElementById('email').value;
-        const propertyAddress = document.getElementById('propertyAddress').value;
-        const filmingDate = document.getElementById('filmingDate').value;
-        const storyName = document.getElementById('storyName').value;
-        const commissionNumber = document.getElementById('commissionNumber') ? document.getElementById('commissionNumber').value.trim() : '';
+            const ownerName = (locationOwnerNameInput?.value || ownerNameAlias?.value || '').trim();
+            const address = (locationAddressInput?.value || propertyAddressAlias?.value || '').trim();
+            const filmDate = (dateOfFilmingInput?.value || filmingDateAlias?.value || '').trim();
+            const story = (storyTitleInput?.value || storyNameAlias?.value || '').trim();
+            const commNum = (commissionNumberInput?.value || '').trim();
+            const ownerPlace = (ownerSignedAtInput?.value || '').trim();
+            const ownerDate = (ownerSignedDateEl?.value || todayStr).trim();
 
-        // 0. Top Header Note
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8.5);
-        doc.setTextColor(15, 23, 42);
-        if (producerSigImg) {
-            doc.text('OFFICIALLY EXECUTED RELEASE AGREEMENT', pageWidth / 2, 8, { align: 'center' });
-        } else {
-            doc.text('OWNER SIGNED • PENDING PRODUCER COUNTERSIGNATURE', pageWidth / 2, 8, { align: 'center' });
-        }
+            const prodPlace = (document.getElementById('producerSignedAt')?.value || '').trim();
+            const prodDate = (prodSignedDateEl?.value || todayStr).trim();
+            const resolvedProdName = (producerName || prodNameInput?.value || getActiveProducerName() || 'Producer').trim();
 
-        // 1. Branding Logos
-        const caLogo = (typeof getBlackLogo === 'function' ? getBlackLogo() : (typeof CAP_LOGO_B64 !== 'undefined' ? CAP_LOGO_B64 : null));
-        if (caLogo) {
-            const props = doc.getImageProperties(caLogo);
-            const caWidth = 38;
-            const caHeight = caWidth * (props.height / props.width);
-            doc.addImage(caLogo, 'PNG', margin, 12, caWidth, caHeight);
-        }
-        if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
-            const props = doc.getImageProperties(CB_LOGO_B64);
-            const cbWidth = 22;
-            const cbHeight = cbWidth * (props.height / props.width);
-            doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, 11, cbWidth, cbHeight);
-        }
-
-        // 2. Title & Header Line
-        doc.setTextColor(0, 143, 190);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(18);
-        doc.text('LOCATION AGREEMENT', margin, 38);
-
-        doc.setDrawColor(0, 143, 190);
-        doc.setLineWidth(0.8);
-        doc.line(margin, 42, pageWidth - margin, 42);
-
-        // Property Owner / Representative Details
-        doc.setTextColor(15, 23, 42);
-        doc.setFontSize(11);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Property Owner / Representative Details', margin, 52);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text(`Full Name: ${ownerName}`, margin, 60);
-        doc.text(`ID/Passport Number: ${ownerId}`, margin, 68);
-        doc.text(`Phone Number: ${phone}`, margin, 76);
-        doc.text(`Email Address: ${email}`, margin, 84);
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(11);
-        doc.text('Location & Filming Details', margin, 96);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
-        doc.text(`Property Address: ${propertyAddress}`, margin, 104);
-        doc.text(`Filming Date: ${filmingDate}`, margin, 112);
-        doc.text(`Story / Project: ${storyName}`, margin, 120);
-        doc.text(`Commission Number: ${commissionNumber || 'N/A'}`, margin, 128);
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(11);
-        doc.text('Grant of Rights', margin, 140);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9.5);
-        const declarationText = 'I hereby grant Combined Artists and Carte Blanche and their assignees the right to enter and film on the property described above. This includes the right to photograph and record both interior and exterior scenes, and to use the recordings in any manner worldwide, in perpetuity.';
-        const splitText = doc.splitTextToSize(declarationText, 170);
-        doc.text(splitText, margin, 148);
-
-        // Signatures Section (Side by Side)
-        const sigY = 178;
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(10);
-        doc.text('Owner / Representative Signature:', margin, sigY);
-        if (contributorSigImg) {
-            doc.addImage(contributorSigImg, 'PNG', margin, sigY + 4, 70, 20);
-        }
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.text(`Date: ${new Date().toLocaleDateString('en-ZA')}`, margin, sigY + 30);
-
-        // Producer Column
-        const prodX = 115;
-        if (producerSigImg) {
+            // 0. Top Header Status Note
             doc.setFont('helvetica', 'bold');
-            doc.setFontSize(10);
-            doc.text('Producer Counter-Signature:', prodX, sigY);
-            doc.addImage(producerSigImg, 'PNG', prodX, sigY + 4, 70, 20);
+            doc.setFontSize(8);
+            doc.setTextColor(15, 23, 42);
+            if (producerSigImg) {
+                doc.text('OFFICIALLY EXECUTED RELEASE AGREEMENT', pageWidth / 2, 7.5, { align: 'center' });
+            } else {
+                doc.text('OWNER SIGNED • PENDING PRODUCER COUNTERSIGNATURE', pageWidth / 2, 7.5, { align: 'center' });
+            }
+
+            // 1. Branding Logos
+            try {
+                let caLogo = null;
+                try {
+                    if (typeof getBlackLogo === 'function') caLogo = getBlackLogo();
+                } catch (e) {}
+                if (!caLogo && typeof CAP_LOGO_B64 !== 'undefined') caLogo = CAP_LOGO_B64;
+                if (caLogo) {
+                    const props = doc.getImageProperties(caLogo);
+                    const caWidth = 34;
+                    const caHeight = (props && props.width > 0) ? caWidth * (props.height / props.width) : 13;
+                    doc.addImage(caLogo, 'PNG', margin, 11, caWidth, caHeight, undefined, 'FAST');
+                }
+            } catch (e) {}
+
+            try {
+                if (typeof CB_LOGO_B64 !== 'undefined' && CB_LOGO_B64) {
+                    const props = doc.getImageProperties(CB_LOGO_B64);
+                    const cbWidth = 20;
+                    const cbHeight = (props && props.width > 0) ? cbWidth * (props.height / props.width) : 16;
+                    doc.addImage(CB_LOGO_B64, 'PNG', pageWidth - margin - cbWidth, 10, cbWidth, cbHeight, undefined, 'FAST');
+                }
+            } catch (e) {}
+
+            // 2. Title & Horizontal Rule
+            let y = 30;
+            doc.setTextColor(0, 143, 190);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(16);
+            doc.text('LOCATION AGREEMENT', margin, y);
+
+            y += 3;
+            doc.setDrawColor(0, 143, 190);
+            doc.setLineWidth(0.6);
+            doc.line(margin, y, pageWidth - margin, y);
+
+            // 3. Parties Block
+            y += 6;
+            doc.setFontSize(8.5);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(71, 85, 105);
+            doc.text('This Agreement is made by and between', margin, y);
+
+            y += 4.5;
+            doc.setFontSize(9.5);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 143, 190);
+            doc.text('CARTE BLANCHE & M-NET', margin, y);
+
+            y += 4;
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'italic');
+            doc.setTextColor(100, 116, 139);
+            doc.text('(“the producer”)', margin, y);
+
+            y += 4.5;
+            doc.setFontSize(8.5);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(71, 85, 105);
+            doc.text('and', margin, y);
+
+            y += 5;
+            doc.setTextColor(15, 23, 42);
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9);
-            doc.text(`Signed by: ${producerName || 'Producer'}`, prodX, sigY + 30);
-            doc.text(`Date: ${new Date().toLocaleDateString('en-ZA')}`, prodX, sigY + 35);
-        } else {
+            doc.text(`Location Owner/Manager Name & Surname:  ${ownerName || '________________________________________'} (“the owner”)`, margin, y);
+
+            // 4. Details
+            y += 5.5;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            doc.text(`Commission Number:  ${commNum || '________________'}`, margin, y);
+            doc.text(`Story Title:  ${story || '___________________________'}`, margin + 85, y);
+
+            // 5. Legal Clauses
+            y += 7;
+            const clauses = [
+                {
+                    title: 'LOCATION:',
+                    text: 'The owner grants the producer and its employees, agents and contractors the right to enter and use the property located at the below address ("location") on the date below ("date") for the purpose of filming, recording and/or photographing scenes for Carte Blanche ("production").'
+                },
+                {
+                    title: 'USE OF LOCATION:',
+                    text: 'The producer shall be permitted to photograph, film and record at the location and to bring equipment and personnel necessary for such purposes. The producer may depict the location and any signs, logos or identifiers included therein, in the production at the producer\'s discretion.'
+                },
+                {
+                    title: 'CONDITION OF LOCATION:',
+                    text: 'The producer agrees to exercise reasonable care in the use of the location and shall return it to its original condition.'
+                },
+                {
+                    title: 'INDEMNIFICATION:',
+                    text: 'The producer agrees to indemnify, defend and hold harmless, the owner from any and all claims, damages, liabilities and expenses arising from the producer\'s use of the location, except to the extent they result from the owner\'s negligence or wilful misconduct.'
+                }
+            ];
+
+            clauses.forEach(c => {
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(8.5);
+                doc.setTextColor(0, 143, 190);
+                doc.text(c.title, margin, y);
+                y += 4;
+
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8.5);
+                doc.setTextColor(30, 41, 59);
+                const splitText = doc.splitTextToSize(c.text, contentWidth);
+                doc.text(splitText, margin, y);
+                y += splitText.length * 4 + 2;
+            });
+
+            // 6. Location Address & Date of Filming
+            y += 2;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            doc.setTextColor(15, 23, 42);
+            doc.text(`Location Address:  ${address || '____________________________________________________________________'}`, margin, y);
+            y += 5;
+            doc.text(`Date of Filming:  ${filmDate || '____________________________________'}`, margin, y);
+            y += 6;
+
+            // 7. Execution Sections (THE OWNER & THE PRODUCER)
+            const colWidth = (contentWidth - 14) / 2;
+            const ownerColX = margin;
+            const prodColX = margin + colWidth + 14;
+
+            doc.setDrawColor(203, 213, 225);
+            doc.setLineWidth(0.4);
+            doc.line(margin, y, pageWidth - margin, y);
+            y += 5;
+
+            // Headings
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(10);
-            doc.text('Producer Counter-Signature:', prodX, sigY);
-            doc.setFont('helvetica', 'italic');
-            doc.setFontSize(9);
-            doc.setTextColor(100, 116, 139);
-            doc.text('[Awaiting Producer Counter-Signature]', prodX, sigY + 12);
+            doc.setTextColor(0, 143, 190);
+            doc.text('THE OWNER', ownerColX, y);
+            doc.text('THE PRODUCER', prodColX, y);
+
+            y += 5;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8.5);
             doc.setTextColor(15, 23, 42);
+
+            // Signed at
+            doc.text(`Signed at: ${ownerPlace || '________________________'}`, ownerColX, y);
+            doc.text(`Signed at: ${prodPlace || '________________________'}`, prodColX, y);
+
+            y += 4.5;
+            // Date
+            doc.text(`Date: ${ownerDate || '________________________'}`, ownerColX, y);
+            doc.text(`Date: ${prodDate || '________________________'}`, prodColX, y);
+
+            y += 4.5;
+            // Signatures
+            doc.setFont('helvetica', 'bold');
+            doc.text('Owner/Manager Signature:', ownerColX, y);
+            doc.text('Producer Signature:', prodColX, y);
+
+            // Images / Placeholder
+            if (contributorSigImg) {
+                try {
+                    doc.addImage(contributorSigImg, 'PNG', ownerColX, y + 2, colWidth - 5, 20, undefined, 'FAST');
+                } catch (e) {
+                    console.warn('[PDF] Failed to add owner signature image:', e);
+                }
+            } else {
+                doc.setFont('helvetica', 'italic');
+                doc.setFontSize(8);
+                doc.setTextColor(100, 116, 139);
+                doc.text('[Awaiting Owner Signature]', ownerColX, y + 10);
+                doc.setTextColor(15, 23, 42);
+            }
+
+            if (producerSigImg) {
+                try {
+                    doc.addImage(producerSigImg, 'PNG', prodColX, y + 2, colWidth - 5, 20, undefined, 'FAST');
+                } catch (e) {
+                    console.warn('[PDF] Failed to add producer signature image:', e);
+                }
+            } else {
+                doc.setFont('helvetica', 'italic');
+                doc.setFontSize(8);
+                doc.setTextColor(100, 116, 139);
+                doc.text('[Awaiting Producer Counter-Signature]', prodColX, y + 10);
+                doc.setTextColor(15, 23, 42);
+            }
+
+            // Signed by note under producer column
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            doc.setTextColor(100, 116, 139);
+            doc.text(`Producer: ${resolvedProdName}`, prodColX, y + 24);
+
+            // Footer note
+            doc.setFontSize(7.5);
+            doc.setTextColor(148, 163, 184);
+            doc.text('Combined Artists CC & Electronic Media Network Limited (M-Net)  •  Form Ref: CB-LOC-2026', margin, pageHeight - 8);
+
+            return doc.output('blob');
+        } catch (fatalErr) {
+            console.error('[PDF] Error in primary PDF generation, building fallback:', fatalErr);
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
+            doc.setFontSize(16);
+            doc.text('LOCATION AGREEMENT', 20, 20);
+            doc.setFontSize(10);
+            doc.text(`Owner: ${locationOwnerNameInput?.value || 'N/A'}`, 20, 35);
+            doc.text(`Address: ${locationAddressInput?.value || 'N/A'}`, 20, 45);
+            doc.text(`Story Title: ${storyTitleInput?.value || 'N/A'}`, 20, 55);
+            doc.text(`Commission: ${commissionNumberInput?.value || 'N/A'}`, 20, 65);
+            if (contributorSigImg) {
+                try { doc.addImage(contributorSigImg, 'PNG', 20, 75, 70, 20, undefined, 'FAST'); } catch (e) {}
+            }
+            if (producerSigImg) {
+                try { doc.addImage(producerSigImg, 'PNG', 115, 75, 70, 20, undefined, 'FAST'); } catch (e) {}
+            }
+            return doc.output('blob');
         }
-
-        return doc.output('blob');
     }
 
+    // -------------------------------------------------------------------------
+    // 5. onSubmissionLoaded (For countersign mode)
+    // -------------------------------------------------------------------------
     function onSubmissionLoaded(sub) {
-        if (document.getElementById('ownerName')) document.getElementById('ownerName').value = sub.ownerName || sub.contributorName || '';
-        if (document.getElementById('ownerId')) document.getElementById('ownerId').value = sub.ownerId || '';
-        if (document.getElementById('phone')) document.getElementById('phone').value = sub.phone || '';
-        if (document.getElementById('email')) document.getElementById('email').value = sub.email || '';
-        if (document.getElementById('propertyAddress')) document.getElementById('propertyAddress').value = sub.propertyAddress || '';
-        if (document.getElementById('filmingDate')) document.getElementById('filmingDate').value = sub.filmingDate || '';
-        if (document.getElementById('storyName')) document.getElementById('storyName').value = sub.storyName || sub.storyTitle || '';
-        if (document.getElementById('commissionNumber') && sub.commissionNumber) document.getElementById('commissionNumber').value = sub.commissionNumber;
-        if (document.getElementById('producerName') && sub.producerName) document.getElementById('producerName').value = sub.producerName;
-        if (document.getElementById('producerEmail') && sub.producerEmail) document.getElementById('producerEmail').value = sub.producerEmail;
+        if (!sub) return;
+
+        const ownerName = sub.locationOwnerName || sub.ownerName || sub.fullName || sub.contributorName || '';
+        if (locationOwnerNameInput) locationOwnerNameInput.value = ownerName;
+
+        const addr = sub.locationAddress || sub.propertyAddress || '';
+        if (locationAddressInput) locationAddressInput.value = addr;
+
+        const fDate = sub.dateOfFilming || sub.filmingDate || '';
+        if (dateOfFilmingInput) dateOfFilmingInput.value = fDate;
+
+        const story = sub.storyTitle || sub.storyName || '';
+        if (storyTitleInput) storyTitleInput.value = story;
+
+        const comm = sub.commissionNumber || sub.commNum || '';
+        if (commissionNumberInput) commissionNumberInput.value = comm;
+
+        const ownerSignedAt = sub.ownerSignedAt || sub.signedAt || '';
+        if (ownerSignedAtInput) ownerSignedAtInput.value = ownerSignedAt;
+
+        const ownerSignedDate = sub.ownerSignedDate || sub.signedDate || '';
+        if (ownerSignedDateEl && ownerSignedDate) ownerSignedDateEl.value = ownerSignedDate;
+
+        syncLegacyFields();
     }
 
-    // Initialize Universal Dual Signing Flow
+    // -------------------------------------------------------------------------
+    // 6. Initialize Universal Dual-Sign Flow
+    // -------------------------------------------------------------------------
     if (window.countersignFlow) {
         window.countersignFlow.initDualSigning({
             formId: 'locationAgreementForm',
@@ -248,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formTitle: 'Location Agreement',
             contributorSigCanvasId: 'signatureCanvas',
             contributorClearBtnId: 'clearSigBtn',
-            contributorSigLabel: 'Owner / Representative Signature',
+            contributorSigLabel: 'Owner/Manager Signature',
             onSubmissionLoaded,
             buildDualPdf,
             standardSubmitEndpoint: '/api/send-location-agreement'

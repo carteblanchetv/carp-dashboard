@@ -322,10 +322,15 @@ async function sendNotificationEmail(fromName, subject, html, recipientList, att
     }
 
     if (!sentViaGraph) {
-        console.log(`[NOTIFY] Using legacy SMTP to send email (directTo: ${directTo}) to: ${recipientList}`);
+        let targetTo = directTo ? recipientList : process.env.EMAIL_USER;
+        if (!targetTo || (typeof targetTo === 'string' && !targetTo.trim())) {
+            console.warn('[NOTIFY] Empty recipientList provided, falling back to lezanne@carteblanche.co.za');
+            targetTo = 'lezanne@carteblanche.co.za';
+        }
+        console.log(`[NOTIFY] Using legacy SMTP to send email (directTo: ${directTo}) to: ${targetTo}`);
         const mailOptions = {
             from: `"${fromName}" <${process.env.EMAIL_USER}>`,
-            to: directTo ? recipientList : process.env.EMAIL_USER,
+            to: targetTo,
             bcc: directTo ? undefined : recipientList,
             subject: subject,
             html: html,
@@ -487,11 +492,25 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
         const recipientList = Array.from(recipients).join(', ');
         const fromName = getFormFromName(type);
 
+        // Deduplicate attachments to prevent identical files from being attached multiple times
+        let safeAttachments = [];
+        if (Array.isArray(attachments) && attachments.length > 0) {
+            const seen = new Set();
+            for (const att of attachments) {
+                const len = att.content ? (att.content.length || att.content.byteLength || 0) : 0;
+                const key = `${att.filename || 'attachment'}_${len}`;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    safeAttachments.push(att);
+                }
+            }
+        }
+
         try {
-            await sendNotificationEmail(fromName, subject, html, recipientList, attachments, directTo);
+            await sendNotificationEmail(fromName, subject, html, recipientList, safeAttachments, directTo);
         } catch (sendErr) {
             console.error(`[NOTIFY] All email attempts failed for type '${type}': ${sendErr.message}. Queuing in Firestore...`);
-            await queueFailedEmail(type, subject, html, attachments, recipientList, sendErr.message);
+            await queueFailedEmail(type, subject, html, safeAttachments, recipientList, sendErr.message);
         }
     } catch (err) {
         console.error(`[NOTIFY] FAILED for type '${type}': ${err.message}`);
@@ -573,6 +592,114 @@ function buildFormEmailDetails({ formTitle, commissionNumber, storyTitle, produc
   return { subject, html };
 }
 
+/**
+ * Resilient helper to resolve producer name and email from fields, Firestore proposals, user token, or submission data
+ */
+async function resolveProducerDetails({ req, fields = {}, commissionNumber, producerName, producerEmail, fallbackSubData = {} }) {
+  let finalEmail = (producerEmail || fields.producerEmail || fields.producer_email || fields.producerSignerEmail || fields.prodSignerEmail || fallbackSubData.producerEmail || fallbackSubData.producerSignerEmail || '').trim();
+  let finalName = (producerName || fields.producerName || fields.producer || fields.producerSignerName || fields.prodSignerName || fallbackSubData.producerName || fallbackSubData.producerSignerName || '').trim();
+
+  const comm = (commissionNumber || fields.commissionNumber || fields.commission_number || fallbackSubData.commissionNumber || '').trim();
+
+  // 1. Query Firestore proposal by commission number if email or name is missing
+  if ((!finalEmail || !finalName || finalName === 'Producer') && comm && comm !== 'N/A' && comm !== '—') {
+    try {
+      let propSnap = await admin.firestore().collection('proposals')
+        .where('commissionNumber', '==', comm)
+        .limit(1)
+        .get();
+
+      if (propSnap.empty && comm.toLowerCase() !== comm) {
+        propSnap = await admin.firestore().collection('proposals')
+          .where('commissionNumber', '==', comm.toUpperCase())
+          .limit(1)
+          .get();
+      }
+
+      if (!propSnap.empty) {
+        const pData = propSnap.docs[0].data();
+        if (!finalEmail) {
+          const rawEmail = pData.producerEmail || pData.producer_email || pData.submittedByEmail || (pData.submittedBy && typeof pData.submittedBy === 'string' && pData.submittedBy.includes('@') ? pData.submittedBy : '');
+          if (typeof rawEmail === 'string' && rawEmail.includes('@')) {
+            finalEmail = rawEmail.trim();
+          }
+        }
+        if (!finalName || finalName === 'Producer') {
+          const rawName = pData.producerName || pData.producer || (pData.submittedByName && pData.submittedBySurname ? `${pData.submittedByName} ${pData.submittedBySurname}` : pData.submittedByName) || '';
+          if (typeof rawName === 'string' && rawName.trim()) {
+            finalName = rawName.trim();
+          }
+        }
+
+        // If proposal has submittedBy (UID) but no email, look up user document
+        if (!finalEmail && pData.submittedBy && typeof pData.submittedBy === 'string' && !pData.submittedBy.includes('@')) {
+          try {
+            let uDoc = await admin.firestore().collection('users').doc(pData.submittedBy).get();
+            if (!uDoc.exists) {
+              const uQuery = await admin.firestore().collection('users').where('uid', '==', pData.submittedBy).limit(1).get();
+              if (!uQuery.empty) uDoc = uQuery.docs[0];
+            }
+            if (uDoc.exists) {
+              const uData = uDoc.data();
+              const decEmail = decrypt(uData.email);
+              if (typeof decEmail === 'string' && decEmail.includes('@')) {
+                finalEmail = decEmail.trim();
+              } else if (typeof uData.email === 'string' && uData.email.includes('@')) {
+                finalEmail = uData.email.trim();
+              } else if (uDoc.id && uDoc.id.includes('@')) {
+                finalEmail = uDoc.id.trim();
+              }
+
+              if (!finalName || finalName === 'Producer') {
+                const decName = decrypt(uData.name);
+                const fullName = `${uData.firstName || ''} ${uData.lastName || ''}`.trim();
+                const resolvedUName = fullName || (typeof decName === 'string' ? decName.trim() : '') || (typeof uData.name === 'string' ? uData.name.trim() : '');
+                if (resolvedUName) finalName = resolvedUName;
+              }
+            }
+          } catch (e) {
+            console.warn('[RESOLVE-PRODUCER] Error querying user doc for producer lookup:', e.message);
+          }
+        }
+
+        console.log(`[RESOLVE-PRODUCER] Found proposal for Comm #${comm}: '${finalName}' <${finalEmail}>`);
+      }
+    } catch (lookupErr) {
+      console.warn(`[RESOLVE-PRODUCER] Proposal lookup failed for Comm #${comm}:`, lookupErr.message);
+    }
+  }
+
+  // 2. Fallback to authenticated user (if producer is logged in)
+  if (!finalEmail && req && req.user && req.user.email) {
+    finalEmail = req.user.email.trim();
+  }
+  if ((!finalName || finalName === 'Producer') && req && req.user) {
+    const fullName = `${req.user.firstName || ''} ${req.user.lastName || ''}`.trim();
+    finalName = fullName || req.user.name || req.user.displayName || req.user.email;
+  }
+
+  // 3. Fallback to submitter info if email present
+  if (!finalEmail && fields.submittedByEmail && typeof fields.submittedByEmail === 'string' && fields.submittedByEmail.includes('@') && !fields.submittedByEmail.includes('@guest')) {
+    finalEmail = fields.submittedByEmail.trim();
+  }
+  if (!finalEmail && fallbackSubData.submittedByEmail && typeof fallbackSubData.submittedByEmail === 'string' && fallbackSubData.submittedByEmail.includes('@') && !fallbackSubData.submittedByEmail.includes('@guest')) {
+    finalEmail = fallbackSubData.submittedByEmail.trim();
+  }
+
+  // 4. Absolute production safety fallback: ensure an actionable email is ALWAYS resolved
+  if (!finalEmail || !finalEmail.includes('@') || finalEmail.includes('@guest')) {
+    finalEmail = 'lezanne@carteblanche.co.za';
+    if (!finalName || finalName === 'Producer') {
+      finalName = 'Lezanne';
+    }
+  }
+
+  return {
+    producerEmail: finalEmail,
+    producerName: finalName || 'Producer'
+  };
+}
+
 async function sendCountersignNotification({
   submissionId,
   formType,
@@ -584,9 +711,20 @@ async function sendCountersignNotification({
   contributorName,
   req
 }) {
-  if (!producerEmail) {
-    console.warn(`[COUNTERSIGN] No producerEmail provided for submission ${submissionId}. Skipping countersign email.`);
-    return;
+  const resolved = await resolveProducerDetails({
+    req,
+    fields: { producerName, producerEmail, commissionNumber },
+    commissionNumber,
+    producerName,
+    producerEmail
+  });
+
+  let resolvedProducerEmail = (resolved.producerEmail || '').trim();
+  let resolvedProducerName = (resolved.producerName || '').trim() || 'Producer';
+
+  if (!resolvedProducerEmail || !resolvedProducerEmail.includes('@')) {
+    resolvedProducerEmail = 'lezanne@carteblanche.co.za';
+    if (!resolvedProducerName || resolvedProducerName === 'Producer') resolvedProducerName = 'Lezanne';
   }
 
   const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
@@ -607,7 +745,7 @@ async function sendCountersignNotification({
   const comm = commissionNumber || 'N/A';
   const story = storyTitle || 'Story';
   const contrib = contributorName || 'Contributor';
-  const prod = producerName || 'Producer';
+  const prod = resolvedProducerName || 'Producer';
 
   const subject = `PLEASE SIGN: ${formTitle} - ${comm} - ${story}`;
   const html = `
@@ -645,14 +783,21 @@ async function sendCountersignNotification({
     </div>
   `.trim();
 
-  await sendNotificationEmail(
-    'Forms Hub - Carte Blanche',
-    subject,
-    html,
-    producerEmail,
-    [],
-    true
-  );
+  try {
+    console.log(`[COUNTERSIGN] Sending countersign notification for submission ${submissionId} to ${resolvedProducerEmail}`);
+    await sendNotificationEmail(
+      'Forms Hub - Carte Blanche',
+      subject,
+      html,
+      resolvedProducerEmail,
+      [],
+      true
+    );
+    console.log(`[COUNTERSIGN] Notification successfully sent to ${resolvedProducerEmail}`);
+  } catch (notifyErr) {
+    console.error(`[COUNTERSIGN] Email notification failed for ${resolvedProducerEmail}: ${notifyErr.message}. Queuing in Firestore...`);
+    await queueFailedEmail(formType, subject, html, [], resolvedProducerEmail, notifyErr.message);
+  }
 }
 
 const app = express();
@@ -1430,7 +1575,18 @@ async function processMultiFileStorageAndFirestore(req, formType, subfolder, fil
   const submissionPath = `submissions/${subfolder}/${timestamp}`;
   const fileRecords = [];
 
-  for (const file of files) {
+  // Deduplicate files with identical contents/lengths if duplicates were passed
+  const uniqueFiles = [];
+  const seenBuffers = new Set();
+  for (const f of files) {
+    const key = `${f.filename}_${f.buffer ? f.buffer.length : 0}`;
+    if (!seenBuffers.has(key)) {
+      seenBuffers.add(key);
+      uniqueFiles.push(f);
+    }
+  }
+
+  for (const file of uniqueFiles) {
     const storagePath = `${submissionPath}/${file.filename}`;
     
     // Encrypt the file buffer before saving
@@ -1677,8 +1833,16 @@ app.post('/api/countersign-form', async (req, res) => {
     };
     const formTitle = formTitleMap[formType] || 'Release Agreement';
 
-    const pName = producerName || subData.producerName || 'Producer';
-    const pEmail = producerEmail || subData.producerEmail || '';
+    const resolvedProd = await resolveProducerDetails({
+      req,
+      fields,
+      commissionNumber: subData.commissionNumber,
+      producerName: producerName || subData.producerName,
+      producerEmail: producerEmail || subData.producerEmail,
+      fallbackSubData: subData
+    });
+    const pName = resolvedProd.producerName;
+    const pEmail = resolvedProd.producerEmail;
     const commNum = subData.commissionNumber || 'N/A';
     const storyTitle = subData.storyName || subData.storyTitle || 'Story';
     const submitterEmail = subData.submittedByEmail || subData.email || '';
@@ -1704,16 +1868,40 @@ app.post('/api/countersign-form', async (req, res) => {
       });
     }
 
-    // Update Firestore submission record
+    // Update Firestore submission record with updated fields and countersignature
     const updatePayload = {
       status: 'completed',
-      producerSignature: producerSignature || null,
+      producerSignature: producerSignature || subData.producerSignature || null,
       producerName: pName,
       producerEmail: pEmail,
       countersignedAt: admin.firestore.FieldValue.serverTimestamp(),
       completedAt: admin.firestore.FieldValue.serverTimestamp(),
       files: fileRecords
     };
+
+    // Persist any edited fields from resubmission (e.g., typos, story name, ID numbers, address)
+    const editableFieldKeys = [
+      'storyName', 'storyTitle', 'commissionNumber',
+      'fullName', 'contributorName', 'artistName', 'guardianName', 'ownerName', 'licensorName',
+      'idNumber', 'guardianId', 'ownerId',
+      'phone', 'email',
+      'minorName', 'minorAge',
+      'propertyAddress', 'filmingDate',
+      'trackTitle', 'trackDuration', 'publisherName',
+      'licensorEntity', 'footageDescription', 'courtesyCredit', 'broadcastDate'
+    ];
+
+    editableFieldKeys.forEach(k => {
+      if (fields[k] !== undefined && fields[k] !== null && String(fields[k]).trim() !== '') {
+        updatePayload[k] = fields[k].trim();
+      }
+    });
+
+    // Ensure story title and contributor name aliases are kept in sync
+    if (fields.storyName && !fields.storyTitle) updatePayload.storyTitle = fields.storyName.trim();
+    if (fields.storyTitle && !fields.storyName) updatePayload.storyName = fields.storyTitle.trim();
+    if (fields.fullName && !fields.contributorName) updatePayload.contributorName = fields.fullName.trim();
+    if (fields.contributorName && !fields.fullName) updatePayload.fullName = fields.contributorName.trim();
 
     if (!subData.proposalId && commNum && commNum.trim() && commNum.trim() !== 'N/A' && commNum.trim() !== '—') {
       try {
@@ -1738,19 +1926,36 @@ app.post('/api/countersign-form', async (req, res) => {
       producerName: pName
     });
 
-    const attachments = (files && files.length > 0) ? files.map(f => ({
+    const attachments = (files && files.length > 0) ? [{
       filename: buildPdfFilename(commNum, storyTitle, formTitle),
-      content: f.buffer,
-      contentType: f.mimeType || 'application/pdf'
-    })) : [];
+      content: files[0].buffer,
+      contentType: files[0].mimeType || 'application/pdf'
+    }] : [];
 
-    // Now that BOTH parties have signed, notify release@carteblanche.co.za!
+    // Now that BOTH parties have signed, notify release@carteblanche.co.za and all relevant recipients!
+    const rawExtraRecipients = [
+      submitterEmail,
+      pEmail,
+      (req.user && req.user.email),
+      fields.producerEmail,
+      fields.producerSignerEmail,
+      fields.prodSignerEmail,
+      subData.producerEmail
+    ].filter(email => email && typeof email === 'string' && email.includes('@') && !email.includes('@guest'));
+
+    if (rawExtraRecipients.length === 0 || !rawExtraRecipients.some(e => e.toLowerCase().includes('carteblanche'))) {
+      rawExtraRecipients.push('lezanne@carteblanche.co.za');
+    }
+
+    const uniqueExtraRecipients = Array.from(new Set(rawExtraRecipients.map(e => e.toLowerCase().trim())));
+    console.log(`[COUNTERSIGN-FORM] Dispatching finalized ${formTitle} for Comm #${commNum} to extraRecipients:`, uniqueExtraRecipients);
+
     await notifyRelevantUsers(
       formType,
       subject,
       html,
       attachments,
-      [submitterEmail, pEmail].filter(Boolean)
+      uniqueExtraRecipients
     );
 
     res.json({ success: true, status: 'completed', message: 'Agreement successfully countersigned and dispatched.' });
@@ -1765,13 +1970,27 @@ app.post('/api/send-footage-release-agreement', async (req, res) => {
     const { fields, files } = await parseMultipart(req);
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
-    const { licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName, commissionNumber, broadcastDate } = fields;
+    const footageOwnerName = fields.footageOwnerName || fields.licensorName || fields.ownerName || fields.fullName || 'Footage Owner';
+    const footageOwnerCompany = fields.footageOwnerCompany || fields.licensorEntity || '';
+    const footageDescription = fields.footageDescription || '';
+    const courtesyCredit = fields.courtesyCredit || '';
+    const broadcastDated = fields.broadcastDated || fields.broadcastDate || '';
+    const phone = fields.phone || '';
+    const email = fields.email || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
-    const producerEmail = fields.producerEmail || fields.producer_email;
 
-    const commNum = commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
-    const producerName = getProducerName(req, fields);
+    const commNum = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = fields.storyTitle || fields.storyName || 'Story';
+
+    const resolvedProd = await resolveProducerDetails({
+      req,
+      fields,
+      commissionNumber: commNum,
+      producerName: fields.producerName,
+      producerEmail: fields.producerEmail
+    });
+    const producerEmail = resolvedProd.producerEmail;
+    const producerName = resolvedProd.producerName;
 
     const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
     const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
@@ -1779,8 +1998,22 @@ app.post('/api/send-footage-release-agreement', async (req, res) => {
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'footage_agreement', 'footage_agreement', files,
       {
-        licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit,
-        storyName: storyTitle, commissionNumber: commNum, broadcastDate, producerName, producerEmail,
+        footageOwnerName,
+        footageOwnerCompany,
+        licensorName: footageOwnerName,
+        licensorEntity: footageOwnerCompany,
+        ownerName: footageOwnerName,
+        phone,
+        email,
+        footageDescription,
+        courtesyCredit,
+        storyTitle,
+        storyName: storyTitle,
+        commissionNumber: commNum,
+        broadcastDated,
+        broadcastDate: broadcastDated,
+        producerName,
+        producerEmail,
         status: formStatus,
         participantSignature: fields.participantSignature || null,
         producerSignature: hasProducerSig ? fields.producerSignature : null,
@@ -1801,11 +2034,11 @@ app.post('/api/send-footage-release-agreement', async (req, res) => {
         'footage_agreement',
         subject,
         html,
-        files.map(f => ({
+        [{
           filename: buildPdfFilename(commNum, storyTitle, 'Footage Agreement'),
-          content: f.buffer,
-          contentType: f.mimeType
-        })),
+          content: files[0].buffer,
+          contentType: files[0].mimeType || 'application/pdf'
+        }],
         [submitterEmail, producerEmail].filter(Boolean)
       );
     } else {
@@ -1817,7 +2050,7 @@ app.post('/api/send-footage-release-agreement', async (req, res) => {
         storyTitle,
         producerName,
         producerEmail,
-        contributorName: licensorName,
+        contributorName: footageOwnerName,
         req
       });
     }
@@ -1834,13 +2067,25 @@ app.post('/api/send-participant-release', async (req, res) => {
     const { fields, files } = await parseMultipart(req);
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
-    const { fullName, idNumber, phone, email, storyName } = fields;
+    const fullName = fields.participantName || fields.participant || fields.fullName || 'Participant';
+    const idNumber = fields.idNumber || '';
+    const phone = fields.contactNumber || fields.phone || '';
+    const email = fields.email || '';
+    const storyTitle = fields.storyTitle || fields.storyName || 'Story';
+    const storyName = storyTitle;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
-    const producerEmail = fields.producerEmail || fields.producer_email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
-    const producerName = getProducerName(req, fields);
+
+    const resolvedProd = await resolveProducerDetails({
+      req,
+      fields,
+      commissionNumber,
+      producerName: fields.producerName,
+      producerEmail: fields.producerEmail
+    });
+    const producerEmail = resolvedProd.producerEmail;
+    const producerName = resolvedProd.producerName;
 
     const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
     const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
@@ -1848,7 +2093,21 @@ app.post('/api/send-participant-release', async (req, res) => {
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'participant_release', 'participant_release', files,
       {
-        fullName, idNumber, phone, email, storyName, commissionNumber, producerName, producerEmail,
+        fullName,
+        participantName: fullName,
+        idNumber,
+        phone,
+        contactNumber: phone,
+        email,
+        storyName,
+        storyTitle,
+        commissionNumber,
+        producerName,
+        producerEmail,
+        participantSignedAt: fields.participantSignedAt || fields.signedAt || null,
+        participantSignedDate: fields.participantSignedDate || fields.signedDate || null,
+        producerSignedAt: fields.producerSignedAt || null,
+        producerSignedDate: fields.producerSignedDate || null,
         status: formStatus,
         participantSignature: fields.participantSignature || null,
         producerSignature: hasProducerSig ? fields.producerSignature : null,
@@ -1868,11 +2127,11 @@ app.post('/api/send-participant-release', async (req, res) => {
         'participant_release',
         subject,
         html,
-        files.map(f => ({
+        [{
           filename: buildPdfFilename(commissionNumber, storyTitle, 'Participant Release Form'),
-          content: f.buffer,
-          contentType: f.mimeType
-        })),
+          content: files[0].buffer,
+          contentType: files[0].mimeType || 'application/pdf'
+        }],
         [submitterEmail, producerEmail].filter(Boolean)
       );
     } else {
@@ -1901,13 +2160,30 @@ app.post('/api/send-minor-release', async (req, res) => {
     const { fields, files } = await parseMultipart(req);
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
-    const { guardianName, guardianId, phone, email, minorName, minorAge, storyName } = fields;
+    const childName = fields.childName || fields.minorName || '';
+    const parentName = fields.parentName || fields.guardianName || fields.fullName || 'Parent/Guardian';
+    const parentIdNumber = fields.parentIdNumber || fields.guardianId || '';
+    const guardianName = parentName;
+    const guardianId = parentIdNumber;
+    const minorName = childName;
+    const minorAge = fields.minorAge || '';
+    const phone = fields.phone || '';
+    const email = fields.email || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
-    const producerEmail = fields.producerEmail || fields.producer_email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
-    const producerName = getProducerName(req, fields);
+    const storyTitle = fields.storyTitle || fields.storyName || 'Story';
+    const storyName = storyTitle;
+
+    const resolvedProd = await resolveProducerDetails({
+      req,
+      fields,
+      commissionNumber,
+      producerName: fields.producerName,
+      producerEmail: fields.producerEmail
+    });
+    const producerEmail = resolvedProd.producerEmail;
+    const producerName = resolvedProd.producerName;
 
     const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
     const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
@@ -1915,9 +2191,19 @@ app.post('/api/send-minor-release', async (req, res) => {
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'minor_release', 'minor_release', files,
       {
-        guardianName, guardianId, phone, email, minorName, minorAge, storyName, commissionNumber, producerName, producerEmail,
+        childName, minorName, minorAge,
+        parentName, guardianName, fullName: parentName,
+        parentIdNumber, guardianId: parentIdNumber,
+        phone, email,
+        storyName, storyTitle,
+        commissionNumber, producerName, producerEmail,
+        parentSignedAt: fields.parentSignedAt || fields.signedAt || null,
+        parentSignedDate: fields.parentSignedDate || fields.signedDate || null,
+        producerSignedAt: fields.producerSignedAt || null,
+        producerSignedDate: fields.producerSignedDate || null,
         status: formStatus,
-        guardianSignature: fields.guardianSignature || fields.participantSignature || null,
+        guardianSignature: fields.parentSignature || fields.guardianSignature || fields.participantSignature || null,
+        parentSignature: fields.parentSignature || fields.guardianSignature || fields.participantSignature || null,
         producerSignature: hasProducerSig ? fields.producerSignature : null,
         completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null
       }
@@ -1935,11 +2221,11 @@ app.post('/api/send-minor-release', async (req, res) => {
         'minor_release',
         subject,
         html,
-        files.map(f => ({
+        [{
           filename: buildPdfFilename(commissionNumber, storyTitle, 'Minor Release Form'),
-          content: f.buffer,
-          contentType: f.mimeType
-        })),
+          content: files[0].buffer,
+          contentType: files[0].mimeType || 'application/pdf'
+        }],
         [submitterEmail, producerEmail].filter(Boolean)
       );
     } else {
@@ -1968,13 +2254,29 @@ app.post('/api/send-location-agreement', async (req, res) => {
     const { fields, files } = await parseMultipart(req);
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
-    const { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName } = fields;
+    const locationOwnerName = fields.locationOwnerName || fields.ownerName || fields.fullName || fields.contributorName;
+    const locationAddress = fields.locationAddress || fields.propertyAddress;
+    const dateOfFilming = fields.dateOfFilming || fields.filmingDate || '';
+    const ownerSignedAt = fields.ownerSignedAt || fields.signedAt || '';
+    const ownerSignedDate = fields.ownerSignedDate || fields.signedDate || '';
+    const producerSignedAt = fields.producerSignedAt || '';
+    const producerSignedDate = fields.producerSignedDate || '';
+
+    const { ownerId, phone, email } = fields;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
-    const producerEmail = fields.producerEmail || fields.producer_email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
-    const producerName = getProducerName(req, fields);
+    const storyTitle = fields.storyTitle || fields.storyName || 'Story';
+
+    const resolvedProd = await resolveProducerDetails({
+      req,
+      fields,
+      commissionNumber,
+      producerName: fields.producerName,
+      producerEmail: fields.producerEmail
+    });
+    const producerEmail = resolvedProd.producerEmail;
+    const producerName = resolvedProd.producerName;
 
     const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
     const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
@@ -1982,9 +2284,29 @@ app.post('/api/send-location-agreement', async (req, res) => {
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'location_agreement', 'location_agreement', files,
       {
-        ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName, commissionNumber, producerName, producerEmail,
+        locationOwnerName,
+        ownerName: locationOwnerName,
+        fullName: locationOwnerName,
+        contributorName: locationOwnerName || 'Location Owner',
+        locationAddress,
+        propertyAddress: locationAddress,
+        dateOfFilming,
+        filmingDate: dateOfFilming,
+        ownerSignedAt,
+        ownerSignedDate,
+        producerSignedAt,
+        producerSignedDate,
+        ownerId,
+        phone,
+        email,
+        storyName: storyTitle,
+        storyTitle,
+        commissionNumber,
+        producerName,
+        producerEmail,
         status: formStatus,
         ownerSignature: fields.ownerSignature || fields.participantSignature || null,
+        participantSignature: fields.ownerSignature || fields.participantSignature || null,
         producerSignature: hasProducerSig ? fields.producerSignature : null,
         completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null
       }
@@ -2002,11 +2324,11 @@ app.post('/api/send-location-agreement', async (req, res) => {
         'location_agreement',
         subject,
         html,
-        files.map(f => ({
+        [{
           filename: buildPdfFilename(commissionNumber, storyTitle, 'Location Agreement'),
-          content: f.buffer,
-          contentType: f.mimeType
-        })),
+          content: files[0].buffer,
+          contentType: files[0].mimeType || 'application/pdf'
+        }],
         [submitterEmail, producerEmail].filter(Boolean)
       );
     } else {
@@ -2035,13 +2357,30 @@ app.post('/api/send-music-agreement', async (req, res) => {
     const { fields, files } = await parseMultipart(req);
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
-    const { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName } = fields;
+    const musicOwnerName = fields.musicOwnerName || fields.artistName || fields.fullName || fields.contributorName;
+    const musicOwnerCompany = fields.musicOwnerCompany || fields.publisherName;
+    const broadcastDate = fields.broadcastDate || '';
+    const ownerSignedAt = fields.ownerSignedAt || fields.signedAt || '';
+    const ownerSignedDate = fields.ownerSignedDate || fields.signedDate || '';
+    const producerSignedAt = fields.producerSignedAt || '';
+    const producerSignedDate = fields.producerSignedDate || '';
+    const musicTracks = fields.musicTracks || fields.trackTitle || fields.musicTrackTitle || '';
+
+    const { phone, email, trackDuration } = fields;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
-    const producerEmail = fields.producerEmail || fields.producer_email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
-    const producerName = getProducerName(req, fields);
+    const storyTitle = fields.storyTitle || fields.storyName || 'Story';
+
+    const resolvedProd = await resolveProducerDetails({
+      req,
+      fields,
+      commissionNumber,
+      producerName: fields.producerName,
+      producerEmail: fields.producerEmail
+    });
+    const producerEmail = resolvedProd.producerEmail;
+    const producerName = resolvedProd.producerName;
 
     const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
     const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
@@ -2049,11 +2388,35 @@ app.post('/api/send-music-agreement', async (req, res) => {
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'music_agreement', 'music_agreement', files,
       {
-        artistName, publisherName, phone, email, trackTitle, trackDuration, storyName, commissionNumber, producerName, producerEmail,
+        musicOwnerName,
+        musicOwnerCompany,
+        artistName: musicOwnerName,
+        contributorName: musicOwnerName || 'Music Owner',
+        fullName: musicOwnerName || 'Music Owner',
+        publisherName: musicOwnerCompany,
+        broadcastDate,
+        ownerSignedAt,
+        ownerSignedDate,
+        producerSignedAt,
+        producerSignedDate,
+        musicTracks,
+        phone,
+        email,
+        trackTitle: musicTracks,
+        trackDuration,
+        storyName: storyTitle,
+        storyTitle,
+        commissionNumber,
+        producerName,
+        producerEmail,
+        proposalId: fields.proposalId || null,
         status: formStatus,
-        artistSignature: fields.artistSignature || fields.participantSignature || null,
+        ownerSignature: fields.ownerSignature || fields.artistSignature || fields.participantSignature || null,
+        artistSignature: fields.ownerSignature || fields.artistSignature || fields.participantSignature || null,
+        participantSignature: fields.ownerSignature || fields.participantSignature || fields.artistSignature || null,
         producerSignature: hasProducerSig ? fields.producerSignature : null,
-        completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null
+        completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null,
+        ...fields
       }
     );
 
@@ -2069,12 +2432,12 @@ app.post('/api/send-music-agreement', async (req, res) => {
         'music_agreement',
         subject,
         html,
-        files.map(f => ({
+        [{
           filename: buildPdfFilename(commissionNumber, storyTitle, 'Music Agreement'),
-          content: f.buffer,
-          contentType: f.mimeType
-        })),
-        [submitterEmail, producerEmail].filter(Boolean)
+          content: files[0].buffer,
+          contentType: files[0].mimeType || 'application/pdf'
+        }],
+        [submitterEmail, producerEmail, email].filter(Boolean)
       );
     } else {
       await sendCountersignNotification({
@@ -2102,12 +2465,13 @@ app.post('/api/send-travel-booking', async (req, res) => {
     const { fields, files } = await parseMultipart(req);
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
-    const { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes } = fields;
-    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const nameAndSurname = fields.nameAndSurname || fields.travelerName || fields.fullName || 'Traveller';
+    const email = fields.email || '';
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const storyTitle = fields.storyName || fields.storyTitle || 'Story';
     const producerName = getProducerName(req, fields);
 
     const { subject, html } = buildFormEmailDetails({
@@ -2120,7 +2484,19 @@ app.post('/api/send-travel-booking', async (req, res) => {
     const [dbResult] = await Promise.all([
       processMultiFileStorageAndFirestore(
         req, 'travel_booking', 'travel_booking', files,
-        { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes, commissionNumber, producerName }
+        {
+          nameAndSurname,
+          travelerName: nameAndSurname,
+          fullName: nameAndSurname,
+          contributorName: nameAndSurname,
+          email,
+          storyName: storyTitle,
+          storyTitle,
+          commissionNumber,
+          producerName,
+          status: 'completed',
+          ...fields
+        }
       ),
       notifyRelevantUsers(
         'travel_booking',
@@ -2421,9 +2797,18 @@ app.post('/api/send-insert-sheet', async (req, res) => {
     const { fields, files } = await parseMultipart(req);
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
-    const storyName = fields.storyName || fields.story_name || fields.storyTitle || 'Story';
-    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyName = fields.storyTitle || fields.storyName || fields.story_name || 'Story';
+    const storyTitle = storyName;
+    const commissionNumber = fields.commissionNumber || fields.commission_number || fields.commNum || 'N/A';
     const producerName = getProducerName(req, fields);
+    const presenter = fields.presenter || '';
+    const dop = fields.dop || '';
+    const camAssist = fields.camAssist || fields.cameraAssistant || '';
+    const editor = fields.editor || '';
+    const finalMix = fields.finalMix || fields.finalMixOperator || '';
+    const deliveryDate = fields.deliveryDate || '';
+    const insertDuration = fields.insertDuration || '';
+    const thirdPartyFootage = fields.thirdPartyFootage || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
 
     const { subject, html } = buildFormEmailDetails({
@@ -2436,7 +2821,26 @@ app.post('/api/send-insert-sheet', async (req, res) => {
     const [dbResult] = await Promise.all([
       processMultiFileStorageAndFirestore(
         req, 'insert_sheet', 'insert_sheet', files,
-        { ...fields, storyName, commissionNumber, producerName }
+        {
+          storyTitle,
+          storyName,
+          commissionNumber,
+          commNum: commissionNumber,
+          producer: producerName,
+          producerName,
+          presenter,
+          dop,
+          camAssist,
+          cameraAssistant: camAssist,
+          editor,
+          finalMix,
+          finalMixOperator: finalMix,
+          deliveryDate,
+          insertDuration,
+          thirdPartyFootage,
+          credits: fields.credits || null,
+          ...fields
+        }
       ),
       notifyRelevantUsers(
         'insert_sheet',
@@ -2766,6 +3170,45 @@ app.post('/api/delete-submission', express.json(), async (req, res) => {
     res.json({ success: true, message: `${isProposal ? 'Proposal' : 'Submission'} and associated files deleted successfully` });
   } catch (error) {
     console.error('[DELETE] Failed:', error);
+    res.status(error.message === 'Unauthorized' ? 403 : (error.message === 'Record not found' ? 404 : 500))
+       .json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * Admin: Delete Legal Form Submission linked to a story proposal
+ */
+app.post('/api/admin/delete-legal-form', express.json(), async (req, res) => {
+  try {
+    if (!hasAdminAccess(req.user)) {
+      return res.status(403).json({ success: false, error: 'Unauthorized: Admin privileges required.' });
+    }
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ success: false, error: 'Submission ID is required.' });
+
+    console.log(`[LEGAL-DELETE] Admin ${req.user.email} deleting legal form submission: ${id}`);
+    await internalDeleteSubmission(id, req.user);
+    res.json({ success: true, message: 'Legal form and associated documents deleted successfully' });
+  } catch (error) {
+    console.error('[LEGAL-DELETE] Failed:', error);
+    res.status(error.message === 'Unauthorized' ? 403 : (error.message === 'Record not found' ? 404 : 500))
+       .json({ success: false, error: error.message });
+  }
+});
+
+app.delete('/api/proposal-legal-forms/:id', async (req, res) => {
+  try {
+    if (!hasAdminAccess(req.user)) {
+      return res.status(403).json({ success: false, error: 'Unauthorized: Admin privileges required.' });
+    }
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ success: false, error: 'Submission ID is required.' });
+
+    console.log(`[LEGAL-DELETE] Admin ${req.user.email} deleting legal form submission: ${id}`);
+    await internalDeleteSubmission(id, req.user);
+    res.json({ success: true, message: 'Legal form and associated documents deleted successfully' });
+  } catch (error) {
+    console.error('[LEGAL-DELETE] Failed:', error);
     res.status(error.message === 'Unauthorized' ? 403 : (error.message === 'Record not found' ? 404 : 500))
        .json({ success: false, error: error.message });
   }
@@ -3676,9 +4119,9 @@ app.get('/api/proposal-legal-forms', async (req, res) => {
         formType: data.formType,
         storyTitle: data.storyName || data.storyTitle || '',
         commissionNumber: data.commissionNumber || 'N/A',
-        contributorName: data.fullName || data.contributorName || data.ownerName || data.travelerName || 'Contributor',
+        contributorName: data.fullName || data.contributorName || data.ownerName || data.travelerName || data.artistName || data.licensorName || 'Contributor',
         producerName: data.producerName || '',
-        status: data.status || 'pending',
+        status: (data.formType === 'travel_booking' || data.formType === 'insert_sheet') ? 'completed' : (data.status || 'pending'),
         submittedAt: data.submittedAt || null,
         completedAt: data.completedAt || data.countersignedAt || null,
         files: (data.files || []).map(f => ({

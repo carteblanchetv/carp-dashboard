@@ -10,8 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
-    <script src="js/branding.js?v=5.1.1"></script>
-    <script src="js/share_form.js?v=5.1.1"></script>
+    <script src="js/branding.js?v=5.2.2"></script>
+    <script src="js/share_form.js?v=5.2.9"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script type="module">
@@ -64,25 +64,6 @@
             font-size: 0.75rem;
             cursor: pointer;
         }
-        .terms-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.25rem;
-            margin-bottom: 1.25rem;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            color: var(--text-main);
-            max-height: 220px;
-            overflow-y: auto;
-        }
-        .terms-box ol {
-            margin: 0;
-            padding-left: 1.25rem;
-        }
-        .terms-box li {
-            margin-bottom: 0.5rem;
-        }
     </style>
 </head>
 <body class="form-body">
@@ -93,10 +74,6 @@
                 <span id="userEmailDisplay" class="gnav-email"></span>
             </div>
             <div class="gnav-actions">
-                <a href="index.html" class="gnav-btn" title="Back to Dashboard">
-                    <span>🏠</span>
-                    <span>DASHBOARD</span>
-                </a>
                 <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
                     <span>🌓</span>
                     <span>THEME</span>
@@ -116,104 +93,133 @@
         <p>Please wait, uploading encrypted documents.</p>
     </div>
 
-    <div class="form-wrapper" style="max-width: 720px; margin: 2rem auto;">
+    <div class="form-wrapper" style="max-width: 700px; margin: 2rem auto;">
         <header class="form-header">
             <div class="logo-group">
                 <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
                 <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
             </div>
-            <h1>Footage Agreement</h1>
-            <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
-                Carte Blanche &amp; M-Net &bull; Video &amp; Archival Material Licence Agreement
-            </p>
+            <h1>FOOTAGE AGREEMENT FORM</h1>
+            <h2 style="text-align: center; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-top: 0.35rem; margin-bottom: 0;">Footage Agreement</h2>
         </header>
 
         <form id="footageAgreementForm" class="modern-form">
-            <!-- SECTION 1: LICENSOR DETAILS -->
+            <!-- Hidden backward-compatibility alias inputs -->
+            <input type="hidden" id="licensorName" name="licensorName">
+            <input type="hidden" id="licensorEntity" name="licensorEntity">
+            <input type="hidden" id="ownerName" name="ownerName">
+            <input type="hidden" id="fullName" name="fullName">
+            <input type="hidden" id="storyName" name="storyName">
+            <input type="hidden" id="broadcastDate" name="broadcastDate">
+            <input type="hidden" id="signedAt" name="signedAt">
+            <input type="hidden" id="signedDate" name="signedDate">
+            <input type="hidden" id="ownerDate" name="ownerDate">
+            <input type="hidden" id="producerDate" name="producerDate">
+            <input type="hidden" id="phone" name="phone">
+            <input type="hidden" id="email" name="email">
+            <input type="hidden" id="courtesyCredit" name="courtesyCredit">
+            <input type="hidden" id="producerName" name="producerName">
+            <input type="hidden" id="producerEmail" name="producerEmail">
+            <input type="hidden" id="prodSignerName" name="producerSignerName">
+            <input type="hidden" id="prodSignerEmail" name="producerSignerEmail">
+
+            <!-- PARTIES SECTION -->
             <section class="form-section">
-                <h2 class="section-title">1. Licensor / Rights Holder Details</h2>
+                <div style="margin-bottom: 0.75rem;">
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">between</div>
+                    <div style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-bottom: 0.15rem;">CARTE BLANCHE &amp; M-NET</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-bottom: 0.75rem;">(“the producer”)</div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">and</div>
+                </div>
+
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label for="licensorName">Licensor / Rights Holder Full Name</label>
-                        <input type="text" id="licensorName" name="licensorName" required placeholder="Enter full name...">
+                    <div class="form-group full-width">
+                        <label for="footageOwnerName">Footage Owner Name &amp; Surname:</label>
+                        <input type="text" id="footageOwnerName" name="footageOwnerName" required placeholder="Enter footage owner full name &amp; surname...">
                     </div>
-                    <div class="form-group">
-                        <label for="licensorEntity">On Behalf Of (Company / Entity / Self)</label>
-                        <input type="text" id="licensorEntity" name="licensorEntity" placeholder="e.g. African Wildlife Archives CC / Self">
+
+                    <div class="form-group full-width">
+                        <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.25rem;">on behald of</div>
+                        <label for="footageOwnerCompany">Footage Owner Company:</label>
+                        <input type="text" id="footageOwnerCompany" name="footageOwnerCompany" placeholder="Enter company / entity name...">
+                        <div style="font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-top: 0.25rem;">(“the owner”)</div>
                     </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" required placeholder="e.g. +27 82 123 4567">
+
+                    <div class="form-group full-width">
+                        <label for="storyTitle">Story Title:</label>
+                        <input type="text" id="storyTitle" name="storyTitle" required placeholder="Enter story title...">
                     </div>
+
                     <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" required placeholder="name@example.com">
+                        <label for="commissionNumber">Commission Number:</label>
+                        <input type="text" id="commissionNumber" name="commissionNumber" placeholder="e.g. CB-2026-042">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="broadcastDated">Broadcast Dated:</label>
+                        <input type="date" id="broadcastDated" name="broadcastDated">
                     </div>
                 </div>
             </section>
 
-            <!-- SECTION 2: FOOTAGE & STORY DETAILS -->
-            <section class="form-section">
-                <h2 class="section-title">2. Footage Description &amp; Production Details</h2>
-                <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label for="footageDescription">Description of Footage / Video Clip / Archival Elements</label>
-                        <textarea id="footageDescription" name="footageDescription" rows="3" required placeholder="Detailed description of clips, recordings, dates, subjects, or scenes being licensed..."></textarea>
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="courtesyCredit">Requested On-Screen Courtesy Credit (Optional)</label>
-                        <input type="text" id="courtesyCredit" name="courtesyCredit" placeholder='e.g. "Footage: John Smith" or "Courtesy of African Wildlife Archives"'>
-                    </div>
-                    <div class="form-group">
-                        <label for="storyName">Story Title / Working Name</label>
-                        <input type="text" id="storyName" name="storyName" required placeholder="e.g. Wildlife Documentary Special">
-                    </div>
-                    <div class="form-group">
-                        <label for="commissionNumber">Commission Number</label>
-                        <input type="text" id="commissionNumber" name="commissionNumber" placeholder="e.g. CB-2026-064">
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="broadcastDate">Anticipated Broadcast Date (Optional)</label>
-                        <input type="date" id="broadcastDate" name="broadcastDate">
-                    </div>
-                </div>
+            <!-- LEGAL TERMS PART 1 -->
+            <section class="form-section legal-terms-section">
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main); margin-bottom: 1rem;">
+                    The owner hereby gives the producer permission to use portions of the following videos/images (“the footage”) in the story titled below to be broadcast on Carte Blanche on M-Net on the date below and on any other MultiChoice platform as M-Net sees fit, in perpetuity.
+                </p>
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main); margin-bottom: 1rem;">
+                    The producer undertakes to use the footage fairly to illustrate issues pertaining to the story.
+                </p>
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main); margin-bottom: 1rem;">
+                    The producer undertakes to provide the owners with an on-screen courtesy credit for the footage, if requested by the owner.
+                </p>
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main); margin-bottom: 1rem;">
+                    The producer will not pay the owner for the use of the footage.
+                </p>
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main); margin-bottom: 0.5rem;">
+                    The program in its completed form is the property of M-Net and Carte Blanche.
+                </p>
             </section>
 
-            <!-- SECTION 3: TERMS OF LICENCE -->
+            <!-- DESCRIPTION OF FOOTAGE -->
             <section class="form-section">
-                <h2 class="section-title">3. Terms of Licence &amp; Broadcast Permission</h2>
-                <div class="terms-box">
-                    <p style="margin-top: 0; font-weight: 700; color: var(--primary);">
-                        This Agreement is entered into by and between Electronic Media Network Proprietary Limited ("M-Net"), Combined Artistic Productions CC ("the producer"), and the Rights Holder / Licensor ("the owner"):
-                    </p>
-                    <ol>
-                        <li><strong>Grant of Licence:</strong> The owner hereby grants the producer a non-exclusive, irrevocable licence to incorporate and use portions of the video, archival, CCTV, or photographic material described above ("the footage") in the story specified above, to be broadcast on Carte Blanche on M-Net, and across any MultiChoice platform or digital service as M-Net sees fit, in perpetuity.</li>
-                        <li><strong>Fair Use &amp; Illustration:</strong> The producer undertakes to use the footage fairly to illustrate and report on issues pertaining to the story in accordance with journalistic fair dealing and reporting standards.</li>
-                        <li><strong>On-Screen Credit:</strong> The producer undertakes to provide the owner with an on-screen courtesy credit for the footage if specifically requested above.</li>
-                        <li><strong>Royalty-Free:</strong> The owner confirms that this licence is granted on a royalty-free basis and the producer will not pay the owner for the use of the footage.</li>
-                        <li><strong>Ownership of Programme:</strong> The television programme in its completed broadcast form is the exclusive property of M-Net and Carte Blanche.</li>
-                        <li><strong>Protection of Original Footage:</strong> The footage in its raw, original form remains the copyright property of the owner, and Carte Blanche &amp; M-Net shall not share, copy, resell, or distribute the standalone footage to external third-party news organisations or persons without consent.</li>
-                    </ol>
-                </div>
-
-                <div style="display: flex; gap: 0.5rem; align-items: flex-start; margin-bottom: 1.5rem;">
-                    <input type="checkbox" id="consentCheckbox" required style="width: auto; margin-top: 0.3rem;">
-                    <label for="consentCheckbox" style="font-size: 0.9rem; cursor: pointer;">
-                        I confirm I am the owner or authorised representative with the legal authority to license this footage, and I agree to the terms of this agreement.
-                    </label>
-                </div>
-
-                <!-- DIGITAL SIGNATURE PAD -->
                 <div class="form-group full-width">
-                    <label>Licensor / Rights Holder Signature</label>
+                    <label for="footageDescription">DESCRIPTION OF FOOTAGE:</label>
+                    <textarea id="footageDescription" name="footageDescription" rows="4" required placeholder="Detailed description of videos/images, clips, dates, subjects, or scenes..."></textarea>
+                </div>
+            </section>
+
+            <!-- LEGAL TERMS PART 2 -->
+            <section class="form-section legal-terms-section">
+                <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-main); margin-bottom: 0.5rem;">
+                    The footage in its entirety remains the property of the owner and Carte Blanche &amp; M-NET cannot share/copy/send the footage to any other news organisations or persons.
+                </p>
+            </section>
+
+            <!-- THE OWNER -->
+            <section class="form-section">
+                <h2 class="section-title">THE OWNER</h2>
+                <div class="form-grid" style="margin-bottom: 1rem;">
+                    <div class="form-group">
+                        <label for="ownerSignedAt">Signed at:</label>
+                        <input type="text" id="ownerSignedAt" name="ownerSignedAt" placeholder="e.g. Johannesburg" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ownerSignedDate">Date:</label>
+                        <input type="text" id="ownerSignedDate" name="ownerSignedDate" readonly style="background: var(--bg-card); cursor: default;">
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Owner Signature:</label>
                     <div class="signature-tabs" style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
                         <button type="button" id="tabDraw" class="sig-tab active" style="padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-card); color: var(--text-main); cursor: pointer; font-size: 0.85rem; font-weight: 600;">Draw Signature</button>
                         <button type="button" id="tabType" class="sig-tab" style="padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-card); color: var(--text-main); cursor: pointer; font-size: 0.85rem; font-weight: 600;">Type Signature</button>
                     </div>
-
+                    
                     <div id="typeSignatureControls" style="margin-bottom: 0.5rem; display: none;">
                         <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
-                            <input type="text" id="typeSigInput" placeholder="Type your full name here..." style="flex: 1; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem;">
+                            <input type="text" id="typeSigInput" placeholder="Type owner name here..." style="flex: 1; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem;">
                             <select id="typeSigFont" style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; cursor: pointer;">
                                 <option value="Caveat">Caveat (Cursive)</option>
                                 <option value="Dancing Script">Dancing Script (Elegant)</option>
@@ -230,6 +236,46 @@
                 </div>
             </section>
 
+            <!-- THE PRODUCER -->
+            <section class="form-section" id="producerSignatureSection">
+                <h2 class="section-title">THE PRODUCER</h2>
+                <div class="form-grid" style="margin-bottom: 1rem;">
+                    <div class="form-group">
+                        <label for="producerSignedAt">Signed at:</label>
+                        <input type="text" id="producerSignedAt" name="producerSignedAt" placeholder="e.g. Johannesburg">
+                    </div>
+                    <div class="form-group">
+                        <label for="producerSignedDate">Date:</label>
+                        <input type="text" id="producerSignedDate" name="producerSignedDate" readonly style="background: var(--bg-card); cursor: default;">
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Producer Signature:</label>
+                    <div class="signature-tabs" style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <button type="button" id="tabProducerDraw" class="sig-tab active" style="padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-card); color: var(--text-main); cursor: pointer; font-size: 0.85rem; font-weight: 600;">Draw Signature</button>
+                        <button type="button" id="tabProducerType" class="sig-tab" style="padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 4px; background: var(--bg-card); color: var(--text-main); cursor: pointer; font-size: 0.85rem; font-weight: 600;">Type Signature</button>
+                    </div>
+                    
+                    <div id="producerTypeSignatureControls" style="margin-bottom: 0.5rem; display: none;">
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <input type="text" id="producerTypeSigInput" placeholder="Type producer name here..." style="flex: 1; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem;">
+                            <select id="producerTypeSigFont" style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; cursor: pointer;">
+                                <option value="Caveat">Caveat (Cursive)</option>
+                                <option value="Dancing Script">Dancing Script (Elegant)</option>
+                                <option value="Great Vibes">Great Vibes (Classic)</option>
+                                <option value="Pacifico">Pacifico (Retro)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="signature-pad-container">
+                        <canvas id="producerSignatureCanvas" class="signature-pad" width="600" height="150"></canvas>
+                        <button type="button" id="clearProducerSigBtn" class="clear-sig-btn">Clear</button>
+                    </div>
+                </div>
+            </section>
+
             <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
                 <a href="forms_hub.html" class="btn-soft" style="text-decoration: none; display: flex; align-items: center;">Cancel</a>
                 <button type="submit" class="add-btn" style="margin-top: 0; background: #d97706; color: white; border: none; padding: 0.75rem 2rem; font-weight: 700; border-radius: 6px; cursor: pointer;">Submit Footage Agreement</button>
@@ -240,13 +286,16 @@
     <!-- Success Dialog -->
     <div id="successDialog" class="dialog-overlay hidden">
         <div class="dialog-box">
-            <h2>Footage Agreement Submitted</h2>
-            <p>Your signed Footage Agreement has been successfully submitted and stored.</p>
-            <button id="dialogCloseBtn" class="add-btn">Return to Forms Hub</button>
+            <h2>Footage Agreement Successfully Submitted</h2>
+            <p>Both participant and producer signatures have been recorded. The final signed document has been sent to you and release@carteblanche.co.za</p>
+            <div class="dialog-actions" style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; justify-content: flex-end;">
+                <button id="dialogReturnBtn" class="btn-soft" style="padding: 0.7rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer;">Return to Dashboard</button>
+                <button id="dialogAnotherBtn" class="add-btn" style="margin: 0; padding: 0.7rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer;">Submit Another Form</button>
+            </div>
         </div>
     </div>
 
-    <script src="js/countersign_ui.js?v=5.2.0"></script>
-    <script src="footage_release_agreement.js"></script>
+    <script src="js/countersign_ui.js?v=5.3.0"></script>
+    <script src="footage_release_agreement.js?v=5.3.0"></script>
 </body>
 </html>

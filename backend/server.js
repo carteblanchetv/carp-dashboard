@@ -662,20 +662,40 @@ app.post('/api/send-footage-release-agreement', async (req, res, next) => {
     const { fields, file } = await parseMultipart(req);
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
-    const { licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit, storyName, commissionNumber, broadcastDate } = fields;
+    const footageOwnerName = fields.footageOwnerName || fields.licensorName || fields.ownerName || fields.fullName || 'Footage Owner';
+    const footageOwnerCompany = fields.footageOwnerCompany || fields.licensorEntity || '';
+    const footageDescription = fields.footageDescription || '';
+    const courtesyCredit = fields.courtesyCredit || '';
+    const broadcastDated = fields.broadcastDated || fields.broadcastDate || '';
+    const phone = fields.phone || '';
+    const email = fields.email || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
 
-    const commNum = commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const commNum = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = fields.storyTitle || fields.storyName || 'Story';
     const producerName = getProducerName(req, fields);
 
     const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
     const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
 
     const dbResult = await saveSubmission(req, 'footage_agreement', buildPdfFilename(commNum, storyTitle, 'Footage Agreement'), file, {
-      licensorName, licensorEntity, phone, email, footageDescription, courtesyCredit,
-      storyName: storyTitle, commissionNumber: commNum, broadcastDate, producerName, producerEmail,
+      footageOwnerName,
+      footageOwnerCompany,
+      licensorName: footageOwnerName,
+      licensorEntity: footageOwnerCompany,
+      ownerName: footageOwnerName,
+      phone,
+      email,
+      footageDescription,
+      courtesyCredit,
+      storyTitle,
+      storyName: storyTitle,
+      commissionNumber: commNum,
+      broadcastDated,
+      broadcastDate: broadcastDated,
+      producerName,
+      producerEmail,
       status: formStatus,
       participantSignature: fields.participantSignature || null,
       producerSignature: hasProducerSig ? fields.producerSignature : null,
@@ -708,7 +728,7 @@ app.post('/api/send-footage-release-agreement', async (req, res, next) => {
         storyTitle,
         producerName,
         producerEmail,
-        contributorName: licensorName,
+        contributorName: footageOwnerName,
         req
       });
     }
@@ -725,19 +745,37 @@ app.post('/api/send-participant-release', async (req, res, next) => {
     const { fields, file } = await parseMultipart(req);
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
-    const { fullName, idNumber, phone, email, storyName } = fields;
+    const fullName = fields.participantName || fields.participant || fields.fullName || 'Participant';
+    const idNumber = fields.idNumber || '';
+    const phone = fields.contactNumber || fields.phone || '';
+    const email = fields.email || '';
+    const storyTitle = fields.storyTitle || fields.storyName || 'Story';
+    const storyName = storyTitle;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
     const producerName = getProducerName(req, fields);
 
     const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
     const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
 
     const dbResult = await saveSubmission(req, 'participant_release', buildPdfFilename(commissionNumber, storyTitle, 'Participant Release Form'), file, {
-      fullName, idNumber, phone, email, storyName, commissionNumber, producerName, producerEmail,
+      fullName,
+      participantName: fullName,
+      idNumber,
+      phone,
+      contactNumber: phone,
+      email,
+      storyName,
+      storyTitle,
+      commissionNumber,
+      producerName,
+      producerEmail,
+      participantSignedAt: fields.participantSignedAt || fields.signedAt || null,
+      participantSignedDate: fields.participantSignedDate || fields.signedDate || null,
+      producerSignedAt: fields.producerSignedAt || null,
+      producerSignedDate: fields.producerSignedDate || null,
       status: formStatus,
       participantSignature: fields.participantSignature || null,
       producerSignature: hasProducerSig ? fields.producerSignature : null,
@@ -786,21 +824,40 @@ app.post('/api/send-minor-release', async (req, res, next) => {
     const { fields, file } = await parseMultipart(req);
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
-    const { guardianName, guardianId, phone, email, minorName, minorAge, storyName } = fields;
+    const childName = fields.childName || fields.minorName || '';
+    const parentName = fields.parentName || fields.guardianName || fields.fullName || 'Parent/Guardian';
+    const parentIdNumber = fields.parentIdNumber || fields.guardianId || '';
+    const guardianName = parentName;
+    const guardianId = parentIdNumber;
+    const minorName = childName;
+    const minorAge = fields.minorAge || '';
+    const phone = fields.phone || '';
+    const email = fields.email || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const storyTitle = fields.storyTitle || fields.storyName || 'Story';
+    const storyName = storyTitle;
     const producerName = getProducerName(req, fields);
 
     const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
     const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
 
     const dbResult = await saveSubmission(req, 'minor_release', buildPdfFilename(commissionNumber, storyTitle, 'Minor Release Form'), file, {
-      guardianName, guardianId, phone, email, minorName, minorAge, storyName, commissionNumber, producerName, producerEmail,
+      childName, minorName, minorAge,
+      parentName, guardianName, fullName: parentName,
+      parentIdNumber, guardianId: parentIdNumber,
+      phone, email,
+      storyName, storyTitle,
+      commissionNumber, producerName, producerEmail,
+      parentSignedAt: fields.parentSignedAt || fields.signedAt || null,
+      parentSignedDate: fields.parentSignedDate || fields.signedDate || null,
+      producerSignedAt: fields.producerSignedAt || null,
+      producerSignedDate: fields.producerSignedDate || null,
       status: formStatus,
-      guardianSignature: fields.guardianSignature || fields.participantSignature || null,
+      guardianSignature: fields.parentSignature || fields.guardianSignature || fields.participantSignature || null,
+      parentSignature: fields.parentSignature || fields.guardianSignature || fields.participantSignature || null,
       producerSignature: hasProducerSig ? fields.producerSignature : null,
       completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null
     });
@@ -847,21 +904,49 @@ app.post('/api/send-location-agreement', async (req, res, next) => {
     const { fields, file } = await parseMultipart(req);
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
-    const { ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName } = fields;
+    const locationOwnerName = fields.locationOwnerName || fields.ownerName || fields.fullName || fields.contributorName;
+    const locationAddress = fields.locationAddress || fields.propertyAddress;
+    const dateOfFilming = fields.dateOfFilming || fields.filmingDate || '';
+    const ownerSignedAt = fields.ownerSignedAt || fields.signedAt || '';
+    const ownerSignedDate = fields.ownerSignedDate || fields.signedDate || '';
+    const producerSignedAt = fields.producerSignedAt || '';
+    const producerSignedDate = fields.producerSignedDate || '';
+
+    const { ownerId, phone, email } = fields;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const storyTitle = fields.storyTitle || fields.storyName || 'Story';
     const producerName = getProducerName(req, fields);
 
     const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
     const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
 
     const dbResult = await saveSubmission(req, 'location_agreement', buildPdfFilename(commissionNumber, storyTitle, 'Location Agreement'), file, {
-      ownerName, ownerId, phone, email, propertyAddress, filmingDate, storyName, commissionNumber, producerName, producerEmail,
+      locationOwnerName,
+      ownerName: locationOwnerName,
+      fullName: locationOwnerName,
+      contributorName: locationOwnerName || 'Location Owner',
+      locationAddress,
+      propertyAddress: locationAddress,
+      dateOfFilming,
+      filmingDate: dateOfFilming,
+      ownerSignedAt,
+      ownerSignedDate,
+      producerSignedAt,
+      producerSignedDate,
+      ownerId,
+      phone,
+      email,
+      storyName: storyTitle,
+      storyTitle,
+      commissionNumber,
+      producerName,
+      producerEmail,
       status: formStatus,
       ownerSignature: fields.ownerSignature || fields.participantSignature || null,
+      participantSignature: fields.ownerSignature || fields.participantSignature || null,
       producerSignature: hasProducerSig ? fields.producerSignature : null,
       completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null
     });
@@ -908,21 +993,52 @@ app.post('/api/send-music-agreement', async (req, res, next) => {
     const { fields, file } = await parseMultipart(req);
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
-    const { artistName, publisherName, phone, email, trackTitle, trackDuration, storyName } = fields;
+    const musicOwnerName = fields.musicOwnerName || fields.artistName || fields.fullName || fields.contributorName;
+    const musicOwnerCompany = fields.musicOwnerCompany || fields.publisherName;
+    const broadcastDate = fields.broadcastDate || '';
+    const ownerSignedAt = fields.ownerSignedAt || fields.signedAt || '';
+    const ownerSignedDate = fields.ownerSignedDate || fields.signedDate || '';
+    const producerSignedAt = fields.producerSignedAt || '';
+    const producerSignedDate = fields.producerSignedDate || '';
+    const musicTracks = fields.musicTracks || fields.trackTitle || fields.musicTrackTitle || '';
+
+    const { phone, email, trackDuration } = fields;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const storyTitle = fields.storyTitle || fields.storyName || 'Story';
     const producerName = getProducerName(req, fields);
 
     const hasProducerSig = Boolean(fields.producerSignature && fields.producerSignature.trim().length > 100);
     const formStatus = hasProducerSig ? 'completed' : 'pending_countersignature';
 
     const dbResult = await saveSubmission(req, 'music_agreement', buildPdfFilename(commissionNumber, storyTitle, 'Music Agreement'), file, {
-      artistName, publisherName, phone, email, trackTitle, trackDuration, storyName, commissionNumber, producerName, producerEmail,
+      musicOwnerName,
+      musicOwnerCompany,
+      artistName: musicOwnerName,
+      publisherName: musicOwnerCompany,
+      fullName: musicOwnerName,
+      contributorName: musicOwnerName || 'Music Owner',
+      broadcastDate,
+      ownerSignedAt,
+      ownerSignedDate,
+      producerSignedAt,
+      producerSignedDate,
+      musicTracks,
+      trackTitle: musicTracks,
+      phone,
+      email,
+      trackDuration,
+      storyName: storyTitle,
+      storyTitle,
+      commissionNumber,
+      producerName,
+      producerEmail,
       status: formStatus,
-      artistSignature: fields.artistSignature || fields.participantSignature || null,
+      ownerSignature: fields.ownerSignature || fields.artistSignature || fields.participantSignature || null,
+      artistSignature: fields.ownerSignature || fields.artistSignature || fields.participantSignature || null,
+      participantSignature: fields.ownerSignature || fields.artistSignature || fields.participantSignature || null,
       producerSignature: hasProducerSig ? fields.producerSignature : null,
       completedAt: hasProducerSig ? admin.firestore.FieldValue.serverTimestamp() : null
     });
@@ -969,13 +1085,14 @@ app.post('/api/send-travel-booking', async (req, res, next) => {
     const { fields, file } = await parseMultipart(req);
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
-    const { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes } = fields;
+    const nameAndSurname = fields.nameAndSurname || fields.travelerName || fields.fullName || 'Traveller';
+    const email = fields.email || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
     const toRecipients = getFormRecipients('travel_booking', submitterEmail, producerEmail);
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
-    const storyTitle = storyName || fields.storyTitle || 'Story';
+    const storyTitle = fields.storyName || fields.storyTitle || 'Story';
     const producerName = getProducerName(req, fields);
 
     const { subject, html } = buildFormEmailDetails({
@@ -994,7 +1111,19 @@ app.post('/api/send-travel-booking', async (req, res, next) => {
     };
 
     await transporter.sendMail(mailOptions);
-    await saveSubmission(req, 'travel_booking', buildPdfFilename(commissionNumber, storyTitle, 'Travel Booking Form'), file, { travelerName, idNumber, phone, email, departureAirport, destinationAirport, departureDate, returnDate, storyName, accommodationRequired, carHireRequired, additionalNotes, commissionNumber, producerName });
+    await saveSubmission(req, 'travel_booking', buildPdfFilename(commissionNumber, storyTitle, 'Travel Booking Form'), file, {
+      nameAndSurname,
+      travelerName: nameAndSurname,
+      fullName: nameAndSurname,
+      contributorName: nameAndSurname,
+      email,
+      storyName: storyTitle,
+      storyTitle,
+      commissionNumber,
+      producerName,
+      status: 'completed',
+      ...fields
+    });
     res.status(200).json({ success: true, message: 'Travel booking request sent successfully!' });
   } catch (error) {
     console.error('Error sending travel booking request:', error);
@@ -1100,9 +1229,18 @@ app.post('/api/send-insert-sheet', async (req, res, next) => {
     const { fields, file } = await parseMultipart(req);
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
-    const storyName = fields.storyName || fields.story_name || fields.storyTitle || 'Story';
-    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyName = fields.storyTitle || fields.storyName || fields.story_name || 'Story';
+    const storyTitle = storyName;
+    const commissionNumber = fields.commissionNumber || fields.commission_number || fields.commNum || 'N/A';
     const producerName = getProducerName(req, fields);
+    const presenter = fields.presenter || '';
+    const dop = fields.dop || '';
+    const camAssist = fields.camAssist || fields.cameraAssistant || '';
+    const editor = fields.editor || '';
+    const finalMix = fields.finalMix || fields.finalMixOperator || '';
+    const deliveryDate = fields.deliveryDate || '';
+    const insertDuration = fields.insertDuration || '';
+    const thirdPartyFootage = fields.thirdPartyFootage || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
     const toRecipients = getFormRecipients('insert_sheet', submitterEmail);
 
@@ -1123,9 +1261,23 @@ app.post('/api/send-insert-sheet', async (req, res, next) => {
 
     await transporter.sendMail(mailOptions);
     await saveSubmission(req, 'insert_sheet', buildPdfFilename(commissionNumber, storyName, 'Insert Sheet'), file, {
+      storyTitle,
       storyName,
       commissionNumber,
+      commNum: commissionNumber,
+      producer: producerName,
       producerName,
+      presenter,
+      dop,
+      camAssist,
+      cameraAssistant: camAssist,
+      editor,
+      finalMix,
+      finalMixOperator: finalMix,
+      deliveryDate,
+      insertDuration,
+      thirdPartyFootage,
+      credits: fields.credits || null,
       ...fields
     });
     res.status(200).json({ success: true, message: 'Insert sheet sent successfully!' });

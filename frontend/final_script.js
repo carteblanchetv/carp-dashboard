@@ -492,13 +492,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.success) {
                 const dialog = document.getElementById('successDialog');
                 dialog.classList.remove('hidden');
-                document.getElementById('dialogCloseBtn').onclick = () => {
-                    if (isStandalone) {
-                        window.location.href = 'index.html';
-                    } else {
-                        window.location.href = `proposal.html?id=${proposalId}&view=preview`;
-                    }
+                const closeBtn = document.getElementById('dialogCloseBtn');
+                let closed = false;
+                const dismiss = () => {
+                    if (closed) return;
+                    closed = true;
+                    dialog.classList.add('hidden');
                 };
+                if (closeBtn) closeBtn.onclick = dismiss;
+                setTimeout(dismiss, 2000);
             } else {
                 throw new Error(result.error);
             }

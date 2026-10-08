@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Insert Sheet - Carte Blanche</title>
+    <title>Insert Sheet - Carte Blanche Forms Hub</title>
     <link rel="stylesheet" href="style.css?v=5.1.2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -142,80 +142,98 @@
                 <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
                 <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
             </div>
-            <h1>Insert Sheet</h1>
+            <h1>INSERT SHEET</h1>
             <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
                 Carte Blanche &bull; Official Post-Production Graphics, Lower Thirds &amp; Credits Delivery
             </p>
         </header>
 
         <form id="insertSheetForm" class="modern-form">
-            <!-- SECTION 1: PRODUCTION & TECHNICAL CREW DETAILS -->
+            <!-- Hidden backward-compatibility alias inputs -->
+            <input type="hidden" id="storyName" name="storyName">
+            <input type="hidden" id="commNum" name="commNum">
+            <input type="hidden" id="producerName" name="producerName">
+            <input type="hidden" id="cameraAssistant" name="cameraAssistant">
+            <input type="hidden" id="finalMixOperator" name="finalMixOperator">
+
+            <!-- PRODUCTION & CREW DETAILS -->
             <section class="form-section">
-                <h2 class="section-title">1. Production &amp; Technical Crew Details</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="commissionNumber">Commission Number</label>
+                        <label for="commissionNumber">Commission Number:</label>
                         <input type="text" id="commissionNumber" name="commissionNumber" required placeholder="e.g. CB-2026-042">
                     </div>
                     <div class="form-group">
-                        <label for="storyName">Story Name / Working Title</label>
-                        <input type="text" id="storyName" name="storyName" required placeholder="e.g. Green Energy Transition">
+                        <label for="storyTitle">Story Title:</label>
+                        <input type="text" id="storyTitle" name="storyTitle" required placeholder="Enter story title...">
                     </div>
                     <div class="form-group">
-                        <label for="producer">Producer</label>
-                        <input type="text" id="producer" name="producer" required placeholder="Producer full name...">
+                        <label for="producer">Producer:</label>
+                        <input type="text" id="producer" name="producer" required placeholder="Producer Name &amp; Surname">
                     </div>
                     <div class="form-group">
-                        <label for="presenter">Presenter</label>
-                        <input type="text" id="presenter" name="presenter" required placeholder="Presenter full name...">
+                        <label for="presenter">Presenter:</label>
+                        <select id="presenter" name="presenter" required style="cursor: pointer;">
+                            <option value="">Select Presenter...</option>
+                            <option value="Catherine Rice">Catherine Rice</option>
+                            <option value="Claire Mawisa">Claire Mawisa</option>
+                            <option value="Erin Bates">Erin Bates</option>
+                            <option value="Govan Whittles">Govan Whittles</option>
+                            <option value="Lourensa Eckard">Lourensa Eckard</option>
+                            <option value="Macfarlane Moleli">Macfarlane Moleli</option>
+                            <option value="Masa Kekana">Masa Kekana</option>
+                            <option value="Nickolaus Bauer">Nickolaus Bauer</option>
+                            <option value="Xola Ntshinga">Xola Ntshinga</option>
+                            <option value="None">None</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="dop">DOP / Camera Operator</label>
-                        <input type="text" id="dop" name="dop" placeholder="Camera Operator full name...">
+                        <label for="dop">DOP:</label>
+                        <input type="text" id="dop" name="dop" placeholder="DOP / Camera Operator...">
                     </div>
                     <div class="form-group">
-                        <label for="camAssist">Camera Assistant</label>
-                        <input type="text" id="camAssist" name="camAssist" placeholder="Camera Assistant full name...">
+                        <label for="camAssist">Camera Assistant:</label>
+                        <input type="text" id="camAssist" name="camAssist" placeholder="Camera Assistant name...">
                     </div>
                     <div class="form-group">
-                        <label for="editor">Editor</label>
-                        <input type="text" id="editor" name="editor" placeholder="Editor full name...">
+                        <label for="editor">Editor:</label>
+                        <input type="text" id="editor" name="editor" placeholder="Editor name...">
                     </div>
                     <div class="form-group">
-                        <label for="finalMix">Final Mix Operator</label>
-                        <input type="text" id="finalMix" name="finalMix" placeholder="Sound Studio / Operator...">
+                        <label for="finalMix">Final Mix Operator:</label>
+                        <input type="text" id="finalMix" name="finalMix" placeholder="Final Mix Operator name...">
                     </div>
                     <div class="form-group">
-                        <label for="deliveryDate">Delivery Date</label>
+                        <label for="deliveryDate">Delivery Date:</label>
                         <input type="date" id="deliveryDate" name="deliveryDate">
                     </div>
                     <div class="form-group">
-                        <label for="insertDuration">Insert Duration (HH:MM:SS)</label>
-                        <input type="text" id="insertDuration" name="insertDuration" placeholder="e.g. 00:12:45" pattern="^\d{2}:\d{2}(:\d{2})?$" title="Format: MM:SS or HH:MM:SS">
+                        <label for="insertDuration">Insert Duration:</label>
+                        <input type="text" id="insertDuration" name="insertDuration" placeholder="HH:MM:SS" maxlength="8" title="Format: HH:MM:SS">
                     </div>
                     <div class="form-group full-width">
-                        <label for="thirdPartyFootage">3rd Party Footage / Archival Material Used</label>
-                        <input type="text" id="thirdPartyFootage" name="thirdPartyFootage" placeholder="Specify Yes/No and details (e.g. Yes - CCTV clip licensed from rights holder)">
+                        <label for="thirdPartyFootage">3rd Party Footage:</label>
+                        <select id="thirdPartyFootage" name="thirdPartyFootage" required style="cursor: pointer;">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
                     </div>
                 </div>
             </section>
 
-            <!-- SECTION 2: ON-SCREEN SUPERS & LOWER THIRDS (CREDITS) -->
+            <!-- SCREEN CREDITS -->
             <section class="form-section">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-                    <h2 class="section-title" style="margin-bottom: 0;">2. On-Screen Supers &amp; Lower Thirds (Credits)</h2>
-                    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;" id="creditCounterDisplay">3 Credits</span>
+                    <h2 class="section-title" style="margin-bottom: 0;">SCREEN CREDITS</h2>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;" id="creditCounterDisplay">4 Credits</span>
                 </div>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
-                    Specify lower thirds, guest titles, on-screen supers, locations, and photo credits with exact broadcast timecodes.
-                </p>
 
                 <div id="creditRowsContainer">
-                    <!-- Dynamic Credit Cards are rendered here -->
+                    <!-- Dynamic Credit Cards are rendered here (initial 4) -->
                 </div>
 
                 <button type="button" id="btnAddCreditRow" class="btn-add-credit-row">
-                    <span>➕</span> Add Another Credit Row
+                    <span>➕</span> Add More
                 </button>
             </section>
 
@@ -230,12 +248,15 @@
     <!-- Success Dialog -->
     <div id="successDialog" class="dialog-overlay hidden">
         <div class="dialog-box">
-            <h2>Insert Sheet Submitted</h2>
+            <h2>Insert Sheet Successfully Submitted</h2>
             <p>Your Insert Sheet has been generated and dispatched to Carte Blanche Legal &amp; Production.</p>
-            <button id="dialogCloseBtn" class="add-btn">Return to Forms Hub</button>
+            <div class="dialog-actions" style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; justify-content: flex-end;">
+                <button id="dialogReturnBtn" class="btn-soft" style="padding: 0.7rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer;">Return to Dashboard</button>
+                <button id="dialogAnotherBtn" class="add-btn" style="margin: 0; padding: 0.7rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer;">Submit Another Form</button>
+            </div>
         </div>
     </div>
 
-    <script src="insert_sheet.js"></script>
+    <script src="insert_sheet.js?v=5.3.0"></script>
 </body>
 </html>

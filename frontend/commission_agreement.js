@@ -116,7 +116,8 @@ async function generatePDF(sub, currentUser, commNum, commDate) {
     const doc = new jsPDF({
         orientation: 'p',
         unit: 'mm',
-        format: 'a4'
+        format: 'a4',
+        compress: true
     });
 
     const pageWidth = doc.internal.pageSize.getWidth();

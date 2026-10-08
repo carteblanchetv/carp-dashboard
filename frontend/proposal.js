@@ -3635,6 +3635,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
             const container = overlay.querySelector('#legalFormsListContainer');
 
+            const currentUser = window.auth ? (window.auth.getCurrentUser ? window.auth.getCurrentUser() : window.auth.getUser()) : null;
+            const canDelete = currentUser && (
+                (typeof isAdmin === 'function' && isAdmin(currentUser)) ||
+                (typeof isSuperAdmin === 'function' && isSuperAdmin(currentUser)) ||
+                (typeof isEditorialProduction === 'function' && isEditorialProduction(currentUser)) ||
+                (window.auth.isAdmin && window.auth.isAdmin(currentUser)) ||
+                (window.auth.isSuperAdmin && window.auth.isSuperAdmin(currentUser)) ||
+                (window.auth.isEditorialProduction && window.auth.isEditorialProduction(currentUser))
+            );
+
             if (!data.success || !data.forms || data.forms.length === 0) {
                 container.innerHTML = `
                     <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
@@ -3646,37 +3656,112 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            container.innerHTML = `
-                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                    ${data.forms.map(f => {
-                        const isDone = f.status === 'completed';
-                        const badgeStyle = isDone 
-                            ? 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;'
-                            : 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
-                        const badgeLabel = isDone ? '✓ Completed' : '⏳ Awaiting Countersign';
-                        const formattedType = (f.formType || 'release').replace(/_/g, ' ').toUpperCase();
+            // Category grouping definitions in exact required order
+            const categoryConfigs = [
+                { title: 'Participant Release Forms', types: ['participant_release'] },
+                { title: 'Minor Release Forms', types: ['minor_release'] },
+                { title: 'Music Agreement Forms', types: ['music_agreement'] },
+                { title: 'Location Agreement Forms', types: ['location_agreement'] },
+                { title: 'Footage Release Forms', types: ['footage_agreement', 'footage_release_agreement', 'footage_release'] },
+                { title: 'Insert Sheets Form', types: ['insert_sheet'] }
+            ];
 
-                        return `
-                            <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border, #e2e8f0); border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
-                                <div>
-                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-                                        <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">${f.contributorName}</span>
-                                        <span style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; ${badgeStyle}">${badgeLabel}</span>
-                                    </div>
-                                    <div style="font-size: 0.78rem; color: var(--text-muted);">
-                                        <strong>${formattedType}</strong> &bull; Producer: ${f.producerName || '—'}
-                                    </div>
-                                </div>
-                                <div style="display: flex; gap: 0.4rem;">
-                                    ${!isDone ? `
-                                        <a href="${f.formType}.html?id=${f.id}&action=countersign" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #008fbe; color: white; border-radius: 4px;">
-                                            ✍️ Countersign
-                                        </a>
-                                    ` : ''}
-                                </div>
+            const formPageMap = {
+                'participant_release': 'participant_release.html',
+                'minor_release': 'minor_release.html',
+                'location_agreement': 'location_agreement.html',
+                'music_agreement': 'music_agreement.html',
+                'footage_agreement': 'footage_release_agreement.html',
+                'footage_release_agreement': 'footage_release_agreement.html',
+                'footage_release': 'footage_release_agreement.html',
+                'insert_sheet': 'insert_sheet.html',
+                'travel_booking': 'travel_booking.html'
+            };
+
+            const groupsWithForms = categoryConfigs.map(cat => {
+                const matched = data.forms.filter(f => cat.types.includes(f.formType));
+                return { title: cat.title, forms: matched };
+            }).filter(g => g.forms.length > 0);
+
+            // Handle any other form types not in standard categories
+            const knownTypes = categoryConfigs.flatMap(c => c.types);
+            const otherForms = data.forms.filter(f => !knownTypes.includes(f.formType));
+            if (otherForms.length > 0) {
+                groupsWithForms.push({ title: 'Other Releases & Agreements', forms: otherForms });
+            }
+
+            if (groupsWithForms.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+                        <p style="font-size: 2rem; margin: 0 0 0.5rem;">📄</p>
+                        <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No legal forms recorded yet</p>
+                        <p style="font-size: 0.85rem; max-width: 380px; margin: 0 auto 1.25rem;">When interviewees or contributors sign forms with commission <strong>${commNum || 'N/A'}</strong>, they will automatically appear here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div id="storyLegalFormsList" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    ${groupsWithForms.map(group => `
+                        <div class="legal-group-section" style="display: flex; flex-direction: column; gap: 0.6rem;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid var(--border, #e2e8f0); padding-bottom: 0.4rem;">
+                                <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: var(--text-main, #0f172a); display: flex; align-items: center; gap: 0.4rem;">
+                                    <span>📂</span> ${group.title}
+                                </h4>
+                                <span style="font-size: 0.75rem; background: var(--bg-light, #f1f5f9); color: var(--text-muted, #64748b); padding: 0.15rem 0.5rem; border-radius: 999px; font-weight: 600;">
+                                    ${group.forms.length}
+                                </span>
                             </div>
-                        `;
-                    }).join('')}
+                            <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+                                ${group.forms.map(f => {
+                                    const isCountersignable = !['travel_booking', 'insert_sheet'].includes(f.formType);
+                                    const isDone = f.status === 'completed' || !isCountersignable;
+                                    const badgeStyle = isDone 
+                                        ? 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;'
+                                        : 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
+                                    const badgeLabel = isDone ? '✓ Completed' : '⏳ Awaiting Countersign';
+                                    const formattedType = (f.formType || 'release').replace(/_/g, ' ').toUpperCase();
+                                    const primaryFile = (f.files && f.files.length > 0) ? f.files[0] : null;
+                                    const targetPage = formPageMap[f.formType] || `${f.formType}.html`;
+
+                                    return `
+                                        <div class="legal-form-item" data-form-id="${f.id}" style="background: var(--bg-card, #ffffff); border: 1px solid var(--border, #e2e8f0); border-radius: 8px; padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: all 0.2s ease;">
+                                            <div>
+                                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+                                                    <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">${escapeHtml(f.contributorName)}</span>
+                                                    <span style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; ${badgeStyle}">${badgeLabel}</span>
+                                                </div>
+                                                <div style="font-size: 0.78rem; color: var(--text-muted);">
+                                                    <strong>${formattedType}</strong> &bull; Producer: ${escapeHtml(f.producerName || '—')}
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; gap: 0.4rem; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
+                                                ${primaryFile ? `
+                                                    <a href="/api/get-submission-file?path=${encodeURIComponent(primaryFile.storagePath)}&inline=true" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="View signed PDF">
+                                                        📄 View PDF
+                                                    </a>
+                                                ` : ''}
+                                                ${(!isDone && isCountersignable) ? `
+                                                    <a href="${targetPage}?id=${f.id}&action=countersign" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #008fbe; color: white; border-radius: 4px; font-weight: 600;">
+                                                        ✍️ Countersign
+                                                    </a>
+                                                ` : ''}
+                                                <a href="${targetPage}?id=${f.id}&action=countersign&mode=edit" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="Edit details to fix typos or mistakes">
+                                                    ✏️ Edit
+                                                </a>
+                                                ${canDelete ? `
+                                                    <button type="button" class="btn-soft btn-delete-legal-form" onclick="window.deleteStoryLegalForm('${f.id}', '${(f.contributorName || 'Form').replace(/'/g, "\\'")}', '${formattedType.replace(/'/g, "\\'")}', this)" style="font-size: 0.75rem; padding: 0.35rem 0.65rem; background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; border-radius: 4px; cursor: pointer;" title="Delete this legal form">
+                                                        🗑️ Delete
+                                                    </button>
+                                                ` : ''}
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
                 </div>
             `;
         } catch (err) {
@@ -3685,6 +3770,54 @@ document.addEventListener('DOMContentLoaded', () => {
                     Error loading legal forms: ${err.message}
                 </div>
             `;
+        }
+    };
+
+    window.deleteStoryLegalForm = async (formId, contributorName, formType, btnEl) => {
+        const confirmMsg = `Are you sure you want to permanently delete this ${formType} for "${contributorName}"?\n\nThis will remove the submission and all attached signed documents from the server. This action cannot be undone.`;
+        if (!confirm(confirmMsg)) return;
+
+        const rowEl = btnEl.closest('.legal-form-item');
+        const origContent = btnEl.innerHTML;
+        btnEl.disabled = true;
+        btnEl.innerHTML = '<span class="spinner-small" style="display:inline-block; vertical-align:middle; width:12px; height:12px; border-width:2px; margin-right:4px;"></span> Deleting...';
+
+        try {
+            const res = await fetchWithAuth('/api/admin/delete-legal-form', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: formId })
+            });
+
+            const data = await res.json();
+            if (!res.ok || !data.success) {
+                throw new Error(data.error || 'Failed to delete form');
+            }
+
+            if (rowEl) {
+                rowEl.style.transition = 'all 0.3s ease';
+                rowEl.style.opacity = '0';
+                rowEl.style.transform = 'translateX(20px)';
+                setTimeout(() => {
+                    const listContainer = rowEl.parentElement;
+                    rowEl.remove();
+                    if (listContainer && listContainer.children.length === 0) {
+                        const grandParent = listContainer.parentElement;
+                        grandParent.innerHTML = `
+                            <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+                                <p style="font-size: 2rem; margin: 0 0 0.5rem;">📄</p>
+                                <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No legal forms recorded</p>
+                                <p style="font-size: 0.85rem; max-width: 380px; margin: 0 auto 1.25rem;">All legal release forms for this story have been removed.</p>
+                            </div>
+                        `;
+                    }
+                }, 300);
+            }
+        } catch (err) {
+            console.error('Delete legal form failed:', err);
+            alert(`Error deleting form: ${err.message}`);
+            btnEl.disabled = false;
+            btnEl.innerHTML = origContent;
         }
     };
 

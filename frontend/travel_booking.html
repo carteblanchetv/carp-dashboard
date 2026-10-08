@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Travel Booking Form</title>
-    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <title>Travel Booking Form - Carte Blanche</title>
+    <link rel="stylesheet" href="style.css?v=5.1.2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
-    <script src="js/branding.js?v=5.1.1"></script>
-    <script src="js/share_form.js?v=5.1.1"></script>
+    <script src="js/branding.js?v=5.2.2"></script>
+    <script src="js/share_form.js?v=5.2.9"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script type="module">
@@ -30,6 +30,154 @@
             }
         });
     </script>
+    <style>
+        .travel-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .travel-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+        .travel-card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 0;
+        }
+        .data-table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .travel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .travel-table th {
+            background: var(--bg-surface, #f8fafc);
+            color: var(--text-muted);
+            font-weight: 600;
+            text-align: left;
+            padding: 0.5rem 0.6rem;
+            border: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        :root.dark-mode .travel-table th {
+            background: #1e293b;
+        }
+        .travel-table td {
+            padding: 0.4rem;
+            border: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        .travel-table input {
+            width: 100%;
+            padding: 0.4rem 0.5rem;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            box-sizing: border-box;
+            background: var(--bg-card);
+            color: var(--text-main);
+        }
+        .travel-table input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 143, 190, 0.15);
+        }
+        .btn-action-small {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #ef4444;
+            font-size: 0.95rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+        }
+        .btn-action-small:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .btn-add-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--bg-surface, #f1f5f9);
+            color: var(--primary);
+            border: 1px dashed var(--primary);
+            border-radius: 6px;
+            padding: 0.4rem 0.85rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.25rem;
+            transition: all 0.2s ease;
+        }
+        .btn-add-row:hover {
+            background: rgba(0, 143, 190, 0.08);
+        }
+        .btn-add-block {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            background: var(--bg-card);
+            color: var(--primary);
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s ease;
+        }
+        .btn-add-block:hover {
+            border-color: var(--primary);
+            background: rgba(0, 143, 190, 0.05);
+        }
+        .other-airport-wrap {
+            margin-top: 0.35rem;
+        }
+        .other-airport-wrap.hidden {
+            display: none !important;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 0.15rem;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+        .checkbox-group label {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            font-weight: 500;
+            cursor: pointer;
+            line-height: 1.4;
+        }
+    </style>
 </head>
 <body class="form-body">
     <nav class="global-top-nav">
@@ -55,98 +203,153 @@
     <div id="loadingOverlay" class="loading-overlay">
         <div class="spinner"></div>
         <h2 style="color: var(--primary);">Submitting Travel Booking...</h2>
-        <p>Please wait, uploading encrypted documents.</p>
+        <p>Please wait, compiling travel logistics documentation.</p>
     </div>
 
-    <div class="form-wrapper" style="max-width: 800px; margin: 2rem auto;">
+    <div class="form-wrapper" style="max-width: 820px; margin: 2rem auto;">
         <header class="form-header">
             <div class="logo-group">
                 <img src="assets/combined_artists_logo.png" alt="Combined Artists" class="brand-logo logo-combined">
                 <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
             </div>
-            <h1>Travel Booking Form</h1>
+            <h1>TRAVEL BOOKING FORM</h1>
         </header>
 
         <form id="travelBookingForm" class="modern-form">
-            <section class="form-section">
-                <h2 class="section-title">Traveler Information</h2>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="travelerName">Traveler Full Name (As in Passport/ID)</label>
-                        <input type="text" id="travelerName" name="travelerName" required placeholder="Enter full name...">
-                    </div>
-                    <div class="form-group">
-                        <label for="idNumber">ID / Passport Number</label>
-                        <input type="text" id="idNumber" name="idNumber" required placeholder="Enter ID/Passport...">
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" required placeholder="e.g. +27 82 123 4567">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" required placeholder="name@example.com">
-                    </div>
-                </div>
-            </section>
+            <!-- Hidden backward-compatibility alias inputs -->
+            <input type="hidden" id="travelerName" name="travelerName">
+            <input type="hidden" id="idNumber" name="idNumber">
+            <input type="hidden" id="phone" name="phone">
+            <input type="hidden" id="departureAirport" name="departureAirport">
+            <input type="hidden" id="destinationAirport" name="destinationAirport">
+            <input type="hidden" id="departureDate" name="departureDate">
+            <input type="hidden" id="returnDate" name="returnDate">
+            <input type="hidden" id="carHireRequired" name="carHireRequired">
+            <input type="hidden" id="additionalNotes" name="additionalNotes">
+            <input type="hidden" id="producerName" name="producerName">
+            <input type="hidden" id="producerEmail" name="producerEmail">
 
+            <!-- SECTION 1: TOP DETAILS -->
             <section class="form-section">
-                <h2 class="section-title">Flight & Destination Details</h2>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="departureAirport">Departure Airport</label>
-                        <input type="text" id="departureAirport" name="departureAirport" required placeholder="e.g. O.R. Tambo (JNB)">
-                    </div>
-                    <div class="form-group">
-                        <label for="destinationAirport">Destination Airport</label>
-                        <input type="text" id="destinationAirport" name="destinationAirport" required placeholder="e.g. Cape Town (CPT)">
-                    </div>
-                    <div class="form-group">
-                        <label for="departureDate">Departure Date</label>
-                        <input type="date" id="departureDate" name="departureDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="returnDate">Return Date</label>
-                        <input type="date" id="returnDate" name="returnDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="storyName">Story / Project Name & Code</label>
-                        <input type="text" id="storyName" name="storyName" required placeholder="e.g. Hot Soup">
-                    </div>
-                    <div class="form-group">
-                        <label for="commissionNumber">Commission Number</label>
+                        <label for="commissionNumber">Commission Number:</label>
                         <input type="text" id="commissionNumber" name="commissionNumber" placeholder="e.g. CB-2026-042">
                     </div>
+                    <div class="form-group">
+                        <label for="storyName">Story Name:</label>
+                        <input type="text" id="storyName" name="storyName" required placeholder="Enter story name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="nameAndSurname">Name &amp; Surname:</label>
+                        <input type="text" id="nameAndSurname" name="nameAndSurname" required placeholder="Enter your full name &amp; surname...">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required placeholder="name@carteblanche.co.za">
+                    </div>
                 </div>
             </section>
 
+            <!-- SECTION 2: AIR TRAVEL -->
             <section class="form-section">
-                <h2 class="section-title">Accommodation & Car Hire</h2>
-                <div class="form-grid">
+                <h2 class="section-title">AIR TRAVEL</h2>
+                <div class="form-grid" style="margin-bottom: 1.25rem;">
                     <div class="form-group">
-                        <label for="accommodationRequired">Accommodation Required?</label>
-                        <select id="accommodationRequired" name="accommodationRequired">
-                            <option value="No">No</option>
+                        <label for="airTravelRequired">Air Travel Required:</label>
+                        <select id="airTravelRequired" name="airTravelRequired">
                             <option value="Yes">Yes</option>
+                            <option value="No">No</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="carHireRequired">Car Hire Required?</label>
-                        <select id="carHireRequired" name="carHireRequired">
-                            <option value="No">No</option>
-                            <option value="Yes">Yes</option>
+                        <label for="singleOrReturn">Single or Return:</label>
+                        <select id="singleOrReturn" name="singleOrReturn">
+                            <option value="Return">Return</option>
+                            <option value="Single">Single</option>
                         </select>
                     </div>
+                </div>
+
+                <div id="flightsContainer">
+                    <!-- Flights 1 to 5 will be initialized here by JavaScript or dynamically -->
+                </div>
+
+                <button type="button" id="btnAddFlight" class="btn-add-block">
+                    <span>➕</span> Add another flight
+                </button>
+            </section>
+
+            <!-- SECTION 3: CAR RENTAL -->
+            <section class="form-section">
+                <h2 class="section-title">CAR RENTAL</h2>
+                <div class="form-grid" style="margin-bottom: 1.25rem;">
                     <div class="form-group full-width">
-                        <label for="additionalNotes">Special Requests / Preferences</label>
-                        <textarea id="additionalNotes" name="additionalNotes" rows="3" placeholder="Specify airline, hotel preference, seating, dietary requirements..."></textarea>
+                        <label for="carRentalRequired">Car Rental Required:</label>
+                        <select id="carRentalRequired" name="carRentalRequired">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
                     </div>
+                </div>
+
+                <div id="carRentalsContainer">
+                    <!-- Car Rentals 1 & 2 initialized here -->
+                </div>
+
+                <button type="button" id="btnAddCar" class="btn-add-block">
+                    <span>➕</span> Add another car rental
+                </button>
+            </section>
+
+            <!-- SECTION 4: ACCOMMODATION -->
+            <section class="form-section">
+                <h2 class="section-title">ACCOMMODATION</h2>
+                <div class="form-grid" style="margin-bottom: 1.25rem;">
+                    <div class="form-group full-width">
+                        <label for="accommodationRequired">Accommodation Required:</label>
+                        <select id="accommodationRequired" name="accommodationRequired">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="locationsContainer">
+                    <!-- Locations 1, 2, 3 initialized here -->
+                </div>
+
+                <button type="button" id="btnAddLocation" class="btn-add-block">
+                    <span>➕</span> Add another location
+                </button>
+            </section>
+
+            <!-- SECTION 5: SPECIAL REQUIREMENTS -->
+            <section class="form-section">
+                <div class="form-group full-width">
+                    <label for="specialRequirements">Special Requirements</label>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.35rem; font-style: italic;">
+                        (Example: SUV for crew &amp; gear)
+                    </div>
+                    <textarea id="specialRequirements" name="specialRequirements" rows="3" placeholder="Specify SUV for crew &amp; gear, excess baggage, seating, or any special requests..."></textarea>
+                </div>
+            </section>
+
+            <!-- SECTION 6: CONFIRMATIONS -->
+            <section class="form-section">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="confirmCorrect" name="confirmCorrect" required>
+                    <label for="confirmCorrect">I hereby confirm that the above information is correct.</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agreeInformManagement" name="agreeInformManagement" required>
+                    <label for="agreeInformManagement">I agree to inform management of any changes as soon as possible.</label>
                 </div>
             </section>
 
             <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
-                <a href="index.html" class="btn-soft" style="text-decoration: none; display: flex; align-items: center;">Cancel</a>
-                <button type="submit" class="add-btn" style="margin-top: 0; background: var(--primary); color: white; border: none; padding: 0.75rem 2rem; font-weight: 600; border-radius: 6px; cursor: pointer;">Submit Request</button>
+                <a href="forms_hub.html" class="btn-soft" style="text-decoration: none; display: flex; align-items: center;">Cancel</a>
+                <button type="submit" class="add-btn" style="margin-top: 0; background: #0284c7; color: white; border: none; padding: 0.75rem 2rem; font-weight: 700; border-radius: 6px; cursor: pointer;">Submit Travel Booking</button>
             </div>
         </form>
     </div>
@@ -154,12 +357,15 @@
     <!-- Success Dialog -->
     <div id="successDialog" class="dialog-overlay hidden">
         <div class="dialog-box">
-            <h2>Travel Request Submitted</h2>
+            <h2>Travel Booking Successfully Submitted</h2>
             <p>Your Travel Booking request has been logged and the travel coordinator has been notified.</p>
-            <button id="dialogCloseBtn" class="add-btn">Return to Dashboard</button>
+            <div class="dialog-actions" style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; justify-content: flex-end;">
+                <button id="dialogReturnBtn" class="btn-soft" style="padding: 0.7rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer;">Return to Dashboard</button>
+                <button id="dialogAnotherBtn" class="add-btn" style="margin: 0; padding: 0.7rem 1.25rem; border-radius: 6px; font-weight: 600; cursor: pointer;">Submit Another Form</button>
+            </div>
         </div>
     </div>
 
-    <script src="travel_booking.js"></script>
+    <script src="travel_booking.js?v=5.3.0"></script>
 </body>
 </html>
