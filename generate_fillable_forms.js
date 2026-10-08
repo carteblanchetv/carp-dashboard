@@ -1535,7 +1535,7 @@ async function generateTravelBooking(cbBytes, caBytes) {
     ], 17);
 
     layout.addFieldRow([
-      { id: 'nameAndSurname', label: 'Name & Surname:', width: halfW },
+      { id: 'producer', label: 'Producer:', width: halfW },
       { id: 'email', label: 'Email:', width: halfW, gap: 0 }
     ], 17);
 
@@ -1561,6 +1561,10 @@ async function generateTravelBooking(cbBytes, caBytes) {
 
     // Backward compatibility aliases on page 1
     try {
+      const aliasName = form.createTextField('nameAndSurname');
+      aliasName.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+      const aliasProdName = form.createTextField('producerName');
+      aliasProdName.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
       const aliasTraveler = form.createTextField('travelerName');
       aliasTraveler.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
       const aliasId = form.createTextField('idNumber');

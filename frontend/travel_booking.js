@@ -490,12 +490,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const carHireRequiredAlias = document.getElementById('carHireRequired');
     const additionalNotesAlias = document.getElementById('additionalNotes');
     const producerNameAlias = document.getElementById('producerName');
+    const producerAlias = document.getElementById('producer');
     const producerEmailAlias = document.getElementById('producerEmail');
 
     function syncLegacyFields() {
         const nameVal = (nameInput?.value || '').trim();
         if (travelerNameAlias) travelerNameAlias.value = nameVal;
-        if (producerNameAlias && !producerNameAlias.value) producerNameAlias.value = nameVal;
+        if (producerNameAlias) producerNameAlias.value = nameVal;
+        if (producerAlias) producerAlias.value = nameVal;
 
         const emailVal = (emailInput?.value || '').trim();
         if (producerEmailAlias && !producerEmailAlias.value) producerEmailAlias.value = emailVal;
@@ -619,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.setTextColor(71, 85, 105);
             doc.text(`COMMISSION NUMBER:`, margin + 3, y + 5);
             doc.text(`STORY NAME:`, margin + 50, y + 5);
-            doc.text(`NAME & SURNAME:`, margin + 105, y + 5);
+            doc.text(`PRODUCER:`, margin + 105, y + 5);
             doc.text(`EMAIL:`, margin + 145, y + 5);
 
             doc.setFont('helvetica', 'normal');
