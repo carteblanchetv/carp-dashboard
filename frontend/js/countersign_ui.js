@@ -255,6 +255,14 @@
         if (prof.name && prodNameHidden && !prodNameHidden.value) prodNameHidden.value = prof.name;
         if (prof.email && prodEmailHidden && !prodEmailHidden.value) prodEmailHidden.value = prof.email;
 
+        // Ensure producerSignedDate defaults to today's date if empty
+        const now = new Date();
+        const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        const prodDateInp = document.getElementById('producerSignedDate');
+        if (prodDateInp && !prodDateInp.value) {
+            prodDateInp.value = todayStr;
+        }
+
         // Keep hidden inputs continuously synchronized with signer inputs
         const syncInputs = () => {
             const n = document.getElementById('prodSignerName')?.value.trim();
@@ -281,27 +289,33 @@
         const typeInput = document.getElementById('producerTypeSigInput');
         const typeFont = document.getElementById('producerTypeSigFont');
 
-        tabDraw.addEventListener('click', () => {
-            producerSigMethod = 'draw';
-            tabDraw.classList.add('active');
-            tabType.classList.remove('active');
-            typeControls.style.display = 'none';
-            producerCtx.clearRect(0, 0, producerCanvas.width, producerCanvas.height);
-            producerCanvas.style.pointerEvents = 'auto';
-        });
+        if (tabDraw) {
+            tabDraw.addEventListener('click', (e) => {
+                if (e) e.preventDefault();
+                producerSigMethod = 'draw';
+                tabDraw.classList.add('active');
+                if (tabType) tabType.classList.remove('active');
+                if (typeControls) typeControls.style.display = 'none';
+                producerCtx.clearRect(0, 0, producerCanvas.width, producerCanvas.height);
+                producerCanvas.style.pointerEvents = 'auto';
+            });
+        }
 
-        tabType.addEventListener('click', () => {
-            producerSigMethod = 'type';
-            tabType.classList.add('active');
-            tabDraw.classList.remove('active');
-            typeControls.style.display = 'block';
-            producerCanvas.style.pointerEvents = 'none';
-            if (!typeInput.value) {
-                const prodName = document.getElementById('producerName')?.value || document.getElementById('prodSignerName')?.value || document.getElementById('producer')?.value || '';
-                if (prodName) typeInput.value = prodName;
-            }
-            renderProducerTypedSignature();
-        });
+        if (tabType) {
+            tabType.addEventListener('click', (e) => {
+                if (e) e.preventDefault();
+                producerSigMethod = 'type';
+                tabType.classList.add('active');
+                if (tabDraw) tabDraw.classList.remove('active');
+                if (typeControls) typeControls.style.display = 'block';
+                producerCanvas.style.pointerEvents = 'none';
+                if (typeInput && !typeInput.value) {
+                    const prodName = document.getElementById('producerName')?.value || document.getElementById('prodSignerName')?.value || document.getElementById('producer')?.value || '';
+                    if (prodName) typeInput.value = prodName;
+                }
+                renderProducerTypedSignature();
+            });
+        }
 
         function renderProducerTypedSignature() {
             producerCtx.clearRect(0, 0, producerCanvas.width, producerCanvas.height);

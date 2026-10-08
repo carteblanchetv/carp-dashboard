@@ -1,5 +1,5 @@
-// insert_sheet.js - v5.3.0
-document.addEventListener('DOMContentLoaded', () => {
+// insert_sheet.js - v5.3.3
+function initInsertSheet() {
     const form = document.getElementById('insertSheetForm');
     const container = document.getElementById('creditRowsContainer');
     const addBtn = document.getElementById('btnAddCreditRow');
@@ -555,4 +555,10 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.text('Form Ref: CB-INS-2026  •  Carte Blanche Post-Production & Legal', x, 290);
         doc.text(`Page ${pageNum} of ${totalPages}`, x + width, 290, { align: 'right' });
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initInsertSheet);
+} else {
+    initInsertSheet();
+}

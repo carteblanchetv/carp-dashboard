@@ -1,5 +1,5 @@
-// travel_booking.js - v5.3.0
-document.addEventListener('DOMContentLoaded', () => {
+// travel_booking.js - v5.3.3
+function initTravelBooking() {
     const form = document.getElementById('travelBookingForm');
     const loadingOverlay = document.getElementById('loadingOverlay');
 
@@ -1052,4 +1052,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })();
     });
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTravelBooking);
+} else {
+    initTravelBooking();
+}

@@ -1,5 +1,5 @@
-// footage_release_agreement.js - v5.3.0
-document.addEventListener('DOMContentLoaded', () => {
+// footage_release_agreement.js - v5.3.3
+function initFootageAgreement() {
     // -------------------------------------------------------------------------
     // 1. Elements & Canvas Setup (Owner & Producer Signatures)
     // -------------------------------------------------------------------------
@@ -684,4 +684,10 @@ document.addEventListener('DOMContentLoaded', () => {
             standardSubmitEndpoint: '/api/send-footage-release-agreement'
         });
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFootageAgreement);
+} else {
+    initFootageAgreement();
+}

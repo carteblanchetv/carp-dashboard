@@ -1,5 +1,5 @@
-// music_agreement.js - v5.3.0
-document.addEventListener('DOMContentLoaded', () => {
+// music_agreement.js - v5.3.3
+function initMusicAgreement() {
     // -------------------------------------------------------------------------
     // 1. Elements & Canvas Setup (Owner & Producer Signatures)
     // -------------------------------------------------------------------------
@@ -608,4 +608,10 @@ document.addEventListener('DOMContentLoaded', () => {
             standardSubmitEndpoint: '/api/send-music-agreement'
         });
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMusicAgreement);
+} else {
+    initMusicAgreement();
+}

@@ -1,5 +1,5 @@
-// participant_release.js - Carte Blanche Participant Release Form Handler
-document.addEventListener('DOMContentLoaded', () => {
+// participant_release.js - Carte Blanche Participant Release Form Handler - v5.3.3
+function initParticipantRelease() {
     const canvas = document.getElementById('signatureCanvas');
     const ctx = canvas ? canvas.getContext('2d') : null;
     const clearBtn = document.getElementById('clearSigBtn');
@@ -568,4 +568,10 @@ document.addEventListener('DOMContentLoaded', () => {
             standardSubmitEndpoint: '/api/send-participant-release'
         });
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initParticipantRelease);
+} else {
+    initParticipantRelease();
+}

@@ -1,5 +1,5 @@
-// minor_release.js - Carte Blanche Minor Release Form Handler
-document.addEventListener('DOMContentLoaded', () => {
+// minor_release.js - Carte Blanche Minor Release Form Handler - v5.3.3
+function initMinorRelease() {
     const canvas = document.getElementById('signatureCanvas');
     const ctx = canvas ? canvas.getContext('2d') : null;
     const clearBtn = document.getElementById('clearSigBtn');
@@ -571,4 +571,10 @@ document.addEventListener('DOMContentLoaded', () => {
             standardSubmitEndpoint: '/api/send-minor-release'
         });
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMinorRelease);
+} else {
+    initMinorRelease();
+}

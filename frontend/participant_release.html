@@ -268,7 +268,19 @@
         </div>
     </div>
 
-    <script src="js/countersign_ui.js?v=5.3.0"></script>
-    <script src="participant_release.js?v=5.3.1"></script>
+    <script>
+        (function() {
+            try {
+                const now = new Date();
+                const today = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+                const pDate = document.getElementById('participantSignedDate');
+                if (pDate && !pDate.value) pDate.value = today;
+                const prDate = document.getElementById('producerSignedDate');
+                if (prDate && !prDate.value) prDate.value = today;
+            } catch (e) {}
+        })();
+    </script>
+    <script src="js/countersign_ui.js?v=5.3.3"></script>
+    <script src="participant_release.js?v=5.3.3"></script>
 </body>
 </html>

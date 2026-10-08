@@ -296,7 +296,21 @@
         </div>
     </div>
 
-    <script src="js/countersign_ui.js?v=5.3.0"></script>
-    <script src="footage_release_agreement.js?v=5.3.1"></script>
+    <script>
+        (function() {
+            try {
+                const now = new Date();
+                const today = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+                const oDate = document.getElementById('ownerSignedDate');
+                if (oDate && !oDate.value) oDate.value = today;
+                const pDate = document.getElementById('producerSignedDate');
+                if (pDate && !pDate.value) pDate.value = today;
+                const bDate = document.getElementById('broadcastDated');
+                if (bDate && !bDate.value) bDate.value = today;
+            } catch (e) {}
+        })();
+    </script>
+    <script src="js/countersign_ui.js?v=5.3.3"></script>
+    <script src="footage_release_agreement.js?v=5.3.3"></script>
 </body>
 </html>

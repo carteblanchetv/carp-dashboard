@@ -1,8 +1,8 @@
 // insert_footage_declaration.js
-// VERSION: 2.2.0 (CSV/Excel Import Data)
+// VERSION: 5.3.3 (Resilient Init)
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Script loaded: insert_footage_declaration.js 3.0.0');
+function initInsertFootageDeclaration() {
+    console.log('Script loaded: insert_footage_declaration.js 5.3.3');
     const tableBody = document.getElementById('footageTableBody');
     const addRowBtn = document.getElementById('addRowBtn');
     const form = document.getElementById('insertFootageForm');
@@ -825,7 +825,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (submitBtn) submitBtn.disabled = false;
         }
     });
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initInsertFootageDeclaration);
+} else {
+    initInsertFootageDeclaration();
+}
 
 
 
