@@ -956,22 +956,19 @@ async function generateMusicAgreement(cbBytes, caBytes) {
   drawHeader(page, cbLogoImg, caLogoImg, 'MUSIC AGREEMENT', 'Carte Blanche & M-Net  •  Music Agreement');
 
   const layout = new FlowLayout(page, form, 726);
-
-  // Preamble
-  layout.addParagraph('Between', page.docBoldFont, 8.5, COLOR_TEXT_DARK, 11);
-  layout.addParagraph('CARTE BLANCHE & M-NET', page.docBoldFont, 10, COLOR_PRIMARY, 12);
-  layout.addParagraph('(“the producer”)', page.docItalicFont, 8, COLOR_TEXT_MUTED, 11);
-  layout.addSpace(2);
-  layout.addParagraph('And', page.docBoldFont, 8.5, COLOR_TEXT_DARK, 11);
-  layout.addSpace(2);
-
   const halfW = (CONTENT_W - 12) / 2;
-  layout.addFieldRow([
-    { id: 'musicOwnerName', label: 'Music Owner Name & Surname:', width: halfW },
-    { id: 'musicOwnerCompany', label: 'Music Owner Company:', width: halfW, subtext: '(on behalf of / “the company”)', gap: 0 }
-  ]);
 
-  layout.addSpace(1);
+  // Centered Parties Block
+  layout.addCenteredParagraph('Music Agreement', page.docBoldFont, 10, COLOR_PRIMARY, 12);
+  layout.addCenteredParagraph('between', page.docBoldFont, 8, COLOR_TEXT_DARK, 10);
+  layout.addCenteredParagraph('CARTE BLANCHE & M-NET', page.docBoldFont, 9.5, COLOR_TEXT_DARK, 10);
+  layout.addCenteredParagraph('(“the producer”)', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 10);
+  layout.addCenteredParagraph('and', page.docBoldFont, 8, COLOR_TEXT_DARK, 11);
+
+  layout.addCenteredField('musicOwnerName', 'Music Owner Name & Surname:', 300, 18);
+  layout.addCenteredParagraph('on behalf of', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 9);
+  layout.addCenteredField('musicOwnerCompany', 'Music Owner Company:', 300, 18);
+  layout.addCenteredParagraph('(“the owner”)', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 11);
 
   // Story Title, Commission Number, Broadcast Date
   const thirdW = (CONTENT_W - 16) / 3;

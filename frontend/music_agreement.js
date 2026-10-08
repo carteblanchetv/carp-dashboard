@@ -305,48 +305,60 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.setLineWidth(0.6);
             doc.line(margin, y, pageWidth - margin, y);
 
-            // 3. Parties Block
+            // 3. Centered Parties Block
             y += 6;
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(0, 143, 190);
+            doc.text('Music Agreement', pageWidth / 2, y, { align: 'center' });
+
+            y += 4.5;
             doc.setFontSize(8.5);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(71, 85, 105);
-            doc.text('Between', margin, y);
+            doc.text('between', pageWidth / 2, y, { align: 'center' });
 
             y += 4.5;
-            doc.setFontSize(9.5);
+            doc.setFontSize(10);
             doc.setFont('helvetica', 'bold');
-            doc.setTextColor(0, 143, 190);
-            doc.text('CARTE BLANCHE & M-NET', margin, y);
+            doc.setTextColor(15, 23, 42);
+            doc.text('CARTE BLANCHE & M-NET', pageWidth / 2, y, { align: 'center' });
 
             y += 4;
             doc.setFontSize(8);
             doc.setFont('helvetica', 'italic');
             doc.setTextColor(100, 116, 139);
-            doc.text('(“the producer”)', margin, y);
+            doc.text('(“the producer”)', pageWidth / 2, y, { align: 'center' });
 
             y += 4.5;
             doc.setFontSize(8.5);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(71, 85, 105);
-            doc.text('And', margin, y);
+            doc.text('and', pageWidth / 2, y, { align: 'center' });
 
-            y += 5;
+            y += 5.5;
             doc.setTextColor(15, 23, 42);
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9);
-            doc.text(`Music Owner Name & Surname:  ${ownerName || '________________________________________'}`, margin, y);
+            doc.text(`Music Owner Name & Surname:  ${ownerName || '________________________________________'}`, pageWidth / 2, y, { align: 'center' });
 
             y += 4.5;
             doc.setFontSize(8);
             doc.setFont('helvetica', 'italic');
             doc.setTextColor(100, 116, 139);
-            doc.text('on behalf of', margin, y);
+            doc.text('on behalf of', pageWidth / 2, y, { align: 'center' });
 
             y += 4.5;
             doc.setTextColor(15, 23, 42);
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9);
-            doc.text(`Music Owner Company:  ${ownerCompany || '________________________________________'} (“the company”)`, margin, y);
+            doc.text(`Music Owner Company:  ${ownerCompany || '________________________________________'}`, pageWidth / 2, y, { align: 'center' });
+
+            y += 4;
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'italic');
+            doc.setTextColor(100, 116, 139);
+            doc.text('(“the owner”)', pageWidth / 2, y, { align: 'center' });
 
             // 4. Production & Broadcast Details
             y += 6;
