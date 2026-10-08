@@ -768,17 +768,17 @@ async function generateFootageAgreement(cbBytes, caBytes) {
   const halfW = (CONTENT_W - 12) / 2;
   layout.addFieldRow([
     { id: 'footageOwnerName', label: 'Footage Owner Name & Surname:', width: halfW },
-    { id: 'footageOwnerCompany', label: 'Footage Owner Company:', width: halfW, subtext: '(on behald of / “the owner”)', gap: 0 }
+    { id: 'footageOwnerCompany', label: 'Footage Owner Company:', width: halfW, subtext: '(on behalf of / “the owner”)', gap: 0 }
   ]);
 
   layout.addSpace(1.5);
 
-  // Story Title, Commission Number, Broadcast Dated
+  // Story Title, Commission Number, Broadcast Date
   const thirdW = (CONTENT_W - 16) / 3;
   layout.addFieldRow([
     { id: 'storyTitle', label: 'Story Title:', width: thirdW },
     { id: 'commissionNumber', label: 'Commission Number:', width: thirdW },
-    { id: 'broadcastDated', label: 'Broadcast Dated:', width: thirdW, gap: 0 }
+    { id: 'broadcastDate', label: 'Broadcast Date:', width: thirdW, gap: 0 }
   ]);
 
   layout.addDivider(0.5);
@@ -854,8 +854,8 @@ async function generateFootageAgreement(cbBytes, caBytes) {
     aliasLicensorEntity.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasStoryName = form.createTextField('storyName');
     aliasStoryName.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
-    const aliasBcastDate = form.createTextField('broadcastDate');
-    aliasBcastDate.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasBcastDated = form.createTextField('broadcastDated');
+    aliasBcastDated.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasSignAt = form.createTextField('signedAt');
     aliasSignAt.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasSignDate = form.createTextField('signedDate');

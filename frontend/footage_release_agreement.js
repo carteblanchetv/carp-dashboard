@@ -278,6 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const footageOwnerCompanyInput = document.getElementById('footageOwnerCompany');
     const storyTitleInput = document.getElementById('storyTitle');
     const commissionNumberInput = document.getElementById('commissionNumber');
+    const broadcastDateInput = document.getElementById('broadcastDate');
     const broadcastDatedInput = document.getElementById('broadcastDated');
     const footageDescInput = document.getElementById('footageDescription');
     const ownerSignedAtInput = document.getElementById('ownerSignedAt');
@@ -288,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fullNameAlias = document.getElementById('fullName');
     const storyNameAlias = document.getElementById('storyName');
     const broadcastDateAlias = document.getElementById('broadcastDate');
+    const broadcastDatedAlias = document.getElementById('broadcastDated');
     const signedAtAlias = document.getElementById('signedAt');
     const signedDateAlias = document.getElementById('signedDate');
     const ownerDateAlias = document.getElementById('ownerDate');
@@ -305,8 +307,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const storyVal = (storyTitleInput?.value || '').trim();
         if (storyNameAlias) storyNameAlias.value = storyVal;
 
-        const bcastVal = (broadcastDatedInput?.value || '').trim();
-        if (broadcastDateAlias) broadcastDateAlias.value = bcastVal;
+        const bcastVal = (broadcastDateInput?.value || broadcastDatedInput?.value || '').trim();
+        if (broadcastDateInput) broadcastDateInput.value = bcastVal;
+        if (broadcastDatedInput && broadcastDatedInput !== broadcastDateInput) broadcastDatedInput.value = bcastVal;
+        if (broadcastDateAlias && broadcastDateAlias !== broadcastDateInput) broadcastDateAlias.value = bcastVal;
+        if (broadcastDatedAlias && broadcastDatedAlias !== broadcastDatedInput) broadcastDatedAlias.value = bcastVal;
 
         const signedAtVal = (ownerSignedAtInput?.value || '').trim();
         if (signedAtAlias) signedAtAlias.value = signedAtVal;
@@ -319,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (producerDateAlias) producerDateAlias.value = prodSignedDateVal;
     }
 
-    [footageOwnerNameInput, footageOwnerCompanyInput, storyTitleInput, commissionNumberInput, broadcastDatedInput, footageDescInput, ownerSignedAtInput].forEach(inp => {
+    [footageOwnerNameInput, footageOwnerCompanyInput, storyTitleInput, commissionNumberInput, broadcastDateInput, broadcastDatedInput, footageDescInput, ownerSignedAtInput].forEach(inp => {
         if (inp) inp.addEventListener('input', syncLegacyFields);
     });
 
@@ -342,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const ownerCompany = (footageOwnerCompanyInput?.value || licensorEntityAlias?.value || '').trim();
             const story = (storyTitleInput?.value || storyNameAlias?.value || '').trim();
             const commNum = (commissionNumberInput?.value || '').trim();
-            const broadcastDated = (broadcastDatedInput?.value || broadcastDateAlias?.value || '').trim();
+            const broadcastDate = (broadcastDateInput?.value || broadcastDatedInput?.value || broadcastDateAlias?.value || '').trim();
             const footageDesc = (footageDescInput?.value || '').trim();
             const ownerPlace = (ownerSignedAtInput?.value || '').trim();
             const ownerDate = (ownerSignedDateEl?.value || todayStr).trim();
@@ -432,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.setFontSize(8);
             doc.setFont('helvetica', 'italic');
             doc.setTextColor(100, 116, 139);
-            doc.text('on behald of', margin, y);
+            doc.text('on behalf of', margin, y);
 
             y += 4.5;
             doc.setTextColor(15, 23, 42);
@@ -448,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.text(`Commission Number:  ${commNum || '________________'}`, margin + 90, y);
 
             y += 4.5;
-            doc.text(`Broadcast Dated:  ${broadcastDated || '___________________________'}`, margin, y);
+            doc.text(`Broadcast Date:  ${broadcastDate || '___________________________'}`, margin, y);
 
             // 5. Legal Terms Part 1
             y += 5.5;
@@ -630,7 +635,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const comm = sub.commissionNumber || sub.commNum || '';
         if (commissionNumberInput) commissionNumberInput.value = comm;
 
-        const bcast = sub.broadcastDated || sub.broadcastDate || '';
+        const bcast = sub.broadcastDate || sub.broadcastDated || '';
+        if (broadcastDateInput) broadcastDateInput.value = bcast;
         if (broadcastDatedInput) broadcastDatedInput.value = bcast;
 
         const desc = sub.footageDescription || '';

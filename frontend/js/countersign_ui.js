@@ -1014,10 +1014,10 @@
                         formData.set('footageOwnerCompany', footageCompVal);
                         if (!formData.get('licensorEntity')) formData.set('licensorEntity', footageCompVal);
                     }
-                    const bcastDatedVal = document.getElementById('broadcastDated')?.value?.trim();
+                    const bcastDatedVal = (document.getElementById('broadcastDate')?.value || document.getElementById('broadcastDated')?.value || '').trim();
                     if (bcastDatedVal) {
+                        formData.set('broadcastDate', bcastDatedVal);
                         formData.set('broadcastDated', bcastDatedVal);
-                        if (!formData.get('broadcastDate')) formData.set('broadcastDate', bcastDatedVal);
                     }
                     const footageDescVal = document.getElementById('footageDescription')?.value?.trim();
                     if (footageDescVal) {
