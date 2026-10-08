@@ -1711,7 +1711,7 @@ async function generateTravelBooking(cbBytes, caBytes) {
     curY -= (cr1H + 6);
 
     const cr2H = drawCarRentalBlock(form, page, 2, MARGIN_X, curY, CONTENT_W);
-    curY -= (cr2H + 10);
+    curY -= (cr2H + 20);
 
     // ACCOMMODATION HEADING
     page.drawText('ACCOMMODATION', { x: MARGIN_X, y: curY, size: 9, font: fontBold, color: COLOR_PRIMARY });

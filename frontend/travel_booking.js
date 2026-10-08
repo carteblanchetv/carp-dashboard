@@ -841,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawCarRentalOnPdf(2);
 
             // ACCOMMODATION HEADING
-            y += 1;
+            y += 4;
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(10);
             doc.setTextColor(0, 143, 190);
