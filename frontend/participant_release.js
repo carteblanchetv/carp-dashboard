@@ -291,13 +291,14 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.setLineWidth(0.7);
         doc.line(margin, 35, pageWidth - margin, 35);
 
-        // 3. Top Fields (Exact matching labels and 2-column executive grid)
+        // 3. Top Fields: Section 1 (Production Details) & Section 2 (Participant Details)
         doc.setFontSize(9);
         const col1X = margin;
         const col2X = margin + (contentW / 2) + 4;
-        const rowH = 6.2;
+        const rowH = 6;
         let currY = 41.5;
 
+        // SECTION 1: Commission Number, Story Title, Producer
         // Row 1: Commission Number | Story Title
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(71, 85, 105);
@@ -313,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.setTextColor(15, 23, 42);
         doc.text(storyTitle || 'N/A', col2X + 22, currY);
 
-        // Row 2: Producer | Participant
+        // Row 2: Producer
         currY += rowH;
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(71, 85, 105);
@@ -322,14 +323,23 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.setTextColor(15, 23, 42);
         doc.text(resolvedProd || 'N/A', col1X + 37, currY);
 
+        // Divider between Section 1 and Section 2
+        currY += 4.5;
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.4);
+        doc.line(margin, currY, pageWidth - margin, currY);
+
+        // SECTION 2: Participant, ID Number, Contact Number
+        currY += 5.5;
+        // Row 3: Participant
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(71, 85, 105);
-        doc.text('Participant:', col2X, currY);
+        doc.text('Participant:', col1X, currY);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(15, 23, 42);
-        doc.text(participant || 'N/A', col2X + 22, currY);
+        doc.text(participant || 'N/A', col1X + 37, currY);
 
-        // Row 3: ID Number | Contact Number
+        // Row 4: ID Number | Contact Number
         currY += rowH;
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(71, 85, 105);
@@ -345,8 +355,8 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.setTextColor(15, 23, 42);
         doc.text(contactNumber || 'N/A', col2X + 28, currY);
 
-        // Divider
-        currY += 5;
+        // Divider between Section 2 and Legal Copy
+        currY += 4.5;
         doc.setDrawColor(226, 232, 240);
         doc.setLineWidth(0.4);
         doc.line(margin, currY, pageWidth - margin, currY);
