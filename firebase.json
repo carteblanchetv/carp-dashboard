@@ -44,24 +44,19 @@
           {
             "key": "X-XSS-Protection",
             "value": "1; mode=block"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, must-revalidate"
           }
         ]
       },
       {
-        "source": "**/*.@(js|css|png|jpg|jpeg|gif|svg|webp)",
+        "source": "**/*.@(png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot|ico)",
         "headers": [
           {
             "key": "Cache-Control",
             "value": "public, max-age=3600, must-revalidate"
-          }
-        ]
-      },
-      {
-        "source": "**/*.html",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-cache, no-store, must-revalidate"
           }
         ]
       }

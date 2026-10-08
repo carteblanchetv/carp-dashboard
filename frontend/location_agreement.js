@@ -74,6 +74,7 @@ function initLocationAgreement() {
         ctx.textAlign = 'center';
         ctx.fillText(text, canvas.width / 2, canvas.height / 2);
     }
+    window.renderOwnerTypedSignature = renderTypedSignature;
 
     if (tabDraw && tabType) {
         tabDraw.addEventListener('click', (e) => {
@@ -200,6 +201,7 @@ function initLocationAgreement() {
         producerCtx.textAlign = 'center';
         producerCtx.fillText(text, producerCanvas.width / 2, producerCanvas.height / 2);
     }
+    window.renderProducerTypedSignature = renderProducerTypedSignature;
 
     if (tabProducerDraw && tabProducerType) {
         tabProducerDraw.addEventListener('click', (e) => {
