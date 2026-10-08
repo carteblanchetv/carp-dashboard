@@ -100,7 +100,6 @@
                 <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
             </div>
             <h1>FOOTAGE AGREEMENT FORM</h1>
-            <h2 style="text-align: center; font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-top: 0.35rem; margin-bottom: 0;">Footage Agreement</h2>
         </header>
 
         <form id="footageAgreementForm" class="modern-form">
@@ -125,26 +124,28 @@
 
             <!-- PARTIES SECTION -->
             <section class="form-section">
-                <div style="margin-bottom: 0.75rem;">
-                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">between</div>
-                    <div style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-bottom: 0.15rem;">CARTE BLANCHE &amp; M-NET</div>
-                    <div style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-bottom: 0.75rem;">(“the producer”)</div>
-                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">and</div>
+                <div style="max-width: 520px; margin: 0 auto; text-align: center;">
+                    <div style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin-bottom: 0.35rem;">Footage Agreement</div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">between</div>
+                    <div style="font-size: 1.2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.15rem;">CARTE BLANCHE &amp; M-NET</div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-bottom: 0.5rem;">(“the producer”)</div>
+                    <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem;">and</div>
+
+                    <div class="form-group" style="text-align: center; margin-bottom: 1rem;">
+                        <label for="footageOwnerName" style="text-align: center; display: block; font-weight: 600; margin-bottom: 0.35rem;">Footage Owner Name &amp; Surname:</label>
+                        <input type="text" id="footageOwnerName" name="footageOwnerName" required placeholder="Enter footage owner full name &amp; surname..." style="text-align: center; max-width: 440px; margin: 0 auto; display: block;">
+                    </div>
+
+                    <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; text-align: center;">on behalf of</div>
+
+                    <div class="form-group" style="text-align: center; margin-bottom: 0.25rem;">
+                        <label for="footageOwnerCompany" style="text-align: center; display: block; font-weight: 600; margin-bottom: 0.35rem;">Footage Owner Company:</label>
+                        <input type="text" id="footageOwnerCompany" name="footageOwnerCompany" placeholder="Enter company / entity name..." style="text-align: center; max-width: 440px; margin: 0 auto; display: block;">
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-bottom: 1.25rem; text-align: center;">(“the owner”)</div>
                 </div>
 
-                <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label for="footageOwnerName">Footage Owner Name &amp; Surname:</label>
-                        <input type="text" id="footageOwnerName" name="footageOwnerName" required placeholder="Enter footage owner full name &amp; surname...">
-                    </div>
-
-                    <div class="form-group full-width">
-                        <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.25rem;">on behalf of</div>
-                        <label for="footageOwnerCompany">Footage Owner Company:</label>
-                        <input type="text" id="footageOwnerCompany" name="footageOwnerCompany" placeholder="Enter company / entity name...">
-                        <div style="font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-top: 0.25rem;">(“the owner”)</div>
-                    </div>
-
+                <div class="form-grid" style="text-align: left; margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
                     <div class="form-group full-width">
                         <label for="storyTitle">Story Title:</label>
                         <input type="text" id="storyTitle" name="storyTitle" required placeholder="Enter story title...">

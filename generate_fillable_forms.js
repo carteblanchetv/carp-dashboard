@@ -128,6 +128,78 @@ class FlowLayout {
     this.y -= 3;
   }
 
+  addCenteredParagraph(text, font = this.page.docRegularFont, size = 7.5, color = COLOR_TEXT_BODY, lineGap = 10) {
+    const textW = font.widthOfTextAtSize(text, size);
+    const x = this.marginX + (this.width - textW) / 2;
+    this.page.drawText(text, {
+      x,
+      y: this.y,
+      size,
+      font,
+      color
+    });
+    this.y -= lineGap;
+  }
+
+  addCenteredField(id, label, width = 300, height = 20, subtext = '') {
+    const labelHeight = 8;
+    const labelGap = 3;
+    const labelY = this.y - labelHeight;
+    const fieldY = labelY - labelGap - height;
+    const fieldX = this.marginX + (this.width - width) / 2;
+
+    if (label) {
+      const labelText = label.toUpperCase();
+      const labelW = this.page.docBoldFont.widthOfTextAtSize(labelText, 7.2);
+      const labelX = this.marginX + (this.width - labelW) / 2;
+      this.page.drawText(labelText, {
+        x: labelX,
+        y: labelY,
+        size: 7.2,
+        font: this.page.docBoldFont,
+        color: COLOR_TEXT_MUTED
+      });
+    }
+
+    this.page.drawRectangle({
+      x: fieldX,
+      y: fieldY,
+      width,
+      height,
+      borderWidth: 1,
+      borderColor: COLOR_BORDER,
+      color: COLOR_BG_FIELD
+    });
+
+    const tf = this.form.createTextField(id);
+    tf.addToPage(this.page, {
+      x: fieldX,
+      y: fieldY,
+      width,
+      height,
+      borderWidth: 1,
+      borderColor: COLOR_BORDER,
+      backgroundColor: COLOR_BG_FIELD,
+      textColor: COLOR_TEXT_DARK
+    });
+    tf.setFontSize(9.5);
+
+    if (subtext) {
+      const subW = this.page.docItalicFont.widthOfTextAtSize(subtext, 6.8);
+      const subX = this.marginX + (this.width - subW) / 2;
+      this.page.drawText(subtext, {
+        x: subX,
+        y: fieldY - 9,
+        size: 6.8,
+        font: this.page.docItalicFont,
+        color: COLOR_TEXT_MUTED
+      });
+      this.y = fieldY - 14;
+    } else {
+      this.y = fieldY - 5;
+    }
+  }
+
   addBullet(numStr, text, font = this.page.docRegularFont, size = 7.5, color = COLOR_TEXT_BODY, lineGap = 10) {
     const bulletW = 14;
     const textW = this.width - bulletW;
@@ -754,24 +826,19 @@ async function generateFootageAgreement(cbBytes, caBytes) {
   drawHeader(page, cbLogoImg, caLogoImg, 'FOOTAGE AGREEMENT', 'Carte Blanche & M-Net  •  Footage Agreement');
 
   const layout = new FlowLayout(page, form, 726);
-
-  // Preamble
-  layout.addParagraph('Footage Agreement', page.docBoldFont, 10, COLOR_PRIMARY, 12);
-  layout.addSpace(2);
-  layout.addParagraph('between', page.docBoldFont, 8.5, COLOR_TEXT_DARK, 11);
-  layout.addParagraph('CARTE BLANCHE & M-NET', page.docBoldFont, 10, COLOR_PRIMARY, 12);
-  layout.addParagraph('(“the producer”)', page.docItalicFont, 8, COLOR_TEXT_MUTED, 11);
-  layout.addSpace(2);
-  layout.addParagraph('and', page.docBoldFont, 8.5, COLOR_TEXT_DARK, 11);
-  layout.addSpace(2);
-
   const halfW = (CONTENT_W - 12) / 2;
-  layout.addFieldRow([
-    { id: 'footageOwnerName', label: 'Footage Owner Name & Surname:', width: halfW },
-    { id: 'footageOwnerCompany', label: 'Footage Owner Company:', width: halfW, subtext: '(on behalf of / “the owner”)', gap: 0 }
-  ]);
 
-  layout.addSpace(1.5);
+  // Centered Parties Block
+  layout.addCenteredParagraph('Footage Agreement', page.docBoldFont, 10, COLOR_PRIMARY, 12);
+  layout.addCenteredParagraph('between', page.docBoldFont, 8, COLOR_TEXT_DARK, 10);
+  layout.addCenteredParagraph('CARTE BLANCHE & M-NET', page.docBoldFont, 9.5, COLOR_TEXT_DARK, 10);
+  layout.addCenteredParagraph('(“the producer”)', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 10);
+  layout.addCenteredParagraph('and', page.docBoldFont, 8, COLOR_TEXT_DARK, 11);
+
+  layout.addCenteredField('footageOwnerName', 'Footage Owner Name & Surname:', 300, 18);
+  layout.addCenteredParagraph('on behalf of', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 9);
+  layout.addCenteredField('footageOwnerCompany', 'Footage Owner Company:', 300, 18);
+  layout.addCenteredParagraph('(“the owner”)', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 11);
 
   // Story Title, Commission Number, Broadcast Date
   const thirdW = (CONTENT_W - 16) / 3;
