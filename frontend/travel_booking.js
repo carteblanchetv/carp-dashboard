@@ -676,14 +676,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 doc.setTextColor(71, 85, 105);
                 doc.text('Departure Airport:', margin + 3, y + 9);
                 doc.text('Departure Date:', margin + 85, y + 9);
-                doc.text('Departure Time (HH:MM am/pm):', margin + 130, y + 9);
+                doc.text('Departure Time (HH:MM):', margin + 130, y + 9);
 
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(7.5);
                 doc.setTextColor(15, 23, 42);
                 doc.text(dep || '___________________________', margin + 3, y + 13);
                 doc.text(depDate || 'DD/MM/YYYY', margin + 85, y + 13);
-                doc.text(depTime || '__:__ am/pm', margin + 130, y + 13);
+                doc.text(depTime || '__:__', margin + 130, y + 13);
 
                 // Flight details row 2
                 doc.setFont('helvetica', 'bold');
@@ -800,14 +800,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 doc.setTextColor(71, 85, 105);
                 doc.text('Pick-Up Location:', margin + 3, y + 8.5);
                 doc.text('Date:', margin + 85, y + 8.5);
-                doc.text('Time (HH:MM am/pm):', margin + 130, y + 8.5);
+                doc.text('Time (HH:MM):', margin + 130, y + 8.5);
 
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(7);
                 doc.setTextColor(15, 23, 42);
                 doc.text(pickLoc || '___________________________', margin + 3, y + 12.5);
                 doc.text(pickDate || 'DD/MM/YYYY', margin + 85, y + 12.5);
-                doc.text(pickTime || '__:__ am/pm', margin + 130, y + 12.5);
+                doc.text(pickTime || '__:__', margin + 130, y + 12.5);
 
                 // Row 2 Drop-off
                 doc.setFont('helvetica', 'bold');
@@ -815,14 +815,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 doc.setTextColor(71, 85, 105);
                 doc.text('Drop-Off Location:', margin + 3, y + 17);
                 doc.text('Date:', margin + 85, y + 17);
-                doc.text('Time (HH:MM am/pm):', margin + 130, y + 17);
+                doc.text('Time (HH:MM):', margin + 130, y + 17);
 
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(7);
                 doc.setTextColor(15, 23, 42);
                 doc.text(dropLoc || '___________________________', margin + 3, y + 20.5);
                 doc.text(dropDate || 'DD/MM/YYYY', margin + 85, y + 20.5);
-                doc.text(dropTime || '__:__ am/pm', margin + 130, y + 20.5);
+                doc.text(dropTime || '__:__', margin + 130, y + 20.5);
 
                 // Row 3 Driver
                 doc.setFont('helvetica', 'bold');

@@ -1348,7 +1348,7 @@ function drawFlightBlock(form, page, fNum, x, y, width) {
   const fY1 = y - 46;
   addStandaloneField(form, page, `depAirport_${fNum}`, 'Departure Airport:', x1, fY1, col1W, 16, { fontSize: 8 });
   addStandaloneField(form, page, `depDate_${fNum}`, 'Departure Date:', x2, fY1, col2W, 16, { fontSize: 8 });
-  addStandaloneField(form, page, `depTime_${fNum}`, 'Departure Time (HH:MM am/pm):', x3, fY1, col3W, 16, { fontSize: 8 });
+  addStandaloneField(form, page, `depTime_${fNum}`, 'Departure Time (HH:MM):', x3, fY1, col3W, 16, { fontSize: 8 });
 
   // Flight details row 2: Arrival Airport, Total Passengers
   const fY2 = y - 73;
@@ -1440,13 +1440,13 @@ function drawCarRentalBlock(form, page, cNum, x, y, width) {
   const row1Y = y - 44;
   addStandaloneField(form, page, `car${cNum}_pickupLoc`, 'Pick-Up Location:', x1, row1Y, col1W, 13, { fontSize: 7.5 });
   addStandaloneField(form, page, `car${cNum}_pickupDate`, 'Date:', x2, row1Y, col2W, 13, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_pickupTime`, 'Time (HH:MM am/pm):', x3, row1Y, col3W, 13, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_pickupTime`, 'Time (HH:MM):', x3, row1Y, col3W, 13, { fontSize: 7.5 });
 
   // Row 2 (Drop-Off): label baseline at y - 55 (top y - 49, 5pt below row 1 box y - 44)
   const row2Y = y - 71;
   addStandaloneField(form, page, `car${cNum}_dropoffLoc`, 'Drop-Off Location:', x1, row2Y, col1W, 13, { fontSize: 7.5 });
   addStandaloneField(form, page, `car${cNum}_dropoffDate`, 'Date:', x2, row2Y, col2W, 13, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_dropoffTime`, 'Time (HH:MM am/pm):', x3, row2Y, col3W, 13, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_dropoffTime`, 'Time (HH:MM):', x3, row2Y, col3W, 13, { fontSize: 7.5 });
 
   // Row 3 (Driver): label baseline at y - 82 (top y - 76, 5pt below row 2 box y - 71)
   const row3Y = y - 98;
