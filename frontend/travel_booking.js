@@ -92,6 +92,35 @@ function initTravelBooking() {
     const flightsContainer = document.getElementById('flightsContainer');
     let flightCount = 0;
 
+    function updateFlightCards() {
+        const cards = flightsContainer.querySelectorAll('.travel-card');
+        cards.forEach((card, idx) => {
+            const num = idx + 1;
+            const title = card.querySelector('.travel-card-title');
+            if (title) title.textContent = `FLIGHT ${num}`;
+
+            const header = card.querySelector('.travel-card-header');
+            let removeBtn = card.querySelector('.btn-remove-flight');
+            if (num === 1) {
+                if (removeBtn) removeBtn.remove();
+            } else {
+                if (!removeBtn && header) {
+                    removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'btn-action-small btn-remove-flight';
+                    removeBtn.title = 'Remove this flight';
+                    removeBtn.textContent = '🗑️ Remove';
+                    removeBtn.addEventListener('click', () => {
+                        card.remove();
+                        updateFlightCards();
+                        syncLegacyFields();
+                    });
+                    header.appendChild(removeBtn);
+                }
+            }
+        });
+    }
+
     function createFlightCard(fNum) {
         const card = document.createElement('div');
         card.className = 'travel-card';
@@ -101,7 +130,7 @@ function initTravelBooking() {
         card.innerHTML = `
             <div class="travel-card-header">
                 <h3 class="travel-card-title">FLIGHT ${fNum}</h3>
-                ${fNum > 5 ? `<button type="button" class="btn-action-small btn-remove-flight" title="Remove this flight">🗑️ Remove</button>` : ''}
+                ${fNum > 1 ? `<button type="button" class="btn-action-small btn-remove-flight" title="Remove this flight">🗑️ Remove</button>` : ''}
             </div>
 
             <div class="form-grid">
@@ -194,11 +223,12 @@ function initTravelBooking() {
             addPassengerRow(fNum, currentRows + 1, tbody);
         });
 
-        // Remove flight button (for flights > 5)
+        // Remove flight button (for flights > 1)
         const removeBtn = card.querySelector('.btn-remove-flight');
         if (removeBtn) {
             removeBtn.addEventListener('click', () => {
                 card.remove();
+                updateFlightCards();
                 syncLegacyFields();
             });
         }
@@ -232,24 +262,52 @@ function initTravelBooking() {
         }
     }
 
-    // Build initial 5 flights
-    for (let f = 1; f <= 5; f++) {
-        createFlightCard(f);
-        flightCount = f;
-    }
+    // Build initial Flight 1 only
+    createFlightCard(1);
+    flightCount = 1;
 
     // Add another flight button
     const btnAddFlight = document.getElementById('btnAddFlight');
     btnAddFlight.addEventListener('click', () => {
         flightCount++;
         createFlightCard(flightCount);
+        updateFlightCards();
     });
 
     // -------------------------------------------------------------------------
-    // 5. Dynamic CAR RENTAL Builder (Car Rentals 1 & 2 + Add More)
+    // 5. Dynamic CAR RENTAL Builder (Car Rental 1 + Add More)
     // -------------------------------------------------------------------------
     const carRentalsContainer = document.getElementById('carRentalsContainer');
     let carRentalCount = 0;
+
+    function updateCarRentalCards() {
+        const cards = carRentalsContainer.querySelectorAll('.travel-card');
+        cards.forEach((card, idx) => {
+            const num = idx + 1;
+            const title = card.querySelector('.travel-card-title');
+            if (title) title.textContent = `CAR RENTAL ${num}`;
+
+            const header = card.querySelector('.travel-card-header');
+            let removeBtn = card.querySelector('.btn-remove-car');
+            if (num === 1) {
+                if (removeBtn) removeBtn.remove();
+            } else {
+                if (!removeBtn && header) {
+                    removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'btn-action-small btn-remove-car';
+                    removeBtn.title = 'Remove car rental';
+                    removeBtn.textContent = '🗑️ Remove';
+                    removeBtn.addEventListener('click', () => {
+                        card.remove();
+                        updateCarRentalCards();
+                        syncLegacyFields();
+                    });
+                    header.appendChild(removeBtn);
+                }
+            }
+        });
+    }
 
     function createCarRentalCard(cNum) {
         const card = document.createElement('div');
@@ -260,7 +318,7 @@ function initTravelBooking() {
         card.innerHTML = `
             <div class="travel-card-header">
                 <h3 class="travel-card-title">CAR RENTAL ${cNum}</h3>
-                ${cNum > 2 ? `<button type="button" class="btn-action-small btn-remove-car" title="Remove car rental">🗑️ Remove</button>` : ''}
+                ${cNum > 1 ? `<button type="button" class="btn-action-small btn-remove-car" title="Remove car rental">🗑️ Remove</button>` : ''}
             </div>
 
             <div class="form-grid">
@@ -303,28 +361,57 @@ function initTravelBooking() {
         if (removeBtn) {
             removeBtn.addEventListener('click', () => {
                 card.remove();
+                updateCarRentalCards();
                 syncLegacyFields();
             });
         }
     }
 
-    // Build initial 2 car rentals
-    for (let c = 1; c <= 2; c++) {
-        createCarRentalCard(c);
-        carRentalCount = c;
-    }
+    // Build initial Car Rental 1 only
+    createCarRentalCard(1);
+    carRentalCount = 1;
 
     const btnAddCar = document.getElementById('btnAddCar');
     btnAddCar.addEventListener('click', () => {
         carRentalCount++;
         createCarRentalCard(carRentalCount);
+        updateCarRentalCards();
     });
 
     // -------------------------------------------------------------------------
-    // 6. Dynamic ACCOMMODATION Builder (Locations 1, 2, 3 + Add More)
+    // 6. Dynamic ACCOMMODATION Builder (Location 1 + Add More)
     // -------------------------------------------------------------------------
     const locationsContainer = document.getElementById('locationsContainer');
     let locationCount = 0;
+
+    function updateLocationCards() {
+        const cards = locationsContainer.querySelectorAll('.travel-card');
+        cards.forEach((card, idx) => {
+            const num = idx + 1;
+            const title = card.querySelector('.travel-card-title');
+            if (title) title.textContent = `LOCATION ${num}`;
+
+            const header = card.querySelector('.travel-card-header');
+            let removeBtn = card.querySelector('.btn-remove-loc');
+            if (num === 1) {
+                if (removeBtn) removeBtn.remove();
+            } else {
+                if (!removeBtn && header) {
+                    removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'btn-action-small btn-remove-loc';
+                    removeBtn.title = 'Remove location';
+                    removeBtn.textContent = '🗑️ Remove';
+                    removeBtn.addEventListener('click', () => {
+                        card.remove();
+                        updateLocationCards();
+                        syncLegacyFields();
+                    });
+                    header.appendChild(removeBtn);
+                }
+            }
+        });
+    }
 
     function createLocationCard(lNum) {
         const card = document.createElement('div');
@@ -335,7 +422,7 @@ function initTravelBooking() {
         card.innerHTML = `
             <div class="travel-card-header">
                 <h3 class="travel-card-title">LOCATION ${lNum}</h3>
-                ${lNum > 3 ? `<button type="button" class="btn-action-small btn-remove-loc" title="Remove location">🗑️ Remove</button>` : ''}
+                ${lNum > 1 ? `<button type="button" class="btn-action-small btn-remove-loc" title="Remove location">🗑️ Remove</button>` : ''}
             </div>
 
             <div class="form-grid">
@@ -399,6 +486,7 @@ function initTravelBooking() {
         if (removeBtn) {
             removeBtn.addEventListener('click', () => {
                 card.remove();
+                updateLocationCards();
                 syncLegacyFields();
             });
         }
@@ -430,16 +518,15 @@ function initTravelBooking() {
         }
     }
 
-    // Build initial 3 locations
-    for (let l = 1; l <= 3; l++) {
-        createLocationCard(l);
-        locationCount = l;
-    }
+    // Build initial Location 1 only
+    createLocationCard(1);
+    locationCount = 1;
 
     const btnAddLocation = document.getElementById('btnAddLocation');
     btnAddLocation.addEventListener('click', () => {
         locationCount++;
         createLocationCard(locationCount);
+        updateLocationCards();
     });
 
     // -------------------------------------------------------------------------
@@ -613,14 +700,47 @@ function initTravelBooking() {
             y += 4;
 
             function drawFlightOnPdf(fNum) {
-                let dep = document.getElementById(`depAirport_${fNum}`)?.value || '';
-                if (dep === 'Other') dep = document.getElementById(`depAirportOther_${fNum}`)?.value || 'Other';
-                const depDate = document.getElementById(`depDate_${fNum}`)?.value || '';
-                const depTime = document.getElementById(`depTime_${fNum}`)?.value || '';
+                const flightCards = flightsContainer.querySelectorAll('.travel-card');
+                const fCard = flightCards[fNum - 1];
 
-                let arr = document.getElementById(`arrAirport_${fNum}`)?.value || '';
-                if (arr === 'Other') arr = document.getElementById(`arrAirportOther_${fNum}`)?.value || 'Other';
-                const totalPax = document.getElementById(`totalPax_${fNum}`)?.value || '';
+                let dep = '';
+                let depDate = '';
+                let depTime = '';
+                let arr = '';
+                let totalPax = '';
+
+                if (fCard) {
+                    const depSel = fCard.querySelector('.airport-select');
+                    dep = depSel ? depSel.value : '';
+                    if (dep === 'Other') {
+                        const depOth = fCard.querySelector('.other-airport-wrap input');
+                        dep = depOth ? depOth.value : 'Other';
+                    }
+                    const dInput = fCard.querySelector('input[type="date"]');
+                    depDate = dInput ? dInput.value : '';
+                    const tInput = fCard.querySelector('input[type="time"]');
+                    depTime = tInput ? tInput.value : '';
+
+                    const selects = fCard.querySelectorAll('.airport-select');
+                    if (selects.length > 1) {
+                        arr = selects[1].value;
+                        if (arr === 'Other') {
+                            const otherInputs = fCard.querySelectorAll('.other-airport-wrap input');
+                            if (otherInputs.length > 1) arr = otherInputs[1].value;
+                            else arr = 'Other';
+                        }
+                    }
+                    const numInput = fCard.querySelector('input[type="number"]');
+                    totalPax = numInput ? numInput.value : '';
+                } else {
+                    dep = document.getElementById(`depAirport_${fNum}`)?.value || '';
+                    if (dep === 'Other') dep = document.getElementById(`depAirportOther_${fNum}`)?.value || 'Other';
+                    depDate = document.getElementById(`depDate_${fNum}`)?.value || '';
+                    depTime = document.getElementById(`depTime_${fNum}`)?.value || '';
+                    arr = document.getElementById(`arrAirport_${fNum}`)?.value || '';
+                    if (arr === 'Other') arr = document.getElementById(`arrAirportOther_${fNum}`)?.value || 'Other';
+                    totalPax = document.getElementById(`totalPax_${fNum}`)?.value || '';
+                }
 
                 const blockH = 46;
                 doc.setFillColor(255, 255, 255);
@@ -684,10 +804,22 @@ function initTravelBooking() {
                 // 3 Passenger Rows
                 for (let p = 1; p <= 3; p++) {
                     const rowY = pTableY + (p * 4);
-                    const pFirst = document.querySelector(`input[name="f${fNum}_pax${p}_firstName"]`)?.value || '';
-                    const pLast = document.querySelector(`input[name="f${fNum}_pax${p}_surname"]`)?.value || '';
-                    const pId = document.querySelector(`input[name="f${fNum}_pax${p}_id"]`)?.value || '';
-                    const pMob = document.querySelector(`input[name="f${fNum}_pax${p}_mobile"]`)?.value || '';
+                    let pFirst = '', pLast = '', pId = '', pMob = '';
+                    if (fCard) {
+                        const paxRow = fCard.querySelectorAll('tbody tr')[p - 1];
+                        if (paxRow) {
+                            const pInputs = paxRow.querySelectorAll('input');
+                            pFirst = pInputs[0]?.value || '';
+                            pLast = pInputs[1]?.value || '';
+                            pId = pInputs[2]?.value || '';
+                            pMob = pInputs[3]?.value || '';
+                        }
+                    } else {
+                        pFirst = document.querySelector(`input[name="f${fNum}_pax${p}_firstName"]`)?.value || '';
+                        pLast = document.querySelector(`input[name="f${fNum}_pax${p}_surname"]`)?.value || '';
+                        pId = document.querySelector(`input[name="f${fNum}_pax${p}_id"]`)?.value || '';
+                        pMob = document.querySelector(`input[name="f${fNum}_pax${p}_mobile"]`)?.value || '';
+                    }
 
                     doc.setFont('helvetica', 'bold');
                     doc.setFontSize(6.5);
@@ -739,13 +871,31 @@ function initTravelBooking() {
             y += 4;
 
             function drawCarRentalOnPdf(cNum) {
-                const pickLoc = document.getElementById(`car${cNum}_pickupLoc`)?.value || '';
-                const pickDate = document.getElementById(`car${cNum}_pickupDate`)?.value || '';
-                const pickTime = document.getElementById(`car${cNum}_pickupTime`)?.value || '';
-                const dropLoc = document.getElementById(`car${cNum}_dropoffLoc`)?.value || '';
-                const dropDate = document.getElementById(`car${cNum}_dropoffDate`)?.value || '';
-                const dropTime = document.getElementById(`car${cNum}_dropoffTime`)?.value || '';
-                const driver = document.getElementById(`car${cNum}_driver`)?.value || '';
+                const carCards = carRentalsContainer.querySelectorAll('.travel-card');
+                const cCard = carCards[cNum - 1];
+
+                let pickLoc = '', pickDate = '', pickTime = '', dropLoc = '', dropDate = '', dropTime = '', driver = '';
+
+                if (cCard) {
+                    const txts = cCard.querySelectorAll('.form-grid input[type="text"]');
+                    const dts = cCard.querySelectorAll('.form-grid input[type="date"]');
+                    const tms = cCard.querySelectorAll('.form-grid input[type="time"]');
+                    pickLoc = txts[0]?.value || '';
+                    dropLoc = txts[1]?.value || '';
+                    driver = txts[2]?.value || '';
+                    pickDate = dts[0]?.value || '';
+                    dropDate = dts[1]?.value || '';
+                    pickTime = tms[0]?.value || '';
+                    dropTime = tms[1]?.value || '';
+                } else {
+                    pickLoc = document.getElementById(`car${cNum}_pickupLoc`)?.value || '';
+                    pickDate = document.getElementById(`car${cNum}_pickupDate`)?.value || '';
+                    pickTime = document.getElementById(`car${cNum}_pickupTime`)?.value || '';
+                    dropLoc = document.getElementById(`car${cNum}_dropoffLoc`)?.value || '';
+                    dropDate = document.getElementById(`car${cNum}_dropoffDate`)?.value || '';
+                    dropTime = document.getElementById(`car${cNum}_dropoffTime`)?.value || '';
+                    driver = document.getElementById(`car${cNum}_driver`)?.value || '';
+                }
 
                 const blockH = 26;
                 doc.setFillColor(255, 255, 255);
@@ -818,10 +968,24 @@ function initTravelBooking() {
             y += 4;
 
             function drawLocationOnPdf(lNum) {
-                const where = document.getElementById(`loc${lNum}_where`)?.value || '';
-                const hotel = document.getElementById(`loc${lNum}_hotel`)?.value || '';
-                const cIn = document.getElementById(`loc${lNum}_checkIn`)?.value || '';
-                const cOut = document.getElementById(`loc${lNum}_checkOut`)?.value || '';
+                const locCards = locationsContainer.querySelectorAll('.travel-card');
+                const lCard = locCards[lNum - 1];
+
+                let where = '', hotel = '', cIn = '', cOut = '';
+
+                if (lCard) {
+                    const txts = lCard.querySelectorAll('.form-grid input[type="text"]');
+                    const dts = lCard.querySelectorAll('.form-grid input[type="date"]');
+                    where = txts[0]?.value || '';
+                    hotel = txts[1]?.value || '';
+                    cIn = dts[0]?.value || '';
+                    cOut = dts[1]?.value || '';
+                } else {
+                    where = document.getElementById(`loc${lNum}_where`)?.value || '';
+                    hotel = document.getElementById(`loc${lNum}_hotel`)?.value || '';
+                    cIn = document.getElementById(`loc${lNum}_checkIn`)?.value || '';
+                    cOut = document.getElementById(`loc${lNum}_checkOut`)?.value || '';
+                }
 
                 const blockH = 32;
                 doc.setFillColor(255, 255, 255);
@@ -870,9 +1034,20 @@ function initTravelBooking() {
 
                 for (let g = 1; g <= 3; g++) {
                     const rowY = gTableY + (g * 3.4);
-                    const gFirst = document.querySelector(`input[name="loc${lNum}_guest${g}_firstName"]`)?.value || '';
-                    const gLast = document.querySelector(`input[name="loc${lNum}_guest${g}_surname"]`)?.value || '';
-                    const gId = document.querySelector(`input[name="loc${lNum}_guest${g}_id"]`)?.value || '';
+                    let gFirst = '', gLast = '', gId = '';
+                    if (lCard) {
+                        const gRow = lCard.querySelectorAll('tbody tr')[g - 1];
+                        if (gRow) {
+                            const gInputs = gRow.querySelectorAll('input');
+                            gFirst = gInputs[0]?.value || '';
+                            gLast = gInputs[1]?.value || '';
+                            gId = gInputs[2]?.value || '';
+                        }
+                    } else {
+                        gFirst = document.querySelector(`input[name="loc${lNum}_guest${g}_firstName"]`)?.value || '';
+                        gLast = document.querySelector(`input[name="loc${lNum}_guest${g}_surname"]`)?.value || '';
+                        gId = document.querySelector(`input[name="loc${lNum}_guest${g}_id"]`)?.value || '';
+                    }
 
                     doc.setFont('helvetica', 'bold');
                     doc.setFontSize(6);
