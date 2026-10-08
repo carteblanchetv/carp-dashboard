@@ -1726,7 +1726,7 @@ async function generateTravelBooking(cbBytes, caBytes) {
     curY -= (loc2H + 5);
 
     const loc3H = drawLocationBlock(form, page, 3, MARGIN_X, curY, CONTENT_W);
-    curY -= (loc3H + 6);
+    curY -= (loc3H + 16);
 
     // Special Requirements
     page.drawText('Special Requirements', { x: MARGIN_X, y: curY, size: 8, font: fontBold, color: COLOR_PRIMARY });

@@ -929,7 +929,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawLocationOnPdf(3);
 
             // Special Requirements Box
-            y += 1;
+            y += 4;
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(8);
             doc.setTextColor(0, 143, 190);
