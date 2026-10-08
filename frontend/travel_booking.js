@@ -87,38 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -------------------------------------------------------------------------
-    // 3. Time Input Auto-Formatter Helper (<HH:MM am/pm>)
-    // -------------------------------------------------------------------------
-    function attachTimeFormatter(inputEl) {
-        if (!inputEl) return;
-        inputEl.addEventListener('blur', () => {
-            let v = inputEl.value.trim().toLowerCase();
-            if (!v) return;
-
-            // Normalize formats like "0830", "8:30am", "14:00", "2pm"
-            let match = v.match(/^(\d{1,2})[:.]?(\d{2})?\s*(am|pm)?$/i);
-            if (match) {
-                let hour = parseInt(match[1], 10);
-                let min = match[2] || '00';
-                let period = match[3] ? match[3].toLowerCase() : null;
-
-                if (!period) {
-                    if (hour >= 12) {
-                        period = 'pm';
-                        if (hour > 12) hour = hour - 12;
-                    } else {
-                        period = 'am';
-                        if (hour === 0) hour = 12;
-                    }
-                }
-                const hourStr = hour < 10 ? `0${hour}` : `${hour}`;
-                inputEl.value = `${hourStr}:${min} ${period}`;
-            }
-        });
-    }
-
-    // -------------------------------------------------------------------------
-    // 4. Dynamic FLIGHTS Builder (Flights 1 to 5 + Add More)
+    // 3. Dynamic FLIGHTS Builder (Flights 1 to 5 + Add More)
     // -------------------------------------------------------------------------
     const flightsContainer = document.getElementById('flightsContainer');
     let flightCount = 0;
@@ -152,8 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div class="form-group">
-                    <label for="depTime_${fNum}">Departure Time: <span style="font-weight: normal; color: var(--text-muted);">(HH:MM am/pm)</span></label>
-                    <input type="text" id="depTime_${fNum}" name="depTime_${fNum}" class="time-input" placeholder="e.g. 08:30 am">
+                    <label for="depTime_${fNum}">Departure Time:</label>
+                    <input type="time" id="depTime_${fNum}" name="depTime_${fNum}">
                 </div>
 
                 <div class="form-group">
@@ -211,9 +180,6 @@ document.addEventListener('DOMContentLoaded', () => {
         arrSelect.addEventListener('change', () => {
             arrOtherWrap.classList.toggle('hidden', arrSelect.value !== 'Other');
         });
-
-        // Bind time formatter
-        attachTimeFormatter(card.querySelector(`#depTime_${fNum}`));
 
         // Add 3 initial passengers
         const tbody = card.querySelector(`#paxTable_${fNum} tbody`);
@@ -307,8 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="date" id="car${cNum}_pickupDate" name="car${cNum}_pickupDate" value="${todayIso}">
                 </div>
                 <div class="form-group">
-                    <label for="car${cNum}_pickupTime">Time: <span style="font-weight: normal; color: var(--text-muted);">(HH:MM am/pm)</span></label>
-                    <input type="text" id="car${cNum}_pickupTime" name="car${cNum}_pickupTime" class="time-input" placeholder="e.g. 09:00 am">
+                    <label for="car${cNum}_pickupTime">Time:</label>
+                    <input type="time" id="car${cNum}_pickupTime" name="car${cNum}_pickupTime">
                 </div>
 
                 <div class="form-group">
@@ -320,8 +286,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="date" id="car${cNum}_dropoffDate" name="car${cNum}_dropoffDate" value="${todayIso}">
                 </div>
                 <div class="form-group">
-                    <label for="car${cNum}_dropoffTime">Time: <span style="font-weight: normal; color: var(--text-muted);">(HH:MM am/pm)</span></label>
-                    <input type="text" id="car${cNum}_dropoffTime" name="car${cNum}_dropoffTime" class="time-input" placeholder="e.g. 05:00 pm">
+                    <label for="car${cNum}_dropoffTime">Time:</label>
+                    <input type="time" id="car${cNum}_dropoffTime" name="car${cNum}_dropoffTime">
                 </div>
 
                 <div class="form-group full-width">
@@ -332,9 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         carRentalsContainer.appendChild(card);
-
-        attachTimeFormatter(card.querySelector(`#car${cNum}_pickupTime`));
-        attachTimeFormatter(card.querySelector(`#car${cNum}_dropoffTime`));
 
         const removeBtn = card.querySelector('.btn-remove-car');
         if (removeBtn) {

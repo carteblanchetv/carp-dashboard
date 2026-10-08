@@ -646,6 +646,18 @@ input, select, textarea {
     box-sizing: border-box;
 }
 
+input[type="date"],
+input[type="time"] {
+    color-scheme: dark;
+}
+
+body.light-mode input[type="date"],
+body.light-mode input[type="time"],
+:root.light-mode input[type="date"],
+:root.light-mode input[type="time"] {
+    color-scheme: light;
+}
+
 .one-liner-field {
     font-size: 0.85rem !important;
     text-align: left !important;
