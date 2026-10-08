@@ -296,6 +296,10 @@
             tabDraw.classList.remove('active');
             typeControls.style.display = 'block';
             producerCanvas.style.pointerEvents = 'none';
+            if (!typeInput.value) {
+                const prodName = document.getElementById('producerName')?.value || document.getElementById('prodSignerName')?.value || document.getElementById('producer')?.value || '';
+                if (prodName) typeInput.value = prodName;
+            }
             renderProducerTypedSignature();
         });
 

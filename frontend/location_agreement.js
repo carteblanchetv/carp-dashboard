@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
         tabDraw.classList.remove('active');
         typeSignatureControls.style.display = 'block';
         canvas.style.pointerEvents = 'none';
+        if (!typeSigInput.value) {
+            const nameVal = document.getElementById('locationOwnerName')?.value || '';
+            if (nameVal) typeSigInput.value = nameVal;
+        }
         renderTypedSignature();
     });
 
@@ -150,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------------------
     const locationOwnerNameInput = document.getElementById('locationOwnerName');
     const locationAddressInput = document.getElementById('locationAddress');
-    const dateOfFilmingInput = document.getElementById('dateOfFilming');
     const storyTitleInput = document.getElementById('storyTitle');
     const commissionNumberInput = document.getElementById('commissionNumber');
     const ownerSignedAtInput = document.getElementById('ownerSignedAt');

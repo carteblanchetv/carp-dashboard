@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
         tabDraw.classList.remove('active');
         typeSignatureControls.style.display = 'block';
         canvas.style.pointerEvents = 'none';
+        if (!typeSigInput.value) {
+            const nameVal = document.getElementById('musicOwnerName')?.value || '';
+            if (nameVal) typeSigInput.value = nameVal;
+        }
         renderTypedSignature();
     });
 
@@ -187,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicOwnerCompanyInput = document.getElementById('musicOwnerCompany');
     const storyTitleInput = document.getElementById('storyTitle');
     const commissionNumberInput = document.getElementById('commissionNumber');
-    const broadcastDateInput = document.getElementById('broadcastDate');
     const ownerSignedAtInput = document.getElementById('ownerSignedAt');
 
     const artistNameAlias = document.getElementById('artistName');

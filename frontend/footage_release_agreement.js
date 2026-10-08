@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
         tabDraw.classList.remove('active');
         typeSignatureControls.style.display = 'block';
         canvas.style.pointerEvents = 'none';
+        if (!typeSigInput.value) {
+            const nameVal = document.getElementById('footageOwnerName')?.value || '';
+            if (nameVal) typeSigInput.value = nameVal;
+        }
         renderTypedSignature();
     });
 
@@ -280,7 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const footageOwnerCompanyInput = document.getElementById('footageOwnerCompany');
     const storyTitleInput = document.getElementById('storyTitle');
     const commissionNumberInput = document.getElementById('commissionNumber');
-    const broadcastDateInput = document.getElementById('broadcastDate');
     const broadcastDatedInput = document.getElementById('broadcastDated');
     const footageDescInput = document.getElementById('footageDescription');
     const ownerSignedAtInput = document.getElementById('ownerSignedAt');
