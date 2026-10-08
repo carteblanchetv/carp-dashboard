@@ -1311,8 +1311,9 @@ function drawCreditBlock(form, page, num, x, y, width) {
 // 7. TRAVEL BOOKING FORM (3-Page A4 Fillable)
 // ----------------------------------------------------
 function drawFlightBlock(form, page, fNum, x, y, width) {
-  const pad = 6;
-  const blockH = 125;
+  const pad = 8;
+  const blockH = 154;
+  const innerW = width - (pad * 2);
 
   // Background Card
   page.drawRectangle({
@@ -1320,12 +1321,12 @@ function drawFlightBlock(form, page, fNum, x, y, width) {
     y: y - blockH,
     width,
     height: blockH,
-    borderWidth: 0.5,
+    borderWidth: 0.75,
     borderColor: rgb(215 / 255, 225 / 255, 235 / 255),
     color: rgb(252 / 255, 253 / 255, 255 / 255)
   });
 
-  // Header Bar
+  // Header Bar (height 18)
   page.drawRectangle({
     x,
     y: y - 18,
@@ -1336,72 +1337,84 @@ function drawFlightBlock(form, page, fNum, x, y, width) {
 
   page.drawText(`FLIGHT ${fNum}`, {
     x: x + pad,
-    y: y - 13,
+    y: y - 12.5,
     size: 8.5,
     font: page.docBoldFont,
     color: rgb(1, 1, 1)
   });
 
-  // Flight details row 1: Departure Airport (w: 220), Departure Date (w: 140), Departure Time (w: 160)
-  const fY1 = y - 38;
-  addStandaloneField(form, page, `depAirport_${fNum}`, 'Departure Airport:', x + pad, fY1, 220, 16, { fontSize: 8 });
-  addStandaloneField(form, page, `depDate_${fNum}`, 'Departure Date:', x + pad + 230, fY1, 140, 16, { fontSize: 8 });
-  addStandaloneField(form, page, `depTime_${fNum}`, 'Departure Time (HH:MM am/pm):', x + pad + 380, fY1, 155, 16, { fontSize: 8 });
+  // Flight details row 1: Departure Airport, Departure Date, Departure Time
+  const gap = 8;
+  const col1W = 227;
+  const col2W = 126;
+  const col3W = innerW - (gap * 2) - col1W - col2W;
 
-  // Flight details row 2: Arrival Airport (w: 220), Total Passengers (w: 140)
-  const fY2 = y - 62;
-  addStandaloneField(form, page, `arrAirport_${fNum}`, 'Arrival Airport:', x + pad, fY2, 220, 16, { fontSize: 8 });
-  addStandaloneField(form, page, `totalPax_${fNum}`, 'Total Passengers:', x + pad + 230, fY2, 140, 16, { fontSize: 8 });
+  const x1 = x + pad;
+  const x2 = x1 + col1W + gap;
+  const x3 = x2 + col2W + gap;
+
+  const fY1 = y - 46;
+  addStandaloneField(form, page, `depAirport_${fNum}`, 'Departure Airport:', x1, fY1, col1W, 16, { fontSize: 8 });
+  addStandaloneField(form, page, `depDate_${fNum}`, 'Departure Date:', x2, fY1, col2W, 16, { fontSize: 8 });
+  addStandaloneField(form, page, `depTime_${fNum}`, 'Departure Time (HH:MM am/pm):', x3, fY1, col3W, 16, { fontSize: 8 });
+
+  // Flight details row 2: Arrival Airport, Total Passengers
+  const fY2 = y - 73;
+  const arrW = col1W + gap + col2W;
+  addStandaloneField(form, page, `arrAirport_${fNum}`, 'Arrival Airport:', x1, fY2, arrW, 16, { fontSize: 8 });
+  addStandaloneField(form, page, `totalPax_${fNum}`, 'Total Passengers:', x3, fY2, col3W, 16, { fontSize: 8 });
 
   // Passenger Info Heading
   page.drawText('PASSENGER INFO', {
     x: x + pad,
-    y: y - 72,
+    y: y - 86,
     size: 7.5,
     font: page.docBoldFont,
     color: COLOR_PRIMARY
   });
 
   // Table Header
-  const tHeadY = y - 82;
-  const colW = [65, 115, 115, 115, 115];
+  const tHeadY = y - 99;
+  const paxLabelW = 67;
+  const paxInputW = (innerW - 24 - paxLabelW) / 4;
   const colX = [
     x + pad,
-    x + pad + colW[0] + 5,
-    x + pad + colW[0] + colW[1] + 10,
-    x + pad + colW[0] + colW[1] + colW[2] + 15,
-    x + pad + colW[0] + colW[1] + colW[2] + colW[3] + 20
+    x + pad + paxLabelW + 6,
+    x + pad + paxLabelW + 6 + (paxInputW + 6),
+    x + pad + paxLabelW + 6 + (paxInputW + 6) * 2,
+    x + pad + paxLabelW + 6 + (paxInputW + 6) * 3
   ];
 
-  page.drawText('Passenger', { x: colX[0], y: tHeadY, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
-  page.drawText('First Name', { x: colX[1], y: tHeadY, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
-  page.drawText('Surname', { x: colX[2], y: tHeadY, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
-  page.drawText('ID Number', { x: colX[3], y: tHeadY, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
-  page.drawText('Mobile Number', { x: colX[4], y: tHeadY, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
+  page.drawText('Passenger', { x: colX[0], y: tHeadY, size: 7, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
+  page.drawText('First Name', { x: colX[1], y: tHeadY, size: 7, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
+  page.drawText('Surname', { x: colX[2], y: tHeadY, size: 7, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
+  page.drawText('ID Number', { x: colX[3], y: tHeadY, size: 7, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
+  page.drawText('Mobile Number', { x: colX[4], y: tHeadY, size: 7, font: page.docBoldFont, color: COLOR_TEXT_MUTED });
 
   // 3 Passenger Rows
   for (let p = 1; p <= 3; p++) {
-    const rowY = y - 84 - (p * 13);
-    page.drawText(`Passenger ${p}`, { x: colX[0], y: rowY + 3, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_DARK });
-    addStandaloneField(form, page, `f${fNum}_pax${p}_firstName`, '', colX[1], rowY, colW[1], 12, { fontSize: 7.5 });
-    addStandaloneField(form, page, `f${fNum}_pax${p}_surname`, '', colX[2], rowY, colW[2], 12, { fontSize: 7.5 });
-    addStandaloneField(form, page, `f${fNum}_pax${p}_id`, '', colX[3], rowY, colW[3], 12, { fontSize: 7.5 });
-    addStandaloneField(form, page, `f${fNum}_pax${p}_mobile`, '', colX[4], rowY, colW[4], 12, { fontSize: 7.5 });
+    const rowY = y - 101 - (p * 15);
+    page.drawText(`Passenger ${p}`, { x: colX[0], y: rowY + 3.5, size: 7, font: page.docBoldFont, color: COLOR_TEXT_DARK });
+    addStandaloneField(form, page, `f${fNum}_pax${p}_firstName`, '', colX[1], rowY, paxInputW, 13, { fontSize: 7.5 });
+    addStandaloneField(form, page, `f${fNum}_pax${p}_surname`, '', colX[2], rowY, paxInputW, 13, { fontSize: 7.5 });
+    addStandaloneField(form, page, `f${fNum}_pax${p}_id`, '', colX[3], rowY, paxInputW, 13, { fontSize: 7.5 });
+    addStandaloneField(form, page, `f${fNum}_pax${p}_mobile`, '', colX[4], rowY, paxInputW, 13, { fontSize: 7.5 });
   }
 
   return blockH;
 }
 
 function drawCarRentalBlock(form, page, cNum, x, y, width) {
-  const pad = 6;
-  const blockH = 68;
+  const pad = 8;
+  const blockH = 88;
+  const innerW = width - (pad * 2);
 
   page.drawRectangle({
     x,
     y: y - blockH,
     width,
     height: blockH,
-    borderWidth: 0.5,
+    borderWidth: 0.75,
     borderColor: rgb(215 / 255, 225 / 255, 235 / 255),
     color: rgb(252 / 255, 253 / 255, 255 / 255)
   });
@@ -1416,38 +1429,48 @@ function drawCarRentalBlock(form, page, cNum, x, y, width) {
 
   page.drawText(`CAR RENTAL ${cNum}`, {
     x: x + pad,
-    y: y - 12,
+    y: y - 11.5,
     size: 8,
     font: page.docBoldFont,
     color: rgb(1, 1, 1)
   });
 
-  const row1Y = y - 34;
-  addStandaloneField(form, page, `car${cNum}_pickupLoc`, 'Pick-Up Location:', x + pad, row1Y, 220, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_pickupDate`, 'Date:', x + pad + 230, row1Y, 140, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_pickupTime`, 'Time (HH:MM am/pm):', x + pad + 380, row1Y, 155, 14, { fontSize: 7.5 });
+  const gap = 8;
+  const col1W = 227;
+  const col2W = 126;
+  const col3W = innerW - (gap * 2) - col1W - col2W;
 
-  const row2Y = y - 51;
-  addStandaloneField(form, page, `car${cNum}_dropoffLoc`, 'Drop-Off Location:', x + pad, row2Y, 220, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_dropoffDate`, 'Date:', x + pad + 230, row2Y, 140, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `car${cNum}_dropoffTime`, 'Time (HH:MM am/pm):', x + pad + 380, row2Y, 155, 14, { fontSize: 7.5 });
+  const x1 = x + pad;
+  const x2 = x1 + col1W + gap;
+  const x3 = x2 + col2W + gap;
 
-  const row3Y = y - 66;
-  addStandaloneField(form, page, `car${cNum}_driver`, 'Responsible Driver Name & Surname:', x + pad, row3Y, width - (pad * 2), 13, { fontSize: 7.5 });
+  const row1Y = y - 41;
+  addStandaloneField(form, page, `car${cNum}_pickupLoc`, 'Pick-Up Location:', x1, row1Y, col1W, 14, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_pickupDate`, 'Date:', x2, row1Y, col2W, 14, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_pickupTime`, 'Time (HH:MM am/pm):', x3, row1Y, col3W, 14, { fontSize: 7.5 });
+
+  const row2Y = y - 62;
+  addStandaloneField(form, page, `car${cNum}_dropoffLoc`, 'Drop-Off Location:', x1, row2Y, col1W, 14, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_dropoffDate`, 'Date:', x2, row2Y, col2W, 14, { fontSize: 7.5 });
+  addStandaloneField(form, page, `car${cNum}_dropoffTime`, 'Time (HH:MM am/pm):', x3, row2Y, col3W, 14, { fontSize: 7.5 });
+
+  const row3Y = y - 79;
+  addStandaloneField(form, page, `car${cNum}_driver`, 'Responsible Driver Name & Surname:', x1, row3Y, innerW, 13, { fontSize: 7.5 });
 
   return blockH;
 }
 
 function drawLocationBlock(form, page, lNum, x, y, width) {
-  const pad = 6;
-  const blockH = 80;
+  const pad = 8;
+  const blockH = 94;
+  const innerW = width - (pad * 2);
 
   page.drawRectangle({
     x,
     y: y - blockH,
     width,
     height: blockH,
-    borderWidth: 0.5,
+    borderWidth: 0.75,
     borderColor: rgb(215 / 255, 225 / 255, 235 / 255),
     color: rgb(252 / 255, 253 / 255, 255 / 255)
   });
@@ -1462,40 +1485,52 @@ function drawLocationBlock(form, page, lNum, x, y, width) {
 
   page.drawText(`LOCATION ${lNum}`, {
     x: x + pad,
-    y: y - 12,
+    y: y - 11.5,
     size: 8,
     font: page.docBoldFont,
     color: rgb(1, 1, 1)
   });
 
-  const row1Y = y - 33;
-  addStandaloneField(form, page, `loc${lNum}_where`, 'Where:', x + pad, row1Y, 160, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `loc${lNum}_hotel`, 'Hotel / B&B (if applicable):', x + pad + 170, row1Y, 160, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `loc${lNum}_checkIn`, 'Check-In Date:', x + pad + 340, row1Y, 95, 14, { fontSize: 7.5 });
-  addStandaloneField(form, page, `loc${lNum}_checkOut`, 'Check-Out Date:', x + pad + 445, row1Y, 95, 14, { fontSize: 7.5 });
+  const gap = 8;
+  const wWhere = 155;
+  const wHotel = 160;
+  const wCheckIn = 90;
+  const wCheckOut = innerW - (gap * 3) - wWhere - wHotel - wCheckIn;
+
+  const x1 = x + pad;
+  const x2 = x1 + wWhere + gap;
+  const x3 = x2 + wHotel + gap;
+  const x4 = x3 + wCheckIn + gap;
+
+  const row1Y = y - 39;
+  addStandaloneField(form, page, `loc${lNum}_where`, 'Where:', x1, row1Y, wWhere, 14, { fontSize: 7.5 });
+  addStandaloneField(form, page, `loc${lNum}_hotel`, 'Hotel / B&B (if applicable):', x2, row1Y, wHotel, 14, { fontSize: 7.5 });
+  addStandaloneField(form, page, `loc${lNum}_checkIn`, 'Check-In Date:', x3, row1Y, wCheckIn, 14, { fontSize: 7.5 });
+  addStandaloneField(form, page, `loc${lNum}_checkOut`, 'Check-Out Date:', x4, row1Y, wCheckOut, 14, { fontSize: 7.5 });
 
   page.drawText('GUEST INFO', {
     x: x + pad,
-    y: y - 41,
+    y: y - 50,
     size: 7.2,
     font: page.docBoldFont,
     color: rgb(13 / 255, 148 / 255, 136 / 255)
   });
 
-  const colW = [60, 155, 155, 160];
+  const guestLabelW = 57;
+  const guestColW = (innerW - 18 - guestLabelW) / 3;
   const colX = [
     x + pad,
-    x + pad + colW[0] + 5,
-    x + pad + colW[0] + colW[1] + 10,
-    x + pad + colW[0] + colW[1] + colW[2] + 15
+    x + pad + guestLabelW + 6,
+    x + pad + guestLabelW + 6 + (guestColW + 6),
+    x + pad + guestLabelW + 6 + (guestColW + 6) * 2
   ];
 
   for (let g = 1; g <= 3; g++) {
-    const gY = y - 43 - (g * 11.5);
-    page.drawText(`Guest ${g}`, { x: colX[0], y: gY + 2.5, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_DARK });
-    addStandaloneField(form, page, `loc${lNum}_guest${g}_firstName`, '', colX[1], gY, colW[1], 10.5, { fontSize: 7 });
-    addStandaloneField(form, page, `loc${lNum}_guest${g}_surname`, '', colX[2], gY, colW[2], 10.5, { fontSize: 7 });
-    addStandaloneField(form, page, `loc${lNum}_guest${g}_id`, '', colX[3], gY, colW[3], 10.5, { fontSize: 7 });
+    const gY = y - 51 - (g * 12.5);
+    page.drawText(`Guest ${g}`, { x: colX[0], y: gY + 3, size: 6.8, font: page.docBoldFont, color: COLOR_TEXT_DARK });
+    addStandaloneField(form, page, `loc${lNum}_guest${g}_firstName`, '', colX[1], gY, guestColW, 11, { fontSize: 7 });
+    addStandaloneField(form, page, `loc${lNum}_guest${g}_surname`, '', colX[2], gY, guestColW, 11, { fontSize: 7 });
+    addStandaloneField(form, page, `loc${lNum}_guest${g}_id`, '', colX[3], gY, guestColW, 11, { fontSize: 7 });
   }
 
   return blockH;
@@ -1544,15 +1579,15 @@ async function generateTravelBooking(cbBytes, caBytes) {
     // AIR TRAVEL Heading
     layout.addHeading('AIR TRAVEL');
     layout.addFieldRow([
-      { id: 'airTravelRequired', label: 'Air Travel Required: Yes / No', width: halfW },
-      { id: 'singleOrReturn', label: 'Single or Return: Single / Return', width: halfW, gap: 0 }
+      { id: 'airTravelRequired', label: 'Air Travel Required? Y / N', width: halfW },
+      { id: 'singleOrReturn', label: 'Single or Return?', width: halfW, gap: 0 }
     ], 17);
 
-    layout.addSpace(4);
+    layout.addSpace(6);
 
     // FLIGHT 1
     const f1H = drawFlightBlock(form, page, 1, MARGIN_X, layout.y, CONTENT_W);
-    layout.y -= (f1H + 12);
+    layout.y -= (f1H + 10);
 
     // FLIGHT 2
     drawFlightBlock(form, page, 2, MARGIN_X, layout.y, CONTENT_W);
@@ -1616,11 +1651,11 @@ async function generateTravelBooking(cbBytes, caBytes) {
 
     // FLIGHT 3
     const f3H = drawFlightBlock(form, page, 3, MARGIN_X, curY, CONTENT_W);
-    curY -= (f3H + 12);
+    curY -= (f3H + 10);
 
     // FLIGHT 4
     const f4H = drawFlightBlock(form, page, 4, MARGIN_X, curY, CONTENT_W);
-    curY -= (f4H + 12);
+    curY -= (f4H + 10);
 
     // FLIGHT 5
     drawFlightBlock(form, page, 5, MARGIN_X, curY, CONTENT_W);
@@ -1671,19 +1706,19 @@ async function generateTravelBooking(cbBytes, caBytes) {
     // CAR RENTAL HEADING
     page.drawText('CAR RENTAL', { x: MARGIN_X, y: curY, size: 9, font: fontBold, color: COLOR_PRIMARY });
     addStandaloneField(form, page, 'carRentalRequired', 'Car Rental Required: Yes / No', RIGHT_X - 180, curY - 14, 180, 14, { fontSize: 8 });
-    curY -= 20;
+    curY -= 22;
 
     // CAR RENTAL 1 & 2
     const cr1H = drawCarRentalBlock(form, page, 1, MARGIN_X, curY, CONTENT_W);
-    curY -= (cr1H + 6);
+    curY -= (cr1H + 8);
 
     const cr2H = drawCarRentalBlock(form, page, 2, MARGIN_X, curY, CONTENT_W);
-    curY -= (cr2H + 12);
+    curY -= (cr2H + 14);
 
     // ACCOMMODATION HEADING
     page.drawText('ACCOMMODATION', { x: MARGIN_X, y: curY, size: 9, font: fontBold, color: COLOR_PRIMARY });
     addStandaloneField(form, page, 'accommodationRequired', 'Accommodation Required: Yes / No', RIGHT_X - 180, curY - 14, 180, 14, { fontSize: 8 });
-    curY -= 20;
+    curY -= 22;
 
     // LOCATION 1, 2, 3
     const loc1H = drawLocationBlock(form, page, 1, MARGIN_X, curY, CONTENT_W);

@@ -642,8 +642,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             doc.setFontSize(8);
             doc.setTextColor(15, 23, 42);
-            doc.text(`Air Travel Required:  ${airReq}`, margin + 50, y);
-            doc.text(`Single or Return:  ${singleOrRet}`, margin + 110, y);
+            doc.text(`Air Travel Required? Y / N:  ${airReq}`, margin + 45, y);
+            doc.text(`Single or Return?  ${singleOrRet}`, margin + 115, y);
 
             y += 4;
 
