@@ -298,13 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rowH = 6;
         let currY = 40.5;
 
-        // SECTION 1
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(0, 143, 190);
-        doc.text('SECTION 1', col1X, currY);
-        currY += 5;
-
+        // Story & Production Details
         // Row 1: Commission Number | Story Title
         doc.setFontSize(8.5);
         doc.setFont('helvetica', 'bold');
@@ -330,18 +324,18 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.setTextColor(15, 23, 42);
         doc.text(resolvedProd || 'N/A', col1X + 37, currY);
 
-        // Divider between Section 1 and Section 2
+        // Divider between Production Details and Participant Info
         currY += 4.5;
         doc.setDrawColor(226, 232, 240);
         doc.setLineWidth(0.4);
         doc.line(margin, currY, pageWidth - margin, currY);
 
-        // SECTION 2
+        // PARTICIPANT INFO
         currY += 5.5;
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(9);
         doc.setTextColor(0, 143, 190);
-        doc.text('SECTION 2', col1X, currY);
+        doc.text('PARTICIPANT INFO', col1X, currY);
         currY += 5;
 
         // Row 3: Participant

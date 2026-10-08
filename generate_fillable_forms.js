@@ -412,8 +412,7 @@ async function generateParticipantRelease(cbBytes, caBytes) {
 
   const layout = new FlowLayout(page, form, 726);
 
-  // Section 1: Commission Number, Story Title, Producer
-  layout.addHeading('SECTION 1');
+  // Production Details: Commission Number, Story Title, Producer
   const halfW = (CONTENT_W - 12) / 2;
   layout.addFieldRow([
     { id: 'commissionNumber', label: 'Commission Number:', width: halfW },
@@ -426,8 +425,8 @@ async function generateParticipantRelease(cbBytes, caBytes) {
 
   layout.addDivider(0.5);
 
-  // Section 2: Participant, ID Number, Contact Number
-  layout.addHeading('SECTION 2');
+  // Participant Info: Participant, ID Number, Contact Number
+  layout.addHeading('PARTICIPANT INFO');
   layout.addFieldRow([
     { id: 'participantName', label: 'Participant:', width: CONTENT_W, gap: 0 }
   ]);
