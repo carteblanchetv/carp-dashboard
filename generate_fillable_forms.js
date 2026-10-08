@@ -856,7 +856,7 @@ async function generateFootageAgreement(cbBytes, caBytes) {
     'The producer undertakes to use the footage fairly to illustrate issues pertaining to the story.',
     'The producer undertakes to provide the owners with an on-screen courtesy credit for the footage, if requested by the owner.',
     'The producer will not pay the owner for the use of the footage.',
-    'The program in its completed form is the property of M-Net and Carte Blanche.'
+    'The programme in its completed form is the property of M-Net and Carte Blanche.'
   ];
 
   for (const t of termsPart1) {
@@ -985,7 +985,7 @@ async function generateMusicAgreement(cbBytes, caBytes) {
     'The owner hereby gives the producer permission to use portions of the following music compositions (“the music”) in the story titled below to be broadcast on Carte Blanche on M-Net on the date below and on any other MultiChoice platform as M-Net sees fit, in perpetuity.',
     'The producer undertakes to use the music fairly to illustrate issues pertaining to the story.',
     'The producer will not pay the owner for the use of the footage.',
-    'The program in its completed form is the property of M-Net and Carte Blanche.'
+    'The programme in its completed form is the property of M-Net and Carte Blanche.'
   ];
 
   for (const t of termsPart1) {

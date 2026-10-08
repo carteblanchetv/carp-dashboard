@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.text(split3, margin, y);
             y += split3.length * 4;
 
-            const para4 = 'The program in its completed form is the property of M-Net and Carte Blanche.';
+            const para4 = 'The programme in its completed form is the property of M-Net and Carte Blanche.';
             const split4 = doc.splitTextToSize(para4, contentWidth);
             doc.text(split4, margin, y);
             y += split4.length * 4 + 1;
