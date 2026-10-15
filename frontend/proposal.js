@@ -1,5 +1,5 @@
 // proposal.js
-// VERSION: 5.2.1
+// VERSION: 5.4.5
 import { getIdToken, fetchWithAuth, checkAuth, isAdmin, isSuperAdmin, isEditorialProduction } from './auth.js?v=5.1.1';
 
 // Force reload if restored from Safari bfcache to prevent cached query parameters and state
@@ -8,6 +8,16 @@ window.addEventListener('pageshow', (event) => {
         window.location.reload();
     }
 });
+
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
 
 function formatStoryDate(dateInput) {
     if (!dateInput) return '—';
@@ -1621,30 +1631,53 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Tables
                 const populateTable = (tableId, data, addFn, mapFn) => {
                     const tbody = document.getElementById(tableId);
+                    if (!tbody) return;
                     tbody.innerHTML = '';
-                    if (data && data.length > 0) {
+                    if (!data) return;
+                    if (Array.isArray(data)) {
                         data.forEach(item => {
+                            if (item) {
+                                const row = addFn();
+                                if (typeof item === 'string') {
+                                    mapFn(row, { name: item, item: item, surname: '', role: '', reason: '' });
+                                } else {
+                                    mapFn(row, item);
+                                }
+                            }
+                        });
+                    } else if (typeof data === 'string' && data.trim()) {
+                        const lines = data.split('\n').map(s => s.trim()).filter(Boolean);
+                        const items = lines.length > 0 ? lines : [data.trim()];
+                        items.forEach(text => {
                             const row = addFn();
-                            mapFn(row, item);
+                            mapFn(row, { name: text, item: text, surname: '', role: '', reason: '' });
                         });
                     }
                 };
 
                 populateTable('budgetTableBody', sub.budgetItems, addBudgetRow, (row, item) => {
-                    row.querySelector('[name="b_item[]"]').value = item.item;
-                    row.querySelector('[name="b_reason[]"]').value = item.reason;
+                    const iEl = row.querySelector('[name="b_item[]"]');
+                    const rEl = row.querySelector('[name="b_reason[]"]');
+                    if (iEl) iEl.value = item.item || '';
+                    if (rEl) rEl.value = item.reason || '';
                 });
 
                 populateTable('caseStudiesTableBody', sub.caseStudies, addCaseStudyRow, (row, item) => {
-                    row.querySelector('[name="cs_name[]"]').value = item.name;
-                    row.querySelector('[name="cs_surname[]"]').value = item.surname;
-                    row.querySelector('[name="cs_role[]"]').value = item.role;
+                    const nEl = row.querySelector('[name="cs_name[]"]');
+                    const sEl = row.querySelector('[name="cs_surname[]"]');
+                    const rEl = row.querySelector('[name="cs_role[]"]');
+                    if (nEl) nEl.value = item.name || '';
+                    if (sEl) sEl.value = item.surname || '';
+                    if (rEl) rEl.value = item.role || '';
                 });
 
                 populateTable('expertsTableBody', sub.experts, addExpertRow, (row, item) => {
-                    row.querySelector('[name="ex_name[]"]').value = item.name;
-                    row.querySelector('[name="ex_surname[]"]').value = item.surname;
-                    row.querySelector('[name="ex_role[]"]').value = item.role;
+                    const nEl = row.querySelector('[name="ex_name[]"]');
+                    const sEl = row.querySelector('[name="ex_surname[]"]');
+                    const rEl = row.querySelector('[name="ex_role[]"]');
+                    if (nEl) nEl.value = item.name || '';
+                    if (sEl) sEl.value = item.surname || '';
+                    if (rEl) rEl.value = item.role || '';
                 });
 
                 // Phase 2 visibility
@@ -2597,7 +2630,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderPlainTextView(sub) {
         const summaryDiv = document.getElementById('proposalSummary');
         const date = sub.submittedAt ? (sub.submittedAt._seconds ? new Date(sub.submittedAt._seconds * 1000) : new Date(sub.submittedAt)) : new Date();
-        const submitterDisplay = (sub.submittedByName && sub.submittedBySurname) ? `${sub.submittedByName} ${sub.submittedBySurname}` : sub.submittedByEmail;
+        const submitterDisplay = (sub.submittedByName && sub.submittedBySurname) ? `${sub.submittedByName} ${sub.submittedBySurname}` : (sub.historicalSubmitterName || sub.submittedByEmail);
         
         const status = sub.status || 'pending';
         let statusLabel = 'Pending';
@@ -2714,47 +2747,95 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        let budgetHtml = sub.extra_budget === 'yes' ? `
-            <div style="margin-bottom: 3rem;">
-                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Extra Budget Items</h3>
-                <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem;">
-                    <thead>
-                        <tr style="border-bottom: 1px solid var(--border);"><th style="text-align: left; padding: 0.75rem 0.5rem;">Item</th><th style="text-align: left; padding: 0.75rem 0.5rem;">Reason</th></tr>
-                    </thead>
-                    <tbody>
-                        ${(sub.budgetItems || []).filter(b => b).map(b => `<tr><td style="padding: 0.75rem 0.5rem;">${b.item || ''}</td><td style="padding: 0.75rem 0.5rem;">${b.reason || ''}</td></tr>`).join('')}
-                    </tbody>
-                </table>
-            </div>
-        ` : '';
+        let budgetHtml = '';
+        if (sub.extra_budget === 'yes' && Array.isArray(sub.budgetItems) && sub.budgetItems.length > 0) {
+            const validBudgets = sub.budgetItems.filter(b => b);
+            if (validBudgets.length > 0) {
+                budgetHtml = `
+                    <div style="margin-bottom: 3rem;">
+                        <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Extra Budget Items</h3>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--border);"><th style="text-align: left; padding: 0.75rem 0.5rem;">Item</th><th style="text-align: left; padding: 0.75rem 0.5rem;">Reason</th></tr>
+                            </thead>
+                            <tbody>
+                                ${validBudgets.map(b => `<tr><td style="padding: 0.75rem 0.5rem;">${escapeHtml(b.item || '')}</td><td style="padding: 0.75rem 0.5rem;">${escapeHtml(b.reason || '')}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+        }
 
-        let caseStudiesHtml = sub.caseStudies && sub.caseStudies.length > 0 ? `
-            <div style="margin-bottom: 3rem;">
-                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Case Studies</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-                    ${(sub.caseStudies || []).filter(cs => cs).map(cs => `
-                        <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02);">
-                            <div style="font-weight: 700; font-size: 1rem;">${cs.name || ''} ${cs.surname || ''}</div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);">${cs.role || 'Case Study'}</div>
+        let caseStudiesHtml = '';
+        if (sub.caseStudies) {
+            if (Array.isArray(sub.caseStudies) && sub.caseStudies.length > 0) {
+                const validCaseStudies = sub.caseStudies.filter(cs => cs);
+                if (validCaseStudies.length > 0) {
+                    caseStudiesHtml = `
+                        <div style="margin-bottom: 3rem;">
+                            <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Case Studies</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                                ${validCaseStudies.map(cs => {
+                                    const name = typeof cs === 'string' ? cs : `${cs.name || ''} ${cs.surname || ''}`.trim();
+                                    const role = (typeof cs === 'object' && cs.role) || 'Case Study';
+                                    return `
+                                    <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02);">
+                                        <div style="font-weight: 700; font-size: 1rem;">${escapeHtml(name)}</div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(role)}</div>
+                                    </div>
+                                    `;
+                                }).join('')}
+                            </div>
                         </div>
-                    `).join('')}
-                </div>
-            </div>
-        ` : '';
+                    `;
+                }
+            } else if (typeof sub.caseStudies === 'string' && sub.caseStudies.trim().length > 0) {
+                caseStudiesHtml = `
+                    <div style="margin-bottom: 3rem;">
+                        <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Case Studies</h3>
+                        <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02); font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap;">
+                            ${escapeHtml(sub.caseStudies)}
+                        </div>
+                    </div>
+                `;
+            }
+        }
 
-        let expertsHtml = sub.experts && sub.experts.length > 0 ? `
-            <div style="margin-bottom: 3rem;">
-                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Experts</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-                    ${(sub.experts || []).filter(ex => ex).map(ex => `
-                        <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02);">
-                            <div style="font-weight: 700; font-size: 1rem;">${ex.name || ''} ${ex.surname || ''}</div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);">${ex.role || 'Expert'}</div>
+        let expertsHtml = '';
+        if (sub.experts) {
+            if (Array.isArray(sub.experts) && sub.experts.length > 0) {
+                const validExperts = sub.experts.filter(ex => ex);
+                if (validExperts.length > 0) {
+                    expertsHtml = `
+                        <div style="margin-bottom: 3rem;">
+                            <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Experts</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                                ${validExperts.map(ex => {
+                                    const name = typeof ex === 'string' ? ex : `${ex.name || ''} ${ex.surname || ''}`.trim();
+                                    const role = (typeof ex === 'object' && ex.role) || 'Expert';
+                                    return `
+                                    <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02);">
+                                        <div style="font-weight: 700; font-size: 1rem;">${escapeHtml(name)}</div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(role)}</div>
+                                    </div>
+                                    `;
+                                }).join('')}
+                            </div>
                         </div>
-                    `).join('')}
-                </div>
-            </div>
-        ` : '';
+                    `;
+                }
+            } else if (typeof sub.experts === 'string' && sub.experts.trim().length > 0) {
+                expertsHtml = `
+                    <div style="margin-bottom: 3rem;">
+                        <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Experts</h3>
+                        <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02); font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap;">
+                            ${escapeHtml(sub.experts)}
+                        </div>
+                    </div>
+                `;
+            }
+        }
 
         let additionalInfoHtml = '';
         if (!sub._isRestrictedView) {
@@ -2764,15 +2845,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem;">
                     <div>
                         <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Third Party Footage</span>
-                        <span style="font-weight: 600;">${sub.third_party === 'yes' ? '✅ Yes' : '❌ No'}</span>
+                        <span style="font-weight: 600;">${String(sub.third_party || '').toLowerCase() === 'yes' ? '✅ Yes' : '❌ No'}</span>
                     </div>
                     <div>
                         <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Hidden Camera</span>
-                        <span style="font-weight: 600;">${sub.hidden_camera === 'yes' ? '✅ Yes' : '❌ No'}</span>
+                        <span style="font-weight: 600;">${String(sub.hidden_camera || '').toLowerCase() === 'yes' ? '✅ Yes' : '❌ No'}</span>
                     </div>
                     <div>
                         <span style="color: var(--text-muted); font-size: 0.75rem; display: block; text-transform: uppercase; margin-bottom: 0.2rem;">Legal Required</span>
-                        <span style="font-weight: 600;">${sub.legal_req === 'yes' ? '✅ Yes' : '❌ No'}</span>
+                        <span style="font-weight: 600;">${String(sub.legal_req || '').toLowerCase() === 'yes' ? '✅ Yes' : '❌ No'}</span>
                     </div>
                 </div>
             </div>
@@ -2919,47 +3000,95 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }
 
-        const budgetHtml = sub.extra_budget === 'yes' ? `
-            <div class="report-section">
-                <div class="report-section-title"><span>ðŸ’°</span> Extra Budget Items</div>
-                <table class="report-table">
-                    <thead>
-                        <tr><th>Item</th><th>Reason</th></tr>
-                    </thead>
-                    <tbody>
-                        ${(sub.budgetItems || []).map(b => `<tr><td>${b.item}</td><td>${b.reason}</td></tr>`).join('')}
-                    </tbody>
-                </table>
-            </div>
-        ` : '';
+        let budgetHtml = '';
+        if (sub.extra_budget === 'yes' && Array.isArray(sub.budgetItems) && sub.budgetItems.length > 0) {
+            const validBudgets = sub.budgetItems.filter(b => b);
+            if (validBudgets.length > 0) {
+                budgetHtml = `
+                    <div class="report-section">
+                        <div class="report-section-title"><span>💰</span> Extra Budget Items</div>
+                        <table class="report-table">
+                            <thead>
+                                <tr><th>Item</th><th>Reason</th></tr>
+                            </thead>
+                            <tbody>
+                                ${validBudgets.map(b => `<tr><td>${escapeHtml(b.item || '')}</td><td>${escapeHtml(b.reason || '')}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+        }
 
-        const caseStudiesHtml = sub.caseStudies && sub.caseStudies.length > 0 ? `
-            <div class="report-section">
-                <div class="report-section-title"><span>ðŸ‘¥</span> Case Studies</div>
-                <div class="report-grid">
-                    ${(sub.caseStudies || []).map(cs => `
-                        <div class="profile-card">
-                            <span class="profile-name">${cs.name} ${cs.surname}</span>
-                            <span class="profile-role">${cs.role || 'Case Study'}</span>
+        let caseStudiesHtml = '';
+        if (sub.caseStudies) {
+            if (Array.isArray(sub.caseStudies) && sub.caseStudies.length > 0) {
+                const validCaseStudies = sub.caseStudies.filter(cs => cs);
+                if (validCaseStudies.length > 0) {
+                    caseStudiesHtml = `
+                        <div class="report-section">
+                            <div class="report-section-title"><span>👥</span> Case Studies</div>
+                            <div class="report-grid">
+                                ${validCaseStudies.map(cs => {
+                                    const name = typeof cs === 'string' ? cs : `${cs.name || ''} ${cs.surname || ''}`.trim();
+                                    const role = (typeof cs === 'object' && cs.role) || 'Case Study';
+                                    return `
+                                    <div class="profile-card">
+                                        <span class="profile-name">${escapeHtml(name)}</span>
+                                        <span class="profile-role">${escapeHtml(role)}</span>
+                                    </div>
+                                    `;
+                                }).join('')}
+                            </div>
                         </div>
-                    `).join('')}
-                </div>
-            </div>
-        ` : '';
+                    `;
+                }
+            } else if (typeof sub.caseStudies === 'string' && sub.caseStudies.trim().length > 0) {
+                caseStudiesHtml = `
+                    <div class="report-section">
+                        <div class="report-section-title"><span>👥</span> Case Studies</div>
+                        <div style="padding: 1rem; background: var(--bg-hover, rgba(0,0,0,0.02)); border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap;">
+                            ${escapeHtml(sub.caseStudies)}
+                        </div>
+                    </div>
+                `;
+            }
+        }
 
-        const expertsHtml = sub.experts && sub.experts.length > 0 ? `
-            <div class="report-section">
-                <div class="report-section-title"><span>ðŸŽ“</span> Experts</div>
-                <div class="report-grid">
-                    ${(sub.experts || []).map(ex => `
-                        <div class="profile-card">
-                            <span class="profile-name">${ex.name} ${ex.surname}</span>
-                            <span class="profile-role">${ex.role || 'Expert'}</span>
+        let expertsHtml = '';
+        if (sub.experts) {
+            if (Array.isArray(sub.experts) && sub.experts.length > 0) {
+                const validExperts = sub.experts.filter(ex => ex);
+                if (validExperts.length > 0) {
+                    expertsHtml = `
+                        <div class="report-section">
+                            <div class="report-section-title"><span>🎓</span> Experts</div>
+                            <div class="report-grid">
+                                ${validExperts.map(ex => {
+                                    const name = typeof ex === 'string' ? ex : `${ex.name || ''} ${ex.surname || ''}`.trim();
+                                    const role = (typeof ex === 'object' && ex.role) || 'Expert';
+                                    return `
+                                    <div class="profile-card">
+                                        <span class="profile-name">${escapeHtml(name)}</span>
+                                        <span class="profile-role">${escapeHtml(role)}</span>
+                                    </div>
+                                    `;
+                                }).join('')}
+                            </div>
                         </div>
-                    `).join('')}
-                </div>
-            </div>
-        ` : '';
+                    `;
+                }
+            } else if (typeof sub.experts === 'string' && sub.experts.trim().length > 0) {
+                expertsHtml = `
+                    <div class="report-section">
+                        <div class="report-section-title"><span>🎓</span> Experts</div>
+                        <div style="padding: 1rem; background: var(--bg-hover, rgba(0,0,0,0.02)); border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; line-height: 1.5; white-space: pre-wrap;">
+                            ${escapeHtml(sub.experts)}
+                        </div>
+                    </div>
+                `;
+            }
+        }
 
         let insertDetailsHtml = '';
         if (sub.details) {
@@ -2973,7 +3102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formatArray = (arr) => {
                 if (!arr) return '';
                 const a = Array.isArray(arr) ? arr : [arr];
-                const res = a.map(item => getFullName(item)).filter(name => name && name !== 'â€”').join(', ');
+                const res = a.map(item => getFullName(item)).filter(name => name && name !== '—').join(', ');
                 return res || '';
             };
 
@@ -2987,17 +3116,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (hasData) {
                 insertDetailsHtml = `
                     <div class="report-section" style="margin-top: 2rem;">
-                        <div class="report-section-title"><span>ðŸŽ¬</span> Insert Details</div>
+                        <div class="report-section-title"><span>🎬</span> Insert Details</div>
                         <div class="report-meta" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-                            <div class="meta-item"><span class="meta-label">Presenter</span><span class="meta-value">${sub.details.presenter || 'â€”'}</span></div>
-                            <div class="meta-item"><span class="meta-label">Researcher(s)</span><span class="meta-value">${formatArray(sub.details.researcher) || 'â€”'}</span></div>
-                            <div class="meta-item"><span class="meta-label">Camera(s)</span><span class="meta-value">${formatArray(sub.details.camera) || 'â€”'}</span></div>
-                            <div class="meta-item"><span class="meta-label">DOP</span><span class="meta-value">${getFullName(sub.details.dop) || 'â€”'}</span></div>
-                            <div class="meta-item"><span class="meta-label">Sound</span><span class="meta-value">${getFullName(sub.details.sound) || 'â€”'}</span></div>
-                            <div class="meta-item"><span class="meta-label">Offline Editor</span><span class="meta-value">${getFullName(sub.details.offline_editor) || 'â€”'}</span></div>
-                            <div class="meta-item"><span class="meta-label">Online Editor</span><span class="meta-value">${getFullName(sub.details.online_editor) || 'â€”'}</span></div>
-                            <div class="meta-item"><span class="meta-label">Audio Final Mix</span><span class="meta-value">${getFullName(sub.details.audio_final_mix) || 'â€”'}</span></div>
-                            <div class="meta-item"><span class="meta-label">Additional Crew</span><span class="meta-value">${(sub.details.additionalCrew && sub.details.additionalCrew.length > 0) ? sub.details.additionalCrew.map(c => `${c.name} ${c.surname} (${c.role})`).join(', ') : 'â€”'}</span></div>
+                            <div class="meta-item"><span class="meta-label">Presenter</span><span class="meta-value">${sub.details.presenter || '—'}</span></div>
+                            <div class="meta-item"><span class="meta-label">Researcher(s)</span><span class="meta-value">${formatArray(sub.details.researcher) || '—'}</span></div>
+                            <div class="meta-item"><span class="meta-label">Camera(s)</span><span class="meta-value">${formatArray(sub.details.camera) || '—'}</span></div>
+                            <div class="meta-item"><span class="meta-label">DOP</span><span class="meta-value">${getFullName(sub.details.dop) || '—'}</span></div>
+                            <div class="meta-item"><span class="meta-label">Sound</span><span class="meta-value">${getFullName(sub.details.sound) || '—'}</span></div>
+                            <div class="meta-item"><span class="meta-label">Offline Editor</span><span class="meta-value">${getFullName(sub.details.offline_editor) || '—'}</span></div>
+                            <div class="meta-item"><span class="meta-label">Online Editor</span><span class="meta-value">${getFullName(sub.details.online_editor) || '—'}</span></div>
+                            <div class="meta-item"><span class="meta-label">Audio Final Mix</span><span class="meta-value">${getFullName(sub.details.audio_final_mix) || '—'}</span></div>
+                            <div class="meta-item"><span class="meta-label">Additional Crew</span><span class="meta-value">${(Array.isArray(sub.details.additionalCrew) && sub.details.additionalCrew.length > 0) ? sub.details.additionalCrew.map(c => `${c.name || ''} ${c.surname || ''} (${c.role || ''})`.trim()).join(', ') : '—'}</span></div>
                         </div>
                     </div>
                 `;
@@ -3006,7 +3135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         const date = sub.submittedAt ? (sub.submittedAt._seconds ? new Date(sub.submittedAt._seconds * 1000) : new Date(sub.submittedAt)) : new Date();
-        const submitterDisplay = (sub.submittedByName && sub.submittedBySurname) ? `${sub.submittedByName} ${sub.submittedBySurname}` : sub.submittedByEmail;
+        const submitterDisplay = (sub.submittedByName && sub.submittedBySurname) ? `${sub.submittedByName} ${sub.submittedBySurname}` : (sub.historicalSubmitterName || sub.submittedByEmail);
 
         summaryDiv.innerHTML = `
             <div class="report-header" style="text-align: left; display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; margin-bottom: 2rem;">
@@ -3031,19 +3160,19 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="report-meta">
                 <div class="meta-item">
                     <span class="meta-label">Location</span>
-                    <span class="meta-value">${(sub.locations && sub.locations.length > 0) ? sub.locations.map(l => `${l.country || ''}${l.province ? ` / ${l.province}` : ''}`).join(', ') : `${sub.country || 'â€”'} / ${sub.province || 'â€”'}`}</span>
+                    <span class="meta-value">${(Array.isArray(sub.locations) && sub.locations.length > 0) ? sub.locations.map(l => `${l.country || ''}${l.province ? ` / ${l.province}` : ''}`).join(', ') : `${sub.country || '—'} / ${sub.province || '—'}`}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Third Party Footage</span>
-                    <span class="meta-value">${sub.third_party === 'yes' ? 'âœ… Yes' : 'âŒ No'}</span>
+                    <span class="meta-value">${String(sub.third_party || '').toLowerCase() === 'yes' ? '✅ Yes' : '❌ No'}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Hidden Camera</span>
-                    <span class="meta-value">${sub.hidden_camera === 'yes' ? 'âœ… Yes' : 'âŒ No'}</span>
+                    <span class="meta-value">${String(sub.hidden_camera || '').toLowerCase() === 'yes' ? '✅ Yes' : '❌ No'}</span>
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Legal Required</span>
-                    <span class="meta-value">${sub.legal_req === 'yes' ? 'âœ… Yes' : 'âŒ No'}</span>
+                    <span class="meta-value">${String(sub.legal_req || '').toLowerCase() === 'yes' ? '✅ Yes' : '❌ No'}</span>
                 </div>
             </div>
 
@@ -4795,14 +4924,14 @@ window.downloadProposalPDF = async () => {
 
         // Metadata table
         const date = sub.submittedAt ? (sub.submittedAt._seconds ? new Date(sub.submittedAt._seconds * 1000) : new Date(sub.submittedAt)) : new Date();
-        const submitter = (sub.submittedByName && sub.submittedBySurname) ? `${sub.submittedByName} ${sub.submittedBySurname}` : sub.submittedByEmail;
+        const submitter = (sub.submittedByName && sub.submittedBySurname) ? `${sub.submittedByName} ${sub.submittedBySurname}` : (sub.historicalSubmitterName || sub.submittedByEmail);
         
         const metadata = [
             ['Story Title', sub.story_title || 'Untitled'],
             ['Commission No', sub.commissionNumber || 'N/A'],
             ['Producer', submitter],
             ['Submitted Date', date.toLocaleDateString()],
-            ['Location', sub._isRestrictedView ? '—' : ((sub.locations && sub.locations.length > 0) ? sub.locations.map(l => `${l.country || ''}${l.province ? ` / ${l.province}` : ''}`).join(', ') : `${sub.country || '—'} / ${sub.province || '—'}`)]
+            ['Location', sub._isRestrictedView ? '—' : ((Array.isArray(sub.locations) && sub.locations.length > 0) ? sub.locations.map(l => `${l.country || ''}${l.province ? ` / ${l.province}` : ''}`).join(', ') : `${sub.country || '—'} / ${sub.province || '—'}`)]
         ];
 
         doc.autoTable({
@@ -4860,28 +4989,31 @@ window.downloadProposalPDF = async () => {
         addSection('One Liner', sub.one_liner);
         addSection('Story Summary', sub.summary || '');
 
-        if (!sub._isRestrictedView && sub.extra_budget === 'yes' && sub.budgetItems && sub.budgetItems.length > 0) {
-            if (currentY > 250) { doc.addPage(); currentY = 20; }
-            doc.setFontSize(12);
-            doc.setTextColor(0, 143, 190);
-            doc.setFont('helvetica', 'bold');
-            doc.text('EXTRA BUDGET ITEMS', margin, currentY);
-            currentY += 8;
-            
-            doc.autoTable({
-                startY: currentY,
-                head: [['Item', 'Reason']],
-                body: sub.budgetItems.map(b => [b.item, b.reason]),
-                theme: 'striped',
-                headStyles: { fillColor: [0, 143, 190], textColor: 255 },
-                styles: { fontSize: 9 },
-                margin: { left: margin, right: margin }
-            });
-            currentY = doc.lastAutoTable.finalY + 12;
+        if (!sub._isRestrictedView && sub.extra_budget === 'yes' && Array.isArray(sub.budgetItems) && sub.budgetItems.length > 0) {
+            const validBudgets = sub.budgetItems.filter(b => b);
+            if (validBudgets.length > 0) {
+                if (currentY > 250) { doc.addPage(); currentY = 20; }
+                doc.setFontSize(12);
+                doc.setTextColor(0, 143, 190);
+                doc.setFont('helvetica', 'bold');
+                doc.text('EXTRA BUDGET ITEMS', margin, currentY);
+                currentY += 8;
+                
+                doc.autoTable({
+                    startY: currentY,
+                    head: [['Item', 'Reason']],
+                    body: validBudgets.map(b => [b.item || '', b.reason || '']),
+                    theme: 'striped',
+                    headStyles: { fillColor: [0, 143, 190], textColor: 255 },
+                    styles: { fontSize: 9 },
+                    margin: { left: margin, right: margin }
+                });
+                currentY = doc.lastAutoTable.finalY + 12;
+            }
         }
 
         // Case Studies
-        if (!sub._isRestrictedView && sub.caseStudies && sub.caseStudies.length > 0) {
+        if (!sub._isRestrictedView && sub.caseStudies && (Array.isArray(sub.caseStudies) ? sub.caseStudies.length > 0 : String(sub.caseStudies).trim().length > 0)) {
             if (currentY > 250) { doc.addPage(); currentY = 20; }
             doc.setFontSize(12);
             doc.setTextColor(0, 143, 190);
@@ -4889,18 +5021,32 @@ window.downloadProposalPDF = async () => {
             doc.text('CASE STUDIES', margin, currentY);
             currentY += 8;
             
-            doc.autoTable({
-                startY: currentY,
-                body: sub.caseStudies.map(cs => [`${cs.name} ${cs.surname}`, cs.role || 'Case Study']),
-                theme: 'plain',
-                styles: { fontSize: 10 },
-                margin: { left: margin, right: margin }
-            });
-            currentY = doc.lastAutoTable.finalY + 12;
+            if (Array.isArray(sub.caseStudies)) {
+                const validCaseStudies = sub.caseStudies.filter(cs => cs);
+                doc.autoTable({
+                    startY: currentY,
+                    body: validCaseStudies.map(cs => {
+                        const name = typeof cs === 'string' ? cs : `${cs.name || ''} ${cs.surname || ''}`.trim();
+                        const role = (typeof cs === 'object' && cs.role) || 'Case Study';
+                        return [name, role];
+                    }),
+                    theme: 'plain',
+                    styles: { fontSize: 10 },
+                    margin: { left: margin, right: margin }
+                });
+                currentY = doc.lastAutoTable.finalY + 12;
+            } else {
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(50, 50, 50);
+                const splitText = doc.splitTextToSize(String(sub.caseStudies), doc.internal.pageSize.getWidth() - (margin * 2));
+                doc.text(splitText, margin, currentY);
+                currentY += (splitText.length * 5) + 12;
+            }
         }
 
         // Experts
-        if (sub.experts && sub.experts.length > 0) {
+        if (sub.experts && (Array.isArray(sub.experts) ? sub.experts.length > 0 : String(sub.experts).trim().length > 0)) {
             if (currentY > 250) { doc.addPage(); currentY = 20; }
             doc.setFontSize(12);
             doc.setTextColor(0, 143, 190);
@@ -4908,14 +5054,28 @@ window.downloadProposalPDF = async () => {
             doc.text('EXPERTS', margin, currentY);
             currentY += 8;
             
-            doc.autoTable({
-                startY: currentY,
-                body: sub.experts.map(ex => [`${ex.name} ${ex.surname}`, ex.role || 'Expert']),
-                theme: 'plain',
-                styles: { fontSize: 10 },
-                margin: { left: margin, right: margin }
-            });
-            currentY = doc.lastAutoTable.finalY + 12;
+            if (Array.isArray(sub.experts)) {
+                const validExperts = sub.experts.filter(ex => ex);
+                doc.autoTable({
+                    startY: currentY,
+                    body: validExperts.map(ex => {
+                        const name = typeof ex === 'string' ? ex : `${ex.name || ''} ${ex.surname || ''}`.trim();
+                        const role = (typeof ex === 'object' && ex.role) || 'Expert';
+                        return [name, role];
+                    }),
+                    theme: 'plain',
+                    styles: { fontSize: 10 },
+                    margin: { left: margin, right: margin }
+                });
+                currentY = doc.lastAutoTable.finalY + 12;
+            } else {
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.setTextColor(50, 50, 50);
+                const splitText = doc.splitTextToSize(String(sub.experts), doc.internal.pageSize.getWidth() - (margin * 2));
+                doc.text(splitText, margin, currentY);
+                currentY += (splitText.length * 5) + 12;
+            }
         }
 
         // Team / Insert Details
