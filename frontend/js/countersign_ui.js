@@ -24,6 +24,25 @@
         isolateCoSignerView();
     }
 
+    // Hide participant signature section immediately if in initiation mode (producer starting document)
+    if (isInitiationMode) {
+        hideParticipantSignatureSectionInstantly();
+    }
+
+    /**
+     * Completely remove and hide participant signature section from the producer until they receive co-signed doc to approve
+     */
+    function hideParticipantSignatureSectionInstantly() {
+        const style = document.createElement('style');
+        style.id = 'initiation-hide-participant-sig-style';
+        style.innerHTML = `
+            #participantSignatureSection {
+                display: none !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     /**
      * Completely remove and hide all dashboard navigation for co-signers
      */
@@ -393,35 +412,37 @@
         const prodNameInp = document.getElementById('producerName') || document.getElementById('prodSignerName');
         if (prodNameInp) prodNameInp.required = true;
 
-        // In initiation mode, the co-signer will sign later via the link.
-        // Therefore, remove HTML5 'required' from co-signer specific fields so browser doesn't block producer submission.
-        const cosignerSpecificInputs = form.querySelectorAll('input#participantSignedAt, input#ownerSignedAt, input#parentSignedAt, input#idNumber, input#parentIdNumber');
-        cosignerSpecificInputs.forEach(inp => {
-            if (inp.hasAttribute('required')) {
-                inp.dataset.wasRequired = 'true';
-                inp.removeAttribute('required');
-            }
-        });
+        // Hide participant signature section completely from the producer until they receive the co-signed document to approve
+        const participantSigSection = document.getElementById('participantSignatureSection') ||
+            (contributorSigCanvasId ? document.getElementById(contributorSigCanvasId)?.closest('.form-section') : null);
 
-        // Add a clear indicator in the contributor signature area
-        const contributorSigContainer = document.querySelector('.signature-pad-container');
-        if (contributorSigContainer && !document.getElementById('cosignerShareNotice')) {
-            const notice = document.createElement('div');
-            notice.id = 'cosignerShareNotice';
-            notice.style.cssText = 'background: rgba(0, 143, 190, 0.08); border: 1.5px dashed var(--primary); border-radius: 6px; padding: 0.85rem 1rem; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;';
-            notice.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 0.6rem;">
-                    <span style="font-size: 1.25rem;">🔗</span>
-                    <div>
-                        <strong style="font-size: 0.85rem; color: var(--primary);">Co-Signer Remote Signature</strong>
-                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);">
-                            The co-signer will sign online via the secure shareable link generated upon clicking Submit.
-                        </p>
-                    </div>
+        if (participantSigSection) {
+            participantSigSection.style.display = 'none';
+            participantSigSection.setAttribute('aria-hidden', 'true');
+            // Remove required constraints from any inputs in the hidden section so browser doesn't block producer submission
+            participantSigSection.querySelectorAll('input, select, textarea').forEach(inp => {
+                if (inp.hasAttribute('required')) {
+                    inp.dataset.wasRequired = 'true';
+                    inp.removeAttribute('required');
+                }
+            });
+        }
+
+        // Add helpful Step 1 guidance banner above the Producer Signature section
+        const producerSection = document.getElementById('producerSignatureSection');
+        if (producerSection && !document.getElementById('producerInitiationStepNote')) {
+            const note = document.createElement('div');
+            note.id = 'producerInitiationStepNote';
+            note.style.cssText = 'background: rgba(0, 143, 190, 0.08); border-left: 4px solid var(--primary); padding: 0.85rem 1.15rem; border-radius: 0 6px 6px 0; margin-bottom: 1.25rem; font-size: 0.88rem; color: var(--text-main); line-height: 1.45;';
+            note.innerHTML = `
+                <div style="font-weight: 700; color: var(--primary); margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.4rem;">
+                    <span>ℹ️</span> Step 1 of 3: Producer Sign &amp; Submit
                 </div>
-                <span style="font-size: 0.75rem; color: var(--text-muted); font-style: italic; white-space: nowrap;">(Sign here if in-person)</span>
+                <div>
+                    Sign below and click <strong>Submit &amp; Generate Share Link</strong>. You will receive a secure shareable link for the participant / co-signer. Once they complete and sign, you will be notified on CARP to review and approve the document for final submission.
+                </div>
             `;
-            contributorSigContainer.parentNode.insertBefore(notice, contributorSigContainer);
+            producerSection.insertBefore(note, producerSection.firstChild);
         }
 
         // Submit button text
@@ -501,7 +522,22 @@
                 `;
             }
 
-            // 4. Co-signer fields are active & required
+            // 4. Ensure participant signature section is visible for the co-signer to sign
+            const initStyle = document.getElementById('initiation-hide-participant-sig-style');
+            if (initStyle) initStyle.remove();
+
+            const participantSigSection = document.getElementById('participantSignatureSection') ||
+                (contributorSigCanvasId ? document.getElementById(contributorSigCanvasId)?.closest('.form-section') : null);
+
+            if (participantSigSection) {
+                participantSigSection.style.display = 'block';
+                participantSigSection.removeAttribute('aria-hidden');
+                participantSigSection.querySelectorAll('[data-was-required="true"]').forEach(inp => {
+                    inp.setAttribute('required', '');
+                });
+            }
+
+            // 5. Co-signer fields are active & required
             const contribName = document.getElementById('participantName') || document.getElementById('fullName') || document.getElementById('guardianName') || document.getElementById('ownerName') || document.getElementById('locationOwnerName') || document.getElementById('footageOwnerName') || document.getElementById('musicOwnerName');
             if (contribName) contribName.required = true;
 
@@ -571,6 +607,23 @@
             populateFormFields(form, loadedSubmission);
             if (typeof onSubmissionLoaded === 'function') {
                 try { onSubmissionLoaded(loadedSubmission); } catch (e) {}
+            }
+
+            // Remove any initiation hidden styles
+            const initStyle = document.getElementById('initiation-hide-participant-sig-style');
+            if (initStyle) initStyle.remove();
+
+            // Ensure participant signature section is visible for the producer to review the recorded co-signature
+            const participantSigSection = document.getElementById('participantSignatureSection') ||
+                document.querySelector('.signature-pad-container')?.closest('.form-section');
+
+            if (participantSigSection) {
+                participantSigSection.style.display = 'block';
+                participantSigSection.removeAttribute('aria-hidden');
+                // Ensure no HTML5 required restrictions block producer approval
+                participantSigSection.querySelectorAll('input, select, textarea').forEach(inp => {
+                    inp.removeAttribute('required');
+                });
             }
 
             // Display verified co-signer signature
