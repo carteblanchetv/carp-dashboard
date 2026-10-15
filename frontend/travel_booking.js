@@ -101,16 +101,40 @@ function initTravelBooking() {
 
             const header = card.querySelector('.travel-card-header');
             let removeBtn = card.querySelector('.btn-remove-flight');
+            let arrow = card.querySelector('.toggle-arrow');
+            let statusSpan = card.querySelector('.toggle-status');
+
             if (num === 1) {
                 if (removeBtn) removeBtn.remove();
+                if (arrow) arrow.remove();
+                if (statusSpan) statusSpan.remove();
+                card.classList.remove('collapsed');
+                if (header) header.classList.remove('is-clickable');
             } else {
+                if (header && !header.classList.contains('is-clickable')) {
+                    header.classList.add('is-clickable');
+                }
+                const toggle = card.querySelector('.travel-card-toggle');
+                if (toggle && !arrow) {
+                    arrow = document.createElement('span');
+                    arrow.className = 'toggle-arrow';
+                    arrow.textContent = '▼';
+                    toggle.prepend(arrow);
+                }
+                if (toggle && !statusSpan) {
+                    statusSpan = document.createElement('span');
+                    statusSpan.className = 'toggle-status';
+                    statusSpan.textContent = card.classList.contains('collapsed') ? '(Click to expand)' : '';
+                    toggle.appendChild(statusSpan);
+                }
                 if (!removeBtn && header) {
                     removeBtn = document.createElement('button');
                     removeBtn.type = 'button';
                     removeBtn.className = 'btn-action-small btn-remove-flight';
                     removeBtn.title = 'Remove this flight';
                     removeBtn.textContent = '🗑️ Remove';
-                    removeBtn.addEventListener('click', () => {
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
                         card.remove();
                         updateFlightCards();
                         syncLegacyFields();
@@ -121,81 +145,112 @@ function initTravelBooking() {
         });
     }
 
-    function createFlightCard(fNum) {
+    function createFlightCard(fNum, startCollapsed = (fNum > 1)) {
         const card = document.createElement('div');
-        card.className = 'travel-card';
+        card.className = `travel-card ${startCollapsed ? 'collapsed' : ''}`;
         card.id = `flightCard_${fNum}`;
         card.dataset.flightIndex = fNum;
 
         card.innerHTML = `
-            <div class="travel-card-header">
-                <h3 class="travel-card-title">FLIGHT ${fNum}</h3>
+            <div class="travel-card-header ${fNum > 1 ? 'is-clickable' : ''}">
+                <div class="travel-card-toggle">
+                    ${fNum > 1 ? `<span class="toggle-arrow">▼</span>` : ''}
+                    <h3 class="travel-card-title">FLIGHT ${fNum}</h3>
+                    ${fNum > 1 ? `<span class="toggle-status">${startCollapsed ? '(Click to expand)' : ''}</span>` : ''}
+                </div>
                 ${fNum > 1 ? `<button type="button" class="btn-action-small btn-remove-flight" title="Remove this flight">🗑️ Remove</button>` : ''}
             </div>
 
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="depAirport_${fNum}">Departure Airport:</label>
-                    <select id="depAirport_${fNum}" name="depAirport_${fNum}" class="airport-select">
-                        ${buildAirportOptions()}
-                    </select>
-                    <div id="depAirportOtherWrap_${fNum}" class="other-airport-wrap hidden">
-                        <input type="text" id="depAirportOther_${fNum}" name="depAirportOther_${fNum}" placeholder="Specify departure airport...">
+            <div class="travel-card-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="depAirport_${fNum}">Departure Airport:</label>
+                        <select id="depAirport_${fNum}" name="depAirport_${fNum}" class="airport-select">
+                            ${buildAirportOptions()}
+                        </select>
+                        <div id="depAirportOtherWrap_${fNum}" class="other-airport-wrap hidden">
+                            <input type="text" id="depAirportOther_${fNum}" name="depAirportOther_${fNum}" placeholder="Specify departure airport...">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="depDate_${fNum}">Departure Date:</label>
+                        <input type="date" id="depDate_${fNum}" name="depDate_${fNum}" value="${todayIso}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="depTime_${fNum}">Departure Time:</label>
+                        <input type="time" id="depTime_${fNum}" name="depTime_${fNum}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="arrAirport_${fNum}">Arrival Airport:</label>
+                        <select id="arrAirport_${fNum}" name="arrAirport_${fNum}" class="airport-select">
+                            ${buildAirportOptions()}
+                        </select>
+                        <div id="arrAirportOtherWrap_${fNum}" class="other-airport-wrap hidden">
+                            <input type="text" id="arrAirportOther_${fNum}" name="arrAirportOther_${fNum}" placeholder="Specify arrival airport...">
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="totalPax_${fNum}">Total Passengers:</label>
+                        <input type="number" id="totalPax_${fNum}" name="totalPax_${fNum}" min="1" placeholder="e.g. 3">
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="depDate_${fNum}">Departure Date:</label>
-                    <input type="date" id="depDate_${fNum}" name="depDate_${fNum}" value="${todayIso}">
-                </div>
-
-                <div class="form-group">
-                    <label for="depTime_${fNum}">Departure Time:</label>
-                    <input type="time" id="depTime_${fNum}" name="depTime_${fNum}">
-                </div>
-
-                <div class="form-group">
-                    <label for="arrAirport_${fNum}">Arrival Airport:</label>
-                    <select id="arrAirport_${fNum}" name="arrAirport_${fNum}" class="airport-select">
-                        ${buildAirportOptions()}
-                    </select>
-                    <div id="arrAirportOtherWrap_${fNum}" class="other-airport-wrap hidden">
-                        <input type="text" id="arrAirportOther_${fNum}" name="arrAirportOther_${fNum}" placeholder="Specify arrival airport...">
+                <div style="margin-top: 1rem;">
+                    <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--primary); margin: 0 0 0.4rem 0;">PASSENGER INFO</h4>
+                    <div class="data-table-container">
+                        <table class="travel-table" id="paxTable_${fNum}">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Passenger</th>
+                                    <th>First Name</th>
+                                    <th>Surname</th>
+                                    <th>ID Number</th>
+                                    <th>Mobile Number</th>
+                                    <th style="width: 40px; text-align: center;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Passengers 1, 2, 3 added initially -->
+                            </tbody>
+                        </table>
                     </div>
+                    <button type="button" class="btn-add-row btn-add-pax" data-flight="${fNum}">
+                        <span>➕</span> Add another passenger
+                    </button>
                 </div>
-
-                <div class="form-group full-width">
-                    <label for="totalPax_${fNum}">Total Passengers:</label>
-                    <input type="number" id="totalPax_${fNum}" name="totalPax_${fNum}" min="1" placeholder="e.g. 3">
-                </div>
-            </div>
-
-            <div style="margin-top: 1rem;">
-                <h4 style="font-size: 0.9rem; font-weight: 700; color: var(--primary); margin: 0 0 0.4rem 0;">PASSENGER INFO</h4>
-                <div class="data-table-container">
-                    <table class="travel-table" id="paxTable_${fNum}">
-                        <thead>
-                            <tr>
-                                <th style="width: 100px;">Passenger</th>
-                                <th>First Name</th>
-                                <th>Surname</th>
-                                <th>ID Number</th>
-                                <th>Mobile Number</th>
-                                <th style="width: 40px; text-align: center;"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Passengers 1, 2, 3 added initially -->
-                        </tbody>
-                    </table>
-                </div>
-                <button type="button" class="btn-add-row btn-add-pax" data-flight="${fNum}">
-                    <span>➕</span> Add another passenger
-                </button>
             </div>
         `;
 
         flightsContainer.appendChild(card);
+
+        // Header click to toggle collapse
+        const header = card.querySelector('.travel-card-header');
+        if (fNum > 1 && header) {
+            header.addEventListener('click', (e) => {
+                if (e.target.closest('.btn-remove-flight')) return;
+                card.classList.toggle('collapsed');
+                const statusSpan = card.querySelector('.toggle-status');
+                if (statusSpan) {
+                    if (card.classList.contains('collapsed')) {
+                        const dep = card.querySelector(`#depAirport_${fNum}`)?.value;
+                        const arr = card.querySelector(`#arrAirport_${fNum}`)?.value;
+                        if (dep || arr) {
+                            const depShort = dep ? (dep.split('(')[1]?.replace(')', '') || dep.slice(0, 15)) : '?';
+                            const arrShort = arr ? (arr.split('(')[1]?.replace(')', '') || arr.slice(0, 15)) : '?';
+                            statusSpan.textContent = `(${depShort} ➔ ${arrShort})`;
+                        } else {
+                            statusSpan.textContent = '(Click to expand)';
+                        }
+                    } else {
+                        statusSpan.textContent = '';
+                    }
+                }
+            });
+        }
 
         // Bind 'Other' toggle for Departure & Arrival airports
         const depSelect = card.querySelector(`#depAirport_${fNum}`);
@@ -226,7 +281,8 @@ function initTravelBooking() {
         // Remove flight button (for flights > 1)
         const removeBtn = card.querySelector('.btn-remove-flight');
         if (removeBtn) {
-            removeBtn.addEventListener('click', () => {
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 card.remove();
                 updateFlightCards();
                 syncLegacyFields();
@@ -262,9 +318,9 @@ function initTravelBooking() {
         }
     }
 
-    // Build initial Flights 1 to 5
+    // Build initial Flights 1 to 5 (Flights 2 to 5 start collapsed)
     for (let f = 1; f <= 5; f++) {
-        createFlightCard(f);
+        createFlightCard(f, f > 1);
         flightCount = f;
     }
 
@@ -272,7 +328,7 @@ function initTravelBooking() {
     const btnAddFlight = document.getElementById('btnAddFlight');
     btnAddFlight.addEventListener('click', () => {
         flightCount++;
-        createFlightCard(flightCount);
+        createFlightCard(flightCount, false);
         updateFlightCards();
     });
 
@@ -397,16 +453,40 @@ function initTravelBooking() {
 
             const header = card.querySelector('.travel-card-header');
             let removeBtn = card.querySelector('.btn-remove-loc');
+            let arrow = card.querySelector('.toggle-arrow');
+            let statusSpan = card.querySelector('.toggle-status');
+
             if (num === 1) {
                 if (removeBtn) removeBtn.remove();
+                if (arrow) arrow.remove();
+                if (statusSpan) statusSpan.remove();
+                card.classList.remove('collapsed');
+                if (header) header.classList.remove('is-clickable');
             } else {
+                if (header && !header.classList.contains('is-clickable')) {
+                    header.classList.add('is-clickable');
+                }
+                const toggle = card.querySelector('.travel-card-toggle');
+                if (toggle && !arrow) {
+                    arrow = document.createElement('span');
+                    arrow.className = 'toggle-arrow';
+                    arrow.textContent = '▼';
+                    toggle.prepend(arrow);
+                }
+                if (toggle && !statusSpan) {
+                    statusSpan = document.createElement('span');
+                    statusSpan.className = 'toggle-status';
+                    statusSpan.textContent = card.classList.contains('collapsed') ? '(Click to expand)' : '';
+                    toggle.appendChild(statusSpan);
+                }
                 if (!removeBtn && header) {
                     removeBtn = document.createElement('button');
                     removeBtn.type = 'button';
                     removeBtn.className = 'btn-action-small btn-remove-loc';
                     removeBtn.title = 'Remove location';
                     removeBtn.textContent = '🗑️ Remove';
-                    removeBtn.addEventListener('click', () => {
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
                         card.remove();
                         updateLocationCards();
                         syncLegacyFields();
@@ -417,62 +497,91 @@ function initTravelBooking() {
         });
     }
 
-    function createLocationCard(lNum) {
+    function createLocationCard(lNum, startCollapsed = (lNum > 1)) {
         const card = document.createElement('div');
-        card.className = 'travel-card';
+        card.className = `travel-card ${startCollapsed ? 'collapsed' : ''}`;
         card.id = `locationCard_${lNum}`;
         card.dataset.locationIndex = lNum;
 
         card.innerHTML = `
-            <div class="travel-card-header">
-                <h3 class="travel-card-title">LOCATION ${lNum}</h3>
+            <div class="travel-card-header ${lNum > 1 ? 'is-clickable' : ''}">
+                <div class="travel-card-toggle">
+                    ${lNum > 1 ? `<span class="toggle-arrow">▼</span>` : ''}
+                    <h3 class="travel-card-title">LOCATION ${lNum}</h3>
+                    ${lNum > 1 ? `<span class="toggle-status">${startCollapsed ? '(Click to expand)' : ''}</span>` : ''}
+                </div>
                 ${lNum > 1 ? `<button type="button" class="btn-action-small btn-remove-loc" title="Remove location">🗑️ Remove</button>` : ''}
             </div>
 
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="loc${lNum}_where">Where:</label>
-                    <input type="text" id="loc${lNum}_where" name="loc${lNum}_where" placeholder="City / Area, e.g. Durban North">
+            <div class="travel-card-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="loc${lNum}_where">Where:</label>
+                        <input type="text" id="loc${lNum}_where" name="loc${lNum}_where" placeholder="City / Area, e.g. Durban North">
+                    </div>
+                    <div class="form-group">
+                        <label for="loc${lNum}_hotel">Hotel / B&amp;B (if applicable):</label>
+                        <input type="text" id="loc${lNum}_hotel" name="loc${lNum}_hotel" placeholder="Hotel or B&amp;B name...">
+                    </div>
+                    <div class="form-group">
+                        <label for="loc${lNum}_checkIn">Check-In Date:</label>
+                        <input type="date" id="loc${lNum}_checkIn" name="loc${lNum}_checkIn" value="${todayIso}">
+                    </div>
+                    <div class="form-group">
+                        <label for="loc${lNum}_checkOut">Check-Out Date:</label>
+                        <input type="date" id="loc${lNum}_checkOut" name="loc${lNum}_checkOut" value="${todayIso}">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="loc${lNum}_hotel">Hotel / B&amp;B (if applicable):</label>
-                    <input type="text" id="loc${lNum}_hotel" name="loc${lNum}_hotel" placeholder="Hotel or B&amp;B name...">
-                </div>
-                <div class="form-group">
-                    <label for="loc${lNum}_checkIn">Check-In Date:</label>
-                    <input type="date" id="loc${lNum}_checkIn" name="loc${lNum}_checkIn" value="${todayIso}">
-                </div>
-                <div class="form-group">
-                    <label for="loc${lNum}_checkOut">Check-Out Date:</label>
-                    <input type="date" id="loc${lNum}_checkOut" name="loc${lNum}_checkOut" value="${todayIso}">
-                </div>
-            </div>
 
-            <div style="margin-top: 1rem;">
-                <h4 style="font-size: 0.9rem; font-weight: 700; color: #0d9488; margin: 0 0 0.4rem 0;">GUEST INFO</h4>
-                <div class="data-table-container">
-                    <table class="travel-table" id="guestTable_${lNum}">
-                        <thead>
-                            <tr>
-                                <th style="width: 100px;">Guest</th>
-                                <th>First Name</th>
-                                <th>Surname</th>
-                                <th>ID Number</th>
-                                <th style="width: 40px; text-align: center;"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Guests 1, 2, 3 added initially -->
-                        </tbody>
-                    </table>
+                <div style="margin-top: 1rem;">
+                    <h4 style="font-size: 0.9rem; font-weight: 700; color: #0d9488; margin: 0 0 0.4rem 0;">GUEST INFO</h4>
+                    <div class="data-table-container">
+                        <table class="travel-table" id="guestTable_${lNum}">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Guest</th>
+                                    <th>First Name</th>
+                                    <th>Surname</th>
+                                    <th>ID Number</th>
+                                    <th style="width: 40px; text-align: center;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Guests 1, 2, 3 added initially -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" class="btn-add-row btn-add-guest" data-location="${lNum}">
+                        <span>➕</span> Add another guest
+                    </button>
                 </div>
-                <button type="button" class="btn-add-row btn-add-guest" data-location="${lNum}">
-                    <span>➕</span> Add another guest
-                </button>
             </div>
         `;
 
         locationsContainer.appendChild(card);
+
+        // Header click to toggle collapse
+        const header = card.querySelector('.travel-card-header');
+        if (lNum > 1 && header) {
+            header.addEventListener('click', (e) => {
+                if (e.target.closest('.btn-remove-loc')) return;
+                card.classList.toggle('collapsed');
+                const statusSpan = card.querySelector('.toggle-status');
+                if (statusSpan) {
+                    if (card.classList.contains('collapsed')) {
+                        const where = card.querySelector(`#loc${lNum}_where`)?.value;
+                        const hotel = card.querySelector(`#loc${lNum}_hotel`)?.value;
+                        if (where || hotel) {
+                            statusSpan.textContent = `(${where || hotel})`;
+                        } else {
+                            statusSpan.textContent = '(Click to expand)';
+                        }
+                    } else {
+                        statusSpan.textContent = '';
+                    }
+                }
+            });
+        }
 
         // Add 3 initial guests
         const tbody = card.querySelector(`#guestTable_${lNum} tbody`);
@@ -488,7 +597,8 @@ function initTravelBooking() {
 
         const removeBtn = card.querySelector('.btn-remove-loc');
         if (removeBtn) {
-            removeBtn.addEventListener('click', () => {
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 card.remove();
                 updateLocationCards();
                 syncLegacyFields();
@@ -522,16 +632,16 @@ function initTravelBooking() {
         }
     }
 
-    // Build initial Locations 1, 2, 3
+    // Build initial Locations 1, 2, 3 (Locations 2 & 3 start collapsed)
     for (let l = 1; l <= 3; l++) {
-        createLocationCard(l);
+        createLocationCard(l, l > 1);
         locationCount = l;
     }
 
     const btnAddLocation = document.getElementById('btnAddLocation');
     btnAddLocation.addEventListener('click', () => {
         locationCount++;
-        createLocationCard(locationCount);
+        createLocationCard(locationCount, false);
         updateLocationCards();
     });
 

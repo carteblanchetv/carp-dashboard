@@ -38,6 +38,17 @@
             padding: 1.25rem;
             margin-bottom: 1.25rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+        .travel-card.collapsed {
+            padding: 0.85rem 1.25rem;
+            margin-bottom: 0.85rem;
+            background: rgba(30, 41, 59, 0.45);
+            border-style: dashed;
+        }
+        .light-mode .travel-card.collapsed {
+            background: rgba(248, 250, 252, 0.85);
+            border-color: #cbd5e1;
         }
         .travel-card-header {
             display: flex;
@@ -46,6 +57,46 @@
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--primary);
+        }
+        .travel-card.collapsed .travel-card-header {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .travel-card-header.is-clickable {
+            cursor: pointer;
+            user-select: none;
+            border-radius: 6px;
+        }
+        .travel-card-header.is-clickable:hover .travel-card-title {
+            color: var(--primary-hover, #38bdf8);
+        }
+        .travel-card-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex: 1;
+        }
+        .toggle-arrow {
+            font-size: 0.75rem;
+            color: var(--primary);
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+        .travel-card.collapsed .toggle-arrow {
+            transform: rotate(-90deg);
+        }
+        .toggle-status {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-left: 0.25rem;
+        }
+        .travel-card-body {
+            transition: all 0.2s ease;
+        }
+        .travel-card.collapsed .travel-card-body {
+            display: none !important;
         }
         .travel-card-title {
             font-size: 1rem;
@@ -376,6 +427,6 @@
         </div>
     </div>
 
-    <script src="travel_booking.js?v=5.4.2"></script>
+    <script src="travel_booking.js?v=5.4.3"></script>
 </body>
 </html>
