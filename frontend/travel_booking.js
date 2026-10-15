@@ -262,9 +262,11 @@ function initTravelBooking() {
         }
     }
 
-    // Build initial Flight 1 only
-    createFlightCard(1);
-    flightCount = 1;
+    // Build initial Flights 1 to 5
+    for (let f = 1; f <= 5; f++) {
+        createFlightCard(f);
+        flightCount = f;
+    }
 
     // Add another flight button
     const btnAddFlight = document.getElementById('btnAddFlight');
@@ -367,9 +369,11 @@ function initTravelBooking() {
         }
     }
 
-    // Build initial Car Rental 1 only
-    createCarRentalCard(1);
-    carRentalCount = 1;
+    // Build initial Car Rentals 1 & 2
+    for (let c = 1; c <= 2; c++) {
+        createCarRentalCard(c);
+        carRentalCount = c;
+    }
 
     const btnAddCar = document.getElementById('btnAddCar');
     btnAddCar.addEventListener('click', () => {
@@ -518,9 +522,11 @@ function initTravelBooking() {
         }
     }
 
-    // Build initial Location 1 only
-    createLocationCard(1);
-    locationCount = 1;
+    // Build initial Locations 1, 2, 3
+    for (let l = 1; l <= 3; l++) {
+        createLocationCard(l);
+        locationCount = l;
+    }
 
     const btnAddLocation = document.getElementById('btnAddLocation');
     btnAddLocation.addEventListener('click', () => {
@@ -673,7 +679,7 @@ function initTravelBooking() {
             doc.setTextColor(71, 85, 105);
             doc.text(`COMMISSION NUMBER:`, margin + 3, y + 5);
             doc.text(`STORY NAME:`, margin + 50, y + 5);
-            doc.text(`PRODUCER:`, margin + 105, y + 5);
+            doc.text(`NAME & SURNAME:`, margin + 105, y + 5);
             doc.text(`EMAIL:`, margin + 145, y + 5);
 
             doc.setFont('helvetica', 'normal');
@@ -694,8 +700,8 @@ function initTravelBooking() {
 
             doc.setFontSize(8);
             doc.setTextColor(15, 23, 42);
-            doc.text(`Air Travel Required? Y / N:  ${airReq}`, margin + 45, y);
-            doc.text(`Single or Return?  ${singleOrRet}`, margin + 115, y);
+            doc.text(`Air Travel Required: Yes / No:  ${airReq}`, margin + 45, y);
+            doc.text(`Single or Return: Single / Return:  ${singleOrRet}`, margin + 115, y);
 
             y += 4;
 
