@@ -67,7 +67,7 @@
             font-size: 0.85rem;
         }
         .travel-table th {
-            background: var(--bg-surface, #f8fafc);
+            background: rgba(15, 23, 42, 0.7);
             color: var(--text-muted);
             font-weight: 600;
             text-align: left;
@@ -75,13 +75,16 @@
             border: 1px solid var(--border);
             white-space: nowrap;
         }
-        :root.dark-mode .travel-table th {
-            background: #1e293b;
+        .light-mode .travel-table th {
+            background: #f8fafc;
+            color: #64748b;
+            border-color: #e2e8f0;
         }
         .travel-table td {
             padding: 0.4rem;
             border: 1px solid var(--border);
             vertical-align: middle;
+            color: var(--text-main);
         }
         .travel-table input {
             width: 100%;
@@ -114,18 +117,24 @@
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
-            background: var(--bg-surface, #f1f5f9);
+            background: rgba(0, 143, 190, 0.12);
             color: var(--primary);
             border: 1px dashed var(--primary);
             border-radius: 6px;
-            padding: 0.4rem 0.85rem;
+            padding: 0.45rem 0.85rem;
             font-size: 0.8rem;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 0.25rem;
+            margin-top: 0.35rem;
             transition: all 0.2s ease;
         }
         .btn-add-row:hover {
+            background: rgba(0, 143, 190, 0.22);
+        }
+        .light-mode .btn-add-row {
+            background: #f1f5f9;
+        }
+        .light-mode .btn-add-row:hover {
             background: rgba(0, 143, 190, 0.08);
         }
         .btn-add-block {
@@ -148,7 +157,7 @@
         }
         .btn-add-block:hover {
             border-color: var(--primary);
-            background: rgba(0, 143, 190, 0.05);
+            background: rgba(0, 143, 190, 0.1);
         }
         .other-airport-wrap {
             margin-top: 0.35rem;
@@ -367,6 +376,6 @@
         </div>
     </div>
 
-    <script src="travel_booking.js?v=5.4.1"></script>
+    <script src="travel_booking.js?v=5.4.2"></script>
 </body>
 </html>

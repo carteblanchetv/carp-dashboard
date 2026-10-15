@@ -238,7 +238,7 @@ function initTravelBooking() {
         const tr = document.createElement('tr');
         tr.dataset.paxIndex = paxNum;
         tr.innerHTML = `
-            <td style="font-weight: 600; color: var(--text-dark, #334155); font-size: 0.8rem;">Passenger ${paxNum}</td>
+            <td style="font-weight: 600; color: var(--text-main); font-size: 0.8rem;">Passenger ${paxNum}</td>
             <td><input type="text" name="f${fNum}_pax${paxNum}_firstName" placeholder="First Name"></td>
             <td><input type="text" name="f${fNum}_pax${paxNum}_surname" placeholder="Surname"></td>
             <td><input type="text" name="f${fNum}_pax${paxNum}_id" placeholder="ID Number"></td>
@@ -500,7 +500,7 @@ function initTravelBooking() {
         const tr = document.createElement('tr');
         tr.dataset.guestIndex = guestNum;
         tr.innerHTML = `
-            <td style="font-weight: 600; color: var(--text-dark, #334155); font-size: 0.8rem;">Guest ${guestNum}</td>
+            <td style="font-weight: 600; color: var(--text-main); font-size: 0.8rem;">Guest ${guestNum}</td>
             <td><input type="text" name="loc${lNum}_guest${guestNum}_firstName" placeholder="First Name"></td>
             <td><input type="text" name="loc${lNum}_guest${guestNum}_surname" placeholder="Surname"></td>
             <td><input type="text" name="loc${lNum}_guest${guestNum}_id" placeholder="ID Number"></td>
