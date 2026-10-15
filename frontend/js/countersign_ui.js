@@ -19,6 +19,15 @@
     let producerSigMethod = 'draw';
     let loadedSubmission = null;
 
+    const FORM_PAGE_MAP = {
+        participant_release: 'participant_release.html',
+        minor_release: 'minor_release.html',
+        location_agreement: 'location_agreement.html',
+        footage_agreement: 'footage_release_agreement.html',
+        footage_release_agreement: 'footage_release_agreement.html',
+        music_agreement: 'music_agreement.html'
+    };
+
     // Isolate co-signer immediately if in co-signer mode (hide any dashboard UI)
     if (isCoSignerMode) {
         isolateCoSignerView();
@@ -428,6 +437,18 @@
             });
         }
 
+        // Unblock co-signer specific inputs outside the participant signature section during producer initiation
+        const coSignerExternalFieldIds = [
+            'parentIdNumber', 'idNumber', 'contactNumber', 'phone', 'email', 'ownerId'
+        ];
+        coSignerExternalFieldIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && el.hasAttribute('required')) {
+                el.dataset.wasRequired = 'true';
+                el.removeAttribute('required');
+            }
+        });
+
         // Add helpful Step 1 guidance banner above the Producer Signature section
         const producerSection = document.getElementById('producerSignatureSection');
         if (producerSection && !document.getElementById('producerInitiationStepNote')) {
@@ -532,10 +553,12 @@
             if (participantSigSection) {
                 participantSigSection.style.display = 'block';
                 participantSigSection.removeAttribute('aria-hidden');
-                participantSigSection.querySelectorAll('[data-was-required="true"]').forEach(inp => {
-                    inp.setAttribute('required', '');
-                });
             }
+
+            // Restore any required attributes that were relaxed during initiation mode
+            form.querySelectorAll('[data-was-required="true"]').forEach(inp => {
+                inp.setAttribute('required', '');
+            });
 
             // 5. Co-signer fields are active & required
             const contribName = document.getElementById('participantName') || document.getElementById('fullName') || document.getElementById('guardianName') || document.getElementById('ownerName') || document.getElementById('locationOwnerName') || document.getElementById('footageOwnerName') || document.getElementById('musicOwnerName');
@@ -620,11 +643,14 @@
             if (participantSigSection) {
                 participantSigSection.style.display = 'block';
                 participantSigSection.removeAttribute('aria-hidden');
-                // Ensure no HTML5 required restrictions block producer approval
-                participantSigSection.querySelectorAll('input, select, textarea').forEach(inp => {
-                    inp.removeAttribute('required');
-                });
             }
+
+            // Ensure no HTML5 required restrictions block producer approval
+            form.querySelectorAll('input, select, textarea').forEach(inp => {
+                if (inp.id !== 'producerName' && inp.id !== 'prodSignerName') {
+                    inp.removeAttribute('required');
+                }
+            });
 
             // Display verified co-signer signature
             const contributorSigContainer = document.querySelector('.signature-pad-container');
@@ -958,7 +984,8 @@
                         showProducerApprovalSuccessModal(formTitle, pEmail);
                     } else {
                         // Share link generated!
-                        const shareUrl = result.shareUrl || `${getBaseUrl()}/${formType}.html?id=${result.firestoreDocId}&action=cosign`;
+                        const formPage = FORM_PAGE_MAP[formType] || `${formType}.html`;
+                        const shareUrl = result.shareUrl || `${getBaseUrl()}/${formPage}?id=${result.firestoreDocId}&action=cosign`;
                         const pEmail = document.getElementById('producerEmail')?.value || getResolvedProducerProfile().email;
                         const storyTitle = document.getElementById('storyTitle')?.value || document.getElementById('storyName')?.value || 'Story';
                         showShareLinkModal({
