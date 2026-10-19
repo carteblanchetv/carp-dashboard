@@ -280,16 +280,30 @@
             if (el && !el.value) el.value = 'Johannesburg';
         });
 
-        const syncInputs = () => {
-            const n = document.getElementById('prodSignerName')?.value.trim() || document.getElementById('producerName')?.value.trim();
-            const e = document.getElementById('prodSignerEmail')?.value.trim() || document.getElementById('producerEmail')?.value.trim();
-            if (n && prodNameHidden) prodNameHidden.value = n;
-            if (e && prodEmailHidden) prodEmailHidden.value = e;
+        const handleProducerNameInput = (e) => {
+            const val = e.target.value;
+            const other = (e.target.id === 'producerName') ? document.getElementById('prodSignerName') : document.getElementById('producerName');
+            if (other && other !== e.target && other.value !== val) {
+                other.value = val;
+            }
+            if (prodNameHidden && prodNameHidden !== e.target && prodNameHidden.value !== val) {
+                prodNameHidden.value = val;
+            }
         };
-        document.getElementById('prodSignerName')?.addEventListener('input', syncInputs);
-        document.getElementById('producerName')?.addEventListener('input', syncInputs);
-        document.getElementById('prodSignerEmail')?.addEventListener('input', syncInputs);
-        document.getElementById('producerEmail')?.addEventListener('input', syncInputs);
+        const handleProducerEmailInput = (e) => {
+            const val = e.target.value;
+            const other = (e.target.id === 'producerEmail') ? document.getElementById('prodSignerEmail') : document.getElementById('producerEmail');
+            if (other && other !== e.target && other.value !== val) {
+                other.value = val;
+            }
+            if (prodEmailHidden && prodEmailHidden !== e.target && prodEmailHidden.value !== val) {
+                prodEmailHidden.value = val;
+            }
+        };
+        document.getElementById('prodSignerName')?.addEventListener('input', handleProducerNameInput);
+        document.getElementById('producerName')?.addEventListener('input', handleProducerNameInput);
+        document.getElementById('prodSignerEmail')?.addEventListener('input', handleProducerEmailInput);
+        document.getElementById('producerEmail')?.addEventListener('input', handleProducerEmailInput);
     }
 
     /**
