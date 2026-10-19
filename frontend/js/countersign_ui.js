@@ -474,15 +474,16 @@
             });
         }
 
-        // Unblock co-signer specific inputs outside the participant signature section during producer initiation
+        // Unblock co-signer specific inputs outside the participant signature section during producer initiation (Phase 1)
         const coSignerExternalFieldIds = [
-            'parentIdNumber', 'idNumber', 'contactNumber', 'phone', 'email', 'ownerId'
+            'parentIdNumber', 'idNumber', 'contactNumber', 'phone', 'email', 'ownerId',
+            'participantName', 'childName', 'parentName', 'locationOwnerName', 'footageOwnerName', 'musicOwnerName'
         ];
         coSignerExternalFieldIds.forEach(id => {
             const el = document.getElementById(id);
-            if (el && el.hasAttribute('required')) {
-                el.dataset.wasRequired = 'true';
+            if (el) {
                 el.removeAttribute('required');
+                el.dataset.wasRequired = 'true';
             }
         });
 
@@ -620,12 +621,18 @@
                 inp.setAttribute('required', '');
             });
 
-            // 5. Co-signer fields are active & required
-            const contribName = document.getElementById('participantName') || document.getElementById('fullName') || document.getElementById('guardianName') || document.getElementById('ownerName') || document.getElementById('locationOwnerName') || document.getElementById('footageOwnerName') || document.getElementById('musicOwnerName');
+            // 5. Co-signer fields are active & required for Phase 2
+            const contribName = document.getElementById('participantName') || document.getElementById('fullName') || document.getElementById('guardianName') || document.getElementById('parentName') || document.getElementById('ownerName') || document.getElementById('locationOwnerName') || document.getElementById('footageOwnerName') || document.getElementById('musicOwnerName');
             if (contribName) contribName.required = true;
 
             const contribSignedAt = document.getElementById('participantSignedAt') || document.getElementById('ownerSignedAt') || document.getElementById('parentSignedAt') || document.getElementById('signedAt');
             if (contribSignedAt) contribSignedAt.required = true;
+
+            const idField = document.getElementById('idNumber') || document.getElementById('parentIdNumber');
+            if (idField) idField.required = true;
+
+            const contactField = document.getElementById('contactNumber') || document.getElementById('phone');
+            if (contactField) contactField.required = true;
 
             // Submit button
             const submitBtn = form.querySelector('button[type="submit"]');
@@ -902,10 +909,22 @@
                     if (cSec) cSec.scrollIntoView({ behavior: 'smooth' });
                     return;
                 }
-                const nameInp = document.getElementById('participantName') || document.getElementById('fullName') || document.getElementById('guardianName') || document.getElementById('ownerName') || document.getElementById('locationOwnerName') || document.getElementById('footageOwnerName') || document.getElementById('musicOwnerName');
+                const nameInp = document.getElementById('participantName') || document.getElementById('fullName') || document.getElementById('guardianName') || document.getElementById('parentName') || document.getElementById('ownerName') || document.getElementById('locationOwnerName') || document.getElementById('footageOwnerName') || document.getElementById('musicOwnerName');
                 if (nameInp && !nameInp.value.trim()) {
                     alert('Please enter your full name & surname.');
                     nameInp.focus();
+                    return;
+                }
+                const idInp = document.getElementById('idNumber') || document.getElementById('parentIdNumber');
+                if (idInp && !idInp.value.trim()) {
+                    alert('Please enter your ID number.');
+                    idInp.focus();
+                    return;
+                }
+                const contactInp = document.getElementById('contactNumber') || document.getElementById('phone');
+                if (contactInp && !contactInp.value.trim()) {
+                    alert('Please enter your contact number.');
+                    contactInp.focus();
                     return;
                 }
             } else if (isApprovalMode) {
