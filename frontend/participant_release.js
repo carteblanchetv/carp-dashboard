@@ -75,7 +75,7 @@ function initParticipantRelease() {
         const text = typeSigInput.value.trim();
         if (!text) return;
 
-        const font = (typeSigFont && typeSigFont.value) || 'Caveat';
+        const font = (typeSigFont && typeSigFont.value) || 'Great Vibes';
         ctx.font = `italic 40px "${font}", cursive`;
         ctx.fillStyle = '#000000';
         ctx.textBaseline = 'middle';

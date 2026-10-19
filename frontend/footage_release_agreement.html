@@ -153,7 +153,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const text = input.value.trim();
             if (!text) return;
-            const font = fontSelect ? fontSelect.value : 'Caveat';
+            const font = fontSelect ? fontSelect.value : 'Great Vibes';
             ctx.font = `italic 40px "${font}", cursive`;
             ctx.fillStyle = '#000000';
             ctx.textBaseline = 'middle';
@@ -378,9 +378,9 @@
                         <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
                             <input type="text" id="typeSigInput" placeholder="Type owner name here..." oninput="window.renderOwnerTypedSignature()" style="flex: 1; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem;">
                             <select id="typeSigFont" onchange="window.renderOwnerTypedSignature()" style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; cursor: pointer;">
+                                <option value="Great Vibes" selected>Great Vibes (Classic)</option>
                                 <option value="Caveat">Caveat (Cursive)</option>
                                 <option value="Dancing Script">Dancing Script (Elegant)</option>
-                                <option value="Great Vibes">Great Vibes (Classic)</option>
                                 <option value="Pacifico">Pacifico (Retro)</option>
                             </select>
                         </div>

@@ -320,6 +320,9 @@
         const typeControls = document.getElementById('producerTypeSignatureControls');
         const typeInput = document.getElementById('producerTypeSigInput');
         const typeFont = document.getElementById('producerTypeSigFont');
+        if (typeFont && !typeFont.value) {
+            typeFont.value = 'Caveat';
+        }
 
         if (tabDraw) {
             tabDraw.addEventListener('click', (e) => {
@@ -633,6 +636,12 @@
 
             const contactField = document.getElementById('contactNumber') || document.getElementById('phone');
             if (contactField) contactField.required = true;
+
+            // Ensure co-signer typed signature font defaults to Great Vibes
+            const coSignerFontSelect = document.getElementById('typeSigFont');
+            if (coSignerFontSelect) {
+                coSignerFontSelect.value = 'Great Vibes';
+            }
 
             // Submit button
             const submitBtn = form.querySelector('button[type="submit"]');
