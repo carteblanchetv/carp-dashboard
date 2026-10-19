@@ -92,6 +92,28 @@
     }
 
     /**
+     * Accurately check whether a canvas is completely blank by inspecting its pixel buffer
+     */
+    function isCanvasBlank(canvas) {
+        if (!canvas) return true;
+        try {
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return true;
+            const w = canvas.width || 0;
+            const h = canvas.height || 0;
+            if (w === 0 || h === 0) return true;
+            const imgData = ctx.getImageData(0, 0, w, h);
+            const data = imgData.data;
+            for (let i = 3; i < data.length; i += 4) {
+                if (data[i] !== 0) return false;
+            }
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
      * Resilient helper to resolve the logged-in or cached producer identity
      */
     function getResolvedProducerProfile() {
@@ -794,34 +816,27 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            // Extract Contributor / Co-signer signature from canvas
+            // Extract Contributor / Co-signer signature
             let contributorSigImg = null;
-            try {
-                const contributorCanvas = document.getElementById(contributorSigCanvasId);
-                if (contributorCanvas) {
-                    const blank = document.createElement('canvas');
-                    blank.width = contributorCanvas.width;
-                    blank.height = contributorCanvas.height;
-                    if (contributorCanvas.toDataURL() !== blank.toDataURL()) {
+            if (isCoSignerMode) {
+                try {
+                    const contributorCanvas = document.getElementById(contributorSigCanvasId);
+                    if (contributorCanvas && !isCanvasBlank(contributorCanvas)) {
                         contributorSigImg = contributorCanvas.toDataURL('image/png');
                     }
-                }
-            } catch (err) {}
-
-            if (isApprovalMode && loadedSubmission) {
-                contributorSigImg = loadedSubmission.participantSignature || loadedSubmission.ownerSignature || loadedSubmission.guardianSignature || loadedSubmission.licensorSignature || loadedSubmission.artistSignature;
+                } catch (err) {}
+            } else if (isApprovalMode && loadedSubmission) {
+                contributorSigImg = loadedSubmission.participantSignature || loadedSubmission.ownerSignature || loadedSubmission.guardianSignature || loadedSubmission.licensorSignature || loadedSubmission.artistSignature || null;
+            } else {
+                // In Step 1 (Initiation Mode), contributor signature does NOT exist yet.
+                contributorSigImg = null;
             }
 
             // Extract Producer signature from canvas
             let producerSigImg = null;
             try {
-                if (producerCanvas) {
-                    const prodBlank = document.createElement('canvas');
-                    prodBlank.width = producerCanvas.width;
-                    prodBlank.height = producerCanvas.height;
-                    if (producerCanvas.toDataURL() !== prodBlank.toDataURL()) {
-                        producerSigImg = producerCanvas.toDataURL('image/png');
-                    }
+                if (producerCanvas && !isCanvasBlank(producerCanvas)) {
+                    producerSigImg = producerCanvas.toDataURL('image/png');
                 }
             } catch (err) {}
 
@@ -961,7 +976,14 @@
 
                     const formData = new FormData(form);
                     if (producerSigImg) formData.set('producerSignature', producerSigImg);
-                    if (contributorSigImg) formData.set('participantSignature', contributorSigImg);
+
+                    // Crucial: Step 1 must NEVER submit participant signatures to the server
+                    formData.delete('participantSignature');
+                    formData.delete('ownerSignature');
+                    formData.delete('guardianSignature');
+                    formData.delete('licensorSignature');
+                    formData.delete('artistSignature');
+
                     formData.append('file', pdfBlob, `Initiated_${formType}_${Date.now()}.pdf`);
 
                     const token = (window.auth && typeof window.auth.getIdToken === 'function')
@@ -978,23 +1000,17 @@
                     const result = await response.json();
                     if (!result.success) throw new Error(result.error || result.message || 'Failed to submit agreement');
 
-                    if (result.status === 'completed' && contributorSigImg) {
-                        // Both signed in person
-                        const pEmail = document.getElementById('producerEmail')?.value || 'your email';
-                        showProducerApprovalSuccessModal(formTitle, pEmail);
-                    } else {
-                        // Share link generated!
-                        const formPage = FORM_PAGE_MAP[formType] || `${formType}.html`;
-                        const shareUrl = result.shareUrl || `${getBaseUrl()}/${formPage}?id=${result.firestoreDocId}&action=cosign`;
-                        const pEmail = document.getElementById('producerEmail')?.value || getResolvedProducerProfile().email;
-                        const storyTitle = document.getElementById('storyTitle')?.value || document.getElementById('storyName')?.value || 'Story';
-                        showShareLinkModal({
-                            formTitle,
-                            storyTitle,
-                            shareUrl,
-                            producerEmail: pEmail
-                        });
-                    }
+                    // Step 1: ALWAYS generate and display shareable link!
+                    const formPage = FORM_PAGE_MAP[formType] || `${formType}.html`;
+                    const shareUrl = result.shareUrl || `${getBaseUrl()}/${formPage}?id=${result.firestoreDocId}&action=cosign`;
+                    const pEmail = document.getElementById('producerEmail')?.value || getResolvedProducerProfile().email;
+                    const storyTitle = document.getElementById('storyTitle')?.value || document.getElementById('storyName')?.value || 'Story';
+                    showShareLinkModal({
+                        formTitle,
+                        storyTitle,
+                        shareUrl,
+                        producerEmail: pEmail
+                    });
                 }
             } catch (err) {
                 console.error('[FORM-SUBMIT-ERROR]', err);
@@ -1144,27 +1160,24 @@
             dialog = document.createElement('div');
             dialog.id = 'successDialog';
             dialog.className = 'dialog-overlay';
-            dialog.innerHTML = `
-                <div class="dialog-box" style="max-width: 560px; padding: 2rem; border-radius: 12px; background: var(--bg-card); color: var(--text-main);">
-                    <div style="font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem;">🎉</div>
-                    <h2 style="color: #0284c7; text-align: center; margin-bottom: 0.5rem;">Release Form Approved &amp; Dispatched</h2>
-                    <p style="text-align: center; line-height: 1.5; color: var(--text-main); font-size: 0.95rem; margin-bottom: 1.5rem;">
-                        Both participant and producer signatures have been recorded. The final signed document has been dispatched to <strong>${escapeHtml(producerEmail)}</strong> and <strong>release@carteblanche.co.za</strong>.
-                    </p>
-                    <div class="dialog-actions" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
-                        <a href="index.html" class="btn-soft" style="padding: 0.7rem 1.25rem; border-radius: 6px; font-weight: 600; text-decoration: none;">Return to Dashboard</a>
-                        <a href="forms_hub.html" class="add-btn" style="padding: 0.7rem 1.25rem; border-radius: 6px; font-weight: 600; text-decoration: none; margin: 0;">Submit Another Form</a>
-                    </div>
-                </div>
-            `;
             document.body.appendChild(dialog);
-        } else {
-            dialog.classList.remove('hidden');
-            const h2 = dialog.querySelector('h2');
-            const p = dialog.querySelector('p');
-            if (h2) h2.textContent = `${formTitle || 'Release Form'} Approved & Dispatched`;
-            if (p) p.innerHTML = `Both participant and producer signatures have been recorded. The final signed document has been sent to <strong>${escapeHtml(producerEmail)}</strong> and <strong>release@carteblanche.co.za</strong>.`;
         }
+
+        dialog.classList.remove('hidden');
+        dialog.style.display = 'flex';
+        dialog.innerHTML = `
+            <div class="dialog-box" style="max-width: 560px; padding: 2rem; border-radius: 12px; background: var(--bg-card); color: var(--text-main); box-shadow: var(--shadow-xl); border: 1px solid var(--border);">
+                <div style="font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem;">🎉</div>
+                <h2 style="color: #0284c7; text-align: center; margin-bottom: 0.5rem;">${escapeHtml(formTitle || 'Release Form')} Approved &amp; Dispatched</h2>
+                <p style="text-align: center; line-height: 1.5; color: var(--text-main); font-size: 0.95rem; margin-bottom: 1.5rem;">
+                    Both participant and producer signatures have been recorded. The final signed document has been dispatched to <strong>${escapeHtml(producerEmail)}</strong> and <strong>release@carteblanche.co.za</strong>.
+                </p>
+                <div class="dialog-actions" style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                    <a href="index.html" class="btn-soft" style="padding: 0.7rem 1.25rem; border-radius: 6px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center;">Return to Dashboard</a>
+                    <a href="forms_hub.html" class="add-btn" style="padding: 0.7rem 1.25rem; border-radius: 6px; font-weight: 600; text-decoration: none; margin: 0; display: inline-flex; align-items: center;">Submit Another Form</a>
+                </div>
+            </div>
+        `;
     }
 
     function escapeHtml(str) {
