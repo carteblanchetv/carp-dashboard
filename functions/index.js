@@ -719,6 +719,112 @@ const RELEASE_FORM_TITLE_MAP = {
 };
 
 /**
+ * Generate cryptographically secure, non-guessable short tokens and URLs
+ */
+function createFormShareMetadata(baseUrl) {
+  const shareToken = crypto.randomBytes(9).toString('base64url');
+  const tokenExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30-day expiration
+  const shareUrl = `${baseUrl}/s/${shareToken}`;
+  return {
+    shareToken,
+    tokenExpiresAt,
+    shareUrl
+  };
+}
+
+/**
+ * Render Branded Status / Error / Locked Page for Public Short Links
+ */
+function renderSignLinkStatusPage({ icon = '📋', title, message, isSuccess = false }) {
+  const escapeH = (s) => (s ? String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])) : '');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeH(title)} - Carte Blanche</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      padding: 20px;
+    }
+    .card {
+      max-width: 480px;
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      text-align: center;
+    }
+    .header {
+      background: #008fbe;
+      color: #ffffff;
+      padding: 24px 20px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .content {
+      padding: 32px 24px;
+    }
+    .icon {
+      font-size: 3rem;
+      margin-bottom: 14px;
+    }
+    .title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: ${isSuccess ? '#16a34a' : '#0f172a'};
+      margin: 0 0 12px 0;
+    }
+    .message {
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: #475569;
+      margin: 0;
+    }
+    .footer {
+      background: #f1f5f9;
+      border-top: 1px solid #e2e8f0;
+      padding: 12px 20px;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <h1>CARTE BLANCHE</h1>
+    </div>
+    <div class="content">
+      <div class="icon">${icon}</div>
+      <h2 class="title">${escapeH(title)}</h2>
+      <p class="message">${escapeH(message)}</p>
+    </div>
+    <div class="footer">
+      Carte Blanche Digital Release System &bull; Confidential
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+/**
  * Step 1: Send shareable link to the Producer via email
  */
 async function sendProducerShareLinkEmail({
@@ -730,6 +836,7 @@ async function sendProducerShareLinkEmail({
   producerName,
   producerEmail,
   contributorName,
+  shareUrl,
   req
 }) {
   const resolved = await resolveProducerDetails({
@@ -754,7 +861,7 @@ async function sendProducerShareLinkEmail({
 
   const formPage = RELEASE_FORM_PAGE_MAP[formType] || 'forms_hub.html';
   const title = formTitle || RELEASE_FORM_TITLE_MAP[formType] || 'Release Form';
-  const cosignUrl = `${baseUrl}/${formPage}?id=${submissionId}&action=cosign`;
+  const cosignUrl = shareUrl || `${baseUrl}/s/${submissionId}`;
   const comm = commissionNumber || 'N/A';
   const story = storyTitle || 'Story';
   const contrib = contributorName || 'Co-signer / Participant';
@@ -917,6 +1024,90 @@ const sendCountersignNotification = sendProducerCosignedNotification;
 const app = express();
 app.use(cors({ origin: true }));
 
+/**
+ * Public Short Sign Links & Public Access Redirection / Locking
+ * GET /s/:token or GET /sign/:token
+ */
+app.get(['/s/:token', '/sign/:token'], async (req, res) => {
+  try {
+    const { token } = req.params;
+    if (!token) {
+      return res.status(400).send(renderSignLinkStatusPage({
+        icon: '⚠️',
+        title: 'Invalid Signing Link',
+        message: 'The link you opened is missing a signing token. Please verify the URL with the producer.'
+      }));
+    }
+
+    // Look up submission by shareToken or direct doc ID
+    let docSnap = null;
+    const tokenQuery = await admin.firestore().collection('submissions')
+      .where('shareToken', '==', token)
+      .limit(1)
+      .get();
+
+    if (!tokenQuery.empty) {
+      docSnap = tokenQuery.docs[0];
+    } else {
+      const directDoc = await admin.firestore().collection('submissions').doc(token).get();
+      if (directDoc.exists) {
+        docSnap = directDoc;
+      }
+    }
+
+    if (!docSnap || !docSnap.exists) {
+      return res.status(404).send(renderSignLinkStatusPage({
+        icon: '🔍',
+        title: 'Agreement Not Found or Link Expired',
+        message: 'This signing link is no longer valid or could not be found. Please contact the Carte Blanche production team.'
+      }));
+    }
+
+    const data = docSnap.data();
+    const docId = docSnap.id;
+    const status = data.status || '';
+
+    // Check optional token expiration
+    if (data.tokenExpiresAt) {
+      const expDate = data.tokenExpiresAt.toDate ? data.tokenExpiresAt.toDate() : new Date(data.tokenExpiresAt);
+      if (Date.now() > expDate.getTime()) {
+        return res.status(410).send(renderSignLinkStatusPage({
+          icon: '⏳',
+          title: 'Signing Link Expired',
+          message: `This secure signing link expired on ${expDate.toLocaleDateString()}. Please request a new link from the producer.`
+        }));
+      }
+    }
+
+    // Locks the document from further edits via the public link once co-signed
+    if (status === 'PENDING_APPROVAL' || status === 'APPROVED' || status === 'completed' || status === 'pending_producer_approval') {
+      const isApproved = (status === 'APPROVED' || status === 'completed');
+      return res.status(200).send(renderSignLinkStatusPage({
+        icon: isApproved ? '✅' : '🔒',
+        title: isApproved ? 'Agreement Completed & Executed' : 'Document Co-Signed & Pending Approval',
+        message: isApproved
+          ? 'This agreement has already been co-signed, approved by the producer, and officially executed. No further action is required.'
+          : 'Thank you! This agreement has already been signed by the participant and submitted for Producer approval. Edits and further submissions are locked.',
+        isSuccess: true
+      }));
+    }
+
+    // Redirect to the appropriate form page in isolated co-signer mode
+    const formType = data.formType || 'participant_release';
+    const formPage = RELEASE_FORM_PAGE_MAP[formType] || 'participant_release.html';
+    return res.redirect(`/${formPage}?token=${encodeURIComponent(token)}&id=${docId}&action=cosign`);
+  } catch (err) {
+    console.error('[SIGN-REDIRECT] Error handling token:', err);
+    return res.status(500).send(renderSignLinkStatusPage({
+      icon: '⚠️',
+      title: 'Server Error',
+      message: 'Unable to process your signing request at this moment. Please try again shortly.'
+    }));
+  }
+});
+
+app.get(['/s', '/sign'], (req, res) => res.redirect('/forms_hub.html'));
+
 
 
 /**
@@ -1007,6 +1198,8 @@ async function validateFirebaseIdToken(req, res, next) {
   console.log(`[AUTH] Checking token for ${req.method} ${req.url}`);
 
   const publicFormRoutes = [
+    '/s',
+    '/sign',
     '/api/send-participant-release',
     '/api/send-minor-release',
     '/api/send-location-agreement',
@@ -1904,16 +2097,38 @@ app.get('/api/get-form-for-countersign/:id', async (req, res) => {
     const { id } = req.params;
     if (!id) return res.status(400).json({ success: false, error: 'Submission ID is required.' });
 
-    const doc = await admin.firestore().collection('submissions').doc(id).get();
+    let doc = await admin.firestore().collection('submissions').doc(id).get();
     if (!doc.exists) {
+      const tokenQuery = await admin.firestore().collection('submissions')
+        .where('shareToken', '==', id)
+        .limit(1)
+        .get();
+      if (!tokenQuery.empty) {
+        doc = tokenQuery.docs[0];
+      }
+    }
+
+    if (!doc || !doc.exists) {
       return res.status(404).json({ success: false, error: 'Agreement record not found.' });
     }
 
     const data = doc.data();
+    const status = data.status || '';
+    const isLocked = (status === 'PENDING_APPROVAL' || status === 'APPROVED' || status === 'completed' || status === 'pending_producer_approval');
+    let isExpired = false;
+    if (data.tokenExpiresAt) {
+      const expDate = data.tokenExpiresAt.toDate ? data.tokenExpiresAt.toDate() : new Date(data.tokenExpiresAt);
+      if (Date.now() > expDate.getTime()) {
+        isExpired = true;
+      }
+    }
+
     res.json({
       success: true,
       submission: {
         id: doc.id,
+        isLocked,
+        isExpired,
         ...data
       }
     });
@@ -1926,19 +2141,40 @@ app.get('/api/get-form-for-countersign/:id', async (req, res) => {
 app.post('/api/cosign-form', async (req, res) => {
   try {
     const { fields } = await parseMultipart(req);
-    const { submissionId } = fields;
+    const { submissionId, shareToken } = fields;
 
-    if (!submissionId) {
-      return res.status(400).json({ success: false, error: 'Missing submission ID for co-signature.' });
+    let subDocRef = null;
+    let subDoc = null;
+    if (submissionId) {
+      subDocRef = admin.firestore().collection('submissions').doc(submissionId);
+      subDoc = await subDocRef.get();
+    }
+    if ((!subDoc || !subDoc.exists) && shareToken) {
+      const tokenQuery = await admin.firestore().collection('submissions')
+        .where('shareToken', '==', shareToken)
+        .limit(1)
+        .get();
+      if (!tokenQuery.empty) {
+        subDoc = tokenQuery.docs[0];
+        subDocRef = subDoc.ref;
+      }
     }
 
-    const subDocRef = admin.firestore().collection('submissions').doc(submissionId);
-    const subDoc = await subDocRef.get();
-    if (!subDoc.exists) {
+    if (!subDoc || !subDoc.exists) {
       return res.status(404).json({ success: false, error: 'Original agreement submission not found.' });
     }
 
     const subData = subDoc.data();
+    const currentStatus = subData.status || '';
+
+    // Enforce lock: document cannot be edited or submitted via public link once co-signed
+    if (currentStatus === 'PENDING_APPROVAL' || currentStatus === 'APPROVED' || currentStatus === 'completed' || currentStatus === 'pending_producer_approval') {
+      return res.status(400).json({
+        success: false,
+        error: 'This document has already been co-signed and is locked from further submissions.'
+      });
+    }
+
     const formType = subData.formType || 'participant_release';
     const formTitle = RELEASE_FORM_TITLE_MAP[formType] || 'Release Agreement';
 
@@ -1948,7 +2184,7 @@ app.post('/api/cosign-form', async (req, res) => {
     }
 
     const updatePayload = {
-      status: 'pending_producer_approval',
+      status: 'PENDING_APPROVAL',
       participantSignature: pSig,
       participantSignedAt: fields.participantSignedAt || fields.signedAt || fields.ownerSignedAt || fields.parentSignedAt || null,
       participantSignedDate: fields.participantSignedDate || fields.signedDate || fields.ownerSignedDate || fields.parentSignedDate || null,
@@ -2000,7 +2236,7 @@ app.post('/api/cosign-form', async (req, res) => {
     const storyTitle = subData.storyName || subData.storyTitle || 'Story';
 
     await sendProducerCosignedNotification({
-      submissionId,
+      submissionId: subDoc.id,
       formType,
       formTitle,
       commissionNumber: commNum,
@@ -2013,7 +2249,7 @@ app.post('/api/cosign-form', async (req, res) => {
 
     res.json({
       success: true,
-      status: 'pending_producer_approval',
+      status: 'PENDING_APPROVAL',
       message: 'Co-signature recorded successfully. Producer has been notified for final approval.'
     });
   } catch (error) {
@@ -2087,11 +2323,12 @@ app.post('/api/countersign-form', async (req, res) => {
 
     // Update Firestore submission record with updated fields and countersignature
     const updatePayload = {
-      status: 'completed',
+      status: 'APPROVED',
       producerSignature: producerSignature || subData.producerSignature || null,
       producerName: pName,
       producerEmail: pEmail,
       countersignedAt: admin.firestore.FieldValue.serverTimestamp(),
+      approvedAt: admin.firestore.FieldValue.serverTimestamp(),
       completedAt: admin.firestore.FieldValue.serverTimestamp(),
       files: fileRecords
     };
@@ -2175,7 +2412,7 @@ app.post('/api/countersign-form', async (req, res) => {
       uniqueExtraRecipients
     );
 
-    res.json({ success: true, status: 'completed', message: 'Agreement successfully countersigned and dispatched.' });
+    res.json({ success: true, status: 'APPROVED', message: 'Agreement successfully approved and dispatched.' });
   } catch (error) {
     console.error('Error countersigning agreement:', error);
     res.status(500).json({ success: false, error: error.message });
@@ -2216,14 +2453,19 @@ app.post('/api/send-footage-release-agreement', async (req, res) => {
       (fields.licensorSignature && fields.licensorSignature.trim().length > 100)
     );
 
-    let formStatus = 'pending_cosigner';
+    let formStatus = 'PARTIALLY_SIGNED';
     if (hasProducerSig && hasParticipantSig) {
-      formStatus = 'completed';
+      formStatus = 'APPROVED';
     } else if (hasProducerSig && !hasParticipantSig) {
-      formStatus = 'pending_cosigner';
+      formStatus = 'PARTIALLY_SIGNED';
     } else if (!hasProducerSig && hasParticipantSig) {
-      formStatus = 'pending_producer_approval';
+      formStatus = 'PENDING_APPROVAL';
     }
+
+    const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
+    const protocol = (req && req.get('x-forwarded-proto')) || 'https';
+    const baseUrl = `${protocol}://${host}`;
+    const { shareToken, tokenExpiresAt, shareUrl } = createFormShareMetadata(baseUrl);
 
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'footage_agreement', 'footage_agreement', files,
@@ -2245,20 +2487,17 @@ app.post('/api/send-footage-release-agreement', async (req, res) => {
         producerName,
         producerEmail,
         status: formStatus,
+        shareToken,
+        tokenExpiresAt,
+        shareUrl,
         participantSignature: fields.participantSignature || fields.ownerSignature || fields.licensorSignature || null,
         producerSignature: hasProducerSig ? fields.producerSignature : null,
-        completedAt: formStatus === 'completed' ? admin.firestore.FieldValue.serverTimestamp() : null,
+        completedAt: formStatus === 'APPROVED' ? admin.firestore.FieldValue.serverTimestamp() : null,
         ...fields
       }
     );
 
-    const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
-    const protocol = (req && req.get('x-forwarded-proto')) || 'https';
-    const baseUrl = `${protocol}://${host}`;
-    const formPage = RELEASE_FORM_PAGE_MAP['footage_agreement'] || 'footage_release_agreement.html';
-    const cosignUrl = `${baseUrl}/${formPage}?id=${dbResult.firestoreDocId}&action=cosign`;
-
-    if (formStatus === 'pending_cosigner') {
+    if (formStatus === 'PARTIALLY_SIGNED' || formStatus === 'pending_cosigner') {
       await sendProducerShareLinkEmail({
         submissionId: dbResult.firestoreDocId,
         formType: 'footage_agreement',
@@ -2268,6 +2507,7 @@ app.post('/api/send-footage-release-agreement', async (req, res) => {
         producerName,
         producerEmail,
         contributorName: footageOwnerName,
+        shareUrl,
         req
       });
 
@@ -2275,9 +2515,10 @@ app.post('/api/send-footage-release-agreement', async (req, res) => {
         success: true,
         status: formStatus,
         firestoreDocId: dbResult.firestoreDocId,
-        shareUrl: cosignUrl
+        shareToken,
+        shareUrl
       });
-    } else if (formStatus === 'completed') {
+    } else if (formStatus === 'APPROVED' || formStatus === 'completed') {
       const { subject, html } = buildFormEmailDetails({
         formTitle: 'Footage Agreement',
         commissionNumber: commNum,
@@ -2358,14 +2599,19 @@ app.post('/api/send-participant-release', async (req, res) => {
       (fields.fullName && fields.participantSignature && fields.participantSignature.trim().length > 100)
     );
 
-    let formStatus = 'pending_cosigner';
+    let formStatus = 'PARTIALLY_SIGNED';
     if (hasProducerSig && hasParticipantSig) {
-      formStatus = 'completed';
+      formStatus = 'APPROVED';
     } else if (hasProducerSig && !hasParticipantSig) {
-      formStatus = 'pending_cosigner';
+      formStatus = 'PARTIALLY_SIGNED';
     } else if (!hasProducerSig && hasParticipantSig) {
-      formStatus = 'pending_producer_approval';
+      formStatus = 'PENDING_APPROVAL';
     }
+
+    const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
+    const protocol = (req && req.get('x-forwarded-proto')) || 'https';
+    const baseUrl = `${protocol}://${host}`;
+    const { shareToken, tokenExpiresAt, shareUrl } = createFormShareMetadata(baseUrl);
 
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'participant_release', 'participant_release', files,
@@ -2386,19 +2632,16 @@ app.post('/api/send-participant-release', async (req, res) => {
         producerSignedAt: fields.producerSignedAt || null,
         producerSignedDate: fields.producerSignedDate || null,
         status: formStatus,
+        shareToken,
+        tokenExpiresAt,
+        shareUrl,
         participantSignature: fields.participantSignature || null,
         producerSignature: hasProducerSig ? fields.producerSignature : null,
-        completedAt: formStatus === 'completed' ? admin.firestore.FieldValue.serverTimestamp() : null
+        completedAt: formStatus === 'APPROVED' ? admin.firestore.FieldValue.serverTimestamp() : null
       }
     );
 
-    const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
-    const protocol = (req && req.get('x-forwarded-proto')) || 'https';
-    const baseUrl = `${protocol}://${host}`;
-    const formPage = RELEASE_FORM_PAGE_MAP['participant_release'] || 'participant_release.html';
-    const cosignUrl = `${baseUrl}/${formPage}?id=${dbResult.firestoreDocId}&action=cosign`;
-
-    if (formStatus === 'pending_cosigner') {
+    if (formStatus === 'PARTIALLY_SIGNED' || formStatus === 'pending_cosigner') {
       await sendProducerShareLinkEmail({
         submissionId: dbResult.firestoreDocId,
         formType: 'participant_release',
@@ -2408,6 +2651,7 @@ app.post('/api/send-participant-release', async (req, res) => {
         producerName,
         producerEmail,
         contributorName: fullName,
+        shareUrl,
         req
       });
 
@@ -2415,9 +2659,10 @@ app.post('/api/send-participant-release', async (req, res) => {
         success: true,
         status: formStatus,
         firestoreDocId: dbResult.firestoreDocId,
-        shareUrl: cosignUrl
+        shareToken,
+        shareUrl
       });
-    } else if (formStatus === 'completed') {
+    } else if (formStatus === 'APPROVED' || formStatus === 'completed') {
       const { subject, html } = buildFormEmailDetails({
         formTitle: 'Participant Release Form',
         commissionNumber,
@@ -2504,14 +2749,19 @@ app.post('/api/send-minor-release', async (req, res) => {
       (fields.participantSignature && fields.participantSignature.trim().length > 100)
     );
 
-    let formStatus = 'pending_cosigner';
+    let formStatus = 'PARTIALLY_SIGNED';
     if (hasProducerSig && hasParticipantSig) {
-      formStatus = 'completed';
+      formStatus = 'APPROVED';
     } else if (hasProducerSig && !hasParticipantSig) {
-      formStatus = 'pending_cosigner';
+      formStatus = 'PARTIALLY_SIGNED';
     } else if (!hasProducerSig && hasParticipantSig) {
-      formStatus = 'pending_producer_approval';
+      formStatus = 'PENDING_APPROVAL';
     }
+
+    const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
+    const protocol = (req && req.get('x-forwarded-proto')) || 'https';
+    const baseUrl = `${protocol}://${host}`;
+    const { shareToken, tokenExpiresAt, shareUrl } = createFormShareMetadata(baseUrl);
 
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'minor_release', 'minor_release', files,
@@ -2527,20 +2777,17 @@ app.post('/api/send-minor-release', async (req, res) => {
         producerSignedAt: fields.producerSignedAt || null,
         producerSignedDate: fields.producerSignedDate || null,
         status: formStatus,
+        shareToken,
+        tokenExpiresAt,
+        shareUrl,
         guardianSignature: fields.parentSignature || fields.guardianSignature || fields.participantSignature || null,
         parentSignature: fields.parentSignature || fields.guardianSignature || fields.participantSignature || null,
         producerSignature: hasProducerSig ? fields.producerSignature : null,
-        completedAt: formStatus === 'completed' ? admin.firestore.FieldValue.serverTimestamp() : null
+        completedAt: formStatus === 'APPROVED' ? admin.firestore.FieldValue.serverTimestamp() : null
       }
     );
 
-    const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
-    const protocol = (req && req.get('x-forwarded-proto')) || 'https';
-    const baseUrl = `${protocol}://${host}`;
-    const formPage = RELEASE_FORM_PAGE_MAP['minor_release'] || 'minor_release.html';
-    const cosignUrl = `${baseUrl}/${formPage}?id=${dbResult.firestoreDocId}&action=cosign`;
-
-    if (formStatus === 'pending_cosigner') {
+    if (formStatus === 'PARTIALLY_SIGNED' || formStatus === 'pending_cosigner') {
       await sendProducerShareLinkEmail({
         submissionId: dbResult.firestoreDocId,
         formType: 'minor_release',
@@ -2550,6 +2797,7 @@ app.post('/api/send-minor-release', async (req, res) => {
         producerName,
         producerEmail,
         contributorName: `${guardianName} (Parent/Guardian of ${minorName || 'Child'})`,
+        shareUrl,
         req
       });
 
@@ -2557,9 +2805,10 @@ app.post('/api/send-minor-release', async (req, res) => {
         success: true,
         status: formStatus,
         firestoreDocId: dbResult.firestoreDocId,
-        shareUrl: cosignUrl
+        shareToken,
+        shareUrl
       });
-    } else if (formStatus === 'completed') {
+    } else if (formStatus === 'APPROVED' || formStatus === 'completed') {
       const { subject, html } = buildFormEmailDetails({
         formTitle: 'Minor Release Form',
         commissionNumber,
@@ -2644,14 +2893,19 @@ app.post('/api/send-location-agreement', async (req, res) => {
       (fields.participantSignature && fields.participantSignature.trim().length > 100)
     );
 
-    let formStatus = 'pending_cosigner';
+    let formStatus = 'PARTIALLY_SIGNED';
     if (hasProducerSig && hasParticipantSig) {
-      formStatus = 'completed';
+      formStatus = 'APPROVED';
     } else if (hasProducerSig && !hasParticipantSig) {
-      formStatus = 'pending_cosigner';
+      formStatus = 'PARTIALLY_SIGNED';
     } else if (!hasProducerSig && hasParticipantSig) {
-      formStatus = 'pending_producer_approval';
+      formStatus = 'PENDING_APPROVAL';
     }
+
+    const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
+    const protocol = (req && req.get('x-forwarded-proto')) || 'https';
+    const baseUrl = `${protocol}://${host}`;
+    const { shareToken, tokenExpiresAt, shareUrl } = createFormShareMetadata(baseUrl);
 
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'location_agreement', 'location_agreement', files,
@@ -2677,20 +2931,17 @@ app.post('/api/send-location-agreement', async (req, res) => {
         producerName,
         producerEmail,
         status: formStatus,
+        shareToken,
+        tokenExpiresAt,
+        shareUrl,
         ownerSignature: fields.ownerSignature || fields.participantSignature || null,
         participantSignature: fields.ownerSignature || fields.participantSignature || null,
         producerSignature: hasProducerSig ? fields.producerSignature : null,
-        completedAt: formStatus === 'completed' ? admin.firestore.FieldValue.serverTimestamp() : null
+        completedAt: formStatus === 'APPROVED' ? admin.firestore.FieldValue.serverTimestamp() : null
       }
     );
 
-    const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
-    const protocol = (req && req.get('x-forwarded-proto')) || 'https';
-    const baseUrl = `${protocol}://${host}`;
-    const formPage = RELEASE_FORM_PAGE_MAP['location_agreement'] || 'location_agreement.html';
-    const cosignUrl = `${baseUrl}/${formPage}?id=${dbResult.firestoreDocId}&action=cosign`;
-
-    if (formStatus === 'pending_cosigner') {
+    if (formStatus === 'PARTIALLY_SIGNED' || formStatus === 'pending_cosigner') {
       await sendProducerShareLinkEmail({
         submissionId: dbResult.firestoreDocId,
         formType: 'location_agreement',
@@ -2700,6 +2951,7 @@ app.post('/api/send-location-agreement', async (req, res) => {
         producerName,
         producerEmail,
         contributorName: locationOwnerName || 'Location Owner',
+        shareUrl,
         req
       });
 
@@ -2707,9 +2959,10 @@ app.post('/api/send-location-agreement', async (req, res) => {
         success: true,
         status: formStatus,
         firestoreDocId: dbResult.firestoreDocId,
-        shareUrl: cosignUrl
+        shareToken,
+        shareUrl
       });
-    } else if (formStatus === 'completed') {
+    } else if (formStatus === 'APPROVED' || formStatus === 'completed') {
       const { subject, html } = buildFormEmailDetails({
         formTitle: 'Location Agreement',
         commissionNumber,
@@ -2796,14 +3049,19 @@ app.post('/api/send-music-agreement', async (req, res) => {
       (fields.participantSignature && fields.participantSignature.trim().length > 100)
     );
 
-    let formStatus = 'pending_cosigner';
+    let formStatus = 'PARTIALLY_SIGNED';
     if (hasProducerSig && hasParticipantSig) {
-      formStatus = 'completed';
+      formStatus = 'APPROVED';
     } else if (hasProducerSig && !hasParticipantSig) {
-      formStatus = 'pending_cosigner';
+      formStatus = 'PARTIALLY_SIGNED';
     } else if (!hasProducerSig && hasParticipantSig) {
-      formStatus = 'pending_producer_approval';
+      formStatus = 'PENDING_APPROVAL';
     }
+
+    const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
+    const protocol = (req && req.get('x-forwarded-proto')) || 'https';
+    const baseUrl = `${protocol}://${host}`;
+    const { shareToken, tokenExpiresAt, shareUrl } = createFormShareMetadata(baseUrl);
 
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'music_agreement', 'music_agreement', files,
@@ -2831,22 +3089,19 @@ app.post('/api/send-music-agreement', async (req, res) => {
         producerEmail,
         proposalId: fields.proposalId || null,
         status: formStatus,
+        shareToken,
+        tokenExpiresAt,
+        shareUrl,
         ownerSignature: fields.ownerSignature || fields.artistSignature || fields.participantSignature || null,
         artistSignature: fields.ownerSignature || fields.artistSignature || fields.participantSignature || null,
         participantSignature: fields.ownerSignature || fields.participantSignature || fields.artistSignature || null,
         producerSignature: hasProducerSig ? fields.producerSignature : null,
-        completedAt: formStatus === 'completed' ? admin.firestore.FieldValue.serverTimestamp() : null,
+        completedAt: formStatus === 'APPROVED' ? admin.firestore.FieldValue.serverTimestamp() : null,
         ...fields
       }
     );
 
-    const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
-    const protocol = (req && req.get('x-forwarded-proto')) || 'https';
-    const baseUrl = `${protocol}://${host}`;
-    const formPage = RELEASE_FORM_PAGE_MAP['music_agreement'] || 'music_agreement.html';
-    const cosignUrl = `${baseUrl}/${formPage}?id=${dbResult.firestoreDocId}&action=cosign`;
-
-    if (formStatus === 'pending_cosigner') {
+    if (formStatus === 'PARTIALLY_SIGNED' || formStatus === 'pending_cosigner') {
       await sendProducerShareLinkEmail({
         submissionId: dbResult.firestoreDocId,
         formType: 'music_agreement',
@@ -2856,6 +3111,7 @@ app.post('/api/send-music-agreement', async (req, res) => {
         producerName,
         producerEmail,
         contributorName: musicOwnerName || 'Music Owner',
+        shareUrl,
         req
       });
 
@@ -2863,9 +3119,10 @@ app.post('/api/send-music-agreement', async (req, res) => {
         success: true,
         status: formStatus,
         firestoreDocId: dbResult.firestoreDocId,
-        shareUrl: cosignUrl
+        shareToken,
+        shareUrl
       });
-    } else if (formStatus === 'completed') {
+    } else if (formStatus === 'APPROVED' || formStatus === 'completed') {
       const { subject, html } = buildFormEmailDetails({
         formTitle: 'Music Agreement',
         commissionNumber,

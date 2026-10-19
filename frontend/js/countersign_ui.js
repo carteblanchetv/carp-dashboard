@@ -6,13 +6,14 @@
 
 (function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const submissionId = urlParams.get('id');
+    const submissionId = urlParams.get('id') || '';
+    const tokenParam = urlParams.get('token') || '';
     const rawAction = (urlParams.get('action') || urlParams.get('mode') || '').toLowerCase();
 
     // Mode determination
-    const isCoSignerMode = (rawAction === 'cosign' || (!rawAction && !!submissionId)) && !!submissionId;
     const isApprovalMode = (rawAction === 'approve' || rawAction === 'countersign') && !!submissionId;
-    const isInitiationMode = !submissionId;
+    const isCoSignerMode = (rawAction === 'cosign' || (!rawAction && (!!submissionId || !!tokenParam))) && (!!submissionId || !!tokenParam) && !isApprovalMode;
+    const isInitiationMode = !submissionId && !tokenParam;
 
     let producerCanvas = null;
     let producerCtx = null;
@@ -491,7 +492,7 @@
         // Submit button text
         const submitBtn = form.querySelector('button[type="submit"]');
         if (submitBtn) {
-            submitBtn.innerHTML = '<span>🚀</span> Submit &amp; Generate Share Link';
+            submitBtn.innerHTML = '<span>🚀</span> Submit Partially Signed Document';
             submitBtn.style.background = 'var(--primary)';
             submitBtn.style.padding = '0.85rem 2.25rem';
             submitBtn.style.fontSize = '0.95rem';
@@ -506,13 +507,20 @@
         try {
             if (loadingOverlay) loadingOverlay.classList.add('active');
 
-            const resp = await fetch(`/api/get-form-for-countersign/${submissionId}`);
+            const fetchId = tokenParam || submissionId;
+            const resp = await fetch(`/api/get-form-for-countersign/${encodeURIComponent(fetchId)}`);
             const data = await resp.json();
             if (!data.success || !data.submission) {
                 throw new Error(data.error || 'Failed to load agreement');
             }
 
             loadedSubmission = data.submission;
+
+            // Check if document is already locked (already co-signed or approved)
+            if (loadedSubmission.isLocked) {
+                showLockedDocumentView(form, loadedSubmission);
+                return;
+            }
 
             // 1. Show Top Co-Signer Welcome Banner
             const bannerContainer = document.getElementById('countersignBannerContainer');
@@ -529,7 +537,7 @@
                                     This agreement has been initiated and signed by Producer <strong>${escapeHtml(loadedSubmission.producerName || 'Carte Blanche')}</strong>.
                                 </p>
                                 <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
-                                    Please review the details below, confirm your personal information, sign in the signature pad, and click <strong>Sign &amp; Submit Agreement</strong>.
+                                    Please review the details below, confirm your personal information, sign in the signature pad, and click <strong>Submit Form</strong>.
                                 </p>
                             </div>
                         </div>
@@ -542,6 +550,22 @@
             if (typeof onSubmissionLoaded === 'function') {
                 try { onSubmissionLoaded(loadedSubmission); } catch (e) {}
             }
+
+            // Lock story, commission, and producer details in read-only state for co-signer
+            const readOnlyFieldIds = [
+                'storyName', 'storyTitle', 'commissionNumber', 'broadcastDate', 'broadcastDated',
+                'producerName', 'prodSignerName', 'producerEmail', 'prodSignerEmail',
+                'producerSignedAt', 'producerSignedDate'
+            ];
+            readOnlyFieldIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.readOnly = true;
+                    el.style.backgroundColor = 'var(--bg-card, #f8fafc)';
+                    el.style.borderColor = 'var(--border, #cbd5e1)';
+                    el.style.cursor = 'not-allowed';
+                }
+            });
 
             // 3. Render verified Producer Signature (locked & read-only for co-signer)
             const producerSection = document.getElementById('producerSignatureSection');
@@ -592,7 +616,7 @@
             // Submit button
             const submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn) {
-                submitBtn.innerHTML = '<span>✍️</span> Sign &amp; Submit Agreement';
+                submitBtn.innerHTML = '<span>✍️</span> Submit Form';
                 submitBtn.style.background = '#16a34a';
                 submitBtn.style.padding = '0.85rem 2.5rem';
                 submitBtn.style.fontSize = '1rem';
@@ -707,7 +731,7 @@
             // Submit Button
             const submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn) {
-                submitBtn.innerHTML = '<span>✅</span> Approve for Final Submission';
+                submitBtn.innerHTML = '<span>✅</span> Approve';
                 submitBtn.style.background = '#0284c7';
                 submitBtn.style.padding = '0.85rem 2.25rem';
                 submitBtn.style.fontSize = '0.95rem';
@@ -895,7 +919,10 @@
                     // STEP 2: Co-Signer Submitting Co-Signature
                     // -------------------------------------------------------------
                     const formData = new FormData(form);
-                    formData.set('submissionId', submissionId);
+                    formData.set('submissionId', (loadedSubmission && loadedSubmission.id) || submissionId);
+                    if (tokenParam || (loadedSubmission && loadedSubmission.shareToken)) {
+                        formData.set('shareToken', tokenParam || loadedSubmission.shareToken);
+                    }
                     formData.set('participantSignature', contributorSigImg);
 
                     const response = await fetch('/api/cosign-form', {
@@ -1063,7 +1090,7 @@
 
                 <!-- Instant Share Shortcuts -->
                 <div style="display: flex; gap: 0.6rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                    <a href="https://api.whatsapp.com/send?text=${encodeURIComponent(`Please complete and sign the Carte Blanche ${formTitle} for story "${storyTitle}":\n${shareUrl}`)}" target="_blank" rel="noopener" style="flex: 1 1 160px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.65rem 1rem; background: #25D366; color: white; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
+                    <a href="https://wa.me/?text=${encodeURIComponent(`Please complete and sign the Carte Blanche ${formTitle} for story "${storyTitle}":\n${shareUrl}`)}" target="_blank" rel="noopener" style="flex: 1 1 160px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.65rem 1rem; background: #25D366; color: white; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
                         <span>📱</span> WhatsApp
                     </a>
                     <a href="mailto:?subject=${encodeURIComponent(`Please sign: Carte Blanche ${formTitle} - ${storyTitle}`)}&body=${encodeURIComponent(`Dear Co-Signer,\n\nPlease review and digitally sign the Carte Blanche ${formTitle} using the secure link below:\n\n${shareUrl}\n\nThank you,\nCarte Blanche Production Team`)}" style="flex: 1 1 160px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.65rem 1rem; background: #0284c7; color: white; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
@@ -1093,6 +1120,7 @@
             navigator.clipboard.writeText(shareUrl).then(() => {
                 copyBtn.textContent = '✓ Copied!';
                 copyBtn.style.background = '#16a34a';
+                showToast('Link copied to clipboard!');
                 setTimeout(() => {
                     copyBtn.textContent = '📋 Copy Link';
                     copyBtn.style.background = '';
@@ -1101,6 +1129,7 @@
                 copyInput.select();
                 document.execCommand('copy');
                 copyBtn.textContent = '✓ Copied!';
+                showToast('Link copied to clipboard!');
             });
         });
 
@@ -1178,6 +1207,86 @@
                 </div>
             </div>
         `;
+    }
+
+    /**
+     * Show clean locked view when document has already been co-signed or approved
+     */
+    function showLockedDocumentView(form, sub) {
+        populateFormFields(form, sub);
+
+        // Disable all form inputs
+        form.querySelectorAll('input, select, textarea, button').forEach(el => {
+            el.disabled = true;
+            el.readOnly = true;
+        });
+
+        const bannerContainer = document.getElementById('countersignBannerContainer');
+        if (bannerContainer) {
+            bannerContainer.innerHTML = `
+                <div style="background: rgba(239, 68, 68, 0.08); border: 2px solid #ef4444; border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        <span style="font-size: 2rem; line-height: 1;">🔒</span>
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0 0 0.35rem 0; color: #dc2626; font-size: 1.15rem; font-weight: 800;">
+                                DOCUMENT LOCKED &bull; ALREADY SIGNED
+                            </h3>
+                            <p style="margin: 0 0 0.4rem 0; font-size: 0.9rem; color: var(--text-main); line-height: 1.5;">
+                                This agreement has already been co-signed and submitted for Producer review and approval. Edits and additional submissions via this link are locked.
+                            </p>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+                                If you need to make changes or have questions, please contact the Carte Blanche production team directly.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.style.display = 'none';
+        }
+    }
+
+    /**
+     * Floating toast notification confirmation
+     */
+    function showToast(message) {
+        let toast = document.getElementById('countersignToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'countersignToast';
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 24px;
+                right: 24px;
+                background: #16a34a;
+                color: #ffffff;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 0.9rem;
+                font-weight: 700;
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                z-index: 99999;
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                pointer-events: none;
+            `;
+            document.body.appendChild(toast);
+        }
+        toast.innerHTML = `<span>✓</span> <span>${escapeHtml(message)}</span>`;
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(20px)';
+        }, 3000);
     }
 
     function escapeHtml(str) {

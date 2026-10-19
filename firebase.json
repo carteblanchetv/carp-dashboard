@@ -11,6 +11,14 @@
       {
         "source": "/api/**",
         "function": "submissionServer"
+      },
+      {
+        "source": "/s/**",
+        "function": "submissionServer"
+      },
+      {
+        "source": "/sign/**",
+        "function": "submissionServer"
       }
     ],
     "redirects": [

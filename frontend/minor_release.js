@@ -644,6 +644,18 @@ function initMinorRelease() {
             doc.text('[Pending Producer Counter-Signature]', prodX, currY + 10);
         }
 
+        // Digital Audit Metadata & Execution Details
+        const auditY = 281;
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.3);
+        doc.line(margin, auditY, pageWidth - margin, auditY);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(6.8);
+        doc.setTextColor(100, 116, 139);
+        const auditText = `Digital Audit Trail • Status: ${producerSigImg && contributorSigImg ? 'APPROVED' : 'PARTIALLY_SIGNED'} • Initiated: ${producerSignedDate || todayFormatted} by ${resolvedProd || 'Producer'} • Co-Signed: ${parentSignedDate || todayFormatted} by ${parentName || 'Parent/Guardian'} • Executed: ${new Date().toISOString()}`;
+        doc.text(auditText, margin, auditY + 3.8);
+
         // Footer
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(7.5);
