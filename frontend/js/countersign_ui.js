@@ -1191,13 +1191,26 @@
                     }
 
                     if (!pdfBlob) {
-                        pdfBlob = new Blob(['%PDF-1.4 Fallback Executed Agreement'], { type: 'application/pdf' });
+                        try {
+                            const { jsPDF } = window.jspdf || {};
+                            if (jsPDF) {
+                                const fallbackDoc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+                                fallbackDoc.setFontSize(16);
+                                fallbackDoc.text(`EXECUTED AGREEMENT • ${formTitle.toUpperCase()}`, 20, 25);
+                                fallbackDoc.setFontSize(10);
+                                fallbackDoc.text(`Submission ID: ${submissionId}`, 20, 38);
+                                fallbackDoc.text(`Executed Date: ${new Date().toISOString()}`, 20, 46);
+                                pdfBlob = fallbackDoc.output('blob');
+                            }
+                        } catch (e) {}
                     }
 
                     const formData = new FormData(form);
                     formData.set('submissionId', submissionId);
                     formData.set('producerSignature', producerSigImg);
-                    formData.append('file', pdfBlob, `Executed_${formType}_${Date.now()}.pdf`);
+                    if (pdfBlob) {
+                        formData.append('file', pdfBlob, `Executed_${formType}_${Date.now()}.pdf`);
+                    }
 
                     const token = (window.auth && typeof window.auth.getIdToken === 'function')
                         ? await window.auth.getIdToken().catch(() => null)
@@ -1236,7 +1249,17 @@
                     }
 
                     if (!pdfBlob) {
-                        pdfBlob = new Blob(['%PDF-1.4 Fallback Release Document'], { type: 'application/pdf' });
+                        try {
+                            const { jsPDF } = window.jspdf || {};
+                            if (jsPDF) {
+                                const fallbackDoc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+                                fallbackDoc.setFontSize(16);
+                                fallbackDoc.text(`RELEASE AGREEMENT • ${formTitle.toUpperCase()}`, 20, 25);
+                                fallbackDoc.setFontSize(10);
+                                fallbackDoc.text(`Initiated Date: ${new Date().toISOString()}`, 20, 38);
+                                pdfBlob = fallbackDoc.output('blob');
+                            }
+                        } catch (e) {}
                     }
 
                     const formData = new FormData(form);
