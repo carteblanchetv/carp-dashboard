@@ -3858,14 +3858,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                         (file.filename && (file.filename.startsWith('DualSigned_') || file.filename.startsWith('Executed_')))
                                     );
 
-                                    // Signed by both parties (either awaiting approval or already approved/completed)
-                                    const isBothSigned = isApprovedOrDone || 
-                                                         hasDualFile ||
-                                                         f.status === 'PENDING_APPROVAL' || 
-                                                         f.status === 'pending_producer_approval' || 
-                                                         f.status === 'pending_approval' || 
-                                                         !!f.hasParticipantSig || 
-                                                         !!f.cosignedAt;
+                                    // Signed by co-signer and awaiting producer review & approval
+                                    const isAwaitingApproval = !isApprovedOrDone && (
+                                        hasDualFile ||
+                                        f.status === 'PENDING_APPROVAL' || 
+                                        f.status === 'pending_producer_approval' || 
+                                        f.status === 'pending_approval' || 
+                                        !!f.hasParticipantSig || 
+                                        !!f.cosignedAt
+                                    );
 
                                     let badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
                                     let badgeLabel = '⏳ Awaiting Co-Signer';
@@ -3873,7 +3874,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     if (isApprovedOrDone || (hasDualFile && f.status !== 'PENDING_APPROVAL')) {
                                         badgeStyle = 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;';
                                         badgeLabel = '✓ Completed';
-                                    } else if (isBothSigned) {
+                                    } else if (isAwaitingApproval) {
                                         badgeStyle = 'background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;';
                                         badgeLabel = '✍️ Co-Signed • Awaiting Approval';
                                     } else {
@@ -3904,8 +3905,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                                         📄 View PDF
                                                     </a>
                                                 ` : ''}
-                                                ${isCountersignable ? `
-                                                    ${isBothSigned ? `
+                                                ${isCountersignable && !isApprovedOrDone ? `
+                                                    ${isAwaitingApproval ? `
                                                         <a href="${targetPage}?id=${f.id}&action=approve" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #16a34a; color: white; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem;" title="Review co-signed agreement and approve for final submission">
                                                             ✅ Review &amp; Approve
                                                         </a>

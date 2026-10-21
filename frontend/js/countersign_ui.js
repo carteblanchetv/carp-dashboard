@@ -904,18 +904,22 @@
             if (submitBtn) {
                 const isEditMode = urlParams.get('mode') === 'edit';
                 if (isAlreadyApproved && !isEditMode) {
-                    submitBtn.innerHTML = '<span>✅</span> Agreement Already Approved &bull; Re-Dispatch Email';
-                    submitBtn.style.background = '#16a34a';
+                    submitBtn.style.display = 'none';
                 } else if (isEditMode) {
+                    submitBtn.style.display = 'inline-block';
                     submitBtn.innerHTML = '<span>💾</span> Save &amp; Update Agreement';
                     submitBtn.style.background = '#0284c7';
+                    submitBtn.style.padding = '0.85rem 2.25rem';
+                    submitBtn.style.fontSize = '0.95rem';
+                    submitBtn.style.fontWeight = '700';
                 } else {
+                    submitBtn.style.display = 'inline-block';
                     submitBtn.innerHTML = '<span>✅</span> Approve';
                     submitBtn.style.background = '#0284c7';
+                    submitBtn.style.padding = '0.85rem 2.25rem';
+                    submitBtn.style.fontSize = '0.95rem';
+                    submitBtn.style.fontWeight = '700';
                 }
-                submitBtn.style.padding = '0.85rem 2.25rem';
-                submitBtn.style.fontSize = '0.95rem';
-                submitBtn.style.fontWeight = '700';
             }
 
         } catch (err) {
@@ -1482,27 +1486,50 @@
             el.readOnly = true;
         });
 
+        const isApprovedOrDone = sub.isApproved || 
+                                 sub.status === 'completed' || 
+                                 sub.status === 'approved' || 
+                                 sub.status === 'APPROVED' || 
+                                 sub.status === 'COMPLETED' || 
+                                 !!sub.approvedAt || 
+                                 !!sub.completedAt;
+
+        const executedFile = (sub.files || []).find(f => 
+            f.fieldname === 'dualSignedPdf' || 
+            (f.filename && (f.filename.startsWith('DualSigned_') || f.filename.startsWith('Executed_')))
+        ) || (sub.files && sub.files.length > 0 ? sub.files[sub.files.length - 1] : null);
+
         const bannerContainer = document.getElementById('countersignBannerContainer');
         if (bannerContainer) {
             bannerContainer.innerHTML = `
-                <div style="background: rgba(239, 68, 68, 0.08); border: 2px solid #ef4444; border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
+                <div style="background: rgba(239, 68, 68, 0.08); border: 2px solid ${isApprovedOrDone ? '#16a34a' : '#ef4444'}; border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
                     <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                        <span style="font-size: 2rem; line-height: 1;">🔒</span>
+                        <span style="font-size: 2rem; line-height: 1;">${isApprovedOrDone ? '✅' : '🔒'}</span>
                         <div style="flex: 1;">
-                            <h3 style="margin: 0 0 0.35rem 0; color: #dc2626; font-size: 1.15rem; font-weight: 800;">
-                                DOCUMENT LOCKED &bull; ALREADY SIGNED
+                            <h3 style="margin: 0 0 0.35rem 0; color: ${isApprovedOrDone ? '#15803d' : '#dc2626'}; font-size: 1.15rem; font-weight: 800;">
+                                ${isApprovedOrDone ? 'DOCUMENT COMPLETED &bull; ALREADY APPROVED' : 'DOCUMENT LOCKED &bull; ALREADY SIGNED'}
                             </h3>
                             <p style="margin: 0 0 0.4rem 0; font-size: 0.9rem; color: var(--text-main); line-height: 1.5;">
-                                This agreement has already been co-signed and submitted for Producer review and approval. Edits and additional submissions via this link are locked.
+                                ${isApprovedOrDone 
+                                    ? 'This agreement has already been fully signed, approved, and executed. Edits and additional submissions via this link are locked.'
+                                    : 'This agreement has already been co-signed and submitted for Producer review and approval. Edits and additional submissions via this link are locked.'}
                             </p>
                             <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
                                 If you need to make changes or have questions, please contact the Carte Blanche production team directly.
                             </p>
-                            <div style="margin-top: 0.85rem; padding-top: 0.65rem; border-top: 1px dashed rgba(239, 68, 68, 0.3);">
-                                <a href="${FORM_PAGE_MAP[sub.formType] || 'forms_hub.html'}?id=${sub.id}&action=approve" style="display: inline-flex; align-items: center; gap: 0.4rem; background: #16a34a; color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
-                                    <span>✅</span> Are you the Producer? Review &amp; Approve Document &rarr;
-                                </a>
-                            </div>
+                            ${!isApprovedOrDone ? `
+                                <div style="margin-top: 0.85rem; padding-top: 0.65rem; border-top: 1px dashed rgba(239, 68, 68, 0.3);">
+                                    <a href="${FORM_PAGE_MAP[sub.formType] || 'forms_hub.html'}?id=${sub.id}&action=approve" style="display: inline-flex; align-items: center; gap: 0.4rem; background: #16a34a; color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
+                                        <span>✅</span> Are you the Producer? Review &amp; Approve Document &rarr;
+                                    </a>
+                                </div>
+                            ` : (executedFile ? `
+                                <div style="margin-top: 0.85rem; padding-top: 0.65rem; border-top: 1px dashed rgba(22, 163, 74, 0.3);">
+                                    <a href="/api/get-submission-file?path=${encodeURIComponent(executedFile.storagePath)}&inline=true" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; background: #16a34a; color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
+                                        <span>📄</span> View Executed PDF
+                                    </a>
+                                </div>
+                            ` : '')}
                         </div>
                     </div>
                 </div>
