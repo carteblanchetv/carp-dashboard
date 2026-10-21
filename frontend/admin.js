@@ -1327,20 +1327,34 @@ window.viewStoryLegalForms = async (proposalId, commNum, storyTitle) => {
             <div id="adminStoryLegalFormsList" style="display: flex; flex-direction: column; gap: 0.75rem;">
                 ${data.forms.map(f => {
                     const isCountersignable = !['travel_booking', 'insert_sheet'].includes(f.formType);
-                    const isDone = f.status === 'completed' || f.status === 'APPROVED' || f.status === 'approved' || !isCountersignable;
-                    const isCoSigned = f.status === 'PENDING_APPROVAL' || 
-                                       f.status === 'pending_producer_approval' || 
-                                       f.status === 'pending_approval' || 
-                                       !!f.hasParticipantSig || 
-                                       !!f.cosignedAt;
+                    const isApprovedOrDone = f.status === 'completed' || 
+                                             f.status === 'APPROVED' || 
+                                             f.status === 'approved' || 
+                                             f.status === 'COMPLETED' || 
+                                             !!f.approvedAt || 
+                                             !!f.completedAt;
+
+                    const hasDualFile = (f.files || []).some(file => 
+                        file.fieldname === 'dualSignedPdf' || 
+                        (file.filename && (file.filename.startsWith('DualSigned_') || file.filename.startsWith('Executed_')))
+                    );
+
+                    // Signed by both parties (either awaiting approval or already approved/completed)
+                    const isBothSigned = isApprovedOrDone || 
+                                         hasDualFile ||
+                                         f.status === 'PENDING_APPROVAL' || 
+                                         f.status === 'pending_producer_approval' || 
+                                         f.status === 'pending_approval' || 
+                                         !!f.hasParticipantSig || 
+                                         !!f.cosignedAt;
 
                     let badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
-                    let badgeLabel = '⏳ Awaiting Countersign';
+                    let badgeLabel = '⏳ Awaiting Co-Signer';
 
-                    if (isDone) {
+                    if (isApprovedOrDone || (hasDualFile && f.status !== 'PENDING_APPROVAL')) {
                         badgeStyle = 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;';
                         badgeLabel = '✓ Completed';
-                    } else if (isCoSigned) {
+                    } else if (isBothSigned) {
                         badgeStyle = 'background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;';
                         badgeLabel = '✍️ Co-Signed • Awaiting Approval';
                     } else {
@@ -1382,8 +1396,8 @@ window.viewStoryLegalForms = async (proposalId, commNum, storyTitle) => {
                                         📄 View PDF
                                     </a>
                                 ` : ''}
-                                ${(!isDone && isCountersignable) ? `
-                                    ${isCoSigned ? `
+                                ${isCountersignable ? `
+                                    ${isBothSigned ? `
                                         <a href="${targetPage}?id=${f.id}&action=approve" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #16a34a; color: white; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem;" title="Review co-signed agreement and approve for final submission">
                                             ✅ Review &amp; Approve
                                         </a>

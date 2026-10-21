@@ -4841,7 +4841,12 @@ app.get('/api/proposal-legal-forms', async (req, res) => {
         (data.artistSignature && data.artistSignature.trim().length > 50) ||
         (data.licensorSignature && data.licensorSignature.trim().length > 50) ||
         (data.contributorSignature && data.contributorSignature.trim().length > 50) ||
-        data.cosignedAt
+        (data.files && data.files.some(f => (f.fieldname === 'dualSignedPdf' || (f.filename && (f.filename.startsWith('DualSigned_') || f.filename.startsWith('Executed_')))))) ||
+        data.cosignedAt ||
+        data.approvedAt ||
+        data.completedAt ||
+        data.countersignedAt ||
+        (data.status === 'PENDING_APPROVAL' || data.status === 'APPROVED' || data.status === 'completed' || data.status === 'approved')
       );
       const hasProdSig = !!(data.producerSignature && data.producerSignature.trim().length > 50);
 
@@ -4862,6 +4867,7 @@ app.get('/api/proposal-legal-forms', async (req, res) => {
         hasProducerSig: hasProdSig,
         cosignedAt: data.cosignedAt || null,
         submittedAt: data.submittedAt || null,
+        approvedAt: data.approvedAt || null,
         completedAt: data.completedAt || data.countersignedAt || null,
         files: (data.files || []).map(f => ({
           filename: f.filename,
