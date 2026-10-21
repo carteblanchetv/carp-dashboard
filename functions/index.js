@@ -2114,7 +2114,8 @@ app.get('/api/get-form-for-countersign/:id', async (req, res) => {
 
     const data = doc.data();
     const status = data.status || '';
-    const isLocked = (status === 'PENDING_APPROVAL' || status === 'APPROVED' || status === 'completed' || status === 'pending_producer_approval');
+    const hasCoSig = !!(data.participantSignature || data.ownerSignature || data.parentSignature || data.guardianSignature || data.artistSignature || data.licensorSignature || data.cosignedAt);
+    const isLocked = (status === 'PENDING_APPROVAL' || status === 'APPROVED' || status === 'completed' || status === 'pending_producer_approval' || (hasCoSig && status !== 'PARTIALLY_SIGNED'));
     let isExpired = false;
     if (data.tokenExpiresAt) {
       const expDate = data.tokenExpiresAt.toDate ? data.tokenExpiresAt.toDate() : new Date(data.tokenExpiresAt);
@@ -2342,7 +2343,9 @@ app.post('/api/countersign-form', async (req, res) => {
       'minorName', 'minorAge',
       'propertyAddress', 'filmingDate',
       'trackTitle', 'trackDuration', 'publisherName',
-      'licensorEntity', 'footageDescription', 'courtesyCredit', 'broadcastDate'
+      'licensorEntity', 'footageDescription', 'courtesyCredit', 'broadcastDate',
+      'participantSignedAt', 'participantSignedDate', 'signedAt', 'signedDate',
+      'producerSignedAt', 'producerSignedDate'
     ];
 
     editableFieldKeys.forEach(k => {
@@ -2724,7 +2727,7 @@ app.post('/api/send-minor-release', async (req, res) => {
     const guardianId = parentIdNumber;
     const minorName = childName;
     const minorAge = fields.minorAge || '';
-    const phone = fields.phone || '';
+    const phone = fields.contactNumber || fields.phone || '';
     const email = fields.email || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
 
@@ -2769,7 +2772,9 @@ app.post('/api/send-minor-release', async (req, res) => {
         childName, minorName, minorAge,
         parentName, guardianName, fullName: parentName,
         parentIdNumber, guardianId: parentIdNumber,
-        phone, email,
+        phone,
+        contactNumber: phone,
+        email,
         storyName, storyTitle,
         commissionNumber, producerName, producerEmail,
         parentSignedAt: fields.parentSignedAt || fields.signedAt || null,
@@ -4828,6 +4833,23 @@ app.get('/api/proposal-legal-forms', async (req, res) => {
     const snapshot = await query.get();
     const forms = snapshot.docs.map(doc => {
       const data = doc.data();
+      const hasPartSig = !!(
+        (data.participantSignature && data.participantSignature.trim().length > 50) ||
+        (data.parentSignature && data.parentSignature.trim().length > 50) ||
+        (data.guardianSignature && data.guardianSignature.trim().length > 50) ||
+        (data.ownerSignature && data.ownerSignature.trim().length > 50) ||
+        (data.artistSignature && data.artistSignature.trim().length > 50) ||
+        (data.licensorSignature && data.licensorSignature.trim().length > 50) ||
+        (data.contributorSignature && data.contributorSignature.trim().length > 50) ||
+        data.cosignedAt
+      );
+      const hasProdSig = !!(data.producerSignature && data.producerSignature.trim().length > 50);
+
+      let effectiveStatus = (data.formType === 'travel_booking' || data.formType === 'insert_sheet') ? 'completed' : (data.status || 'pending');
+      if (hasPartSig && effectiveStatus !== 'completed' && effectiveStatus !== 'APPROVED' && effectiveStatus !== 'approved') {
+        effectiveStatus = 'PENDING_APPROVAL';
+      }
+
       return {
         id: doc.id,
         formType: data.formType,
@@ -4835,7 +4857,10 @@ app.get('/api/proposal-legal-forms', async (req, res) => {
         commissionNumber: data.commissionNumber || 'N/A',
         contributorName: data.fullName || data.contributorName || data.ownerName || data.travelerName || data.artistName || data.licensorName || 'Contributor',
         producerName: data.producerName || '',
-        status: (data.formType === 'travel_booking' || data.formType === 'insert_sheet') ? 'completed' : (data.status || 'pending'),
+        status: effectiveStatus,
+        hasParticipantSig: hasPartSig,
+        hasProducerSig: hasProdSig,
+        cosignedAt: data.cosignedAt || null,
         submittedAt: data.submittedAt || null,
         completedAt: data.completedAt || data.countersignedAt || null,
         files: (data.files || []).map(f => ({

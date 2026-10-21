@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
     <script src="js/branding.js?v=5.2.2"></script>
-    <script src="js/share_form.js?v=5.2.9"></script>
+    <script src="js/share_form.js?v=5.3.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script type="module">
@@ -35,6 +35,11 @@
             background: var(--primary) !important;
             color: white !important;
             border-color: var(--primary) !important;
+        }
+        .signature-tabs {
+            display: flex !important;
+            gap: 0.5rem !important;
+            margin-bottom: 0.5rem !important;
         }
         .signature-pad-container {
             border: 2px dashed var(--border);
@@ -160,6 +165,8 @@
             ctx.fillText(text, canvas.width / 2, canvas.height / 2);
         };
         window.renderOwnerTypedSignature = window.renderParentTypedSignature;
+        window.renderParticipantTypedSignature = window.renderParentTypedSignature;
+        window.renderTypedSignature = window.renderParentTypedSignature;
 
         window.renderProducerTypedSignature = function() {
             const canvas = document.getElementById('producerSignatureCanvas');
@@ -196,6 +203,8 @@
             }
         };
         window.clearOwnerSignature = window.clearParentSignature;
+        window.clearParticipantSignature = window.clearParentSignature;
+        window.clearSignature = window.clearParentSignature;
 
         window.clearProducerSignature = function(e) {
             if (e) e.preventDefault();
@@ -310,18 +319,23 @@
             </section>
 
             <section class="form-section">
+                <h2 class="section-title">PARTICIPANT INFO</h2>
                 <div class="form-grid">
                     <div class="form-group full-width">
                         <label for="childName">Child Name &amp; Surname:</label>
                         <input type="text" id="childName" name="childName" placeholder="Enter child's full name &amp; surname (optional in Phase 1)...">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group full-width">
                         <label for="parentName">Parent/Guardian Name &amp; Surname:</label>
                         <input type="text" id="parentName" name="parentName" placeholder="Enter parent/guardian full name &amp; surname (optional in Phase 1)...">
                     </div>
                     <div class="form-group">
                         <label for="parentIdNumber">Parent/Guardian ID Number:</label>
                         <input type="text" id="parentIdNumber" name="parentIdNumber" placeholder="Enter ID number...">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactNumber">Cell / Contact Number:</label>
+                        <input type="tel" id="contactNumber" name="contactNumber" placeholder="e.g. +27 82 123 4567">
                     </div>
                 </div>
             </section>
@@ -393,7 +407,7 @@
                         <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
                             <input type="text" id="producerTypeSigInput" placeholder="Type producer name here..." oninput="window.renderProducerTypedSignature()" style="flex: 1; padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem;">
                             <select id="producerTypeSigFont" onchange="window.renderProducerTypedSignature()" style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; cursor: pointer;">
-                                <option value="Caveat">Caveat (Cursive)</option>
+                                <option value="Caveat" selected>Caveat (Cursive)</option>
                                 <option value="Dancing Script">Dancing Script (Elegant)</option>
                                 <option value="Great Vibes">Great Vibes (Classic)</option>
                                 <option value="Pacifico">Pacifico (Retro)</option>
@@ -439,7 +453,7 @@
             } catch (e) {}
         })();
     </script>
-    <script src="js/countersign_ui.js?v=5.6.0"></script>
-    <script src="minor_release.js?v=5.5.0"></script>
+    <script src="js/countersign_ui.js?v=5.6.5"></script>
+    <script src="minor_release.js?v=5.6.1"></script>
 </body>
 </html>

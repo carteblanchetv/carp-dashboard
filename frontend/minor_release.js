@@ -61,7 +61,9 @@ function initMinorRelease() {
             if (typeSigInput) {
                 if (!typeSigInput.value) {
                     const nameVal = document.getElementById('parentName')?.value || 
-                                    document.getElementById('fullName')?.value || '';
+                                    document.getElementById('fullName')?.value || 
+                                    document.getElementById('guardianName')?.value || 
+                                    document.getElementById('childName')?.value || '';
                     if (nameVal) typeSigInput.value = nameVal;
                 }
                 renderTypedSignature();
@@ -84,6 +86,8 @@ function initMinorRelease() {
     }
     window.renderParentTypedSignature = renderTypedSignature;
     window.renderOwnerTypedSignature = renderTypedSignature;
+    window.renderParticipantTypedSignature = renderTypedSignature;
+    window.renderTypedSignature = renderTypedSignature;
 
     if (typeSigInput) typeSigInput.addEventListener('input', renderTypedSignature);
     if (typeSigFont) typeSigFont.addEventListener('change', renderTypedSignature);
@@ -286,6 +290,7 @@ function initMinorRelease() {
     syncFields('parentName', 'guardianName');
     syncFields('parentName', 'fullName');
     syncFields('parentIdNumber', 'guardianId');
+    syncFields('contactNumber', 'phone');
     syncFields('storyTitle', 'storyName');
     syncFields('parentSignedAt', 'signedAt');
     syncFields('parentSignedDate', 'signedDate');
@@ -350,12 +355,13 @@ function initMinorRelease() {
     }
 
 
-    // 5. Pre-fill URL Context (Commission #, Story Title, Names)
+    // 5. Pre-fill URL Context (Commission #, Story Title, Names, Contact)
     const urlParams = new URLSearchParams(window.location.search);
     const commParam = urlParams.get('comm') || urlParams.get('commission') || urlParams.get('commissionNumber') || '';
     const storyParam = urlParams.get('story') || urlParams.get('storyTitle') || urlParams.get('storyName') || '';
     const childParam = urlParams.get('child') || urlParams.get('childName') || urlParams.get('minorName') || '';
     const parentParam = urlParams.get('parent') || urlParams.get('parentName') || urlParams.get('guardianName') || urlParams.get('name') || '';
+    const contactParam = urlParams.get('phone') || urlParams.get('contactNumber') || urlParams.get('contact') || '';
 
     if (commParam && document.getElementById('commissionNumber')) {
         document.getElementById('commissionNumber').value = commParam;
@@ -373,6 +379,10 @@ function initMinorRelease() {
         if (document.getElementById('guardianName')) document.getElementById('guardianName').value = parentParam;
         if (document.getElementById('fullName')) document.getElementById('fullName').value = parentParam;
     }
+    if (contactParam) {
+        if (document.getElementById('contactNumber')) document.getElementById('contactNumber').value = contactParam;
+        if (document.getElementById('phone')) document.getElementById('phone').value = contactParam;
+    }
 
     // 6. Dual PDF Generation matching EXACT requested specification
     async function buildDualPdf({ contributorSigImg, producerSigImg, producerName, isCountersignMode }) {
@@ -389,6 +399,7 @@ function initMinorRelease() {
         const childName = (document.getElementById('childName')?.value || document.getElementById('minorName')?.value || '').trim();
         const parentName = (document.getElementById('parentName')?.value || document.getElementById('guardianName')?.value || '').trim();
         const parentIdNumber = (document.getElementById('parentIdNumber')?.value || document.getElementById('guardianId')?.value || '').trim();
+        const contactNumber = (document.getElementById('contactNumber')?.value || document.getElementById('phone')?.value || '').trim();
 
         const parentSignedAt = (document.getElementById('parentSignedAt')?.value || document.getElementById('signedAt')?.value || '').trim();
         const parentSignedDate = (document.getElementById('parentSignedDate')?.value || document.getElementById('signedDate')?.value || todayFormatted).trim();
@@ -557,6 +568,13 @@ function initMinorRelease() {
         doc.setTextColor(15, 23, 42);
         doc.text(parentIdNumber || 'N/A', col1X + 54, currY);
 
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(71, 85, 105);
+        doc.text('Cell / Contact Number:', col2X, currY);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(15, 23, 42);
+        doc.text(contactNumber || 'N/A', col2X + 40, currY);
+
         // Divider
         currY += 5;
         doc.setDrawColor(226, 232, 240);
@@ -653,7 +671,7 @@ function initMinorRelease() {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(6.8);
         doc.setTextColor(100, 116, 139);
-        const auditText = `Digital Audit Trail • Status: ${producerSigImg && contributorSigImg ? 'APPROVED' : 'PARTIALLY_SIGNED'} • Initiated: ${producerSignedDate || todayFormatted} by ${resolvedProd || 'Producer'} • Co-Signed: ${parentSignedDate || todayFormatted} by ${parentName || 'Parent/Guardian'} • Executed: ${new Date().toISOString()}`;
+        const auditText = `Digital Audit Trail • Status: ${producerSigImg && contributorSigImg ? 'APPROVED' : 'PARTIALLY_SIGNED'} • Initiated: ${producerSignedDate || todayFormatted} by ${resolvedProd || 'Producer'} • Co-Signed: ${parentSignedDate || todayFormatted} by ${parentName || 'Parent/Guardian'} • Contact: ${contactNumber || 'N/A'} • Executed: ${new Date().toISOString()}`;
         doc.text(auditText, margin, auditY + 3.8);
 
         // Footer
@@ -679,6 +697,10 @@ function initMinorRelease() {
         const pId = sub.parentIdNumber || sub.guardianId || '';
         if (document.getElementById('parentIdNumber')) document.getElementById('parentIdNumber').value = pId;
         if (document.getElementById('guardianId')) document.getElementById('guardianId').value = pId;
+
+        const contact = sub.contactNumber || sub.phone || '';
+        if (document.getElementById('contactNumber')) document.getElementById('contactNumber').value = contact;
+        if (document.getElementById('phone')) document.getElementById('phone').value = contact;
 
         const sTitle = sub.storyTitle || sub.storyName || '';
         if (document.getElementById('storyTitle')) document.getElementById('storyTitle').value = sTitle;

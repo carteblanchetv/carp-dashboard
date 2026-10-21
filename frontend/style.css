@@ -3854,3 +3854,16 @@ textarea:user-invalid {
     color: white;
 }
 
+.signature-tabs {
+    display: flex !important;
+    gap: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.sig-tab.active {
+    background: var(--primary) !important;
+    color: white !important;
+    border-color: var(--primary) !important;
+}
+
+

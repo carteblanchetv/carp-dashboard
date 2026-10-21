@@ -3763,6 +3763,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetchWithAuth(url);
             const data = await res.json();
             const container = overlay.querySelector('#legalFormsListContainer');
+            const token = await (window.auth ? window.auth.getIdToken() : getIdToken());
 
             const currentUser = window.auth ? (window.auth.getCurrentUser ? window.auth.getCurrentUser() : window.auth.getUser()) : null;
             const canDelete = currentUser && (
@@ -3845,13 +3846,31 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div style="display: flex; flex-direction: column; gap: 0.6rem;">
                                 ${group.forms.map(f => {
                                     const isCountersignable = !['travel_booking', 'insert_sheet'].includes(f.formType);
-                                    const isDone = f.status === 'completed' || !isCountersignable;
-                                    const badgeStyle = isDone 
-                                        ? 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;'
-                                        : 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
-                                    const badgeLabel = isDone ? '✓ Completed' : '⏳ Awaiting Countersign';
+                                    const isDone = f.status === 'completed' || f.status === 'APPROVED' || f.status === 'approved' || !isCountersignable;
+                                    const isCoSigned = f.status === 'PENDING_APPROVAL' || 
+                                                       f.status === 'pending_producer_approval' || 
+                                                       f.status === 'pending_approval' || 
+                                                       !!f.hasParticipantSig || 
+                                                       !!f.cosignedAt;
+
+                                    let badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
+                                    let badgeLabel = '⏳ Awaiting Countersign';
+
+                                    if (isDone) {
+                                        badgeStyle = 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;';
+                                        badgeLabel = '✓ Completed';
+                                    } else if (isCoSigned) {
+                                        badgeStyle = 'background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;';
+                                        badgeLabel = '✍️ Co-Signed • Awaiting Approval';
+                                    } else {
+                                        badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
+                                        badgeLabel = '⏳ Awaiting Co-Signer';
+                                    }
+
                                     const formattedType = (f.formType || 'release').replace(/_/g, ' ').toUpperCase();
-                                    const primaryFile = (f.files && f.files.length > 0) ? f.files[0] : null;
+                                    const primaryFile = (f.files && f.files.length > 0)
+                                        ? (f.files.find(file => file.fieldname === 'dualSignedPdf' || (file.filename && file.filename.startsWith('DualSigned_'))) || f.files[f.files.length - 1])
+                                        : null;
                                     const targetPage = formPageMap[f.formType] || `${f.formType}.html`;
 
                                     return `
@@ -3867,14 +3886,20 @@ document.addEventListener('DOMContentLoaded', () => {
                                             </div>
                                             <div style="display: flex; gap: 0.4rem; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
                                                 ${primaryFile ? `
-                                                    <a href="/api/get-submission-file?path=${encodeURIComponent(primaryFile.storagePath)}&inline=true" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="View signed PDF">
+                                                    <a href="/api/get-submission-file?path=${encodeURIComponent(primaryFile.storagePath)}&inline=true${token ? `&token=${encodeURIComponent(token)}` : ''}" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="View signed PDF">
                                                         📄 View PDF
                                                     </a>
                                                 ` : ''}
                                                 ${(!isDone && isCountersignable) ? `
-                                                    <a href="${targetPage}?id=${f.id}&action=countersign" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #008fbe; color: white; border-radius: 4px; font-weight: 600;">
-                                                        ✍️ Countersign
-                                                    </a>
+                                                    ${isCoSigned ? `
+                                                        <a href="${targetPage}?id=${f.id}&action=approve" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #16a34a; color: white; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem;" title="Review co-signed agreement and approve for final submission">
+                                                            ✅ Review &amp; Approve
+                                                        </a>
+                                                    ` : `
+                                                        <a href="${targetPage}?id=${f.id}&action=countersign" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #008fbe; color: white; border-radius: 4px; font-weight: 600;" title="Open to sign or generate co-signer link">
+                                                            ✍️ Countersign
+                                                        </a>
+                                                    `}
                                                 ` : ''}
                                                 <a href="${targetPage}?id=${f.id}&action=countersign&mode=edit" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="Edit details to fix typos or mistakes">
                                                     ✏️ Edit

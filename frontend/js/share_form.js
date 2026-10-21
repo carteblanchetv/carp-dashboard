@@ -70,6 +70,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const pageStory = defaultStory || urlParams.get('story') || urlParams.get('storyName') || (document.getElementById('storyName') ? document.getElementById('storyName').value : '');
         const pageComm = defaultComm || urlParams.get('comm') || urlParams.get('commission') || urlParams.get('commissionNumber') || (document.getElementById('commissionNumber') ? document.getElementById('commissionNumber').value : '');
+        const isDualSignForm = ['participant_release', 'minor_release', 'location_agreement', 'footage_release_agreement', 'footage_agreement', 'music_agreement'].some(k => (formUrl || '').toLowerCase().includes(k));
 
         // Prevent background scrolling while modal is active
         document.body.style.overflow = 'hidden';
@@ -91,9 +92,23 @@
                 </div>
 
                 <div class="share-modal-body">
+                    ${isDualSignForm ? `
+                    <div style="background: rgba(0, 143, 190, 0.08); border: 1.5px solid var(--primary, #008fbe); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem;">
+                        <div style="font-weight: 700; color: var(--primary, #008fbe); font-size: 0.95rem; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+                            <span>ℹ️</span> Step 1: Producer Signature Required
+                        </div>
+                        <p style="margin: 0 0 0.85rem 0; font-size: 0.85rem; color: var(--text-main); line-height: 1.45;">
+                            According to Carte Blanche legal protocol, release agreements must be initiated and signed by the Producer first to generate a secure co-sign link.
+                        </p>
+                        <button type="button" id="btnOpenToSignAndShare" style="background: var(--primary, #008fbe); color: white; border: none; padding: 0.7rem 1.25rem; font-size: 0.9rem; font-weight: 700; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
+                            <span>✍️</span> Open Form &amp; Sign as Producer to Generate Co-Sign Link &rarr;
+                        </button>
+                    </div>
+                    ` : `
                     <p class="share-modal-intro">
                         Send this online form directly to your participant, source, or case study to complete and digitally sign on their mobile phone or computer. <strong>No login required.</strong>
                     </p>
+                    `}
 
                     <div class="share-fields-grid">
                         <div class="share-field full-width" id="storyPickerWrapper" style="display: none;">
@@ -177,6 +192,14 @@
         const qrContainer = modalOverlay.querySelector('#qrCodeContainer');
         const qrImg = modalOverlay.querySelector('#qrCodeImg');
         const closeBtn = modalOverlay.querySelector('#closeShareModalBtn');
+        const openToSignBtn = modalOverlay.querySelector('#btnOpenToSignAndShare');
+        if (openToSignBtn) {
+            openToSignBtn.addEventListener('click', () => {
+                if (urlDisplay && urlDisplay.value) {
+                    window.location.href = urlDisplay.value;
+                }
+            });
+        }
 
         const storyPickerWrapper = modalOverlay.querySelector('#storyPickerWrapper');
         const storySelect = modalOverlay.querySelector('#shareStorySelect');

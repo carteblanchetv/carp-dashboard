@@ -11,7 +11,7 @@
     const rawAction = (urlParams.get('action') || urlParams.get('mode') || '').toLowerCase();
 
     // Mode determination
-    const isApprovalMode = (rawAction === 'approve' || rawAction === 'countersign') && !!submissionId;
+    const isApprovalMode = (rawAction === 'approve' || rawAction === 'countersign' || rawAction === 'edit' || rawAction === 'review') && !!submissionId;
     const isCoSignerMode = (rawAction === 'cosign' || (!rawAction && (!!submissionId || !!tokenParam))) && (!!submissionId || !!tokenParam) && !isApprovalMode;
     const isInitiationMode = !submissionId && !tokenParam;
 
@@ -503,8 +503,32 @@
                 <div>
                     Sign below and click <strong>Submit &amp; Generate Share Link</strong>. You will receive a secure shareable link for the participant / co-signer. Once they complete and sign, you will be notified on CARP to review and approve the document for final submission.
                 </div>
+                <div style="margin-top: 0.6rem; padding-top: 0.5rem; border-top: 1px dashed rgba(0, 143, 190, 0.25);">
+                    <button type="button" id="inPersonSignToggleBtn" style="background: none; border: none; padding: 0; color: var(--primary); text-decoration: underline; font-size: 0.82rem; cursor: pointer; font-weight: 600;">
+                        Participant / Parent is present with you? Click here to sign together in person &rarr;
+                    </button>
+                </div>
             `;
             producerSection.insertBefore(note, producerSection.firstChild);
+
+            const toggleBtn = document.getElementById('inPersonSignToggleBtn');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    const initStyle = document.getElementById('initiation-hide-participant-sig-style');
+                    if (initStyle) initStyle.remove();
+                    if (participantSigSection) {
+                        participantSigSection.style.display = 'block';
+                        participantSigSection.removeAttribute('aria-hidden');
+                        const pTabs = participantSigSection.querySelector('.signature-tabs');
+                        if (pTabs) pTabs.style.display = 'flex';
+                    }
+                    toggleBtn.parentElement.innerHTML = '<span style="color: #16a34a; font-weight: 600;">✓ In-person signing enabled. Both parties can sign below.</span>';
+                    const sBtn = form.querySelector('button[type="submit"]');
+                    if (sBtn) {
+                        sBtn.innerHTML = '<span>✅</span> Submit Fully Signed Form';
+                    }
+                });
+            }
         }
 
         // Submit button text
@@ -536,6 +560,12 @@
 
             // Check if document is already locked (already co-signed or approved)
             if (loadedSubmission.isLocked) {
+                // If a logged in staff member (producer) visits, switch directly to Approval Mode so they can review and approve!
+                const isStaff = (window.auth && typeof window.auth.getUser === 'function' && !!window.auth.getUser());
+                if (isStaff) {
+                    await setupApprovalMode(form, contributorSigLabel, onSubmissionLoaded, loadingOverlay);
+                    return;
+                }
                 showLockedDocumentView(form, loadedSubmission);
                 return;
             }
@@ -617,6 +647,10 @@
             if (participantSigSection) {
                 participantSigSection.style.display = 'block';
                 participantSigSection.removeAttribute('aria-hidden');
+                const coSignerTabs = participantSigSection.querySelector('.signature-tabs');
+                if (coSignerTabs) {
+                    coSignerTabs.style.display = 'flex';
+                }
             }
 
             // Restore any required attributes that were relaxed during initiation mode
@@ -624,23 +658,50 @@
                 inp.setAttribute('required', '');
             });
 
-            // 5. Co-signer fields are active & required for Phase 2
-            const contribName = document.getElementById('participantName') || document.getElementById('fullName') || document.getElementById('guardianName') || document.getElementById('parentName') || document.getElementById('ownerName') || document.getElementById('locationOwnerName') || document.getElementById('footageOwnerName') || document.getElementById('musicOwnerName');
+            // 5. Co-signer fields are active & required for Phase 2 (only for visible inputs, ignoring hidden aliases)
+            const contribName = [
+                document.getElementById('participantName'),
+                document.getElementById('footageOwnerName'),
+                document.getElementById('locationOwnerName'),
+                document.getElementById('musicOwnerName'),
+                document.getElementById('ownerName'),
+                document.getElementById('parentName'),
+                document.getElementById('guardianName'),
+                document.getElementById('fullName')
+            ].find(el => el && el.type !== 'hidden');
             if (contribName) contribName.required = true;
 
-            const contribSignedAt = document.getElementById('participantSignedAt') || document.getElementById('ownerSignedAt') || document.getElementById('parentSignedAt') || document.getElementById('signedAt');
+            const contribSignedAt = [
+                document.getElementById('participantSignedAt'),
+                document.getElementById('ownerSignedAt'),
+                document.getElementById('parentSignedAt'),
+                document.getElementById('signedAt')
+            ].find(el => el && el.type !== 'hidden');
             if (contribSignedAt) contribSignedAt.required = true;
 
-            const idField = document.getElementById('idNumber') || document.getElementById('parentIdNumber');
+            const idField = [
+                document.getElementById('idNumber'),
+                document.getElementById('parentIdNumber')
+            ].find(el => el && el.type !== 'hidden');
             if (idField) idField.required = true;
 
-            const contactField = document.getElementById('contactNumber') || document.getElementById('phone');
+            const contactField = [
+                document.getElementById('contactNumber'),
+                document.getElementById('phone')
+            ].find(el => el && el.type !== 'hidden');
             if (contactField) contactField.required = true;
 
             // Ensure co-signer typed signature font defaults to Great Vibes
             const coSignerFontSelect = document.getElementById('typeSigFont');
             if (coSignerFontSelect) {
                 coSignerFontSelect.value = 'Great Vibes';
+                if (typeof window.renderParticipantTypedSignature === 'function') {
+                    window.renderParticipantTypedSignature();
+                } else if (typeof window.renderParentTypedSignature === 'function') {
+                    window.renderParentTypedSignature();
+                } else if (typeof window.renderOwnerTypedSignature === 'function') {
+                    window.renderOwnerTypedSignature();
+                }
             }
 
             // Submit button
@@ -682,19 +743,22 @@
             // Top Banner for Producer
             const bannerContainer = document.getElementById('countersignBannerContainer');
             if (bannerContainer) {
+                const isEditMode = urlParams.get('mode') === 'edit';
                 bannerContainer.innerHTML = `
                     <div style="background: linear-gradient(135deg, rgba(0, 143, 190, 0.12), rgba(99, 102, 241, 0.08)); border: 2px solid var(--primary); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
                         <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                            <span style="font-size: 2rem; line-height: 1;">📋</span>
+                            <span style="font-size: 2rem; line-height: 1;">${isEditMode ? '✏️' : '📋'}</span>
                             <div style="flex: 1;">
                                 <h3 style="margin: 0 0 0.35rem 0; color: var(--primary); font-size: 1.15rem; font-weight: 800;">
-                                    CO-SIGNER SIGNATURE RECORDED &bull; PRODUCER FINAL APPROVAL
+                                    ${isEditMode ? 'EDIT AGREEMENT DETAILS &bull; PRODUCER REVIEW' : 'CO-SIGNER SIGNATURE RECORDED &bull; PRODUCER FINAL APPROVAL'}
                                 </h3>
                                 <p style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--text-main); line-height: 1.5;">
                                     <strong>${escapeHtml(contribName)}</strong> completed and signed this agreement on ${escapeHtml(cosignedDate)}.
                                 </p>
                                 <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
-                                    Please review all fields below (editable if you need to correct typos). When satisfied, click <strong>Approve for Final Submission</strong> to execute and dispatch the official document to <strong>release@carteblanche.co.za</strong> and your email.
+                                    ${isEditMode 
+                                        ? 'Review and modify any fields below (e.g. typos, participant info, locations, dates). When satisfied, click <strong>Save &amp; Update Agreement</strong> to re-generate and record the updated official agreement.'
+                                        : 'Please review all fields below (editable if you need to correct typos). When satisfied, click <strong>Approve for Final Submission</strong> to execute and dispatch the official document to <strong>release@carteblanche.co.za</strong> and your email.'}
                                 </p>
                             </div>
                         </div>
@@ -729,20 +793,38 @@
             });
 
             // Display verified co-signer signature
-            const contributorSigContainer = document.querySelector('.signature-pad-container');
-            const contributorTabs = document.querySelector('.signature-tabs');
-            if (contributorTabs) contributorTabs.style.display = 'none';
+            const isEditMode = urlParams.get('mode') === 'edit';
 
-            const sigData = loadedSubmission.participantSignature || loadedSubmission.ownerSignature || loadedSubmission.guardianSignature || loadedSubmission.licensorSignature || loadedSubmission.artistSignature;
-            if (contributorSigContainer && sigData) {
-                contributorSigContainer.innerHTML = `
-                    <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 1rem; text-align: center;">
-                        <div style="display: inline-flex; align-items: center; gap: 0.35rem; color: #16a34a; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.4rem;">
-                            <span>✓</span> Verified ${escapeHtml(contributorSigLabel)} (${escapeHtml(contribName)})
+            const contributorSigContainer = participantSigSection 
+                ? participantSigSection.querySelector('.signature-pad-container') 
+                : document.querySelector('.signature-pad-container');
+
+            const contributorTabs = participantSigSection 
+                ? participantSigSection.querySelector('.signature-tabs') 
+                : document.querySelector('.signature-tabs');
+
+            const sigData = loadedSubmission.parentSignature || 
+                            loadedSubmission.guardianSignature || 
+                            loadedSubmission.participantSignature || 
+                            loadedSubmission.ownerSignature || 
+                            loadedSubmission.artistSignature || 
+                            loadedSubmission.licensorSignature || 
+                            loadedSubmission.contributorSignature || null;
+
+            if (sigData && !isEditMode) {
+                if (contributorTabs) contributorTabs.style.display = 'none';
+                if (contributorSigContainer) {
+                    contributorSigContainer.innerHTML = `
+                        <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 1rem; text-align: center;">
+                            <div style="display: inline-flex; align-items: center; gap: 0.35rem; color: #16a34a; font-weight: 700; font-size: 0.85rem; margin-bottom: 0.4rem;">
+                                <span>✓</span> Verified ${escapeHtml(contributorSigLabel)} (${escapeHtml(contribName)})
+                            </div>
+                            <img src="${sigData}" alt="Co-Signer Signature" style="max-height: 90px; display: block; margin: 0 auto; filter: contrast(120%);">
                         </div>
-                        <img src="${sigData}" alt="Co-Signer Signature" style="max-height: 90px; display: block; margin: 0 auto; filter: contrast(120%);">
-                    </div>
-                `;
+                    `;
+                }
+            } else {
+                if (contributorTabs) contributorTabs.style.display = 'flex';
             }
 
             // Ensure Producer signature is visible
@@ -761,7 +843,8 @@
             // Submit Button
             const submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn) {
-                submitBtn.innerHTML = '<span>✅</span> Approve';
+                const isEditMode = urlParams.get('mode') === 'edit';
+                submitBtn.innerHTML = isEditMode ? '<span>💾</span> Save &amp; Update Agreement' : '<span>✅</span> Approve';
                 submitBtn.style.background = '#0284c7';
                 submitBtn.style.padding = '0.85rem 2.25rem';
                 submitBtn.style.fontSize = '0.95rem';
@@ -880,10 +963,29 @@
                     }
                 } catch (err) {}
             } else if (isApprovalMode && loadedSubmission) {
-                contributorSigImg = loadedSubmission.participantSignature || loadedSubmission.ownerSignature || loadedSubmission.guardianSignature || loadedSubmission.licensorSignature || loadedSubmission.artistSignature || null;
+                try {
+                    const contributorCanvas = document.getElementById(contributorSigCanvasId);
+                    if (contributorCanvas && !isCanvasBlank(contributorCanvas)) {
+                        contributorSigImg = contributorCanvas.toDataURL('image/png');
+                    }
+                } catch (err) {}
+                if (!contributorSigImg) {
+                    contributorSigImg = loadedSubmission.parentSignature || 
+                                       loadedSubmission.guardianSignature || 
+                                       loadedSubmission.participantSignature || 
+                                       loadedSubmission.ownerSignature || 
+                                       loadedSubmission.artistSignature || 
+                                       loadedSubmission.licensorSignature || 
+                                       loadedSubmission.contributorSignature || null;
+                }
             } else {
-                // In Step 1 (Initiation Mode), contributor signature does NOT exist yet.
-                contributorSigImg = null;
+                // In Step 1 (Initiation Mode), check if contributor canvas has a signature (in-person signing)
+                try {
+                    const contributorCanvas = document.getElementById(contributorSigCanvasId);
+                    if (contributorCanvas && !isCanvasBlank(contributorCanvas)) {
+                        contributorSigImg = contributorCanvas.toDataURL('image/png');
+                    }
+                } catch (err) {}
             }
 
             // Extract Producer signature from canvas
@@ -918,19 +1020,41 @@
                     if (cSec) cSec.scrollIntoView({ behavior: 'smooth' });
                     return;
                 }
-                const nameInp = document.getElementById('participantName') || document.getElementById('fullName') || document.getElementById('guardianName') || document.getElementById('parentName') || document.getElementById('ownerName') || document.getElementById('locationOwnerName') || document.getElementById('footageOwnerName') || document.getElementById('musicOwnerName');
+                const nameInp = [
+                    document.getElementById('participantName'),
+                    document.getElementById('footageOwnerName'),
+                    document.getElementById('locationOwnerName'),
+                    document.getElementById('musicOwnerName'),
+                    document.getElementById('ownerName'),
+                    document.getElementById('parentName'),
+                    document.getElementById('guardianName'),
+                    document.getElementById('fullName')
+                ].find(el => el && el.type !== 'hidden');
+
                 if (nameInp && !nameInp.value.trim()) {
                     alert('Please enter your full name & surname.');
                     nameInp.focus();
                     return;
                 }
-                const idInp = document.getElementById('idNumber') || document.getElementById('parentIdNumber');
+
+                // ID number: only validate if an actual visible ID field exists on this specific form
+                const idInp = [
+                    document.getElementById('idNumber'),
+                    document.getElementById('parentIdNumber')
+                ].find(el => el && el.type !== 'hidden');
+
                 if (idInp && !idInp.value.trim()) {
                     alert('Please enter your ID number.');
                     idInp.focus();
                     return;
                 }
-                const contactInp = document.getElementById('contactNumber') || document.getElementById('phone');
+
+                // Contact number: only validate if an actual visible contact field exists on this specific form
+                const contactInp = [
+                    document.getElementById('contactNumber'),
+                    document.getElementById('phone')
+                ].find(el => el && el.type !== 'hidden');
+
                 if (contactInp && !contactInp.value.trim()) {
                     alert('Please enter your contact number.');
                     contactInp.focus();
@@ -1046,14 +1170,32 @@
                     const formData = new FormData(form);
                     if (producerSigImg) formData.set('producerSignature', producerSigImg);
 
-                    // Crucial: Step 1 must NEVER submit participant signatures to the server
-                    formData.delete('participantSignature');
-                    formData.delete('ownerSignature');
-                    formData.delete('guardianSignature');
-                    formData.delete('licensorSignature');
-                    formData.delete('artistSignature');
+                    // Support in-person signing when contributor signed together with producer
+                    if (contributorSigImg) {
+                        formData.set('participantSignature', contributorSigImg);
+                        if (formType === 'location_agreement') formData.set('ownerSignature', contributorSigImg);
+                        if (formType === 'minor_release') {
+                            formData.set('parentSignature', contributorSigImg);
+                            formData.set('guardianSignature', contributorSigImg);
+                        }
+                        if (formType === 'music_agreement') {
+                            formData.set('artistSignature', contributorSigImg);
+                            formData.set('ownerSignature', contributorSigImg);
+                        }
+                        if (formType === 'footage_agreement' || formType === 'footage_release_agreement') {
+                            formData.set('licensorSignature', contributorSigImg);
+                            formData.set('ownerSignature', contributorSigImg);
+                        }
+                    } else {
+                        // Crucial: Step 1 without in-person participant signature must NEVER submit participant signatures to the server
+                        formData.delete('participantSignature');
+                        formData.delete('ownerSignature');
+                        formData.delete('guardianSignature');
+                        formData.delete('licensorSignature');
+                        formData.delete('artistSignature');
+                    }
 
-                    formData.append('file', pdfBlob, `Initiated_${formType}_${Date.now()}.pdf`);
+                    formData.append('file', pdfBlob, `${contributorSigImg ? 'Executed' : 'Initiated'}_${formType}_${Date.now()}.pdf`);
 
                     const token = (window.auth && typeof window.auth.getIdToken === 'function')
                         ? await window.auth.getIdToken().catch(() => null)
@@ -1069,17 +1211,21 @@
                     const result = await response.json();
                     if (!result.success) throw new Error(result.error || result.message || 'Failed to submit agreement');
 
-                    // Step 1: ALWAYS generate and display shareable link!
-                    const formPage = FORM_PAGE_MAP[formType] || `${formType}.html`;
-                    const shareUrl = result.shareUrl || `${getBaseUrl()}/${formPage}?id=${result.firestoreDocId}&action=cosign`;
                     const pEmail = document.getElementById('producerEmail')?.value || getResolvedProducerProfile().email;
-                    const storyTitle = document.getElementById('storyTitle')?.value || document.getElementById('storyName')?.value || 'Story';
-                    showShareLinkModal({
-                        formTitle,
-                        storyTitle,
-                        shareUrl,
-                        producerEmail: pEmail
-                    });
+                    if (result.status === 'APPROVED' || result.status === 'completed') {
+                        showProducerApprovalSuccessModal(formTitle, pEmail);
+                    } else {
+                        // Step 1: ALWAYS generate and display shareable link!
+                        const formPage = FORM_PAGE_MAP[formType] || `${formType}.html`;
+                        const shareUrl = result.shareUrl || `${getBaseUrl()}/${formPage}?id=${result.firestoreDocId}&action=cosign`;
+                        const storyTitle = document.getElementById('storyTitle')?.value || document.getElementById('storyName')?.value || 'Story';
+                        showShareLinkModal({
+                            formTitle,
+                            storyTitle,
+                            shareUrl,
+                            producerEmail: pEmail
+                        });
+                    }
                 }
             } catch (err) {
                 console.error('[FORM-SUBMIT-ERROR]', err);
@@ -1279,6 +1425,11 @@
                             <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
                                 If you need to make changes or have questions, please contact the Carte Blanche production team directly.
                             </p>
+                            <div style="margin-top: 0.85rem; padding-top: 0.65rem; border-top: 1px dashed rgba(239, 68, 68, 0.3);">
+                                <a href="${FORM_PAGE_MAP[sub.formType] || 'forms_hub.html'}?id=${sub.id}&action=approve" style="display: inline-flex; align-items: center; gap: 0.4rem; background: #16a34a; color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">
+                                    <span>✅</span> Are you the Producer? Review &amp; Approve Document &rarr;
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1344,4 +1495,5 @@
         isApproval: () => isApprovalMode,
         getLoadedSubmission: () => loadedSubmission
     };
+    window.CountersignUI = window.countersignFlow;
 })();
