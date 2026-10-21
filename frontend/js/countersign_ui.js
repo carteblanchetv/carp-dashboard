@@ -754,11 +754,12 @@
                                 </h3>
                                 <p style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--text-main); line-height: 1.5;">
                                     <strong>${escapeHtml(contribName)}</strong> completed and signed this agreement on ${escapeHtml(cosignedDate)}.
+                                    ${loadedSubmission.producerSignature ? '<span style="display: inline-flex; align-items: center; gap: 0.25rem; margin-left: 0.5rem; background: rgba(22, 163, 74, 0.12); color: #15803d; border: 1px solid rgba(22, 163, 74, 0.3); padding: 0.15rem 0.55rem; border-radius: 4px; font-size: 0.78rem; font-weight: 700;">✓ Producer Signature on Record</span>' : ''}
                                 </p>
                                 <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
                                     ${isEditMode 
                                         ? 'Review and modify any fields below (e.g. typos, participant info, locations, dates). When satisfied, click <strong>Save &amp; Update Agreement</strong> to re-generate and record the updated official agreement.'
-                                        : 'Please review all fields below (editable if you need to correct typos). When satisfied, click <strong>Approve for Final Submission</strong> to execute and dispatch the official document to <strong>release@carteblanche.co.za</strong> and your email.'}
+                                        : 'Please review all fields below (editable if you need to correct typos). When satisfied, click <strong>Approve</strong> to execute and dispatch the official document to <strong>release@carteblanche.co.za</strong> and your email.'}
                                 </p>
                             </div>
                         </div>
@@ -827,16 +828,15 @@
                 if (contributorTabs) contributorTabs.style.display = 'flex';
             }
 
-            // Ensure Producer signature is visible
+            // When Reviewing and Approving, hide the producer signature section if it's already been signed
             const producerSection = document.getElementById('producerSignatureSection');
             if (producerSection) {
-                producerSection.style.display = 'block';
-                if (loadedSubmission.producerSignature && !document.getElementById('prevProducerSigNotice')) {
-                    const notice = document.createElement('div');
-                    notice.id = 'prevProducerSigNotice';
-                    notice.style.cssText = 'background: rgba(16, 185, 129, 0.08); border: 1px solid #10b981; border-radius: 6px; padding: 0.6rem 0.9rem; font-size: 0.8rem; margin-bottom: 0.75rem; color: #15803d; display: flex; align-items: center; gap: 0.4rem;';
-                    notice.innerHTML = '<span>✓</span> <span>Your producer signature is on file. You may re-sign below if you wish to update it.</span>';
-                    producerSection.insertBefore(notice, producerSection.firstChild);
+                if (loadedSubmission.producerSignature) {
+                    producerSection.style.display = 'none';
+                    producerSection.setAttribute('aria-hidden', 'true');
+                } else {
+                    producerSection.style.display = 'block';
+                    producerSection.removeAttribute('aria-hidden');
                 }
             }
 
