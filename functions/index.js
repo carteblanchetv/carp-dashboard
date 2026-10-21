@@ -415,6 +415,8 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
             'minor_release',
             'location_agreement',
             'footage_agreement',
+            'footage_release',
+            'footage_release_agreement',
             'episode_footage',
             'music_agreement',
             'insert_footage',
@@ -2281,6 +2283,7 @@ app.post('/api/countersign-form', async (req, res) => {
       minor_release: 'Minor Release Form',
       location_agreement: 'Location Agreement',
       footage_agreement: 'Footage Agreement',
+      footage_release: 'Footage Agreement',
       footage_release_agreement: 'Footage Agreement',
       music_agreement: 'Music Agreement'
     };
@@ -2407,13 +2410,16 @@ app.post('/api/countersign-form', async (req, res) => {
     const uniqueExtraRecipients = Array.from(new Set(rawExtraRecipients.map(e => e.toLowerCase().trim())));
     console.log(`[COUNTERSIGN-FORM] Dispatching finalized ${formTitle} for Comm #${commNum} to extraRecipients:`, uniqueExtraRecipients);
 
-    await notifyRelevantUsers(
-      formType,
-      subject,
-      html,
-      attachments,
-      uniqueExtraRecipients
-    );
+    // Safe dispatch with 12s timeout to protect against SMTP delays and 504 timeouts
+    try {
+      await Promise.race([
+        notifyRelevantUsers(formType, subject, html, attachments, uniqueExtraRecipients),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Email dispatch timeout')), 12000))
+      ]);
+    } catch (notifyErr) {
+      console.warn(`[COUNTERSIGN-FORM] Email dispatch delayed or failed: ${notifyErr.message}. Queued for retry.`);
+      await queueFailedEmail(formType, subject, html, attachments, uniqueExtraRecipients.join(', '), notifyErr.message).catch(() => {});
+    }
 
     res.json({ success: true, status: 'APPROVED', message: 'Agreement successfully approved and dispatched.' });
   } catch (error) {

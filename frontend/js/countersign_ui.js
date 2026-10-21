@@ -25,9 +25,29 @@
         minor_release: 'minor_release.html',
         location_agreement: 'location_agreement.html',
         footage_agreement: 'footage_release_agreement.html',
+        footage_release: 'footage_release_agreement.html',
         footage_release_agreement: 'footage_release_agreement.html',
         music_agreement: 'music_agreement.html'
     };
+
+    /**
+     * Resilient response parser preventing SyntaxError: JSON.parse on HTML error pages
+     */
+    async function safeParseJson(resp) {
+        const contentType = resp.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            const text = await resp.text();
+            console.error('[API-NON-JSON-RESPONSE]', resp.status, text.slice(0, 300));
+            if (resp.status === 504 || text.includes('Gateway Timeout')) {
+                throw new Error('Server request timed out. Please try again.');
+            }
+            if (!resp.ok) {
+                throw new Error(`Server returned error (${resp.status}).`);
+            }
+            throw new Error(`Unexpected server response format (${resp.status}).`);
+        }
+        return await resp.json();
+    }
 
     // Isolate co-signer immediately if in co-signer mode (hide any dashboard UI)
     if (isCoSignerMode) {
@@ -551,7 +571,7 @@
 
             const fetchId = tokenParam || submissionId;
             const resp = await fetch(`/api/get-form-for-countersign/${encodeURIComponent(fetchId)}`);
-            const data = await resp.json();
+            const data = await safeParseJson(resp);
             if (!data.success || !data.submission) {
                 throw new Error(data.error || 'Failed to load agreement');
             }
@@ -730,12 +750,23 @@
             if (loadingOverlay) loadingOverlay.classList.add('active');
 
             const resp = await fetch(`/api/get-form-for-countersign/${submissionId}`);
-            const data = await resp.json();
+            const data = await safeParseJson(resp);
             if (!data.success || !data.submission) {
                 throw new Error(data.error || 'Failed to load agreement');
             }
 
             loadedSubmission = data.submission;
+
+            const isAlreadyApproved = loadedSubmission.status === 'APPROVED' || 
+                                      loadedSubmission.status === 'approved' || 
+                                      loadedSubmission.status === 'completed' || 
+                                      !!loadedSubmission.approvedAt || 
+                                      !!loadedSubmission.completedAt;
+
+            const executedFile = (loadedSubmission.files || []).find(f => 
+                f.fieldname === 'dualSignedPdf' || 
+                (f.filename && (f.filename.startsWith('DualSigned_') || f.filename.startsWith('Executed_')))
+            ) || (loadedSubmission.files && loadedSubmission.files.length > 0 ? loadedSubmission.files[0] : null);
 
             const contribName = loadedSubmission.contributorName || loadedSubmission.fullName || loadedSubmission.participantName || loadedSubmission.ownerName || 'Co-signer';
             const cosignedDate = loadedSubmission.participantSignedDate || loadedSubmission.ownerSignedDate || loadedSubmission.signedDate || 'recently';
@@ -744,27 +775,55 @@
             const bannerContainer = document.getElementById('countersignBannerContainer');
             if (bannerContainer) {
                 const isEditMode = urlParams.get('mode') === 'edit';
-                bannerContainer.innerHTML = `
-                    <div style="background: linear-gradient(135deg, rgba(0, 143, 190, 0.12), rgba(99, 102, 241, 0.08)); border: 2px solid var(--primary); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
-                        <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                            <span style="font-size: 2rem; line-height: 1;">${isEditMode ? '✏️' : '📋'}</span>
-                            <div style="flex: 1;">
-                                <h3 style="margin: 0 0 0.35rem 0; color: var(--primary); font-size: 1.15rem; font-weight: 800;">
-                                    ${isEditMode ? 'EDIT AGREEMENT DETAILS &bull; PRODUCER REVIEW' : 'CO-SIGNER SIGNATURE RECORDED &bull; PRODUCER FINAL APPROVAL'}
-                                </h3>
-                                <p style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--text-main); line-height: 1.5;">
-                                    <strong>${escapeHtml(contribName)}</strong> completed and signed this agreement on ${escapeHtml(cosignedDate)}.
-                                    ${loadedSubmission.producerSignature ? '<span style="display: inline-flex; align-items: center; gap: 0.25rem; margin-left: 0.5rem; background: rgba(22, 163, 74, 0.12); color: #15803d; border: 1px solid rgba(22, 163, 74, 0.3); padding: 0.15rem 0.55rem; border-radius: 4px; font-size: 0.78rem; font-weight: 700;">✓ Producer Signature on Record</span>' : ''}
-                                </p>
-                                <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
-                                    ${isEditMode 
-                                        ? 'Review and modify any fields below (e.g. typos, participant info, locations, dates). When satisfied, click <strong>Save &amp; Update Agreement</strong> to re-generate and record the updated official agreement.'
-                                        : 'Please review all fields below (editable if you need to correct typos). When satisfied, click <strong>Approve</strong> to execute and dispatch the official document to <strong>release@carteblanche.co.za</strong> and your email.'}
-                                </p>
+                if (isAlreadyApproved && !isEditMode) {
+                    bannerContainer.innerHTML = `
+                        <div style="background: linear-gradient(135deg, rgba(22, 163, 74, 0.12), rgba(16, 185, 129, 0.08)); border: 2px solid #16a34a; border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
+                            <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                                <span style="font-size: 2.2rem; line-height: 1;">✅</span>
+                                <div style="flex: 1;">
+                                    <h3 style="margin: 0 0 0.35rem 0; color: #15803d; font-size: 1.15rem; font-weight: 800;">
+                                        AGREEMENT OFFICIALLY APPROVED &amp; EXECUTED
+                                    </h3>
+                                    <p style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--text-main); line-height: 1.5;">
+                                        This agreement between <strong>${escapeHtml(contribName)}</strong> and Producer <strong>${escapeHtml(loadedSubmission.producerName || 'Carte Blanche')}</strong> has been approved and executed. Official copies were dispatched to <strong>release@carteblanche.co.za</strong> and the producer.
+                                    </p>
+                                    <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 0.75rem; flex-wrap: wrap;">
+                                        ${executedFile ? `
+                                            <a href="/api/get-submission-file?path=${encodeURIComponent(executedFile.storagePath)}&inline=true" target="_blank" class="add-btn" style="margin: 0; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; background: #16a34a;">
+                                                <span>📄</span> View Executed PDF
+                                            </a>
+                                        ` : ''}
+                                        <a href="?id=${encodeURIComponent(submissionId)}&action=countersign&mode=edit" class="btn-soft" style="padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+                                            <span>✏️</span> Edit Details
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    bannerContainer.innerHTML = `
+                        <div style="background: linear-gradient(135deg, rgba(0, 143, 190, 0.12), rgba(99, 102, 241, 0.08)); border: 2px solid var(--primary); border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
+                            <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                                <span style="font-size: 2rem; line-height: 1;">${isEditMode ? '✏️' : '📋'}</span>
+                                <div style="flex: 1;">
+                                    <h3 style="margin: 0 0 0.35rem 0; color: var(--primary); font-size: 1.15rem; font-weight: 800;">
+                                        ${isEditMode ? 'EDIT AGREEMENT DETAILS &bull; PRODUCER REVIEW' : 'CO-SIGNER SIGNATURE RECORDED &bull; PRODUCER FINAL APPROVAL'}
+                                    </h3>
+                                    <p style="margin: 0 0 0.5rem 0; font-size: 0.9rem; color: var(--text-main); line-height: 1.5;">
+                                        <strong>${escapeHtml(contribName)}</strong> completed and signed this agreement on ${escapeHtml(cosignedDate)}.
+                                        ${loadedSubmission.producerSignature ? '<span style="display: inline-flex; align-items: center; gap: 0.25rem; margin-left: 0.5rem; background: rgba(22, 163, 74, 0.12); color: #15803d; border: 1px solid rgba(22, 163, 74, 0.3); padding: 0.15rem 0.55rem; border-radius: 4px; font-size: 0.78rem; font-weight: 700;">✓ Producer Signature on Record</span>' : ''}
+                                    </p>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
+                                        ${isEditMode 
+                                            ? 'Review and modify any fields below (e.g. typos, participant info, locations, dates). When satisfied, click <strong>Save &amp; Update Agreement</strong> to re-generate and record the updated official agreement.'
+                                            : 'Please review all fields below (editable if you need to correct typos). When satisfied, click <strong>Approve</strong> to execute and dispatch the official document to <strong>release@carteblanche.co.za</strong> and your email.'}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
             }
 
             // Populate all fields
@@ -844,8 +903,16 @@
             const submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn) {
                 const isEditMode = urlParams.get('mode') === 'edit';
-                submitBtn.innerHTML = isEditMode ? '<span>💾</span> Save &amp; Update Agreement' : '<span>✅</span> Approve';
-                submitBtn.style.background = '#0284c7';
+                if (isAlreadyApproved && !isEditMode) {
+                    submitBtn.innerHTML = '<span>✅</span> Agreement Already Approved &bull; Re-Dispatch Email';
+                    submitBtn.style.background = '#16a34a';
+                } else if (isEditMode) {
+                    submitBtn.innerHTML = '<span>💾</span> Save &amp; Update Agreement';
+                    submitBtn.style.background = '#0284c7';
+                } else {
+                    submitBtn.innerHTML = '<span>✅</span> Approve';
+                    submitBtn.style.background = '#0284c7';
+                }
                 submitBtn.style.padding = '0.85rem 2.25rem';
                 submitBtn.style.fontSize = '0.95rem';
                 submitBtn.style.fontWeight = '700';
@@ -1095,7 +1162,7 @@
                         method: 'POST',
                         body: formData
                     });
-                    const result = await response.json();
+                    const result = await safeParseJson(response);
                     if (!result.success) throw new Error(result.error || result.message || 'Failed to submit co-signature');
 
                     // Show Co-Signer Thank You Modal
@@ -1139,10 +1206,11 @@
                         headers,
                         body: formData
                     });
-                    const result = await response.json();
+                    const result = await safeParseJson(response);
                     if (!result.success) throw new Error(result.error || result.message || 'Failed to approve agreement');
 
                     const pEmail = document.getElementById('producerEmail')?.value || 'your email';
+                    if (loadingOverlay) loadingOverlay.classList.remove('active');
                     showProducerApprovalSuccessModal(formTitle, pEmail);
 
                 } else {
@@ -1182,7 +1250,7 @@
                             formData.set('artistSignature', contributorSigImg);
                             formData.set('ownerSignature', contributorSigImg);
                         }
-                        if (formType === 'footage_agreement' || formType === 'footage_release_agreement') {
+                        if (formType === 'footage_agreement' || formType === 'footage_release_agreement' || formType === 'footage_release') {
                             formData.set('licensorSignature', contributorSigImg);
                             formData.set('ownerSignature', contributorSigImg);
                         }
@@ -1208,10 +1276,11 @@
                         headers,
                         body: formData
                     });
-                    const result = await response.json();
+                    const result = await safeParseJson(response);
                     if (!result.success) throw new Error(result.error || result.message || 'Failed to submit agreement');
 
                     const pEmail = document.getElementById('producerEmail')?.value || getResolvedProducerProfile().email;
+                    if (loadingOverlay) loadingOverlay.classList.remove('active');
                     if (result.status === 'APPROVED' || result.status === 'completed') {
                         showProducerApprovalSuccessModal(formTitle, pEmail);
                     } else {
@@ -1372,6 +1441,9 @@
      * Show final success modal for Producer upon final approval (Step 3)
      */
     function showProducerApprovalSuccessModal(formTitle, producerEmail) {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) overlay.classList.remove('active');
+
         let dialog = document.getElementById('successDialog');
         if (!dialog) {
             dialog = document.createElement('div');
@@ -1382,6 +1454,7 @@
 
         dialog.classList.remove('hidden');
         dialog.style.display = 'flex';
+        dialog.style.zIndex = '9999';
         dialog.innerHTML = `
             <div class="dialog-box" style="max-width: 560px; padding: 2rem; border-radius: 12px; background: var(--bg-card); color: var(--text-main); box-shadow: var(--shadow-xl); border: 1px solid var(--border);">
                 <div style="font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem;">🎉</div>
