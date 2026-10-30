@@ -1,5 +1,5 @@
-import { submitLegalForm, showSubmissionSuccessModal, safeDrawField, cleanPdfText } from './form_submission_helper.js?v=5.3.1';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.3.1';
+import { submitLegalForm, showSubmissionSuccessModal, safeDrawField, cleanPdfText, prepareTemplatePdf, drawInFieldBox } from './form_submission_helper.js?v=5.4.0';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.0';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Default TX Date
@@ -216,44 +216,33 @@ async function buildCompletedPDF() {
 
     const { PDFDocument, rgb, StandardFonts } = PDFLib;
     const pdfDoc = await PDFDocument.load(templateBytes);
+    const fieldMap = prepareTemplatePdf(pdfDoc);
     const page1 = pdfDoc.getPages()[0];
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-    const fontSize = 10;
+    const fontSize = 9.5;
     const textColor = rgb(0.06, 0.09, 0.16);
 
-    const drawFieldOnPage = (pg, text, x, y, isBold = false) => {
-        safeDrawField(pg, text, x, y, {
+    const drawBoxOnPage1 = (fieldName, text, isBold = false) => {
+        drawInFieldBox(page1, fieldMap, fieldName, text, {
             size: fontSize,
             font: isBold ? fontBold : font,
             color: textColor
         });
     };
 
-    // Correct Coordinates for Page 1 Cover Sheet
-    // 1. Commission Number: (128, 735, 349, 759)
-    drawFieldOnPage(page1, commNum, 134, 743, true);
-    // 2. Story Name: (128, 689, 569, 713)
-    drawFieldOnPage(page1, storyName, 134, 697, true);
-    // 3. Producer: (128, 643, 569, 667)
-    drawFieldOnPage(page1, producerName, 134, 651);
-    // 4. Presenter: (128, 597, 569, 621)
-    drawFieldOnPage(page1, presenterName, 134, 605);
-    // 5. DOP: (128, 551, 569, 575)
-    drawFieldOnPage(page1, cameraName, 134, 559);
-    // 6. Camera Assistant: (128, 505, 569, 529)
-    drawFieldOnPage(page1, researcherName, 134, 513);
-    // 7. Editor: (128, 459, 569, 483)
-    drawFieldOnPage(page1, editorName, 134, 467);
-    // 8. Final Mix Operator: (128, 413, 569, 437)
-    drawFieldOnPage(page1, soundName, 134, 421);
-    // 9. Delivery Date (TX Date): (128, 367, 239, 391)
-    drawFieldOnPage(page1, formattedTxDate, 134, 375);
-    // 10. Insert Duration: (458, 367, 569, 391)
-    drawFieldOnPage(page1, duration, 464, 375);
-    // 11. 3rd Party Footage: (458, 321, 569, 345)
-    drawFieldOnPage(page1, music, 464, 329);
+    drawBoxOnPage1('commissionNumber', commNum, true);
+    drawBoxOnPage1('storyTitle', storyName, true);
+    drawBoxOnPage1('producer', producerName);
+    drawBoxOnPage1('presenter', presenterName);
+    drawBoxOnPage1('dop', cameraName);
+    drawBoxOnPage1('camAssist', researcherName);
+    drawBoxOnPage1('editor', editorName);
+    drawBoxOnPage1('finalMix', soundName);
+    drawBoxOnPage1('deliveryDate', formattedTxDate);
+    drawBoxOnPage1('insertDuration', duration);
+    drawBoxOnPage1('thirdPartyFootage', music);
 
     // If Additional Production Credits or General Notes exist, insert supplementary page(s) right after Page 1
     if (extraCredits.length > 0 || notes) {

@@ -6,9 +6,12 @@ import {
     renderCoSignBanner,
     showSubmissionSuccessModal,
     safeDrawField,
-    cleanPdfText
-} from './form_submission_helper.js?v=5.3.2';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.3.2';
+    cleanPdfText,
+    prepareTemplatePdf,
+    drawInFieldBox,
+    drawSignatureInFieldBox
+} from './form_submission_helper.js?v=5.4.0';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.0';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialise Dual-Mode Signature Pads
@@ -465,50 +468,41 @@ async function buildCompletedPDF(producerPad, ownerPad) {
 
     const { PDFDocument, rgb, StandardFonts } = PDFLib;
     const pdfDoc = await PDFDocument.load(templateBytes);
+    const fieldMap = prepareTemplatePdf(pdfDoc);
     const page = pdfDoc.getPages()[0];
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-    const fontSize = 10;
+    const fontSize = 9.5;
     const textColor = rgb(0.06, 0.09, 0.16);
 
-    const drawField = (text, x, y, isBold = false) => {
-        safeDrawField(page, text, x, y, {
+    const drawBox = (fieldName, text, isBold = false, opts = {}) => {
+        drawInFieldBox(page, fieldMap, fieldName, text, {
             size: fontSize,
             font: isBold ? fontBold : font,
-            color: textColor
+            color: textColor,
+            ...opts
         });
     };
 
-    drawField(ownerSignatory, 24, 656, true);
-    drawField(ownerEntity, 24, 593, true);
-    
-    if (footageDesc) {
-        const lines = footageDesc.split('\n');
-        let descY = 380;
-        lines.forEach(l => {
-            if (descY > 325) {
-                drawField(l, 24, descY);
-                descY -= 14;
-            }
-        });
-    }
-
-    drawField(storyTitle, 134, 262, true);
-    drawField(commNum, 134, 225, true);
-    drawField(formatDate(broadcastDate), 464, 225);
-    drawField(producerName, 134, 179);
-    drawField(formatDate(producerDate), 464, 179);
-    drawField(ownerName || ownerSignatory, 134, 110);
-    drawField(formatDate(ownerDate), 464, 110);
+    drawBox('footageOwnerName', ownerSignatory, true, { align: 'center' });
+    drawBox('footageOwnerCompany', ownerEntity, true, { align: 'center' });
+    drawBox('storyTitle', storyTitle, true);
+    drawBox('commissionNumber', commNum, true);
+    drawBox('broadcastDate', formatDate(broadcastDate));
+    drawBox('footageDescription', footageDesc, false, { multiline: true, size: 8.5 });
+    drawBox('ownerSignedAt', ownerName || ownerSignatory || 'Johannesburg');
+    drawBox('producerSignedAt', producerName || 'Johannesburg');
+    drawBox('ownerSignedDate', formatDate(ownerDate));
+    drawBox('producerSignedDate', formatDate(producerDate));
 
     if (!producerPad.isEmpty()) {
         const pSig = await pdfDoc.embedPng(producerPad.toDataURL());
-        page.drawImage(pSig, { x: 132, y: 147, width: 105, height: 24 });
+        drawSignatureInFieldBox(page, fieldMap, 'producerSignature', pSig);
     }
     if (!ownerPad.isEmpty()) {
         const oSig = await pdfDoc.embedPng(ownerPad.toDataURL());
-        page.drawImage(oSig, { x: 132, y: 78, width: 105, height: 24 });
+        drawSignatureInFieldBox(page, fieldMap, 'ownerSignature', oSig);
     }
 
     const pdfBytes = await pdfDoc.save();

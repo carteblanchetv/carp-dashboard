@@ -6,9 +6,12 @@ import {
     renderCoSignBanner,
     showSubmissionSuccessModal,
     safeDrawField,
-    cleanPdfText
-} from './form_submission_helper.js?v=5.3.1';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.3.1';
+    cleanPdfText,
+    prepareTemplatePdf,
+    drawInFieldBox,
+    drawSignatureInFieldBox
+} from './form_submission_helper.js?v=5.4.0';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.0';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialise Dual-Mode Signature Pads
@@ -90,11 +93,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         document.getElementById('participantName').value = val;
                     }
                 }
-                if (loadedSubmission.idNumber) {
-                    document.getElementById('participantId').value = loadedSubmission.idNumber;
+                let parsedMeta = {};
+                if (loadedSubmission.metadata) {
+                    try {
+                        parsedMeta = typeof loadedSubmission.metadata === 'string'
+                            ? JSON.parse(loadedSubmission.metadata)
+                            : loadedSubmission.metadata;
+                    } catch (e) {}
                 }
-                if (loadedSubmission.phone || loadedSubmission.contactNumber) {
-                    document.getElementById('participantContact').value = loadedSubmission.phone || loadedSubmission.contactNumber;
+                if (loadedSubmission.idNumber || parsedMeta.participantId) {
+                    document.getElementById('participantId').value = loadedSubmission.idNumber || parsedMeta.participantId;
+                }
+                if (loadedSubmission.phone || loadedSubmission.contactNumber || parsedMeta.participantContact) {
+                    document.getElementById('participantContact').value = loadedSubmission.phone || loadedSubmission.contactNumber || parsedMeta.participantContact;
                 }
                 const emailEl = document.getElementById('submitterEmail');
                 if (emailEl && !emailEl.value) {
@@ -334,10 +345,17 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('signatoryName', metadata.participantName);
             formData.append('participantName', metadata.participantName);
             formData.append('fullName', metadata.participantName);
+            formData.append('idNumber', metadata.participantId);
+            formData.append('contactNumber', metadata.participantContact);
+            formData.append('phone', metadata.participantContact);
             formData.append('submitterEmail', metadata.submitterEmail);
             formData.append('email', metadata.submitterEmail);
             formData.append('place', metadata.place);
+            formData.append('participantSignedAt', metadata.place);
+            formData.append('producerSignedAt', metadata.place);
             formData.append('dateVal', metadata.formattedDate);
+            formData.append('participantSignedDate', metadata.formattedDate);
+            formData.append('producerSignedDate', metadata.formattedDate);
             formData.append('participantSignature', participantPad.toDataURL());
             formData.append('producerSignature', producerPad.toDataURL());
             formData.append('metadata', JSON.stringify({
@@ -405,50 +423,43 @@ async function buildCompletedPDF(participantPad, producerPad) {
 
     const { PDFDocument, rgb, StandardFonts } = PDFLib;
     const pdfDoc = await PDFDocument.load(templateBytes);
+    const fieldMap = prepareTemplatePdf(pdfDoc);
     const page = pdfDoc.getPages()[0];
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-    const fontSize = 10;
+    const fontSize = 9.5;
     const textColor = rgb(0.06, 0.09, 0.16);
 
-    const drawField = (text, x, y, isBold = false) => {
-        safeDrawField(page, text, x, y, {
+    const drawBox = (fieldName, text, isBold = false) => {
+        drawInFieldBox(page, fieldMap, fieldName, text, {
             size: fontSize,
             font: isBold ? fontBold : font,
             color: textColor
         });
     };
 
-    drawField(commNum, 134, 725, true);
-    drawField(storyName, 134, 679, true);
-    drawField(producerName, 134, 633);
-    drawField(participantName, 134, 587, true);
-    drawField(participantId, 134, 541);
-    drawField(participantContact, 134, 495);
-    drawField(place, 134, 207);
-    drawField(formattedDate, 134, 161);
+    drawBox('commissionNumber', commNum, true);
+    drawBox('storyTitle', storyName, true);
+    drawBox('producerName', producerName);
+    drawBox('participantName', participantName, true);
+    drawBox('idNumber', participantId);
+    drawBox('contactNumber', participantContact);
+    drawBox('participantSignedAt', place);
+    drawBox('producerSignedAt', place);
+    drawBox('participantSignedDate', formattedDate);
+    drawBox('producerSignedDate', formattedDate);
 
     if (!participantPad.isEmpty()) {
         const pSigData = participantPad.toDataURL();
         const pSigImage = await pdfDoc.embedPng(pSigData);
-        page.drawImage(pSigImage, {
-            x: 132,
-            y: 63,
-            width: 105,
-            height: 65
-        });
+        drawSignatureInFieldBox(page, fieldMap, 'participantSignature', pSigImage);
     }
 
     if (!producerPad.isEmpty()) {
         const prSigData = producerPad.toDataURL();
         const prSigImage = await pdfDoc.embedPng(prSigData);
-        page.drawImage(prSigImage, {
-            x: 462,
-            y: 63,
-            width: 105,
-            height: 65
-        });
+        drawSignatureInFieldBox(page, fieldMap, 'producerSignature', prSigImage);
     }
 
     const pdfBytes = await pdfDoc.save();

@@ -281,3 +281,159 @@ export function safeDrawField(page, text, x, y, options = {}) {
     }
 }
 
+/**
+ * Extracts a map of fieldName -> { x, y, width, height } from the PDF's AcroForm widgets,
+ * and then strips all interactive AcroForm widget annotations so their opaque backgrounds
+ * never cover up text or signature images drawn onto the page content stream.
+ */
+export function prepareTemplatePdf(pdfDoc) {
+    const fieldMap = {};
+    const { PDFName } = (typeof window !== 'undefined' && window.PDFLib) || {};
+
+    try {
+        const form = pdfDoc.getForm();
+        const fields = form.getFields();
+        for (const field of fields) {
+            const name = field.getName();
+            const widgets = field.acroField.getWidgets();
+            for (const w of widgets) {
+                const rect = w.getRectangle();
+                if (rect && rect.width > 0 && rect.height > 0) {
+                    fieldMap[name] = {
+                        x: rect.x,
+                        y: rect.y,
+                        width: rect.width,
+                        height: rect.height
+                    };
+                    break;
+                }
+            }
+        }
+        for (const field of fields) {
+            try { form.removeField(field); } catch (e) {}
+        }
+    } catch (e) {
+        console.warn('[prepareTemplatePdf] Notice extracting AcroForm fields:', e);
+    }
+
+    if (PDFName) {
+        try {
+            for (const pg of pdfDoc.getPages()) {
+                pg.node.set(PDFName.of('Annots'), pdfDoc.context.obj([]));
+            }
+        } catch (e) {}
+        try {
+            if (pdfDoc.catalog.has(PDFName.of('AcroForm'))) {
+                pdfDoc.catalog.delete(PDFName.of('AcroForm'));
+            }
+        } catch (e) {}
+    }
+
+    return fieldMap;
+}
+
+/**
+ * Draws text neatly inside a named template field box extracted by prepareTemplatePdf().
+ * Automatically shrinks font size if needed to prevent horizontal overflow, and supports
+ * centered alignment and multiline wrapping.
+ */
+export function drawInFieldBox(page, fieldMap, fieldName, text, options = {}) {
+    if (!text && text !== 0) return;
+    const cleaned = cleanPdfText(text);
+    if (!cleaned) return;
+
+    const box = (fieldMap && fieldMap[fieldName]) || options.fallbackRect;
+    if (!box) {
+        console.warn(`[drawInFieldBox] Field "${fieldName}" not found in template fieldMap.`);
+        return;
+    }
+
+    const font = options.font;
+    const color = options.color;
+    const padX = options.padX !== undefined ? options.padX : 6;
+    const maxW = Math.max(20, box.width - padX * 2);
+    let size = options.size || 9.5;
+
+    if (options.multiline) {
+        const lineSize = options.size || 8.5;
+        const lineGap = lineSize + 2.5;
+        const rawParagraphs = String(text).split(/\r?\n/);
+        const lines = [];
+
+        for (const para of rawParagraphs) {
+            const cleanPara = cleanPdfText(para);
+            if (!cleanPara) continue;
+            const words = cleanPara.split(/\s+/);
+            let currentLine = '';
+            for (const word of words) {
+                const testLine = currentLine ? `${currentLine} ${word}` : word;
+                if (font && font.widthOfTextAtSize(testLine, lineSize) <= maxW) {
+                    currentLine = testLine;
+                } else {
+                    if (currentLine) lines.push(currentLine);
+                    currentLine = word;
+                }
+            }
+            if (currentLine) lines.push(currentLine);
+        }
+
+        let curY = box.y + box.height - lineSize - 3;
+        for (const line of lines) {
+            if (curY < box.y + 2) break;
+            safeDrawField(page, line, box.x + padX, curY, { size: lineSize, font, color });
+            curY -= lineGap;
+        }
+        return;
+    }
+
+    let textToDraw = cleaned;
+    if (font) {
+        while (size > 6.5 && font.widthOfTextAtSize(textToDraw, size) > maxW) {
+            size -= 0.5;
+        }
+        if (font.widthOfTextAtSize(textToDraw, size) > maxW) {
+            while (textToDraw.length > 3 && font.widthOfTextAtSize(textToDraw + '...', size) > maxW) {
+                textToDraw = textToDraw.slice(0, -1);
+            }
+            textToDraw = textToDraw.trim() + '...';
+        }
+    }
+
+    let drawX = box.x + padX;
+    if (options.align === 'center' && font) {
+        const textW = font.widthOfTextAtSize(textToDraw, size);
+        drawX = box.x + Math.max(padX, (box.width - textW) / 2);
+    }
+
+    const drawY = box.y + (box.height - size * 0.72) / 2;
+    safeDrawField(page, textToDraw, drawX, drawY, { size, font, color });
+}
+
+/**
+ * Draws an embedded PNG signature image proportionally scaled and centered inside a named template signature box.
+ */
+export function drawSignatureInFieldBox(page, fieldMap, fieldName, sigImage, options = {}) {
+    if (!sigImage) return;
+    const box = (fieldMap && fieldMap[fieldName]) || options.fallbackRect;
+    if (!box) {
+        console.warn(`[drawSignatureInFieldBox] Signature field "${fieldName}" not found in template fieldMap.`);
+        return;
+    }
+
+    const padX = options.padX !== undefined ? options.padX : 6;
+    const padY = options.padY !== undefined ? options.padY : 3;
+    const maxW = Math.max(20, box.width - padX * 2);
+    const maxH = Math.max(10, box.height - padY * 2);
+
+    const dims = sigImage.scaleToFit(maxW, maxH);
+    const drawX = box.x + (box.width - dims.width) / 2;
+    const drawY = box.y + (box.height - dims.height) / 2;
+
+    page.drawImage(sigImage, {
+        x: drawX,
+        y: drawY,
+        width: dims.width,
+        height: dims.height
+    });
+}
+

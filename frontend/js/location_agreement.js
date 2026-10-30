@@ -6,9 +6,12 @@ import {
     renderCoSignBanner,
     showSubmissionSuccessModal,
     safeDrawField,
-    cleanPdfText
-} from './form_submission_helper.js?v=5.3.1';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.3.1';
+    cleanPdfText,
+    prepareTemplatePdf,
+    drawInFieldBox,
+    drawSignatureInFieldBox
+} from './form_submission_helper.js?v=5.4.0';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.0';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialise Dual-Mode Signature Pads
@@ -386,40 +389,41 @@ async function buildCompletedPDF(producerPad, ownerPad) {
 
     const { PDFDocument, rgb, StandardFonts } = PDFLib;
     const pdfDoc = await PDFDocument.load(templateBytes);
+    const fieldMap = prepareTemplatePdf(pdfDoc);
     const page = pdfDoc.getPages()[0];
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-    const fontSize = 10;
+    const fontSize = 9.5;
     const textColor = rgb(0.06, 0.09, 0.16);
 
-    const drawField = (text, x, y, isBold = false) => {
-        safeDrawField(page, text, x, y, {
+    const drawBox = (fieldName, text, isBold = false, align = 'left') => {
+        drawInFieldBox(page, fieldMap, fieldName, text, {
             size: fontSize,
             font: isBold ? fontBold : font,
-            color: textColor
+            color: textColor,
+            align
         });
     };
 
-    // Coordinates for Location Agreement
-    drawField(ownerName, 24, 628, true);
-    drawField(locationAddress, 134, 255);
-    drawField(formatDate(dateOfFilming), 134, 218);
-    drawField(commNum, 464, 218, true);
-    drawField(storyName, 134, 181, true);
-    drawField(producerName, 134, 144);
-    drawField(formatDate(producerDate), 464, 144);
-    drawField(ownerName, 134, 89);
-    drawField(formatDate(ownerSignDate), 464, 89);
+    drawBox('locationOwnerName', ownerName, true, 'center');
+    drawBox('commissionNumber', commNum, true);
+    drawBox('storyTitle', storyName, true);
+    drawBox('locationAddress', locationAddress);
+    drawBox('dateOfFilming', formatDate(dateOfFilming));
+    drawBox('ownerSignedAt', locationAddress || 'Johannesburg');
+    drawBox('producerSignedAt', locationAddress || producerName || 'Johannesburg');
+    drawBox('ownerSignedDate', formatDate(ownerSignDate));
+    drawBox('producerSignedDate', formatDate(producerDate));
 
     if (!producerPad.isEmpty()) {
         const pSig = await pdfDoc.embedPng(producerPad.toDataURL());
-        page.drawImage(pSig, { x: 132, y: 116, width: 105, height: 24 });
+        drawSignatureInFieldBox(page, fieldMap, 'producerSignature', pSig);
     }
 
     if (!ownerPad.isEmpty()) {
         const oSig = await pdfDoc.embedPng(ownerPad.toDataURL());
-        page.drawImage(oSig, { x: 132, y: 61, width: 105, height: 24 });
+        drawSignatureInFieldBox(page, fieldMap, 'ownerSignature', oSig);
     }
 
     const pdfBytes = await pdfDoc.save();

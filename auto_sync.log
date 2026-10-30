@@ -1,114 +1,3 @@
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_603.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_604.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_605.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_606.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_607.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_608.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_609.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_610.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_611.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_612.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_613.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_614.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_615.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_616.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_617.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_618.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_619.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_620.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_621.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_622.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_623.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_624.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_625.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_626.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_627.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_628.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_629.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_630.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_631.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_632.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_633.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_634.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_635.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_636.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_637.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_638.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_639.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_640.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_641.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_642.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_643.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_644.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_645.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_646.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_647.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_648.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_649.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_650.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_651.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_652.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_653.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_654.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_655.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_656.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_657.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_658.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_659.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_660.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_661.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_662.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_663.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_664.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_665.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_666.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_667.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_668.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_669.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_670.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_671.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_672.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_673.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_674.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_675.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_676.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_677.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_678.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_679.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_680.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_681.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_682.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_683.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_684.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_685.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_686.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_687.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_688.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_689.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_690.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_691.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_692.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_693.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_694.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_695.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_696.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_697.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_698.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_699.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_700.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_701.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_702.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_703.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_704.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_705.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_706.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_707.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_708.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_709.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_710.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_711.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_712.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_713.json
 [2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_714.json
 [2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_715.json
 [2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_716.json
@@ -499,3 +388,27 @@
 [2026-10-30 16:50:43]     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
 [2026-10-30 16:50:43]     at node:internal/main/run_main_module:33:47
 [2026-10-30 16:50:43] Changes detected. Syncing...
+[2026-10-30 16:50:43] warning: in the working copy of 'auto_sync.ps1', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 16:50:43] warning: in the working copy of 'auto_sync.vbs', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 16:50:43] warning: in the working copy of 'register_sync_task.ps1', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 16:50:43] warning: in the working copy of 'GEMINI.md', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 16:50:43] [main 5dd5b61] auto-sync: 2026-10-30 16:50
+[2026-10-30 16:50:43]  5 files changed, 24 insertions(+), 4 deletions(-)
+[2026-10-30 16:50:43]  create mode 100644 GEMINI.md
+[2026-10-30 16:50:43] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-10-30 16:50:43]    8d0c6b4..5dd5b61  main -> main
+[2026-10-30 16:50:43] Sync complete.
+[2026-10-30 17:20:44] Running Microsoft Graph Email Importer...
+[2026-10-30 17:20:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-10-30 17:20:44] Error during Graph email import execution: Error: Missing Microsoft Graph API credentials in environment.
+[2026-10-30 17:20:44]     at getMicrosoftAccessToken (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:61:11)
+[2026-10-30 17:20:44]     at runImporter (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:153:31)
+[2026-10-30 17:20:44]     at Object.<anonymous> (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:362:3)
+[2026-10-30 17:20:44]     at Module._compile (node:internal/modules/cjs/loader:1812:14)
+[2026-10-30 17:20:44]     at Object..js (node:internal/modules/cjs/loader:1943:10)
+[2026-10-30 17:20:44]     at Module.load (node:internal/modules/cjs/loader:1533:32)
+[2026-10-30 17:20:44]     at Module._load (node:internal/modules/cjs/loader:1335:12)
+[2026-10-30 17:20:44]     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+[2026-10-30 17:20:44]     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+[2026-10-30 17:20:44]     at node:internal/main/run_main_module:33:47
+[2026-10-30 17:20:44] Changes detected. Syncing...

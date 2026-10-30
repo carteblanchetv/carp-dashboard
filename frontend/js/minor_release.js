@@ -6,9 +6,12 @@ import {
     renderCoSignBanner,
     showSubmissionSuccessModal,
     safeDrawField,
-    cleanPdfText
-} from './form_submission_helper.js?v=5.3.1';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.3.1';
+    cleanPdfText,
+    prepareTemplatePdf,
+    drawInFieldBox,
+    drawSignatureInFieldBox
+} from './form_submission_helper.js?v=5.4.0';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.0';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialise Dual-Mode Signature Pads
@@ -84,14 +87,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (loadedSubmission.place) {
                     document.getElementById('signedAt').value = loadedSubmission.place;
                 }
-                if (loadedSubmission.guardianName || loadedSubmission.parentName) {
-                    document.getElementById('parentName').value = loadedSubmission.guardianName || loadedSubmission.parentName;
+                let parsedMeta = {};
+                if (loadedSubmission.metadata) {
+                    try {
+                        parsedMeta = typeof loadedSubmission.metadata === 'string'
+                            ? JSON.parse(loadedSubmission.metadata)
+                            : loadedSubmission.metadata;
+                    } catch (e) {}
                 }
-                if (loadedSubmission.minorName || loadedSubmission.childName) {
-                    document.getElementById('childName').value = loadedSubmission.minorName || loadedSubmission.childName;
+                if (loadedSubmission.guardianName || loadedSubmission.parentName || parsedMeta.parentName) {
+                    document.getElementById('parentName').value = loadedSubmission.guardianName || loadedSubmission.parentName || parsedMeta.parentName;
                 }
-                if (loadedSubmission.guardianId || loadedSubmission.parentId) {
-                    document.getElementById('parentId').value = loadedSubmission.guardianId || loadedSubmission.parentId;
+                if (loadedSubmission.minorName || loadedSubmission.childName || parsedMeta.childName) {
+                    document.getElementById('childName').value = loadedSubmission.minorName || loadedSubmission.childName || parsedMeta.childName;
+                }
+                if (loadedSubmission.guardianId || loadedSubmission.parentId || loadedSubmission.parentIdNumber || parsedMeta.parentId) {
+                    document.getElementById('parentId').value = loadedSubmission.guardianId || loadedSubmission.parentId || loadedSubmission.parentIdNumber || parsedMeta.parentId;
                 }
                 const emailEl = document.getElementById('submitterEmail');
                 if (emailEl && !emailEl.value) {
@@ -399,50 +410,43 @@ async function buildCompletedPDF(parentPad, producerPad) {
 
     const { PDFDocument, rgb, StandardFonts } = PDFLib;
     const pdfDoc = await PDFDocument.load(templateBytes);
+    const fieldMap = prepareTemplatePdf(pdfDoc);
     const page = pdfDoc.getPages()[0];
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-    const fontSize = 10;
+    const fontSize = 9.5;
     const textColor = rgb(0.06, 0.09, 0.16);
 
-    const drawField = (text, x, y, isBold = false) => {
-        safeDrawField(page, text, x, y, {
+    const drawBox = (fieldName, text, isBold = false) => {
+        drawInFieldBox(page, fieldMap, fieldName, text, {
             size: fontSize,
             font: isBold ? fontBold : font,
             color: textColor
         });
     };
 
-    drawField(commNum, 134, 725, true);
-    drawField(storyName, 134, 679, true);
-    drawField(producerName, 134, 633);
-    drawField(childName, 244, 338, true);
-    drawField(parentName, 244, 292, true);
-    drawField(parentId, 244, 246);
-    drawField(place, 244, 200);
-    drawField(formattedDate, 244, 154);
+    drawBox('commissionNumber', commNum, true);
+    drawBox('storyTitle', storyName, true);
+    drawBox('producerName', producerName);
+    drawBox('childName', childName, true);
+    drawBox('parentName', parentName, true);
+    drawBox('parentIdNumber', parentId);
+    drawBox('parentSignedAt', place);
+    drawBox('producerSignedAt', place);
+    drawBox('parentSignedDate', formattedDate);
+    drawBox('producerSignedDate', formattedDate);
 
     if (!parentPad.isEmpty()) {
         const parentSigData = parentPad.toDataURL();
         const parentSigImage = await pdfDoc.embedPng(parentSigData);
-        page.drawImage(parentSigImage, {
-            x: 132,
-            y: 56,
-            width: 105,
-            height: 65
-        });
+        drawSignatureInFieldBox(page, fieldMap, 'parentSignature', parentSigImage);
     }
 
     if (!producerPad.isEmpty()) {
         const prodSigData = producerPad.toDataURL();
         const prodSigImage = await pdfDoc.embedPng(prodSigData);
-        page.drawImage(prodSigImage, {
-            x: 462,
-            y: 56,
-            width: 105,
-            height: 65
-        });
+        drawSignatureInFieldBox(page, fieldMap, 'producerSignature', prodSigImage);
     }
 
     const pdfBytes = await pdfDoc.save();
