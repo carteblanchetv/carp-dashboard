@@ -1,120 +1,3 @@
-[2026-10-30 17:50:43]     at node:internal/main/run_main_module:33:47
-[2026-10-30 17:50:43] Changes detected. Syncing...
-[2026-10-30 17:50:43] [main 39554c8] auto-sync: 2026-10-30 17:50
-[2026-10-30 17:50:43]  1 file changed, 32 insertions(+)
-[2026-10-30 17:50:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-10-30 17:50:43]    61178dd..39554c8  main -> main
-[2026-10-30 17:50:43] Sync complete.
-[2026-10-30 18:20:43] Running Microsoft Graph Email Importer...
-[2026-10-30 18:20:43] Starting Graph API Email Importer... Mode: LIVE
-[2026-10-30 18:20:43] Error during Graph email import execution: Error: Missing Microsoft Graph API credentials in environment.
-[2026-10-30 18:20:43]     at getMicrosoftAccessToken (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:61:11)
-[2026-10-30 18:20:43]     at runImporter (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:153:31)
-[2026-10-30 18:20:43]     at Object.<anonymous> (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:362:3)
-[2026-10-30 18:20:43]     at Module._compile (node:internal/modules/cjs/loader:1812:14)
-[2026-10-30 18:20:43]     at Object..js (node:internal/modules/cjs/loader:1943:10)
-[2026-10-30 18:20:43]     at Module.load (node:internal/modules/cjs/loader:1533:32)
-[2026-10-30 18:20:43]     at Module._load (node:internal/modules/cjs/loader:1335:12)
-[2026-10-30 18:20:43]     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
-[2026-10-30 18:20:43]     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
-[2026-10-30 18:20:43]     at node:internal/main/run_main_module:33:47
-[2026-10-30 18:20:43] Changes detected. Syncing...
-[2026-10-30 18:20:43] [main 19fd489] auto-sync: 2026-10-30 18:20
-[2026-10-30 18:20:43]  1 file changed, 19 insertions(+)
-[2026-10-30 18:20:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-10-30 18:20:43]    39554c8..19fd489  main -> main
-[2026-10-30 18:20:43] Sync complete.
-[2026-10-30 18:50:44] Running Microsoft Graph Email Importer...
-[2026-10-30 18:50:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-10-30 18:50:44] Error during Graph email import execution: Error: Missing Microsoft Graph API credentials in environment.
-[2026-10-30 18:50:44]     at getMicrosoftAccessToken (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:61:11)
-[2026-10-30 18:50:44]     at runImporter (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:153:31)
-[2026-10-30 18:50:44]     at Object.<anonymous> (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:362:3)
-[2026-10-30 18:50:44]     at Module._compile (node:internal/modules/cjs/loader:1812:14)
-[2026-10-30 18:50:44]     at Object..js (node:internal/modules/cjs/loader:1943:10)
-[2026-10-30 18:50:44]     at Module.load (node:internal/modules/cjs/loader:1533:32)
-[2026-10-30 18:50:44]     at Module._load (node:internal/modules/cjs/loader:1335:12)
-[2026-10-30 18:50:44]     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
-[2026-10-30 18:50:44]     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
-[2026-10-30 18:50:44]     at node:internal/main/run_main_module:33:47
-[2026-10-30 18:50:44] Changes detected. Syncing...
-[2026-10-30 18:50:44] [main dcf8d3a] auto-sync: 2026-10-30 18:50
-[2026-10-30 18:50:44]  1 file changed, 19 insertions(+)
-[2026-10-30 18:50:44] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-10-30 18:50:44]    19fd489..dcf8d3a  main -> main
-[2026-10-30 18:50:44] Sync complete.
-[2026-10-30 19:20:43] Running Microsoft Graph Email Importer...
-[2026-10-30 19:20:43] Starting Graph API Email Importer... Mode: LIVE
-[2026-10-30 19:20:43] Fetching messages from Microsoft Graph...
-[2026-10-30 19:20:43] Fetching messages from Microsoft Graph...
-[2026-10-30 19:20:43] Fetching messages from Microsoft Graph...
-[2026-10-30 19:20:43] Found 103 email(s) since 1 May 2026 to check.
-[2026-10-30 19:20:43] Skipping duplicate: "Story Proposal - Project 170" from Caleb Matthew <calebmatthew980603@gmail.com> (received: 2026-10-27T19:25:21Z)
-[2026-10-30 19:20:43] Skipping duplicate: "The Montreal Book 2026" from Hotel Booking Team <reservations@swift-checkin.com> (received: 2026-10-27T20:01:42Z)
-[2026-10-30 19:20:43] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
-[2026-10-30 19:20:43] Skipping duplicate: "Healthcare Support & intervention(HPCSA), Department of Justice and Constitutional Development (DOJ),South African Police Service, South African Government =ƒç+=ƒçª" from Nathan Petzer <nathan.petzer@gmail.com> (received: 2026-10-27T20:50:08Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-27T20:51:42Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Level up Winners and BBXPO" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-10-27T22:58:52Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T06:47:22Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T06:50:11Z)
-[2026-10-30 19:20:43] Skipping duplicate: "6996 - Worth... Everything - Insert Sheet / Footage Declaration - Kate Nokwe" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:22:56Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Sibaya Decision to Withhold Billions from Market Ensures Protection of Critical Ecosystem" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za> (received: 2026-10-28T07:26:33Z)
-[2026-10-30 19:20:43] Skipping duplicate: "CALL SHEET for 7011 Helihack Mission" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:36:48Z)
-[2026-10-30 19:20:43] Skipping duplicate: "CALL SHEET for 7011 Helihack Mission" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:36:50Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Automatic reply: CALL SHEET for 7011 Helihack Mission" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:36:52Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Re:CRM : 166854  |  Cancellation  |  Outstanding Memorandum of Agreement" from Amanda Peter's <mandypeter777@gmail.com> (received: 2026-10-28T08:18:42Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Milk + Cookies 2027 presale is live + media accreditation info" from Nash Chikazunga <nash@arxna.com> (received: 2026-10-28T08:19:26Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Re:MIOSA REF: 524337 ISUZU Peters |  Outstanding Memorandum of Agreement  |  CRM : 166854" from Amanda Peter's <mandypeter777@gmail.com> (received: 2026-10-28T08:19:39Z)
-[2026-10-30 19:20:43] Skipping duplicate: "New Proposal: Unlikely Hero - Beth Neale" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:22:45Z)
-[2026-10-30 19:20:43] Skipping duplicate: "New Proposal: Unlikely Hero - Beth Neale" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:22:49Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Automatic reply: New Proposal: Unlikely Hero - Beth Neale" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:22:50Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Re:" from Marius Calitz <mariuscalitz54@gmail.com> (received: 2026-10-28T08:29:53Z)
-[2026-10-30 19:20:43] Skipping duplicate: "airport luggage theft" from Samantha Watkins <watkinssamantha62@gmail.com> (received: 2026-10-28T08:32:02Z)
-[2026-10-30 19:20:43] Skipping duplicate: "7020 - Cost of gold - Participant Release Form - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:36:08Z)
-[2026-10-30 19:20:43] Skipping duplicate: "S39 | New Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:40:43Z)
-[2026-10-30 19:20:43] Skipping duplicate: "S39 | New Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:40:44Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Automatic reply: S39 | New Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:40:48Z)
-[2026-10-30 19:20:43] Skipping duplicate: "S39 | Update to Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:43:45Z)
-[2026-10-30 19:20:43] Skipping duplicate: "S39 | Update to Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:43:47Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Automatic reply: S39 | Update to Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:43:49Z)
-[2026-10-30 19:20:43] Skipping duplicate: "7020 - The Cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:48:30Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Nigel high nagmerry" from Junita Piek <junita.piek@gmail.com> (received: 2026-10-28T09:08:51Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T09:10:07Z)
-[2026-10-30 19:20:43] Skipping duplicate: "(No Subject)" from Leonie van Metzinger <leonievanmetzinger@gmail.com> (received: 2026-10-28T09:14:11Z)
-[2026-10-30 19:20:43] Skipping duplicate: "7009 - Donkey & Horse Trade - Insert Sheet / Footage Declaration - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T09:18:29Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Medical discovery about the brain and human origin." from Brendan Evans <baimagineer@gmail.com> (received: 2026-10-28T09:33:36Z)
-[2026-10-30 19:20:43] Skipping duplicate: "7020 - Cost of gold - Participant Release Form - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T09:40:20Z)
-[2026-10-30 19:20:43] Skipping duplicate: "7020 - The cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T09:42:51Z)
-[2026-10-30 19:20:43] Skipping duplicate: "(No Subject)" from Muhammed Ibrahim Hamid <moehamid61@gmail.com> (received: 2026-10-28T09:53:54Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T13:17:33Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Let them Roam, please" from Cera-Jane Catton <cerajanec@gmail.com> (received: 2026-10-28T14:39:43Z)
-[2026-10-30 19:20:43] Skipping duplicate: "7020 - Cost of gold - Participant Release Form - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T14:46:05Z)
-[2026-10-30 19:20:43] Skipping duplicate: "7020 - Cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T14:48:20Z)
-[2026-10-30 19:20:43] Skipping duplicate: "7020 - Cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T15:13:37Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Bettersure or Worstsure Riaan Kemp ID 7707095015080" from Riaan Kemp <riaank17@gmail.com> (received: 2026-10-28T16:02:05Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Animal cruelty and the law" from Soula Foord <soulafoord406@gmail.com> (received: 2026-10-28T16:13:49Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Fw: Act Urgently" from Inandasaps <inandasapsiscaptured@proton.me> (received: 2026-10-28T16:38:23Z)
-[2026-10-30 19:20:43] Skipping duplicate: "myOUTA Oct/Nov 2026 Newsletter " from info@outa.co.za <info@outa.co.za> (received: 2026-10-28T17:01:14Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Fwd: Cape winelands international school" from Jacobus Wentzel <jdjwentzeldirect@gmail.com> (received: 2026-10-28T17:02:49Z)
-[2026-10-30 19:20:43] Skipping duplicate: "To Whom It May Concern, How can it be acceptable for Rustenburg residents to be left without water for days, and in some cases, weeks? We have now been without water for seven days, and this is completely unacceptable. Without water, we cannot bathe, p..." from Henjoronika Nel <henjoronikanel@gmail.com> (received: 2026-10-28T17:31:33Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Re: WATER" from Henjoronika Nel <henjoronikanel@gmail.com> (received: 2026-10-28T17:44:04Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T18:07:03Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T19:05:11Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T19:07:58Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T20:26:09Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Story Pitch : Cape Town Mom featured in Sunday Times needs help with visibility for 2nd Breast Cancer BackaBuddy" from Berenice Dalwai <berenicedalwai@gmail.com> (received: 2026-10-28T22:23:53Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Urgent Investigation Request: Bonitas medical fund- Unpaid Claims and Serious Administrative Failures" from alriede van der merwe <alriedevdm@yahoo.com> (received: 2026-10-29T05:08:35Z)
-[2026-10-30 19:20:43] Skipping duplicate: "The scam that keeps on scamming_rental fraud and identity theft" from Amelia Hayes <ameliahayes49@gmail.com> (received: 2026-10-29T05:09:21Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Coalition fights to save pristine Limpopo bushveld from huge Chinese industrial land grab" from conorw <conorw@mweb.co.za> (received: 2026-10-29T06:50:11Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T06:54:57Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Developer Defeats Municipality's Appeal Bid in 4,947 m-¦ Open-Space Dispute" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za> (received: 2026-10-29T07:17:36Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T07:22:39Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Meta A. I Scamming" from Zunette Bothma <zunettebothma@gmail.com> (received: 2026-10-29T07:27:31Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Re: Automatic reply: Meta A. I Scamming" from Zunette Bothma <zunettebothma@gmail.com> (received: 2026-10-29T07:29:33Z)
-[2026-10-30 19:20:43] Skipping duplicate: "(No Subject)" from Alridge Rhodes <alridgerhodes@yahoo.com> (received: 2026-10-29T07:34:17Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Re: HELLOPETER HANDOFF L1- Zay R - Ref. [OLCMAN30851253] inappropriate deceit upon a claim patient informed policy canceled in 2024 yet proof of iwyze debiting client each month beware consumers, patients being deceived inappropriately" from Michael House <michaelhouse786@gmail.com> (received: 2026-10-29T07:49:32Z)
-[2026-10-30 19:20:43] Skipping duplicate: "Re: We've received your complaint GÇô BSH00140331" from Riaan Kemp <riaank17@gmail.com> (received: 2026-10-29T07:59:26Z)
-[2026-10-30 19:20:43] Skipping duplicate: "We've received your complaint GÇô BSH00140331" from Complaints <complaints@bettersure.co.za> (received: 2026-10-29T08:49:02Z)
 [2026-10-30 19:20:43] Skipping duplicate: "Our team has received your query, your case number is  00696340." from Complaints auto-response <noreply@bettersure.co.za> (received: 2026-10-29T08:49:56Z)
 [2026-10-30 19:20:43] Skipping duplicate: "Witpoortjie Water Crisis & lack of service delivery" from Wendy Mitchell <wendy.mitchell9@gmail.com> (received: 2026-10-29T10:05:21Z)
 [2026-10-30 19:20:43] Skipping duplicate: "RE: Re: We've received your complaint GÇô BSH00140331" from Gavin van Niekerk <Gavin.vanNiekerk@bettersure.co.za> (received: 2026-10-29T10:16:29Z)
@@ -510,3 +393,120 @@
 [2026-10-30 20:50:43] 
 [2026-10-30 20:50:43] Microsoft Graph email import cycle completed successfully.
 [2026-10-30 20:50:43] Changes detected. Syncing...
+[2026-10-30 20:50:43] [main 3fe6ede] auto-sync: 2026-10-30 20:52
+[2026-10-30 20:50:43]  1 file changed, 117 insertions(+), 117 deletions(-)
+[2026-10-30 20:50:43] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-10-30 20:50:43]    10cefbd..3fe6ede  main -> main
+[2026-10-30 20:50:43] Sync complete.
+[2026-10-30 21:20:43] Running Microsoft Graph Email Importer...
+[2026-10-30 21:20:43] Starting Graph API Email Importer... Mode: LIVE
+[2026-10-30 21:20:43] Fetching messages from Microsoft Graph...
+[2026-10-30 21:20:43] Fetching messages from Microsoft Graph...
+[2026-10-30 21:20:43] Fetching messages from Microsoft Graph...
+[2026-10-30 21:20:43] Found 103 email(s) since 1 May 2026 to check.
+[2026-10-30 21:20:43] Skipping duplicate: "Story Proposal - Project 170" from Caleb Matthew <calebmatthew980603@gmail.com> (received: 2026-10-27T19:25:21Z)
+[2026-10-30 21:20:43] Skipping duplicate: "The Montreal Book 2026" from Hotel Booking Team <reservations@swift-checkin.com> (received: 2026-10-27T20:01:42Z)
+[2026-10-30 21:20:43] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-10-30 21:20:43] Skipping duplicate: "Healthcare Support & intervention(HPCSA), Department of Justice and Constitutional Development (DOJ),South African Police Service, South African Government =ƒç+=ƒçª" from Nathan Petzer <nathan.petzer@gmail.com> (received: 2026-10-27T20:50:08Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-27T20:51:42Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Level up Winners and BBXPO" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-10-27T22:58:52Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T06:47:22Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T06:50:11Z)
+[2026-10-30 21:20:43] Skipping duplicate: "6996 - Worth... Everything - Insert Sheet / Footage Declaration - Kate Nokwe" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:22:56Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Sibaya Decision to Withhold Billions from Market Ensures Protection of Critical Ecosystem" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za> (received: 2026-10-28T07:26:33Z)
+[2026-10-30 21:20:43] Skipping duplicate: "CALL SHEET for 7011 Helihack Mission" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:36:48Z)
+[2026-10-30 21:20:43] Skipping duplicate: "CALL SHEET for 7011 Helihack Mission" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:36:50Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Automatic reply: CALL SHEET for 7011 Helihack Mission" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:36:52Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Re:CRM : 166854  |  Cancellation  |  Outstanding Memorandum of Agreement" from Amanda Peter's <mandypeter777@gmail.com> (received: 2026-10-28T08:18:42Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Milk + Cookies 2027 presale is live + media accreditation info" from Nash Chikazunga <nash@arxna.com> (received: 2026-10-28T08:19:26Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Re:MIOSA REF: 524337 ISUZU Peters |  Outstanding Memorandum of Agreement  |  CRM : 166854" from Amanda Peter's <mandypeter777@gmail.com> (received: 2026-10-28T08:19:39Z)
+[2026-10-30 21:20:43] Skipping duplicate: "New Proposal: Unlikely Hero - Beth Neale" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:22:45Z)
+[2026-10-30 21:20:43] Skipping duplicate: "New Proposal: Unlikely Hero - Beth Neale" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:22:49Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Automatic reply: New Proposal: Unlikely Hero - Beth Neale" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:22:50Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Re:" from Marius Calitz <mariuscalitz54@gmail.com> (received: 2026-10-28T08:29:53Z)
+[2026-10-30 21:20:43] Skipping duplicate: "airport luggage theft" from Samantha Watkins <watkinssamantha62@gmail.com> (received: 2026-10-28T08:32:02Z)
+[2026-10-30 21:20:43] Skipping duplicate: "7020 - Cost of gold - Participant Release Form - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:36:08Z)
+[2026-10-30 21:20:43] Skipping duplicate: "S39 | New Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:40:43Z)
+[2026-10-30 21:20:43] Skipping duplicate: "S39 | New Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:40:44Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Automatic reply: S39 | New Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:40:48Z)
+[2026-10-30 21:20:43] Skipping duplicate: "S39 | Update to Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:43:45Z)
+[2026-10-30 21:20:43] Skipping duplicate: "S39 | Update to Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:43:47Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Automatic reply: S39 | Update to Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:43:49Z)
+[2026-10-30 21:20:43] Skipping duplicate: "7020 - The Cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:48:30Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Nigel high nagmerry" from Junita Piek <junita.piek@gmail.com> (received: 2026-10-28T09:08:51Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T09:10:07Z)
+[2026-10-30 21:20:43] Skipping duplicate: "(No Subject)" from Leonie van Metzinger <leonievanmetzinger@gmail.com> (received: 2026-10-28T09:14:11Z)
+[2026-10-30 21:20:43] Skipping duplicate: "7009 - Donkey & Horse Trade - Insert Sheet / Footage Declaration - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T09:18:29Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Medical discovery about the brain and human origin." from Brendan Evans <baimagineer@gmail.com> (received: 2026-10-28T09:33:36Z)
+[2026-10-30 21:20:43] Skipping duplicate: "7020 - Cost of gold - Participant Release Form - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T09:40:20Z)
+[2026-10-30 21:20:43] Skipping duplicate: "7020 - The cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T09:42:51Z)
+[2026-10-30 21:20:43] Skipping duplicate: "(No Subject)" from Muhammed Ibrahim Hamid <moehamid61@gmail.com> (received: 2026-10-28T09:53:54Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T13:17:33Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Let them Roam, please" from Cera-Jane Catton <cerajanec@gmail.com> (received: 2026-10-28T14:39:43Z)
+[2026-10-30 21:20:43] Skipping duplicate: "7020 - Cost of gold - Participant Release Form - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T14:46:05Z)
+[2026-10-30 21:20:43] Skipping duplicate: "7020 - Cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T14:48:20Z)
+[2026-10-30 21:20:43] Skipping duplicate: "7020 - Cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T15:13:37Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Bettersure or Worstsure Riaan Kemp ID 7707095015080" from Riaan Kemp <riaank17@gmail.com> (received: 2026-10-28T16:02:05Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Animal cruelty and the law" from Soula Foord <soulafoord406@gmail.com> (received: 2026-10-28T16:13:49Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Fw: Act Urgently" from Inandasaps <inandasapsiscaptured@proton.me> (received: 2026-10-28T16:38:23Z)
+[2026-10-30 21:20:43] Skipping duplicate: "myOUTA Oct/Nov 2026 Newsletter " from info@outa.co.za <info@outa.co.za> (received: 2026-10-28T17:01:14Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Fwd: Cape winelands international school" from Jacobus Wentzel <jdjwentzeldirect@gmail.com> (received: 2026-10-28T17:02:49Z)
+[2026-10-30 21:20:43] Skipping duplicate: "To Whom It May Concern, How can it be acceptable for Rustenburg residents to be left without water for days, and in some cases, weeks? We have now been without water for seven days, and this is completely unacceptable. Without water, we cannot bathe, p..." from Henjoronika Nel <henjoronikanel@gmail.com> (received: 2026-10-28T17:31:33Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Re: WATER" from Henjoronika Nel <henjoronikanel@gmail.com> (received: 2026-10-28T17:44:04Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T18:07:03Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T19:05:11Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T19:07:58Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T20:26:09Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Story Pitch : Cape Town Mom featured in Sunday Times needs help with visibility for 2nd Breast Cancer BackaBuddy" from Berenice Dalwai <berenicedalwai@gmail.com> (received: 2026-10-28T22:23:53Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Urgent Investigation Request: Bonitas medical fund- Unpaid Claims and Serious Administrative Failures" from alriede van der merwe <alriedevdm@yahoo.com> (received: 2026-10-29T05:08:35Z)
+[2026-10-30 21:20:43] Skipping duplicate: "The scam that keeps on scamming_rental fraud and identity theft" from Amelia Hayes <ameliahayes49@gmail.com> (received: 2026-10-29T05:09:21Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Coalition fights to save pristine Limpopo bushveld from huge Chinese industrial land grab" from conorw <conorw@mweb.co.za> (received: 2026-10-29T06:50:11Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T06:54:57Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Developer Defeats Municipality's Appeal Bid in 4,947 m-¦ Open-Space Dispute" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za> (received: 2026-10-29T07:17:36Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T07:22:39Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Meta A. I Scamming" from Zunette Bothma <zunettebothma@gmail.com> (received: 2026-10-29T07:27:31Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Re: Automatic reply: Meta A. I Scamming" from Zunette Bothma <zunettebothma@gmail.com> (received: 2026-10-29T07:29:33Z)
+[2026-10-30 21:20:43] Skipping duplicate: "(No Subject)" from Alridge Rhodes <alridgerhodes@yahoo.com> (received: 2026-10-29T07:34:17Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Re: HELLOPETER HANDOFF L1- Zay R - Ref. [OLCMAN30851253] inappropriate deceit upon a claim patient informed policy canceled in 2024 yet proof of iwyze debiting client each month beware consumers, patients being deceived inappropriately" from Michael House <michaelhouse786@gmail.com> (received: 2026-10-29T07:49:32Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Re: We've received your complaint GÇô BSH00140331" from Riaan Kemp <riaank17@gmail.com> (received: 2026-10-29T07:59:26Z)
+[2026-10-30 21:20:43] Skipping duplicate: "We've received your complaint GÇô BSH00140331" from Complaints <complaints@bettersure.co.za> (received: 2026-10-29T08:49:02Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Our team has received your query, your case number is  00696340." from Complaints auto-response <noreply@bettersure.co.za> (received: 2026-10-29T08:49:56Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Witpoortjie Water Crisis & lack of service delivery" from Wendy Mitchell <wendy.mitchell9@gmail.com> (received: 2026-10-29T10:05:21Z)
+[2026-10-30 21:20:43] Skipping duplicate: "RE: Re: We've received your complaint GÇô BSH00140331" from Gavin van Niekerk <Gavin.vanNiekerk@bettersure.co.za> (received: 2026-10-29T10:16:29Z)
+[2026-10-30 21:20:43] Skipping duplicate: "CALL SHEET for 7019 JMPD ARMOURY" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:17Z)
+[2026-10-30 21:20:43] Skipping duplicate: "CALL SHEET for 7019 JMPD ARMOURY" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:19Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Automatic reply: CALL SHEET for 7019 JMPD ARMOURY" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:20Z)
+[2026-10-30 21:20:43] Skipping duplicate: "CALL SHEET for 7022 Video Piracy" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:22Z)
+[2026-10-30 21:20:43] Skipping duplicate: "CALL SHEET for 7022 Video Piracy" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:23Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Automatic reply: CALL SHEET for 7022 Video Piracy" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:24Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Re: Re: We've received your complaint GÇô BSH00140331" from Riaan Kemp <riaank17@gmail.com> (received: 2026-10-29T10:29:15Z)
+[2026-10-30 21:20:43] Skipping duplicate: "RE: Re: We've received your complaint GÇô BSH00140331" from Gavin van Niekerk <Gavin.vanNiekerk@bettersure.co.za> (received: 2026-10-29T11:12:18Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Re: Re: We've received your complaint GÇô BSH00140331" from Riaan Kemp <riaank17@gmail.com> (received: 2026-10-29T11:19:18Z)
+[2026-10-30 21:20:43] Skipping duplicate: "SCAM ARTIST TO BE SHAMED" from Theresa Lukan <theresa.l@mweb.co.za> (received: 2026-10-29T12:00:56Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T12:13:35Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Rudger Van Wyk, changing the narrative of wine drinking in South Africa" from gillian@wordzmiths.co.za <gillian@wordzmiths.co.za> (received: 2026-10-29T12:44:49Z)
+[2026-10-30 21:20:43] Skipping duplicate: "SUNET SAAYMAN CONSULTENCY SERVICES (PTY) LTS" from Erika Nel <erikanel370@gmail.com> (received: 2026-10-29T13:23:17Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Fwd: SUNET SAAYMAN CONSULTANCY SERVICES (PTY) LTD" from Erika Nel <erikanel370@gmail.com> (received: 2026-10-29T14:18:48Z)
+[2026-10-30 21:20:43] Skipping duplicate: "LSSA CONGRATULATES JUDGE NAVANETHEM (NAVI) PILLAY ON THE 2026 NOBEL PEACE PRIZE" from Law Society of South Africa <contact@lssa.org.za> (received: 2026-10-29T14:32:39Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T14:52:04Z)
+[2026-10-30 21:20:43] Skipping duplicate: "CROSS-BORDER FRAUD TO REMOVE FATHER NAME OFF BIRTH REGISTER WITHOUT MOTHERS CONSENT - SYSTEM FAILURE BY THE VERY PEOPLE WHO ARE SUPPOSED TO PROTECT THE CHILD" from Leanne Mikkelsen <lmikkelsen13@gmail.com> (received: 2026-10-29T15:23:37Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Highly Confidential " from Kenneth Mathebe <mathebek@icloud.com> (received: 2026-10-29T15:32:25Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T15:59:04Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T17:55:15Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T17:57:30Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T18:35:06Z)
+[2026-10-30 21:20:43] Skipping duplicate: "AdsGPT Camp-¦ign Ads Manager Platform OpCo, LLC has invited you to test -PpenAI -ÉdsGPT -íampaign AI." from AdsGPT Camp-¦ign Ads Manager Platform OpCo, LLC via TestFlight <testflight_no_reply@email.apple.com> (received: 2026-10-29T19:24:02Z)
+[2026-10-30 21:20:43] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-10-30 21:20:43] Skipping duplicate: "N/ Dossier 204 SCMS - Em+¡lia Costa" from Alberto Da Costa <dukedacosta@gmail.com> (received: 2026-10-30T05:09:11Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Fwd: A Sacred Invitation to Empathy: The Launch of the Adoptee Remembrance Day Manifesto, Global Pledge, and Official AGÇª" from Nathan Petzer <nathan.petzer@gmail.com> (received: 2026-10-30T05:39:54Z)
+[2026-10-30 21:20:43] Skipping duplicate: "EMS Foundation response Re: Let them Roam, please" from Megan Carr <megan@emsfoundation.org.za> (received: 2026-10-30T07:43:55Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T10:14:23Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T10:39:59Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T12:06:42Z)
+[2026-10-30 21:20:43] Skipping duplicate: "RX Radio Newsletter" from RX Radio SA <pofficer@rxradio.co.za> (received: 2026-10-30T12:55:43Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Re: EMS Foundation response Re: Let them Roam, please" from Cera-Jane Catton <cerajanec@gmail.com> (received: 2026-10-30T13:57:22Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T14:03:39Z)
+[2026-10-30 21:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T17:15:27Z)
+[2026-10-30 21:20:43] 
+[2026-10-30 21:20:43] Microsoft Graph email import cycle completed successfully.
+[2026-10-30 21:20:43] Changes detected. Syncing...
