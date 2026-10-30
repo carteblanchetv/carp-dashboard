@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Legal & Production Forms - CARP Dashboard</title>
-    <link rel="stylesheet" href="style.css?v=5.1.3">
+    <link rel="stylesheet" href="style.css?v=5.3.1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
-    <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script src="js/share_form.js?v=5.3.0"></script>
     <script type="module">
         import { checkAuth } from './auth.js?v=5.1.1';
         checkAuth().then(user => {
@@ -153,17 +154,22 @@
         }
         .form-card-actions {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.6rem;
+            grid-template-columns: 1.15fr 0.9fr 1fr;
+            gap: 0.5rem;
             border-top: 1px solid var(--border);
             padding-top: 1rem;
+        }
+        @media (max-width: 420px) {
+            .form-card-actions {
+                grid-template-columns: 1fr;
+            }
         }
         .btn-fill-online {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
-            padding: 0.6rem 0.8rem;
+            gap: 0.35rem;
+            padding: 0.6rem 0.5rem;
             font-size: 0.8rem;
             font-weight: 700;
             background: var(--primary);
@@ -179,12 +185,34 @@
             background: var(--primary-hover);
             color: white;
         }
+        .btn-share-form {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            padding: 0.6rem 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: rgba(0, 143, 190, 0.08);
+            color: var(--primary);
+            border: 1px solid rgba(0, 143, 190, 0.25);
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-share-form:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
         .btn-download-empty {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
-            padding: 0.6rem 0.8rem;
+            gap: 0.35rem;
+            padding: 0.6rem 0.5rem;
             font-size: 0.8rem;
             font-weight: 700;
             background: var(--bg-card);
@@ -202,7 +230,7 @@
             color: var(--primary);
         }
         .btn-full-width {
-            grid-column: span 2;
+            grid-column: 1 / -1;
         }
         .back-nav {
             margin-bottom: 1.5rem;
@@ -277,40 +305,11 @@
                 <img src="assets/carte_blanche_logo.png" alt="Carte Blanche" class="brand-logo">
             </div>
             <h1>Legal &amp; Production Forms</h1>
-            <p>Access official Carte Blanche release forms, licensing agreements, and production templates. Fill them online or download neat, fillable blank PDFs with interactive fields for mobile and desktop.</p>
-            <div style="margin-top: 0.75rem;">
-                <a href="guide.html#forms-hub" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 600; color: var(--primary); text-decoration: none; padding: 0.3rem 0.75rem; border-radius: 20px; background: rgba(0, 143, 190, 0.08); border: 1px solid rgba(0, 143, 190, 0.2); transition: all 0.2s;">
-                    <span>📖</span> Need help with online forms or blank PDFs? View Guide &rarr;
-                </a>
-            </div>
+            <p>Access official Carte Blanche release forms, licensing agreements, and production templates. Fill them online or download blank printable PDFs.</p>
 
             <div class="hub-search-bar">
                 <span class="hub-search-icon">🔍</span>
                 <input type="text" id="formSearchInput" class="hub-search-input" placeholder="Search forms by name, role, or type (e.g. participant, minor, music)...">
-            </div>
-
-            <!-- Commission Number & Story Linking Context -->
-            <div class="hub-story-context-box" id="hubStoryContextBox" style="max-width: 650px; margin: -1rem auto 2.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem 1.25rem; box-shadow: var(--shadow-sm); text-align: left;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="font-size: 1.2rem;">🔗</span>
-                        <div>
-                            <strong style="font-size: 0.88rem; color: var(--text-main);">Commission Number &amp; Story Linking</strong>
-                            <p style="margin: 0; font-size: 0.75rem; color: var(--text-muted);">Set a commission number to automatically link online signing, form sharing, and blank PDF downloads.</p>
-                        </div>
-                    </div>
-                    <button type="button" id="clearStoryContextBtn" class="btn-soft" style="font-size: 0.75rem; padding: 0.25rem 0.6rem; display: none; cursor: pointer;">Clear</button>
-                </div>
-                <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
-                    <select id="hubStorySelect" style="flex: 1 1 200px; padding: 0.5rem 0.75rem; font-size: 0.82rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main);">
-                        <option value="">-- Choose Commissioned Story (Auto-Fill) --</option>
-                    </select>
-                    <input type="text" id="hubCommInput" placeholder="Commission # (e.g. CB-2026-042)" style="flex: 1 1 140px; padding: 0.5rem 0.75rem; font-size: 0.82rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main);">
-                    <input type="text" id="hubStoryInput" placeholder="Story Title" style="flex: 1 1 160px; padding: 0.5rem 0.75rem; font-size: 0.82rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main);">
-                </div>
-                <div id="hubContextStatus" style="margin-top: 0.6rem; font-size: 0.76rem; color: #16a34a; font-weight: 600; display: none;">
-                    ✓ Active: Commission #<span id="activeCommDisplay"></span> will be included across all forms, share links, and downloaded blank PDFs.
-                </div>
             </div>
         </header>
 
@@ -321,13 +320,13 @@
         <div class="forms-grid" id="legalFormsGrid">
             
             <!-- Participant Release Form -->
-            <div class="form-card" data-keywords="participant adult consent release interview camera">
+            <div class="form-card" data-keywords="participant adult consent release interview camera 2026">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon">👤</div>
                         <div class="form-card-title-group">
                             <span class="form-tag">Consent &bull; Adult</span>
-                            <h3>Participant Release Form</h3>
+                            <h3>Participant Release Form 2026</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Standard release giving consent to M-Net and Carte Blanche to film interviewees, record voices, and broadcast on all platforms.</p>
@@ -336,23 +335,23 @@
                     <a href="participant_release.html" class="btn-fill-online">
                         <span>📝</span> Fill Online
                     </a>
-                    <button type="button" class="btn-download-empty" onclick="window.handleHubDownload('templates/Carte_Blanche_Participant_Release_Form_2026.pdf', 'Participant Release Form', 'participant_release')" title="Download fillable blank PDF (mobile and desktop compatible)">
+                    <button type="button" class="btn-share-form" data-share-title="Participant Release Form 2026" data-share-url="participant_release.html" title="Share link with participant">
+                        <span>🔗</span> Share
+                    </button>
+                    <a href="templates/Carte_Blanche_Participant_Release_Form_2026.pdf" download="Carte_Blanche_Participant_Release_Form_2026.pdf" class="btn-download-empty" title="Download clean blank PDF for print">
                         <span>📥</span> Blank PDF
-                    </button>
-                    <button type="button" class="btn-share-online" onclick="window.handleHubShare('Participant Release Form', 'participant_release.html', '👤')">
-                        <span>🔗</span> Share Online Form with Participant
-                    </button>
+                    </a>
                 </div>
             </div>
 
             <!-- Minor Release Form -->
-            <div class="form-card" data-keywords="minor child children parent guardian consent release">
+            <div class="form-card" data-keywords="minor child children parent guardian consent release 2026">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(168, 85, 247, 0.08); border-color: rgba(168, 85, 247, 0.2); color: #a855f7;">🧒</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">Consent &bull; Minor</span>
-                            <h3>Minor Release Form</h3>
+                            <h3>Minor Release Form 2026</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Parental or legal guardian permission for interviewing, filming, and broadcasting children under 18 on Carte Blanche.</p>
@@ -361,23 +360,23 @@
                     <a href="minor_release.html" class="btn-fill-online" style="background: #9333ea;">
                         <span>📝</span> Fill Online
                     </a>
-                    <button type="button" class="btn-download-empty" onclick="window.handleHubDownload('templates/Carte_Blanche_Minor_Release_Form_2026.pdf', 'Minor Release Form', 'minor_release')" title="Download fillable blank PDF (mobile and desktop compatible)">
+                    <button type="button" class="btn-share-form" data-share-title="Minor Release Form 2026" data-share-url="minor_release.html" title="Share link with parent / guardian">
+                        <span>🔗</span> Share
+                    </button>
+                    <a href="templates/Carte_Blanche_Minor_Release_Form_2026.pdf" download="Carte_Blanche_Minor_Release_Form_2026.pdf" class="btn-download-empty" title="Download clean blank PDF for print">
                         <span>📥</span> Blank PDF
-                    </button>
-                    <button type="button" class="btn-share-online" onclick="window.handleHubShare('Minor Release Form', 'minor_release.html', '🧒')">
-                        <span>🔗</span> Share Online Form with Parent / Guardian
-                    </button>
+                    </a>
                 </div>
             </div>
 
             <!-- Location Agreement -->
-            <div class="form-card" data-keywords="location premises property venue filming agreement">
+            <div class="form-card" data-keywords="location premises property venue filming agreement 2026">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.2); color: #10b981;">📍</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">Premises &bull; Property</span>
-                            <h3>Location Agreement</h3>
+                            <h3>Location Agreement 2026</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Permission from property owners/managers to enter premises, bring equipment, and film scenes for Carte Blanche.</p>
@@ -386,23 +385,23 @@
                     <a href="location_agreement.html" class="btn-fill-online" style="background: #10b981;">
                         <span>📝</span> Fill Online
                     </a>
-                    <button type="button" class="btn-download-empty" onclick="window.handleHubDownload('templates/Carte_Blanche_Location_Agreement_2026.pdf', 'Location Agreement', 'location_agreement')" title="Download fillable blank PDF (mobile and desktop compatible)">
+                    <button type="button" class="btn-share-form" data-share-title="Location Agreement 2026" data-share-url="location_agreement.html" title="Share link with property owner">
+                        <span>🔗</span> Share
+                    </button>
+                    <a href="templates/Carte_Blanche_Location_Agreement_2026.pdf" download="Carte_Blanche_Location_Agreement_2026.pdf" class="btn-download-empty" title="Download clean blank PDF for print">
                         <span>📥</span> Blank PDF
-                    </button>
-                    <button type="button" class="btn-share-online" onclick="window.handleHubShare('Location Agreement', 'location_agreement.html', '📍')">
-                        <span>🔗</span> Share Online Form with Property Owner
-                    </button>
+                    </a>
                 </div>
             </div>
 
             <!-- Footage Agreement -->
-            <div class="form-card" data-keywords="footage video archive licensing rights owner">
+            <div class="form-card" data-keywords="footage video archive licensing rights owner 2026">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.2); color: #f59e0b;">🎞️</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">Licence &bull; Footage</span>
-                            <h3>Footage Agreement</h3>
+                            <h3>Footage Agreement 2026</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Permission from rights holders to incorporate third-party or user-submitted video footage/images into stories.</p>
@@ -411,23 +410,23 @@
                     <a href="footage_release_agreement.html" class="btn-fill-online" style="background: #d97706;">
                         <span>📝</span> Fill Online
                     </a>
-                    <button type="button" class="btn-download-empty" onclick="window.handleHubDownload('templates/Carte_Blanche_Footage_Agreement_2026.pdf', 'Footage Agreement', 'footage_agreement')" title="Download fillable blank PDF (mobile and desktop compatible)">
+                    <button type="button" class="btn-share-form" data-share-title="Footage Agreement 2026" data-share-url="footage_release_agreement.html" title="Share link with footage owner">
+                        <span>🔗</span> Share
+                    </button>
+                    <a href="templates/Carte_Blanche_Footage_Agreement_2026.pdf" download="Carte_Blanche_Footage_Agreement_2026.pdf" class="btn-download-empty" title="Download clean blank PDF for print">
                         <span>📥</span> Blank PDF
-                    </button>
-                    <button type="button" class="btn-share-online" onclick="window.handleHubShare('Footage Agreement', 'footage_release_agreement.html', '🎞️')">
-                        <span>🔗</span> Share Online Form with Rights Holder
-                    </button>
+                    </a>
                 </div>
             </div>
 
             <!-- Music Agreement -->
-            <div class="form-card" data-keywords="music composition audio soundtrack licensing rights">
+            <div class="form-card" data-keywords="music composition audio soundtrack licensing rights 2026">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(236, 72, 153, 0.08); border-color: rgba(236, 72, 153, 0.2); color: #ec4899;">🎵</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">Licence &bull; Music</span>
-                            <h3>Music Agreement</h3>
+                            <h3>Music Agreement 2026</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Music synchronisation agreement granting permission to use compositions and recordings in Carte Blanche broadcasts.</p>
@@ -436,23 +435,23 @@
                     <a href="music_agreement.html" class="btn-fill-online" style="background: #db2777;">
                         <span>📝</span> Fill Online
                     </a>
-                    <button type="button" class="btn-download-empty" onclick="window.handleHubDownload('templates/Carte_Blanche_Music_Agreement_2026.pdf', 'Music Agreement', 'music_agreement')" title="Download fillable blank PDF (mobile and desktop compatible)">
+                    <button type="button" class="btn-share-form" data-share-title="Music Agreement 2026" data-share-url="music_agreement.html" title="Share link with composer / rights holder">
+                        <span>🔗</span> Share
+                    </button>
+                    <a href="templates/Carte_Blanche_Music_Agreement_2026.pdf" download="Carte_Blanche_Music_Agreement_2026.pdf" class="btn-download-empty" title="Download clean blank PDF for print">
                         <span>📥</span> Blank PDF
-                    </button>
-                    <button type="button" class="btn-share-online" onclick="window.handleHubShare('Music Agreement', 'music_agreement.html', '🎵')">
-                        <span>🔗</span> Share Online Form with Licensor / Artist
-                    </button>
+                    </a>
                 </div>
             </div>
 
             <!-- Insert Sheet -->
-            <div class="form-card" data-keywords="insert sheet graphics supers credits names">
+            <div class="form-card" data-keywords="insert sheet graphics supers credits names 2026">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(99, 102, 241, 0.08); border-color: rgba(99, 102, 241, 0.2); color: #6366f1;">📝</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(99, 102, 241, 0.1); color: #6366f1;">Production &bull; Graphics</span>
-                            <h3>Insert Sheet</h3>
+                            <h3>Insert Sheet 2026</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Official insert sheet document for specifying lower thirds, guest titles, on-screen supers, and photo credits.</p>
@@ -461,20 +460,23 @@
                     <a href="insert_sheet.html" class="btn-fill-online" style="background: #4f46e5;">
                         <span>📝</span> Fill Online
                     </a>
-                    <button type="button" class="btn-download-empty" onclick="window.handleHubDownload('templates/Carte_Blanche_Insert_Sheet_2026.pdf', 'Insert Sheet', 'insert_sheet')" title="Download fillable blank PDF (mobile and desktop compatible)">
-                        <span>📥</span> Blank PDF
+                    <button type="button" class="btn-share-form" data-share-title="Insert Sheet 2026" data-share-url="insert_sheet.html" title="Share insert sheet link">
+                        <span>🔗</span> Share
                     </button>
+                    <a href="templates/Carte_Blanche_Insert_Sheet_2026.pdf" download="Carte_Blanche_Insert_Sheet_2026.pdf" class="btn-download-empty" title="Download clean blank PDF for print">
+                        <span>📥</span> Blank PDF
+                    </a>
                 </div>
             </div>
 
             <!-- Travel Booking Form -->
-            <div class="form-card" data-keywords="travel flight car hotel booking logistics">
+            <div class="form-card" data-keywords="travel flight car hotel booking logistics 2026">
                 <div>
                     <div class="form-card-header">
                         <div class="form-card-icon" style="background: rgba(14, 165, 233, 0.08); border-color: rgba(14, 165, 233, 0.2); color: #0ea5e9;">✈️</div>
                         <div class="form-card-title-group">
                             <span class="form-tag" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9;">Logistics &bull; Crew</span>
-                            <h3>Travel Booking Form</h3>
+                            <h3>Travel Booking Form 2026</h3>
                         </div>
                     </div>
                     <p class="form-card-desc">Production travel and logistics booking portal for crew flights, accommodation, and rental car arrangements.</p>
@@ -483,11 +485,8 @@
                     <a href="travel_booking.html" class="btn-fill-online" style="background: #0284c7;">
                         <span>✈️</span> Fill Online
                     </a>
-                    <button type="button" class="btn-download-empty" onclick="window.handleHubDownload('templates/Carte_Blanche_Travel_Booking_Form_2026.pdf', 'Travel Booking Form', 'travel_booking')" title="Download fillable blank PDF (mobile and desktop compatible)">
-                        <span>📥</span> Blank PDF
-                    </button>
-                    <button type="button" class="btn-share-online" onclick="window.handleHubShare('Travel Booking Form', 'travel_booking.html', '✈️')">
-                        <span>🔗</span> Share Online Form with Traveller
+                    <button type="button" class="btn-share-form" data-share-title="Travel Booking Form 2026" data-share-url="travel_booking.html" title="Share travel booking link">
+                        <span>🔗</span> Share
                     </button>
                 </div>
             </div>
@@ -496,10 +495,50 @@
 
     </div>
 
-    <!-- Quick filter, story context synchronize, and PDF download handler -->
-    <script>
-        // 1. Filter cards by search input
-        document.getElementById('formSearchInput').addEventListener('input', function(e) {
+    <!-- Quick filter and Share script -->
+    <script type="module">
+        import { openShareModal } from './js/share_helper.js?v=5.1.3';
+
+        // Story context preservation
+        const params = new URLSearchParams(window.location.search);
+        const storyTitle = params.get('story') || '';
+        const commNum = params.get('comm') || '';
+
+        if (storyTitle || commNum) {
+            const hero = document.querySelector('.hub-hero');
+            if (hero) {
+                const banner = document.createElement('div');
+                banner.style.cssText = 'background: rgba(0, 143, 190, 0.08); border: 1.5px solid var(--primary); border-radius: 8px; padding: 0.75rem 1.25rem; max-width: 600px; margin: 1rem auto 0; font-size: 0.9rem; color: var(--text-main); display: flex; align-items: center; justify-content: center; gap: 0.6rem;';
+                banner.innerHTML = `<span>📌</span><span>Story: <strong>${storyTitle || 'Story'}</strong> ${commNum ? `(Comm #${commNum})` : ''} &bull; Forms shared will include story details</span>`;
+                hero.appendChild(banner);
+            }
+
+            // Append query params to all "Fill Online" links
+            document.querySelectorAll('.btn-fill-online').forEach(a => {
+                const href = a.getAttribute('href');
+                if (href && !href.startsWith('http')) {
+                    const u = new URL(href, window.location.origin);
+                    if (storyTitle) u.searchParams.set('story', storyTitle);
+                    if (commNum) u.searchParams.set('comm', commNum);
+                    a.setAttribute('href', u.pathname + u.search);
+                }
+            });
+        }
+
+        // Bind share buttons
+        document.querySelectorAll('.btn-share-form').forEach(btn => {
+            btn.addEventListener('click', () => {
+                openShareModal({
+                    title: btn.dataset.shareTitle,
+                    url: btn.dataset.shareUrl,
+                    storyTitle: storyTitle,
+                    commNum: commNum
+                });
+            });
+        });
+
+        // Search filter
+        document.getElementById('formSearchInput')?.addEventListener('input', function(e) {
             const query = e.target.value.toLowerCase().trim();
             const cards = document.querySelectorAll('.form-card');
             cards.forEach(card => {
@@ -511,325 +550,6 @@
                     card.style.display = 'none';
                 }
             });
-        });
-
-        // 2. Synchronize Commission Number & Story across all Hub actions
-        window.syncHubStoryContext = function() {
-            const comm = (document.getElementById('hubCommInput')?.value || '').trim();
-            const story = (document.getElementById('hubStoryInput')?.value || '').trim();
-            const statusEl = document.getElementById('hubContextStatus');
-            const dispEl = document.getElementById('activeCommDisplay');
-            const clearBtn = document.getElementById('clearStoryContextBtn');
-
-            if (comm) {
-                if (statusEl) statusEl.style.display = 'block';
-                if (dispEl) dispEl.textContent = comm;
-                if (clearBtn) clearBtn.style.display = 'inline-block';
-            } else {
-                if (statusEl) statusEl.style.display = 'none';
-                if (clearBtn) clearBtn.style.display = 'none';
-            }
-
-            // Extract producer name and email from selected story or cached profile
-            let prodName = '';
-            let prodEmail = '';
-            const storySelect = document.getElementById('hubStorySelect');
-            if (storySelect && storySelect.value) {
-                try {
-                    const sel = JSON.parse(storySelect.value);
-                    if (sel.producerName) prodName = sel.producerName;
-                    if (sel.producerEmail) prodEmail = sel.producerEmail;
-                } catch (e) {}
-            }
-            if (!prodEmail) {
-                try {
-                    const uCacheKey = Object.keys(localStorage).find(k => k.startsWith('user_profile_') && k.includes('@'));
-                    if (uCacheKey) {
-                        const parsed = JSON.parse(localStorage.getItem(uCacheKey) || '{}');
-                        prodEmail = parsed.email || uCacheKey.replace('user_profile_', '');
-                        if (!prodName) prodName = parsed.displayName || `${parsed.firstName || ''} ${parsed.lastName || ''}`.trim() || parsed.name || '';
-                    }
-                    if (!prodEmail && window.auth && typeof window.auth.getCurrentUser === 'function') {
-                        const cu = window.auth.getCurrentUser();
-                        if (cu && cu.email) {
-                            prodEmail = cu.email;
-                            if (!prodName) prodName = cu.displayName || cu.email;
-                        }
-                    }
-                } catch (e) {}
-            }
-            if (!prodEmail) {
-                prodEmail = 'lezanne@carteblanche.co.za';
-                if (!prodName) prodName = 'Lezanne';
-            }
-
-            // Update all Fill Online links with ?comm=...&story=...&producer=...&producerEmail=...
-            const queryParams = new URLSearchParams();
-            if (comm) queryParams.set('comm', comm);
-            if (story) queryParams.set('story', story);
-            if (prodName) queryParams.set('producer', prodName);
-            if (prodEmail) queryParams.set('producerEmail', prodEmail);
-            const queryStr = queryParams.toString();
-
-            document.querySelectorAll('.btn-fill-online').forEach(btn => {
-                let baseHref = btn.dataset.baseHref;
-                if (!baseHref) {
-                    baseHref = btn.getAttribute('href').split('?')[0];
-                    btn.dataset.baseHref = baseHref;
-                }
-                btn.setAttribute('href', queryStr ? `${baseHref}?${queryStr}` : baseHref);
-            });
-        };
-
-        // 3. Share form with active story context
-        window.handleHubShare = function(formTitle, formUrl, icon) {
-            const activeComm = (document.getElementById('hubCommInput')?.value || '').trim();
-            const activeStory = (document.getElementById('hubStoryInput')?.value || '').trim();
-
-            let prodName = '';
-            let prodEmail = '';
-            const storySelect = document.getElementById('hubStorySelect');
-            if (storySelect && storySelect.value) {
-                try {
-                    const sel = JSON.parse(storySelect.value);
-                    if (sel.producerName) prodName = sel.producerName;
-                    if (sel.producerEmail) prodEmail = sel.producerEmail;
-                } catch (e) {}
-            }
-
-            if (window.shareForm && typeof window.shareForm.openModal === 'function') {
-                window.shareForm.openModal({
-                    formTitle,
-                    formUrl,
-                    icon,
-                    defaultStory: activeStory,
-                    defaultComm: activeComm,
-                    defaultProducer: prodName,
-                    defaultProducerEmail: prodEmail
-                });
-            }
-        };
-
-        // 4. Download PDF with Commission Number stamped
-        async function executePdfDownload(templateUrl, formTitle, comm, story) {
-            try {
-                const resp = await fetch(templateUrl);
-                if (!resp.ok) throw new Error('Could not fetch PDF template');
-                const bytes = await resp.arrayBuffer();
-
-                if (!window.PDFLib) {
-                    throw new Error('PDF library not ready');
-                }
-
-                const { PDFDocument } = window.PDFLib;
-                const pdfDoc = await PDFDocument.load(bytes);
-                const form = pdfDoc.getForm();
-
-                // Fill Commission Number field
-                if (comm) {
-                    try { const f = form.getTextField('commissionNumber'); if (f) f.setText(comm); } catch (e) {}
-                    try { const f = form.getTextField('commNum'); if (f) f.setText(comm); } catch (e) {}
-                    for (let p = 2; p <= 10; p++) {
-                        try { const f = form.getTextField(`commNum_p${p}`); if (f) f.setText(comm); } catch (e) {}
-                    }
-                }
-
-                // Fill Story Title field
-                if (story) {
-                    try { const f = form.getTextField('storyName'); if (f) f.setText(story); } catch (e) {}
-                    try { const f = form.getTextField('storyTitle'); if (f) f.setText(story); } catch (e) {}
-                    for (let p = 2; p <= 10; p++) {
-                        try { const f = form.getTextField(`storyName_p${p}`); if (f) f.setText(story); } catch (e) {}
-                    }
-                }
-
-                // Fill Producer Name if cached
-                try {
-                    const userStr = localStorage.getItem('user_profile_cache') || Object.keys(localStorage).find(k => k.startsWith('user_profile_'));
-                    if (userStr) {
-                        const u = JSON.parse(localStorage.getItem(userStr) || '{}');
-                        const pName = u.displayName || `${u.firstName || ''} ${u.lastName || ''}`.trim();
-                        if (pName) {
-                            try { const f = form.getTextField('producerName'); if (f) f.setText(pName); } catch (e) {}
-                            try { const f = form.getTextField('producer'); if (f) f.setText(pName); } catch (e) {}
-                        }
-                    }
-                } catch (e) {}
-
-                // Fill Date fields with today's date
-                try {
-                    const todayIso = new Date().toISOString().split('T')[0];
-                    try { const f = form.getTextField('participantSignedDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
-                    try { const f = form.getTextField('parentSignedDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
-                    try { const f = form.getTextField('ownerSignedDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
-                    try { const f = form.getTextField('ownerDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
-                    try { const f = form.getTextField('signedDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
-                    try { const f = form.getTextField('producerSignedDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
-                    try { const f = form.getTextField('producerDate'); if (f && !f.getText()) f.setText(todayIso); } catch (e) {}
-                } catch (e) {}
-
-                const modifiedBytes = await pdfDoc.save();
-                const blob = new Blob([modifiedBytes], { type: 'application/pdf' });
-                const downloadUrl = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = downloadUrl;
-                const cleanFormTitle = formTitle.replace(/[/\\?%*:|"<>]/g, '-');
-                const cleanComm = comm ? comm.replace(/[/\\?%*:|"<>]/g, '-') : 'Blank';
-                const cleanStory = story ? ` - ${story.replace(/[/\\?%*:|"<>]/g, '-')}` : '';
-                a.download = `Carte_Blanche_${cleanComm}${cleanStory}_${cleanFormTitle}.pdf`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                setTimeout(() => URL.revokeObjectURL(downloadUrl), 5000);
-            } catch (err) {
-                console.warn('Interactive PDF generation fallback:', err);
-                const a = document.createElement('a');
-                a.href = templateUrl;
-                a.download = `Carte_Blanche_${formTitle.replace(/\s+/g, '_')}.pdf`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }
-        }
-
-        function showPdfPromptModal(templateUrl, formTitle, formType) {
-            const overlay = document.createElement('div');
-            overlay.className = 'share-modal-overlay';
-            overlay.style.cssText = 'position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 1rem;';
-            overlay.innerHTML = `
-                <div style="background: var(--bg-card, #ffffff); border: 1px solid var(--border, #cbd5e1); border-radius: 12px; max-width: 480px; width: 100%; padding: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                        <h3 style="margin: 0; font-size: 1.15rem; color: var(--text-main, #0f172a);">📥 Download Blank PDF</h3>
-                        <button type="button" id="closePdfPromptBtn" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
-                    </div>
-                    <p style="margin: 0 0 1.25rem 0; font-size: 0.88rem; color: var(--text-muted, #64748b); line-height: 1.5;">
-                        Enter a Commission Number below to have it pre-filled on your <strong>${formTitle}</strong>, or download a completely unassigned blank PDF.
-                    </p>
-                    <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
-                        <div>
-                            <label style="display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.25rem; color: var(--text-main);">Commission Number (Optional)</label>
-                            <input type="text" id="promptCommInput" placeholder="e.g. CB-2026-042" style="width: 100%; padding: 0.6rem 0.75rem; border-radius: 6px; border: 1px solid var(--border, #cbd5e1); background: var(--bg-card); color: var(--text-main); font-size: 0.9rem;">
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.25rem; color: var(--text-main);">Story Title (Optional)</label>
-                            <input type="text" id="promptStoryInput" placeholder="e.g. Green Energy Scandals" style="width: 100%; padding: 0.6rem 0.75rem; border-radius: 6px; border: 1px solid var(--border, #cbd5e1); background: var(--bg-card); color: var(--text-main); font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 0.75rem; justify-content: flex-end;">
-                        <button type="button" id="promptDownloadCleanBtn" class="btn-soft" style="padding: 0.6rem 1rem; font-size: 0.85rem; border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">
-                            Download Clean PDF
-                        </button>
-                        <button type="button" id="promptDownloadWithCommBtn" style="padding: 0.6rem 1.25rem; font-size: 0.85rem; font-weight: 700; background: var(--primary, #008fbe); color: white; border: none; border-radius: 6px; cursor: pointer;">
-                            Download with Commission #
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-
-            const close = () => overlay.remove();
-            overlay.querySelector('#closePdfPromptBtn').onclick = close;
-            overlay.onclick = (e) => { if (e.target === overlay) close(); };
-
-            overlay.querySelector('#promptDownloadCleanBtn').onclick = () => {
-                close();
-                const a = document.createElement('a');
-                a.href = templateUrl;
-                a.download = `Carte_Blanche_${formTitle.replace(/\s+/g, '_')}.pdf`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            };
-
-            overlay.querySelector('#promptDownloadWithCommBtn').onclick = async () => {
-                const c = overlay.querySelector('#promptCommInput').value.trim();
-                const s = overlay.querySelector('#promptStoryInput').value.trim();
-                close();
-                if (c) {
-                    if (document.getElementById('hubCommInput')) document.getElementById('hubCommInput').value = c;
-                    if (document.getElementById('hubStoryInput')) document.getElementById('hubStoryInput').value = s;
-                    window.syncHubStoryContext();
-                }
-                await executePdfDownload(templateUrl, formTitle, c, s);
-            };
-        }
-
-        window.handleHubDownload = async function(templateUrl, formTitle, formType) {
-            const activeComm = (document.getElementById('hubCommInput')?.value || '').trim();
-            const activeStory = (document.getElementById('hubStoryInput')?.value || '').trim();
-
-            if (activeComm) {
-                await executePdfDownload(templateUrl, formTitle, activeComm, activeStory);
-            } else {
-                showPdfPromptModal(templateUrl, formTitle, formType);
-            }
-        };
-
-        // 5. Initialize context on DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', () => {
-            const commInput = document.getElementById('hubCommInput');
-            const storyInput = document.getElementById('hubStoryInput');
-            const storySelect = document.getElementById('hubStorySelect');
-            const clearBtn = document.getElementById('clearStoryContextBtn');
-
-            // Parse URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const story = urlParams.get('story') || urlParams.get('storyName') || '';
-            const comm = urlParams.get('comm') || urlParams.get('commission') || urlParams.get('commissionNumber') || '';
-
-            if (comm && commInput) commInput.value = comm;
-            if (story && storyInput) storyInput.value = story;
-
-            window.syncHubStoryContext();
-
-            // Listeners for manual input
-            if (commInput) commInput.addEventListener('input', window.syncHubStoryContext);
-            if (storyInput) storyInput.addEventListener('input', window.syncHubStoryContext);
-
-            if (clearBtn) {
-                clearBtn.addEventListener('click', () => {
-                    if (commInput) commInput.value = '';
-                    if (storyInput) storyInput.value = '';
-                    if (storySelect) storySelect.value = '';
-                    window.syncHubStoryContext();
-                });
-            }
-
-            // Fetch commissioned stories for logged-in producer / admin
-            async function loadCommissionedStories() {
-                try {
-                    let token = null;
-                    if (window.auth && typeof window.auth.getIdToken === 'function') {
-                        token = await window.auth.getIdToken().catch(() => null);
-                    }
-                    const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-                    const res = await fetch('/api/commissioned-stories', { headers });
-                    if (!res.ok) return;
-                    const data = await res.json();
-                    if (data.success && data.stories && data.stories.length > 0 && storySelect) {
-                        data.stories.forEach(s => {
-                            const opt = document.createElement('option');
-                            opt.value = JSON.stringify(s);
-                            opt.textContent = `${s.commissionNumber} — ${s.storyTitle}`;
-                            storySelect.appendChild(opt);
-                        });
-
-                        storySelect.addEventListener('change', () => {
-                            if (!storySelect.value) return;
-                            try {
-                                const selected = JSON.parse(storySelect.value);
-                                if (selected.commissionNumber && commInput) commInput.value = selected.commissionNumber;
-                                if (selected.storyTitle && storyInput) storyInput.value = selected.storyTitle;
-                                window.syncHubStoryContext();
-                            } catch (e) {}
-                        });
-                    }
-                } catch (err) {
-                    console.warn('Could not load commissioned stories in Hub:', err.message);
-                }
-            }
-
-            loadCommissionedStories();
         });
     </script>
 </body>

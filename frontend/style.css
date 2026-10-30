@@ -1,3 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Allura&family=Birthstone+Bounce:wght@400;500&family=Great+Vibes&family=Herr+Von+Muellerhoff&display=swap');
+
+@font-face {
+    font-family: 'Priestacy';
+    src: url('fonts/priestacy.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Amsterdam';
+    src: url('fonts/amsterdam.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+
 :root {
     /* Color Palette - Dark Mode Default */
     --primary: #008fbe;
@@ -278,8 +297,15 @@ body.is-masquerading {
     cursor: pointer;
     
     /* Reveal Animation */
-    opacity: 0;
+    opacity: 1;
     animation: revealCard 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .app-card {
+        opacity: 1 !important;
+        animation: none !important;
+    }
 }
 
 @keyframes revealCard {
@@ -306,6 +332,11 @@ body.is-masquerading {
     transform: translateY(-4px);
     border-color: var(--primary);
     background: var(--bg-card);
+}
+
+#formsHubCard:hover:not(.disabled) {
+    border-color: #ec4899 !important;
+    box-shadow: var(--shadow-lg), 0 0 20px rgba(236, 72, 153, 0.25) !important;
 }
 
 .app-card.disabled {
@@ -543,16 +574,8 @@ body.is-masquerading {
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.25rem 1.5rem;
-    align-items: stretch;
-}
-
-@media (max-width: 640px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
 }
 
 .phase2-grid {
@@ -576,38 +599,13 @@ body.is-masquerading {
 .form-group {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    min-width: 0;
+    gap: 0.4rem;
 }
 
-.form-group.full-width,
-.form-grid .full-width {
-    grid-column: 1 / -1 !important;
-    width: 100%;
-}
-
-.form-group label,
 label {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--text-main);
-    line-height: 1.35;
-    margin-bottom: 0.45rem;
-    display: block;
-}
-
-.form-group > input:not([type="checkbox"]):not([type="radio"]),
-.form-group > select {
-    margin-top: auto;
-    width: 100%;
-    height: 44px;
-    box-sizing: border-box;
-}
-
-.form-group > textarea {
-    margin-top: auto;
-    width: 100%;
-    box-sizing: border-box;
 }
 
 /* Radio Group Styles */
@@ -643,19 +641,6 @@ input, select, textarea {
     transition: var(--transition);
     background-color: var(--bg-light);
     color: var(--text-main);
-    box-sizing: border-box;
-}
-
-input[type="date"],
-input[type="time"] {
-    color-scheme: dark;
-}
-
-body.light-mode input[type="date"],
-body.light-mode input[type="time"],
-:root.light-mode input[type="date"],
-:root.light-mode input[type="time"] {
-    color-scheme: light;
 }
 
 .one-liner-field {
@@ -2359,7 +2344,8 @@ input:checked + .slider:before {
 
     /* Show only the report/form and its contents */
     .admin-report, .admin-report *,
-    .form-wrapper, .form-wrapper * {
+    .form-wrapper, .form-wrapper *,
+    #callSheetSection, #callSheetSection * {
         visibility: visible;
     }
 
@@ -3432,438 +3418,285 @@ textarea:user-invalid {
     border-radius: 3px;
 }
 
-/* ==========================================================================
-   ONLINE FORM SHARING & PARTICIPANT EXPERIENCE STYLES
-   ========================================================================== */
-
-.share-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 99999;
-    padding: 1rem;
-    box-sizing: border-box;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    animation: shareFadeIn 0.2s ease-out;
-}
-
-@keyframes shareFadeIn {
-    from { opacity: 0; transform: scale(0.97); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-.share-modal-container {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg, 12px);
-    width: 100%;
-    max-width: 580px;
-    max-height: calc(100vh - 2.5rem);
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    color: var(--text-main);
-    margin: auto;
-}
-
-.share-modal-header {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.25rem 1.5rem;
-    background: rgba(0, 143, 190, 0.08);
-    border-bottom: 1px solid var(--border);
-}
-
-.share-modal-title-group {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-}
-
-.share-modal-icon {
-    font-size: 1.75rem;
-    line-height: 1;
-}
-
-.share-modal-header h3 {
-    margin: 0;
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text-main);
-}
-
-.share-modal-subtitle {
-    margin: 0.15rem 0 0;
-    font-size: 0.82rem;
-    color: var(--primary, #008fbe);
-    font-weight: 600;
-}
-
-.share-modal-close {
-    background: none;
-    border: none;
-    font-size: 1.6rem;
-    line-height: 1;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 0.25rem 0.5rem;
-    border-radius: 6px;
-    transition: all 0.15s;
-}
-
-.share-modal-close:hover {
-    color: var(--text-main);
-    background: rgba(148, 163, 184, 0.15);
-}
-
-.share-modal-body {
-    padding: 1.5rem;
-    background: var(--bg-card);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-}
-
-.share-modal-intro {
-    font-size: 0.88rem;
-    color: var(--text-muted);
-    line-height: 1.5;
-    margin: 0 0 1.25rem 0;
-}
-
-.share-fields-grid {
+/* ================================================
+   CARP FORMS - DUAL-MODE SIGNATURE PADS
+   ================================================ */
+.signature-pads-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.85rem;
-    margin-bottom: 1.25rem;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
 }
-
-.share-field {
+@media (max-width: 640px) {
+    .signature-pads-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.sig-container {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
-}
-
-.share-field.full-width {
-    grid-column: span 2;
-}
-
-.share-field label {
-    font-size: 0.76rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-muted);
-}
-
-.share-field input {
-    padding: 0.6rem 0.8rem;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background-color: var(--bg-light);
-    color: var(--text-main);
-    font-family: var(--font);
-    font-size: 0.9rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
-    width: 100%;
-}
-
-.share-field input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--focus-ring);
-    background-color: var(--bg-card);
-}
-
-.share-field input::placeholder {
-    color: var(--text-muted);
-    opacity: 0.7;
-}
-
-.share-link-section {
-    background: var(--bg-light);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.85rem;
-    margin-bottom: 1.25rem;
-}
-
-.share-link-section label {
-    display: block;
-    font-size: 0.74rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-muted);
-    margin-bottom: 0.4rem;
-}
-
-.share-link-bar {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.share-link-bar input {
-    flex: 1;
-    padding: 0.55rem 0.75rem;
-    font-size: 0.82rem;
-    font-family: ui-monospace, SFMono-Regular, monospace;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text-main);
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.share-link-bar input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--focus-ring);
-}
-
-.btn-copy-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    background: var(--primary, #008fbe);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s;
-}
-
-.btn-copy-link:hover {
-    background: var(--primary-hover, #00779e);
-}
-
-.copy-feedback-toast {
-    margin-top: 0.4rem;
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--success, #10b981);
-}
-
-.share-actions-row {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
     gap: 0.6rem;
 }
-
-.share-btn-whatsapp {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.65rem 0.85rem;
-    font-size: 0.82rem;
-    font-weight: 700;
-    background: #25d366;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-}
-
-.share-btn-whatsapp:hover {
-    background: #1eb956;
-}
-
-.share-btn-email {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.65rem 0.85rem;
-    font-size: 0.82rem;
-    font-weight: 700;
-    background: var(--bg-card);
-    color: var(--text-main);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-}
-
-.share-btn-email:hover {
-    background: var(--bg-light);
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-.share-btn-qr {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    padding: 0.65rem 0.85rem;
-    font-size: 0.82rem;
-    font-weight: 700;
-    background: var(--bg-card);
-    color: var(--text-main);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-}
-
-.share-btn-qr:hover {
-    background: var(--bg-light);
-    border-color: var(--primary);
-    color: var(--primary);
-}
-
-.share-qr-container {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: var(--bg-light);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    text-align: center;
-}
-
-.share-qr-img {
-    display: inline-block;
-    border-radius: 8px;
-    background: white;
-    padding: 8px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-/* Forms Hub Button */
-.btn-share-online {
-    grid-column: span 2;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.sig-actions {
+    display: flex;
+    flex-direction: column;
     gap: 0.45rem;
-    padding: 0.55rem 0.8rem;
+    min-height: 52px;
+}
+.sig-actions label {
     font-size: 0.8rem;
     font-weight: 700;
-    background: rgba(0, 143, 190, 0.08);
-    color: var(--primary, #008fbe);
-    border: 1px dashed var(--primary, #008fbe);
-    border-radius: var(--radius-sm, 6px);
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-    margin-top: 0.2rem;
-}
-
-.btn-share-online:hover {
-    background: var(--primary, #008fbe);
-    color: white;
-    border-style: solid;
-}
-
-/* Participant Page Banner */
-.participant-banner {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.85rem;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.5rem;
-    background: rgba(0, 143, 190, 0.08);
-    border: 1px solid rgba(0, 143, 190, 0.25);
-    border-radius: var(--radius-md, 8px);
-    color: var(--text-main, #0f172a);
-}
-
-.participant-banner-icon {
-    font-size: 1.5rem;
-    line-height: 1;
-    color: var(--primary, #008fbe);
-    flex-shrink: 0;
-}
-
-.participant-banner-content h4 {
-    margin: 0 0 0.25rem 0;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--primary, #008fbe);
-}
-
-.participant-banner-content p {
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-main);
     margin: 0;
-    font-size: 0.85rem;
-    line-height: 1.45;
-    color: var(--text-muted, #64748b);
-}
-
-/* Form Top Action Bar (for Producers viewing form) */
-.form-top-actions {
+    min-height: 1.25rem;
     display: flex;
     align-items: center;
+}
+.sig-controls-group {
+    display: flex;
     justify-content: space-between;
-    margin-bottom: 1.25rem;
-    gap: 0.75rem;
-}
-
-.btn-back-hub {
-    display: inline-flex;
     align-items: center;
-    font-size: 0.85rem;
+    width: 100%;
+}
+.sig-actions:not(:has(.sig-controls-group)) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.sig-actions:not(:has(.sig-controls-group)) label {
+    flex: 0 0 100%;
+    width: 100%;
+}
+.sig-actions:not(:has(.sig-controls-group)) .btn-clear-sig {
+    margin-left: auto;
+}
+.sig-mode-tabs {
+    display: inline-flex;
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+    gap: 2px;
+}
+.sig-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.72rem;
     font-weight: 600;
-    color: var(--text-muted, #64748b);
-    text-decoration: none;
-    transition: color 0.15s;
-}
-
-.btn-back-hub:hover {
-    color: var(--primary, #008fbe);
-}
-
-.btn-header-share {
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.4rem 0.85rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    background: rgba(0, 143, 190, 0.1);
-    color: var(--primary, #008fbe);
-    border: 1px solid rgba(0, 143, 190, 0.3);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
+    gap: 4px;
 }
-
-.btn-header-share:hover {
-    background: var(--primary, #008fbe);
-    color: white;
+.sig-tab:hover {
+    color: var(--text-main);
 }
-
-.signature-tabs {
-    display: flex !important;
-    gap: 0.5rem !important;
-    margin-bottom: 0.5rem !important;
-}
-
 .sig-tab.active {
-    background: var(--primary) !important;
-    color: white !important;
-    border-color: var(--primary) !important;
+    background: var(--primary);
+    color: #ffffff;
+}
+.btn-clear-sig {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+}
+.btn-clear-sig:hover {
+    color: var(--danger);
+}
+.sig-canvas-wrapper {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    background: #ffffff;
+    border: 2px dashed #cbd5e1;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    touch-action: none;
+}
+.sig-canvas-wrapper canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: crosshair;
+}
+.sig-canvas-placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #94a3b8;
+    font-size: 0.85rem;
+    pointer-events: none;
+    font-weight: 500;
+}
+.sig-type-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 140px;
+    box-sizing: border-box;
+}
+.sig-type-input {
+    width: 100%;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    color: var(--text-main);
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+.sig-type-input:focus {
+    border-color: var(--primary);
+}
+.sig-type-preview-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 2px dashed #cbd5e1;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    padding: 0.25rem 1rem;
+}
+.sig-type-preview {
+    font-family: 'Amsterdam', 'Priestacy', cursive;
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    font-weight: 400;
+    color: #0f172a;
+    user-select: none;
+    display: inline-block;
+    white-space: nowrap;
+    line-height: 1.2;
+    text-align: center;
+    letter-spacing: 0.02em;
+    transform: none;
+}
+
+#producerSigContainer .sig-type-preview {
+    font-family: 'Priestacy', 'Birthstone Bounce', cursive;
+    font-size: clamp(1.85rem, 3.8vw, 2.85rem);
+    transform: none;
+}
+
+#participantSigContainer .sig-type-preview,
+#parentSigContainer .sig-type-preview,
+#ownerSigContainer .sig-type-preview {
+    font-family: 'Amsterdam', 'Amsterdam Handwriting', cursive;
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    transform: none;
+}
+
+/* ========================================================
+   CRITICAL UI INTEGRITY & CARD STABILITY SAFEGUARDS
+   Guarantees Forms Hub card and button remain permanently visible across all devices
+   ======================================================== */
+#formsHubCard,
+a#formsHubCard.app-card {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    border-color: #ec4899 !important;
+}
+
+#formsHubCard h2 {
+    color: #ec4899 !important;
+}
+
+#formsHubCard .card-arrow {
+    color: #ec4899 !important;
+}
+
+#formsHubCard:hover:not(.disabled) {
+    border-color: #ec4899 !important;
+    box-shadow: var(--shadow-lg), 0 0 20px rgba(236, 72, 153, 0.25) !important;
+    transform: translateY(-4px);
+}
+
+#gnavFormsHubBtn,
+.gnav-btn#gnavFormsHubBtn {
+    display: inline-flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ========================================================
+   CO-SIGNER ISOLATED VIEW (Clean Mode)
+   When an external contributor/co-signer opens the form (?id=...),
+   they only see the form and the Submit button.
+   ======================================================== */
+.co-sign-mode .global-top-nav,
+.co-sign-mode #masqueradeBanner,
+.co-sign-mode .form-top-actions,
+.co-sign-mode #resetFormBtn,
+.co-sign-mode #downloadCompletedPdfBtn,
+.co-sign-mode #downloadBlankPdfBtn,
+.co-sign-mode #shareForCosignBtn,
+.co-sign-mode #shareFormBtn,
+.co-sign-mode .gnav-actions,
+body.co-sign-mode .global-top-nav,
+body.co-sign-mode #masqueradeBanner,
+body.co-sign-mode .form-top-actions,
+body.co-sign-mode #resetFormBtn,
+body.co-sign-mode #downloadCompletedPdfBtn,
+body.co-sign-mode #downloadBlankPdfBtn,
+body.co-sign-mode #shareForCosignBtn,
+body.co-sign-mode #shareFormBtn {
+    display: none !important;
+}
+
+body.co-sign-mode,
+.co-sign-mode body {
+    background: var(--bg-main, #0f172a) !important;
+}
+
+body.co-sign-mode .form-page-container,
+.co-sign-mode .form-page-container {
+    padding-top: 2rem !important;
+    padding-bottom: 3.5rem !important;
+    max-width: 860px !important;
+    margin: 0 auto !important;
+}
+
+body.co-sign-mode .form-bottom-actions,
+.co-sign-mode .form-bottom-actions {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    margin-top: 2.25rem !important;
+    padding-top: 1.75rem !important;
+    border-top: 1px solid var(--border) !important;
+}
+
+body.co-sign-mode #submitFormBtn,
+.co-sign-mode #submitFormBtn {
+    width: 100% !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    padding: 1.1rem 2.25rem !important;
+    border-radius: var(--radius-md) !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.6rem !important;
+    box-shadow: 0 4px 18px rgba(0, 143, 190, 0.4) !important;
 }
 
 

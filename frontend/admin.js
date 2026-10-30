@@ -1300,133 +1300,186 @@ window.viewStoryLegalForms = async (proposalId, commNum, storyTitle) => {
     `;
     document.body.appendChild(overlay);
 
-    const close = () => overlay.remove();
+    const loadLegalForms = async (isSilent = false) => {
+        const container = overlay.querySelector('#adminLegalFormsListContainer');
+        if (!container) return;
+        if (!isSilent) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                    <div class="spinner-small" style="margin: 0 auto 0.75rem;"></div>
+                    Loading signed releases for this story...
+                </div>
+            `;
+        }
+
+        try {
+            const token = await window.auth.getIdToken();
+            const url = `/api/proposal-legal-forms?proposalId=${encodeURIComponent(proposalId)}&commNum=${encodeURIComponent(commNum)}`;
+            const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+            const data = await res.json();
+
+            if (!data.success || !data.forms || data.forms.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+                        <p style="font-size: 2rem; margin: 0 0 0.5rem;">📄</p>
+                        <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No legal forms recorded yet</p>
+                        <p style="font-size: 0.85rem; max-width: 380px; margin: 0 auto 1.25rem;">Signed contributor and rights releases matching <strong>${commNum || 'this story'}</strong> will appear here automatically.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div id="adminStoryLegalFormsList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    ${data.forms.map(f => {
+                        const isCountersignable = !['travel_booking', 'insert_sheet'].includes(f.formType);
+                        const isApprovedOrDone = f.status === 'completed' || 
+                                                 f.status === 'APPROVED' || 
+                                                 f.status === 'approved' || 
+                                                 f.status === 'COMPLETED' || 
+                                                 !!f.approvedAt || 
+                                                 !!f.completedAt;
+
+                        const hasDualFile = (f.files || []).some(file => 
+                            file.fieldname === 'dualSignedPdf' || 
+                            (file.filename && (file.filename.startsWith('DualSigned_') || file.filename.startsWith('Executed_')))
+                        );
+
+                        // Signed by co-signer and awaiting producer review & approval
+                        const isAwaitingApproval = !isApprovedOrDone && (
+                            hasDualFile ||
+                            f.status === 'PENDING_APPROVAL' || 
+                            f.status === 'pending_producer_approval' || 
+                            f.status === 'pending_approval' || 
+                            !!f.hasParticipantSig || 
+                            !!f.cosignedAt
+                        );
+
+                        let badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
+                        let badgeLabel = '⏳ Awaiting Co-Signer';
+
+                        if (isApprovedOrDone || (hasDualFile && f.status !== 'PENDING_APPROVAL')) {
+                            badgeStyle = 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;';
+                            badgeLabel = '✓ Completed';
+                        } else if (isAwaitingApproval) {
+                            badgeStyle = 'background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;';
+                            badgeLabel = '✍️ Co-Signed • Awaiting Approval';
+                        } else {
+                            badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
+                            badgeLabel = '⏳ Awaiting Co-Signer';
+                        }
+
+                        const formattedType = (f.formType || 'release').replace(/_/g, ' ').toUpperCase();
+                        const primaryFile = (f.files && f.files.length > 0)
+                            ? (f.files.find(file => file.fieldname === 'dualSignedPdf' || (file.filename && file.filename.startsWith('DualSigned_'))) || f.files[f.files.length - 1])
+                            : null;
+                        const formPageMap = {
+                            'participant_release': 'participant_release.html',
+                            'minor_release': 'minor_release.html',
+                            'location_agreement': 'location_agreement.html',
+                            'music_agreement': 'music_agreement.html',
+                            'footage_agreement': 'footage_release_agreement.html',
+                            'footage_release_agreement': 'footage_release_agreement.html',
+                            'footage_release': 'footage_release_agreement.html',
+                            'insert_sheet': 'insert_sheet.html',
+                            'travel_booking': 'travel_booking.html'
+                        };
+                        const targetPage = formPageMap[f.formType] || `${f.formType}.html`;
+
+                        return `
+                            <div class="legal-form-item" data-form-id="${f.id}" style="background: var(--bg-card, #ffffff); border: 1px solid var(--border, #e2e8f0); border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: all 0.2s ease;">
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+                                        <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">${f.contributorName}</span>
+                                        <span style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; ${badgeStyle}">${badgeLabel}</span>
+                                    </div>
+                                    <div style="font-size: 0.78rem; color: var(--text-muted);">
+                                        <strong>${formattedType}</strong> &bull; Producer: ${f.producerName || '—'}
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.4rem; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
+                                    ${primaryFile ? `
+                                        <a href="/api/get-submission-file?path=${encodeURIComponent(primaryFile.storagePath)}&inline=true${token ? `&token=${encodeURIComponent(token)}` : ''}" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="View signed PDF">
+                                            📄 View PDF
+                                        </a>
+                                    ` : ''}
+                                    ${isCountersignable && !isApprovedOrDone ? `
+                                        ${isAwaitingApproval ? `
+                                            <a href="${targetPage}?id=${f.id}&action=approve" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #16a34a; color: white; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem;" title="Review co-signed agreement and approve for final submission">
+                                                ✅ Review &amp; Approve
+                                            </a>
+                                        ` : `
+                                            <a href="${targetPage}?id=${f.id}&action=countersign" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #008fbe; color: white; border-radius: 4px; font-weight: 600;" title="Open to sign or generate co-signer link">
+                                                ✍️ Countersign
+                                            </a>
+                                        `}
+                                    ` : ''}
+                                    <a href="${targetPage}?id=${f.id}&action=countersign&mode=edit" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="Edit details to fix typos or mistakes">
+                                        ✏️ Edit
+                                    </a>
+                                    <button type="button" class="btn-soft btn-delete-legal-form" onclick="window.deleteStoryLegalForm('${f.id}', '${(f.contributorName || 'Form').replace(/'/g, "\\'")}', '${formattedType.replace(/'/g, "\\'")}', this)" style="font-size: 0.75rem; padding: 0.35rem 0.65rem; background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; border-radius: 4px; cursor: pointer;" title="Delete this legal form">
+                                        🗑️ Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        } catch (err) {
+            if (!isSilent) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--danger);">
+                        Error loading legal forms: ${err.message}
+                    </div>
+                `;
+            }
+        }
+    };
+
+    // Real-time synchronization: BroadcastChannel, storage event, window focus, and window.opener
+    let syncBc = null;
+    try {
+        syncBc = new BroadcastChannel('carp_legal_forms_sync');
+        syncBc.onmessage = (ev) => {
+            if (ev && ev.data && (ev.data.type === 'LEGAL_FORM_UPDATED' || ev.data.status)) {
+                loadLegalForms(true);
+            }
+        };
+    } catch (e) {}
+
+    const storageHandler = (e) => {
+        if (e.key === 'carp_legal_form_last_updated') {
+            loadLegalForms(true);
+        }
+    };
+    window.addEventListener('storage', storageHandler);
+
+    const focusHandler = () => {
+        loadLegalForms(true);
+    };
+    window.addEventListener('focus', focusHandler);
+
+    window.refreshCurrentLegalFormsModal = () => {
+        loadLegalForms(true);
+    };
+
+    const close = () => {
+        try { if (syncBc) syncBc.close(); } catch (e) {}
+        window.removeEventListener('storage', storageHandler);
+        window.removeEventListener('focus', focusHandler);
+        if (window.refreshCurrentLegalFormsModal) {
+            window.refreshCurrentLegalFormsModal = null;
+        }
+        overlay.remove();
+    };
+
     overlay.querySelector('#closeAdminLegalModalBtn').addEventListener('click', close);
     overlay.querySelector('#closeAdminLegalModalBtn2').addEventListener('click', close);
     overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
 
-    try {
-        const token = await window.auth.getIdToken();
-        const url = `/api/proposal-legal-forms?proposalId=${encodeURIComponent(proposalId)}&commNum=${encodeURIComponent(commNum)}`;
-        const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
-        const data = await res.json();
-        const container = overlay.querySelector('#adminLegalFormsListContainer');
-
-        if (!data.success || !data.forms || data.forms.length === 0) {
-            container.innerHTML = `
-                <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
-                    <p style="font-size: 2rem; margin: 0 0 0.5rem;">📄</p>
-                    <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No legal forms recorded yet</p>
-                    <p style="font-size: 0.85rem; max-width: 380px; margin: 0 auto 1.25rem;">Signed contributor and rights releases matching <strong>${commNum || 'this story'}</strong> will appear here automatically.</p>
-                </div>
-            `;
-            return;
-        }
-
-        container.innerHTML = `
-            <div id="adminStoryLegalFormsList" style="display: flex; flex-direction: column; gap: 0.75rem;">
-                ${data.forms.map(f => {
-                    const isCountersignable = !['travel_booking', 'insert_sheet'].includes(f.formType);
-                    const isApprovedOrDone = f.status === 'completed' || 
-                                             f.status === 'APPROVED' || 
-                                             f.status === 'approved' || 
-                                             f.status === 'COMPLETED' || 
-                                             !!f.approvedAt || 
-                                             !!f.completedAt;
-
-                    const hasDualFile = (f.files || []).some(file => 
-                        file.fieldname === 'dualSignedPdf' || 
-                        (file.filename && (file.filename.startsWith('DualSigned_') || file.filename.startsWith('Executed_')))
-                    );
-
-                    // Signed by co-signer and awaiting producer review & approval
-                    const isAwaitingApproval = !isApprovedOrDone && (
-                        hasDualFile ||
-                        f.status === 'PENDING_APPROVAL' || 
-                        f.status === 'pending_producer_approval' || 
-                        f.status === 'pending_approval' || 
-                        !!f.hasParticipantSig || 
-                        !!f.cosignedAt
-                    );
-
-                    let badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
-                    let badgeLabel = '⏳ Awaiting Co-Signer';
-
-                    if (isApprovedOrDone || (hasDualFile && f.status !== 'PENDING_APPROVAL')) {
-                        badgeStyle = 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;';
-                        badgeLabel = '✓ Completed';
-                    } else if (isAwaitingApproval) {
-                        badgeStyle = 'background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;';
-                        badgeLabel = '✍️ Co-Signed • Awaiting Approval';
-                    } else {
-                        badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
-                        badgeLabel = '⏳ Awaiting Co-Signer';
-                    }
-
-                    const formattedType = (f.formType || 'release').replace(/_/g, ' ').toUpperCase();
-                    const primaryFile = (f.files && f.files.length > 0)
-                        ? (f.files.find(file => file.fieldname === 'dualSignedPdf' || (file.filename && file.filename.startsWith('DualSigned_'))) || f.files[f.files.length - 1])
-                        : null;
-                    const formPageMap = {
-                        'participant_release': 'participant_release.html',
-                        'minor_release': 'minor_release.html',
-                        'location_agreement': 'location_agreement.html',
-                        'music_agreement': 'music_agreement.html',
-                        'footage_agreement': 'footage_release_agreement.html',
-                        'footage_release_agreement': 'footage_release_agreement.html',
-                        'footage_release': 'footage_release_agreement.html',
-                        'insert_sheet': 'insert_sheet.html',
-                        'travel_booking': 'travel_booking.html'
-                    };
-                    const targetPage = formPageMap[f.formType] || `${f.formType}.html`;
-
-                    return `
-                        <div class="legal-form-item" data-form-id="${f.id}" style="background: var(--bg-card, #ffffff); border: 1px solid var(--border, #e2e8f0); border-radius: 8px; padding: 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: all 0.2s ease;">
-                            <div>
-                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-                                    <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">${f.contributorName}</span>
-                                    <span style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; ${badgeStyle}">${badgeLabel}</span>
-                                </div>
-                                <div style="font-size: 0.78rem; color: var(--text-muted);">
-                                    <strong>${formattedType}</strong> &bull; Producer: ${f.producerName || '—'}
-                                </div>
-                            </div>
-                            <div style="display: flex; gap: 0.4rem; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
-                                ${primaryFile ? `
-                                    <a href="/api/get-submission-file?path=${encodeURIComponent(primaryFile.storagePath)}&inline=true${token ? `&token=${encodeURIComponent(token)}` : ''}" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="View signed PDF">
-                                        📄 View PDF
-                                    </a>
-                                ` : ''}
-                                ${isCountersignable && !isApprovedOrDone ? `
-                                    ${isAwaitingApproval ? `
-                                        <a href="${targetPage}?id=${f.id}&action=approve" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #16a34a; color: white; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem;" title="Review co-signed agreement and approve for final submission">
-                                            ✅ Review &amp; Approve
-                                        </a>
-                                    ` : `
-                                        <a href="${targetPage}?id=${f.id}&action=countersign" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #008fbe; color: white; border-radius: 4px; font-weight: 600;" title="Open to sign or generate co-signer link">
-                                            ✍️ Countersign
-                                        </a>
-                                    `}
-                                ` : ''}
-                                <a href="${targetPage}?id=${f.id}&action=countersign&mode=edit" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="Edit details to fix typos or mistakes">
-                                    ✏️ Edit
-                                </a>
-                                <button type="button" class="btn-soft btn-delete-legal-form" onclick="window.deleteStoryLegalForm('${f.id}', '${(f.contributorName || 'Form').replace(/'/g, "\\'")}', '${formattedType.replace(/'/g, "\\'")}', this)" style="font-size: 0.75rem; padding: 0.35rem 0.65rem; background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; border-radius: 4px; cursor: pointer;" title="Delete this legal form">
-                                    🗑️ Delete
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }).join('')}
-            </div>
-        `;
-    } catch (err) {
-        overlay.querySelector('#adminLegalFormsListContainer').innerHTML = `
-            <div style="text-align: center; padding: 2rem; color: var(--danger);">
-                Error loading legal forms: ${err.message}
-            </div>
-        `;
-    }
+    // Initial load
+    loadLegalForms(false);
 };
 
 window.deleteStoryLegalForm = async (formId, contributorName, formType, btnEl) => {

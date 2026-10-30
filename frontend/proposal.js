@@ -203,6 +203,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function checkHasCallSheetData(csData) {
+        if (!csData || typeof csData !== 'object') return false;
+        const hasDates = Array.isArray(csData.shoot_dates) && csData.shoot_dates.some(d => d && String(d).trim() !== '');
+        const hasCrew = Array.isArray(csData.crew) && csData.crew.some(m => {
+            if (!m || typeof m !== 'object') return false;
+            const hasName = m.name && String(m.name).trim() !== '';
+            const hasSurname = m.surname && String(m.surname).trim() !== '';
+            const hasPhone = m.phone && (typeof m.phone === 'string' ? m.phone.trim() !== '' : !!m.phone._encrypted);
+            return Boolean(hasName || hasSurname || hasPhone);
+        });
+        const hasRisk = Boolean(csData.risk_assessment && String(csData.risk_assessment).trim() !== '');
+        const hasMovement = Array.isArray(csData.movement_orders) && csData.movement_orders.some(s => Array.isArray(s.items) && s.items.length > 0);
+        const hasEquipment = Boolean(csData.equipment && (
+            csData.equipment.as_per_dop ||
+            (Array.isArray(csData.equipment.cameras) && csData.equipment.cameras.length > 0) ||
+            (Array.isArray(csData.equipment.audios) && csData.equipment.audios.length > 0) ||
+            (csData.equipment.camera_desc && String(csData.equipment.camera_desc).trim() !== '') ||
+            (csData.equipment.audio_desc && String(csData.equipment.audio_desc).trim() !== '')
+        ));
+        return Boolean(hasDates || hasCrew || hasRisk || hasMovement || hasEquipment);
+    }
+
     // --- STANDALONE CALL SHEET MODE ---
     function checkStandaloneMode() {
         console.log("[DEBUG] checkStandaloneMode - Hash:", window.location.hash);
@@ -250,9 +272,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Check if we should show read-only preview
             const csData = window.currentProposal && window.currentProposal.details && window.currentProposal.details.callSheet;
-            const hasCallSheetData = !!(csData && ((csData.shoot_dates && csData.shoot_dates.length > 0) || (csData.crew && csData.crew.length > 0)));
+            const hasCallSheetData = checkHasCallSheetData(csData);
             
-            if (!isCallSheetEdit && (isAdminView || isTextView || hasCallSheetData)) {
+            if (!isCallSheetEdit && hasCallSheetData) {
                 if (window.currentProposal) {
                     toggleCallSheetRequired(false);
                     showCallSheetPreview(window.currentProposal, window.linkedAssets || []);
@@ -1543,10 +1565,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isCallSheetMode = window.location.hash === '#CallSheet';
                 const isCallSheetEditMode = window.location.hash === '#CallSheetEdit';
                 const csData = sub.details && sub.details.callSheet;
-                const hasCallSheetData = !!(csData && ((csData.shoot_dates && csData.shoot_dates.length > 0) || (csData.crew && csData.crew.length > 0)));
+                const hasCallSheetData = checkHasCallSheetData(csData);
 
                 if (isCallSheetMode || isCallSheetEditMode) {
-                    if (isAdminView || isTextView || (!isCallSheetEditMode && hasCallSheetData)) {
+                    if (!isCallSheetEditMode && hasCallSheetData) {
                         console.log("[DEBUG] Entering Read-Only Call Sheet mode");
                         showCallSheetPreview(sub, linkedAssets);
                         return;
@@ -2068,10 +2090,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (name) data.experts.push({ name, surname: ex_surnames[i], role: ex_roles[i] });
         });
 
+        const existingDetails = window.currentProposal?.details || {};
+        const isCsActive = window.location.hash === '#CallSheet' || window.location.hash === '#CallSheetEdit';
+
         data.details = {
-            ...(window.currentProposal?.details || {}),
-            callSheet: gatherCallSheetData()
+            ...existingDetails
         };
+
+        if (isCsActive) {
+            data.details.callSheet = gatherCallSheetData();
+        } else if (existingDetails.callSheet && checkHasCallSheetData(existingDetails.callSheet)) {
+            data.details.callSheet = existingDetails.callSheet;
+        } else {
+            delete data.details.callSheet;
+        }
         return data;
     }
 
@@ -2231,6 +2263,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        const submitBtn = document.getElementById('submitDetailsBtn') || form.querySelector('button[type="submit"]');
+        const saveDraftBtn = document.getElementById('saveDraftBtn');
+        if (submitBtn) submitBtn.disabled = true;
+        if (saveDraftBtn) saveDraftBtn.disabled = true;
+
         loadingOverlay.classList.add('active');
         const heading = document.getElementById('loadingHeading');
         const subtext = document.getElementById('loadingSubtext');
@@ -2286,7 +2323,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         surname: formData.getAll('crew_surname[]')[i]?.trim() || '',
                         role: formData.getAll('crew_role[]')[i]?.trim() || ''
                     })).filter(c => c.name !== '' || c.surname !== ''),
-                    callSheet: gatherCallSheetData()
+                    ...(isCsActive
+                        ? { callSheet: gatherCallSheetData() }
+                        : ((window.currentProposal?.details?.callSheet && checkHasCallSheetData(window.currentProposal.details.callSheet))
+                            ? { callSheet: window.currentProposal.details.callSheet }
+                            : {}))
                 }
             };
 
@@ -2358,6 +2399,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             alert("Update failed: " + err.message);
         } finally {
+            if (submitBtn) submitBtn.disabled = false;
+            if (saveDraftBtn) saveDraftBtn.disabled = false;
             loadingOverlay.classList.remove('active');
         }
     }
@@ -3753,193 +3796,246 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.body.appendChild(overlay);
 
-        const close = () => overlay.remove();
+        const loadLegalForms = async (isSilent = false) => {
+            const container = overlay.querySelector('#legalFormsListContainer');
+            if (!container) return;
+            if (!isSilent) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                        <div class="spinner-small" style="margin: 0 auto 0.75rem;"></div>
+                        Loading signed releases for this commission...
+                    </div>
+                `;
+            }
+
+            try {
+                const url = `/api/proposal-legal-forms?proposalId=${encodeURIComponent(proposalId)}&commNum=${encodeURIComponent(commNum)}`;
+                const res = await fetchWithAuth(url);
+                const data = await res.json();
+                const token = await (window.auth ? window.auth.getIdToken() : getIdToken());
+
+                const currentUser = window.auth ? (window.auth.getCurrentUser ? window.auth.getCurrentUser() : window.auth.getUser()) : null;
+                const canDelete = currentUser && (
+                    (typeof isAdmin === 'function' && isAdmin(currentUser)) ||
+                    (typeof isSuperAdmin === 'function' && isSuperAdmin(currentUser)) ||
+                    (typeof isEditorialProduction === 'function' && isEditorialProduction(currentUser)) ||
+                    (window.auth.isAdmin && window.auth.isAdmin(currentUser)) ||
+                    (window.auth.isSuperAdmin && window.auth.isSuperAdmin(currentUser)) ||
+                    (window.auth.isEditorialProduction && window.auth.isEditorialProduction(currentUser))
+                );
+
+                if (!data.success || !data.forms || data.forms.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+                            <p style="font-size: 2rem; margin: 0 0 0.5rem;">📄</p>
+                            <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No legal forms recorded yet</p>
+                            <p style="font-size: 0.85rem; max-width: 380px; margin: 0 auto 1.25rem;">When interviewees or contributors sign forms with commission <strong>${commNum || 'N/A'}</strong>, they will automatically appear here.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Category grouping definitions in exact required order
+                const categoryConfigs = [
+                    { title: 'Participant Release Forms', types: ['participant_release'] },
+                    { title: 'Minor Release Forms', types: ['minor_release'] },
+                    { title: 'Music Agreement Forms', types: ['music_agreement'] },
+                    { title: 'Location Agreement Forms', types: ['location_agreement'] },
+                    { title: 'Footage Release Forms', types: ['footage_agreement', 'footage_release_agreement', 'footage_release'] },
+                    { title: 'Insert Sheets Form', types: ['insert_sheet'] }
+                ];
+
+                const formPageMap = {
+                    'participant_release': 'participant_release.html',
+                    'minor_release': 'minor_release.html',
+                    'location_agreement': 'location_agreement.html',
+                    'music_agreement': 'music_agreement.html',
+                    'footage_agreement': 'footage_release_agreement.html',
+                    'footage_release_agreement': 'footage_release_agreement.html',
+                    'footage_release': 'footage_release_agreement.html',
+                    'insert_sheet': 'insert_sheet.html',
+                    'travel_booking': 'travel_booking.html'
+                };
+
+                const groupsWithForms = categoryConfigs.map(cat => {
+                    const matched = data.forms.filter(f => cat.types.includes(f.formType));
+                    return { title: cat.title, forms: matched };
+                }).filter(g => g.forms.length > 0);
+
+                // Handle any other form types not in standard categories
+                const knownTypes = categoryConfigs.flatMap(c => c.types);
+                const otherForms = data.forms.filter(f => !knownTypes.includes(f.formType));
+                if (otherForms.length > 0) {
+                    groupsWithForms.push({ title: 'Other Releases & Agreements', forms: otherForms });
+                }
+
+                if (groupsWithForms.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+                            <p style="font-size: 2rem; margin: 0 0 0.5rem;">📄</p>
+                            <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No legal forms recorded yet</p>
+                            <p style="font-size: 0.85rem; max-width: 380px; margin: 0 auto 1.25rem;">When interviewees or contributors sign forms with commission <strong>${commNum || 'N/A'}</strong>, they will automatically appear here.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div id="storyLegalFormsList" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        ${groupsWithForms.map(group => `
+                            <div class="legal-group-section" style="display: flex; flex-direction: column; gap: 0.6rem;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid var(--border, #e2e8f0); padding-bottom: 0.4rem;">
+                                    <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: var(--text-main, #0f172a); display: flex; align-items: center; gap: 0.4rem;">
+                                        <span>📂</span> ${group.title}
+                                    </h4>
+                                    <span style="font-size: 0.75rem; background: var(--bg-light, #f1f5f9); color: var(--text-muted, #64748b); padding: 0.15rem 0.5rem; border-radius: 999px; font-weight: 600;">
+                                        ${group.forms.length}
+                                    </span>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+                                    ${group.forms.map(f => {
+                                        const isCountersignable = !['travel_booking', 'insert_sheet'].includes(f.formType);
+                                        const isApprovedOrDone = f.status === 'completed' || 
+                                                                 f.status === 'APPROVED' || 
+                                                                 f.status === 'approved' || 
+                                                                 f.status === 'COMPLETED' || 
+                                                                 !!f.approvedAt || 
+                                                                 !!f.completedAt;
+
+                                        const hasDualFile = (f.files || []).some(file => 
+                                            file.fieldname === 'dualSignedPdf' || 
+                                            (file.filename && (file.filename.startsWith('DualSigned_') || file.filename.startsWith('Executed_')))
+                                        );
+
+                                        // Signed by co-signer and awaiting producer review & approval
+                                        const isAwaitingApproval = !isApprovedOrDone && (
+                                            hasDualFile ||
+                                            f.status === 'PENDING_APPROVAL' || 
+                                            f.status === 'pending_producer_approval' || 
+                                            f.status === 'pending_approval' || 
+                                            !!f.hasParticipantSig || 
+                                            !!f.cosignedAt
+                                        );
+
+                                        let badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
+                                        let badgeLabel = '⏳ Awaiting Co-Signer';
+
+                                        if (isApprovedOrDone || (hasDualFile && f.status !== 'PENDING_APPROVAL')) {
+                                            badgeStyle = 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;';
+                                            badgeLabel = '✓ Completed';
+                                        } else if (isAwaitingApproval) {
+                                            badgeStyle = 'background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;';
+                                            badgeLabel = '✍️ Co-Signed • Awaiting Approval';
+                                        } else {
+                                            badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
+                                            badgeLabel = '⏳ Awaiting Co-Signer';
+                                        }
+
+                                        const formattedType = (f.formType || 'release').replace(/_/g, ' ').toUpperCase();
+                                        const primaryFile = (f.files && f.files.length > 0)
+                                            ? (f.files.find(file => file.fieldname === 'dualSignedPdf' || (file.filename && file.filename.startsWith('DualSigned_'))) || f.files[f.files.length - 1])
+                                            : null;
+                                        const targetPage = formPageMap[f.formType] || `${f.formType}.html`;
+
+                                        return `
+                                            <div class="legal-form-item" data-form-id="${f.id}" style="background: var(--bg-card, #ffffff); border: 1px solid var(--border, #e2e8f0); border-radius: 8px; padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: all 0.2s ease;">
+                                                <div>
+                                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+                                                        <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">${escapeHtml(f.contributorName)}</span>
+                                                        <span style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; ${badgeStyle}">${badgeLabel}</span>
+                                                    </div>
+                                                    <div style="font-size: 0.78rem; color: var(--text-muted);">
+                                                        <strong>${formattedType}</strong> &bull; Producer: ${escapeHtml(f.producerName || '—')}
+                                                    </div>
+                                                </div>
+                                                <div style="display: flex; gap: 0.4rem; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
+                                                    ${primaryFile ? `
+                                                        <a href="/api/get-submission-file?path=${encodeURIComponent(primaryFile.storagePath)}&inline=true${token ? `&token=${encodeURIComponent(token)}` : ''}" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="View signed PDF">
+                                                            📄 View PDF
+                                                        </a>
+                                                    ` : ''}
+                                                    ${isCountersignable && !isApprovedOrDone ? `
+                                                        ${isAwaitingApproval ? `
+                                                            <a href="${targetPage}?id=${f.id}&action=approve" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #16a34a; color: white; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem;" title="Review co-signed agreement and approve for final submission">
+                                                                ✅ Review &amp; Approve
+                                                            </a>
+                                                        ` : `
+                                                            <a href="${targetPage}?id=${f.id}&action=countersign" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #008fbe; color: white; border-radius: 4px; font-weight: 600;" title="Open to sign or generate co-signer link">
+                                                                ✍️ Countersign
+                                                            </a>
+                                                        `}
+                                                    ` : ''}
+                                                    <a href="${targetPage}?id=${f.id}&action=countersign&mode=edit" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="Edit details to fix typos or mistakes">
+                                                        ✏️ Edit
+                                                    </a>
+                                                    ${canDelete ? `
+                                                        <button type="button" class="btn-soft btn-delete-legal-form" onclick="window.deleteStoryLegalForm('${f.id}', '${(f.contributorName || 'Form').replace(/'/g, "\\'")}', '${formattedType.replace(/'/g, "\\'")}', this)" style="font-size: 0.75rem; padding: 0.35rem 0.65rem; background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; border-radius: 4px; cursor: pointer;" title="Delete this legal form">
+                                                            🗑️ Delete
+                                                        </button>
+                                                    ` : ''}
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (err) {
+                if (!isSilent) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: var(--danger);">
+                            Error loading legal forms: ${err.message}
+                        </div>
+                    `;
+                }
+            }
+        };
+
+        // Real-time synchronization: BroadcastChannel, storage event, window focus, and window.opener
+        let syncBc = null;
+        try {
+            syncBc = new BroadcastChannel('carp_legal_forms_sync');
+            syncBc.onmessage = (ev) => {
+                if (ev && ev.data && (ev.data.type === 'LEGAL_FORM_UPDATED' || ev.data.status)) {
+                    loadLegalForms(true);
+                }
+            };
+        } catch (e) {}
+
+        const storageHandler = (e) => {
+            if (e.key === 'carp_legal_form_last_updated') {
+                loadLegalForms(true);
+            }
+        };
+        window.addEventListener('storage', storageHandler);
+
+        const focusHandler = () => {
+            loadLegalForms(true);
+        };
+        window.addEventListener('focus', focusHandler);
+
+        window.refreshCurrentLegalFormsModal = () => {
+            loadLegalForms(true);
+        };
+
+        const close = () => {
+            try { if (syncBc) syncBc.close(); } catch (e) {}
+            window.removeEventListener('storage', storageHandler);
+            window.removeEventListener('focus', focusHandler);
+            if (window.refreshCurrentLegalFormsModal) {
+                window.refreshCurrentLegalFormsModal = null;
+            }
+            overlay.remove();
+        };
+
         overlay.querySelector('#closeLegalModalBtn').addEventListener('click', close);
         overlay.querySelector('#closeLegalModalBtn2').addEventListener('click', close);
         overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
 
-        try {
-            const url = `/api/proposal-legal-forms?proposalId=${encodeURIComponent(proposalId)}&commNum=${encodeURIComponent(commNum)}`;
-            const res = await fetchWithAuth(url);
-            const data = await res.json();
-            const container = overlay.querySelector('#legalFormsListContainer');
-            const token = await (window.auth ? window.auth.getIdToken() : getIdToken());
-
-            const currentUser = window.auth ? (window.auth.getCurrentUser ? window.auth.getCurrentUser() : window.auth.getUser()) : null;
-            const canDelete = currentUser && (
-                (typeof isAdmin === 'function' && isAdmin(currentUser)) ||
-                (typeof isSuperAdmin === 'function' && isSuperAdmin(currentUser)) ||
-                (typeof isEditorialProduction === 'function' && isEditorialProduction(currentUser)) ||
-                (window.auth.isAdmin && window.auth.isAdmin(currentUser)) ||
-                (window.auth.isSuperAdmin && window.auth.isSuperAdmin(currentUser)) ||
-                (window.auth.isEditorialProduction && window.auth.isEditorialProduction(currentUser))
-            );
-
-            if (!data.success || !data.forms || data.forms.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
-                        <p style="font-size: 2rem; margin: 0 0 0.5rem;">📄</p>
-                        <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No legal forms recorded yet</p>
-                        <p style="font-size: 0.85rem; max-width: 380px; margin: 0 auto 1.25rem;">When interviewees or contributors sign forms with commission <strong>${commNum || 'N/A'}</strong>, they will automatically appear here.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            // Category grouping definitions in exact required order
-            const categoryConfigs = [
-                { title: 'Participant Release Forms', types: ['participant_release'] },
-                { title: 'Minor Release Forms', types: ['minor_release'] },
-                { title: 'Music Agreement Forms', types: ['music_agreement'] },
-                { title: 'Location Agreement Forms', types: ['location_agreement'] },
-                { title: 'Footage Release Forms', types: ['footage_agreement', 'footage_release_agreement', 'footage_release'] },
-                { title: 'Insert Sheets Form', types: ['insert_sheet'] }
-            ];
-
-            const formPageMap = {
-                'participant_release': 'participant_release.html',
-                'minor_release': 'minor_release.html',
-                'location_agreement': 'location_agreement.html',
-                'music_agreement': 'music_agreement.html',
-                'footage_agreement': 'footage_release_agreement.html',
-                'footage_release_agreement': 'footage_release_agreement.html',
-                'footage_release': 'footage_release_agreement.html',
-                'insert_sheet': 'insert_sheet.html',
-                'travel_booking': 'travel_booking.html'
-            };
-
-            const groupsWithForms = categoryConfigs.map(cat => {
-                const matched = data.forms.filter(f => cat.types.includes(f.formType));
-                return { title: cat.title, forms: matched };
-            }).filter(g => g.forms.length > 0);
-
-            // Handle any other form types not in standard categories
-            const knownTypes = categoryConfigs.flatMap(c => c.types);
-            const otherForms = data.forms.filter(f => !knownTypes.includes(f.formType));
-            if (otherForms.length > 0) {
-                groupsWithForms.push({ title: 'Other Releases & Agreements', forms: otherForms });
-            }
-
-            if (groupsWithForms.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
-                        <p style="font-size: 2rem; margin: 0 0 0.5rem;">📄</p>
-                        <p style="font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">No legal forms recorded yet</p>
-                        <p style="font-size: 0.85rem; max-width: 380px; margin: 0 auto 1.25rem;">When interviewees or contributors sign forms with commission <strong>${commNum || 'N/A'}</strong>, they will automatically appear here.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = `
-                <div id="storyLegalFormsList" style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    ${groupsWithForms.map(group => `
-                        <div class="legal-group-section" style="display: flex; flex-direction: column; gap: 0.6rem;">
-                            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1.5px solid var(--border, #e2e8f0); padding-bottom: 0.4rem;">
-                                <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: var(--text-main, #0f172a); display: flex; align-items: center; gap: 0.4rem;">
-                                    <span>📂</span> ${group.title}
-                                </h4>
-                                <span style="font-size: 0.75rem; background: var(--bg-light, #f1f5f9); color: var(--text-muted, #64748b); padding: 0.15rem 0.5rem; border-radius: 999px; font-weight: 600;">
-                                    ${group.forms.length}
-                                </span>
-                            </div>
-                            <div style="display: flex; flex-direction: column; gap: 0.6rem;">
-                                ${group.forms.map(f => {
-                                    const isCountersignable = !['travel_booking', 'insert_sheet'].includes(f.formType);
-                                    const isApprovedOrDone = f.status === 'completed' || 
-                                                             f.status === 'APPROVED' || 
-                                                             f.status === 'approved' || 
-                                                             f.status === 'COMPLETED' || 
-                                                             !!f.approvedAt || 
-                                                             !!f.completedAt;
-
-                                    const hasDualFile = (f.files || []).some(file => 
-                                        file.fieldname === 'dualSignedPdf' || 
-                                        (file.filename && (file.filename.startsWith('DualSigned_') || file.filename.startsWith('Executed_')))
-                                    );
-
-                                    // Signed by co-signer and awaiting producer review & approval
-                                    const isAwaitingApproval = !isApprovedOrDone && (
-                                        hasDualFile ||
-                                        f.status === 'PENDING_APPROVAL' || 
-                                        f.status === 'pending_producer_approval' || 
-                                        f.status === 'pending_approval' || 
-                                        !!f.hasParticipantSig || 
-                                        !!f.cosignedAt
-                                    );
-
-                                    let badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
-                                    let badgeLabel = '⏳ Awaiting Co-Signer';
-
-                                    if (isApprovedOrDone || (hasDualFile && f.status !== 'PENDING_APPROVAL')) {
-                                        badgeStyle = 'background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0;';
-                                        badgeLabel = '✓ Completed';
-                                    } else if (isAwaitingApproval) {
-                                        badgeStyle = 'background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;';
-                                        badgeLabel = '✍️ Co-Signed • Awaiting Approval';
-                                    } else {
-                                        badgeStyle = 'background: #fef3c7; color: #b45309; border: 1px solid #fde68a;';
-                                        badgeLabel = '⏳ Awaiting Co-Signer';
-                                    }
-
-                                    const formattedType = (f.formType || 'release').replace(/_/g, ' ').toUpperCase();
-                                    const primaryFile = (f.files && f.files.length > 0)
-                                        ? (f.files.find(file => file.fieldname === 'dualSignedPdf' || (file.filename && file.filename.startsWith('DualSigned_'))) || f.files[f.files.length - 1])
-                                        : null;
-                                    const targetPage = formPageMap[f.formType] || `${f.formType}.html`;
-
-                                    return `
-                                        <div class="legal-form-item" data-form-id="${f.id}" style="background: var(--bg-card, #ffffff); border: 1px solid var(--border, #e2e8f0); border-radius: 8px; padding: 0.85rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; transition: all 0.2s ease;">
-                                            <div>
-                                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-                                                    <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-main);">${escapeHtml(f.contributorName)}</span>
-                                                    <span style="font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 4px; ${badgeStyle}">${badgeLabel}</span>
-                                                </div>
-                                                <div style="font-size: 0.78rem; color: var(--text-muted);">
-                                                    <strong>${formattedType}</strong> &bull; Producer: ${escapeHtml(f.producerName || '—')}
-                                                </div>
-                                            </div>
-                                            <div style="display: flex; gap: 0.4rem; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end;">
-                                                ${primaryFile ? `
-                                                    <a href="/api/get-submission-file?path=${encodeURIComponent(primaryFile.storagePath)}&inline=true${token ? `&token=${encodeURIComponent(token)}` : ''}" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="View signed PDF">
-                                                        📄 View PDF
-                                                    </a>
-                                                ` : ''}
-                                                ${isCountersignable && !isApprovedOrDone ? `
-                                                    ${isAwaitingApproval ? `
-                                                        <a href="${targetPage}?id=${f.id}&action=approve" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #16a34a; color: white; border-radius: 4px; font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem;" title="Review co-signed agreement and approve for final submission">
-                                                            ✅ Review &amp; Approve
-                                                        </a>
-                                                    ` : `
-                                                        <a href="${targetPage}?id=${f.id}&action=countersign" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #008fbe; color: white; border-radius: 4px; font-weight: 600;" title="Open to sign or generate co-signer link">
-                                                            ✍️ Countersign
-                                                        </a>
-                                                    `}
-                                                ` : ''}
-                                                <a href="${targetPage}?id=${f.id}&action=countersign&mode=edit" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: var(--bg-light, #f1f5f9); color: var(--text-main, #334155); border: 1px solid var(--border, #cbd5e1); border-radius: 4px;" title="Edit details to fix typos or mistakes">
-                                                    ✏️ Edit
-                                                </a>
-                                                ${canDelete ? `
-                                                    <button type="button" class="btn-soft btn-delete-legal-form" onclick="window.deleteStoryLegalForm('${f.id}', '${(f.contributorName || 'Form').replace(/'/g, "\\'")}', '${formattedType.replace(/'/g, "\\'")}', this)" style="font-size: 0.75rem; padding: 0.35rem 0.65rem; background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; border-radius: 4px; cursor: pointer;" title="Delete this legal form">
-                                                        🗑️ Delete
-                                                    </button>
-                                                ` : ''}
-                                            </div>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        } catch (err) {
-            overlay.querySelector('#legalFormsListContainer').innerHTML = `
-                <div style="text-align: center; padding: 2rem; color: var(--danger);">
-                    Error loading legal forms: ${err.message}
-                </div>
-            `;
-        }
+        // Initial load
+        loadLegalForms(false);
     };
 
     window.deleteStoryLegalForm = async (formId, contributorName, formType, btnEl) => {
@@ -4002,7 +4098,7 @@ function renderProjectAssets(assets, proposal) {
     const csData = proposal.details && proposal.details.callSheet;
     const statusStr = (proposal.status || '').toLowerCase();
     const isCommissioned = statusStr === 'accepted' || statusStr === 'paid';
-    const hasCallSheetData = isCommissioned && !!(csData && ((csData.shoot_dates && csData.shoot_dates.length > 0) || (csData.crew && csData.crew.length > 0)));
+    const hasCallSheetData = isCommissioned && checkHasCallSheetData(csData);
     
     let hasAnyVisibleAsset = hasCallSheetData || hasFinalScript || (assets && assets.length > 0);
     
@@ -4040,7 +4136,7 @@ function renderProjectAssets(assets, proposal) {
         const comm = proposal.commissionNumber || 'N/A';
         const story = proposal.story_title || 'N/A';
         const finalName = `${comm} - ${story} - Call Sheet`;
-        card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: flex-start;"><span style="font-size: 0.7rem; font-weight: 800; color: var(--success); letter-spacing: 0.05em;">CALL SHEET</span><span style="font-size: 0.7rem; color: var(--text-muted);">${date}</span></div><div style="font-weight: 700; color: var(--text-main); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${finalName}">${finalName}</div><div style="display: flex; gap: 0.5rem; margin-top: auto; padding-top: 0.5rem;"><button onclick="window.location.hash='#CallSheet'; setTimeout(() => window.print(), 500);" class="btn-soft" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; flex: 1; border: 1px solid var(--success) !important; color: var(--success);">Download PDF</button><a href="#CallSheet" class="btn-soft" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; text-decoration: none; text-align: center; border: 1px solid var(--border) !important;">View Details</a></div>`;
+        card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: flex-start;"><span style="font-size: 0.7rem; font-weight: 800; color: var(--success); letter-spacing: 0.05em;">CALL SHEET</span><span style="font-size: 0.7rem; color: var(--text-muted);">${date}</span></div><div style="font-weight: 700; color: var(--text-main); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${finalName}">${finalName}</div><div style="display: flex; gap: 0.5rem; margin-top: auto; padding-top: 0.5rem;"><button onclick="window.downloadCallSheetPDF()" class="btn-soft" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; flex: 1; border: 1px solid var(--success) !important; color: var(--success);">Download PDF</button><a href="#CallSheet" class="btn-soft" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; text-decoration: none; text-align: center; border: 1px solid var(--border) !important;">View Details</a></div>`;
         list.appendChild(card);
     }
     assets.forEach(asset => {
@@ -4328,16 +4424,12 @@ function showCallSheetPreview(sub, assets) {
     // Setup Edit Call Sheet Button
     const editBtn = document.getElementById('topEditCallSheetBtn');
     if (editBtn) {
-        if (isAdminView) {
-            editBtn.classList.add('hidden');
-            editBtn.style.display = 'none';
-        } else {
-            editBtn.classList.remove('hidden');
-            editBtn.style.display = 'inline-block';
-            editBtn.onclick = () => {
-                window.location.href = `proposal.html?id=${sub.id}#CallSheetEdit`;
-            };
-        }
+        editBtn.classList.remove('hidden');
+        editBtn.style.display = 'inline-block';
+        editBtn.onclick = () => {
+            const adminQuery = isAdminView ? '&view=admin' : '';
+            window.location.href = `proposal.html?id=${sub.id}${adminQuery}#CallSheetEdit`;
+        };
     }
     
     const backBtn = document.getElementById('backToProposalBtn');
@@ -4869,8 +4961,8 @@ window.buildCallSheetPDFDocument = async (sub) => {
     }
 };
 
-window.downloadCallSheetPDF = async () => {
-    const sub = window.currentProposal;
+window.downloadCallSheetPDF = async (prop) => {
+    const sub = prop || window.currentProposal;
     if (!sub) {
         alert("No proposal data loaded.");
         return;

@@ -1150,6 +1150,22 @@
 
             if (loadingOverlay) loadingOverlay.classList.add('active');
 
+            function broadcastLegalFormUpdate(detail) {
+                try {
+                    const bc = new BroadcastChannel('carp_legal_forms_sync');
+                    bc.postMessage({ type: 'LEGAL_FORM_UPDATED', ...detail, timestamp: Date.now() });
+                    setTimeout(() => { try { bc.close(); } catch (e) {} }, 1000);
+                } catch (e) {}
+                try {
+                    localStorage.setItem('carp_legal_form_last_updated', JSON.stringify({ ...detail, time: Date.now() }));
+                } catch (e) {}
+                try {
+                    if (window.opener && !window.opener.closed && typeof window.opener.refreshCurrentLegalFormsModal === 'function') {
+                        window.opener.refreshCurrentLegalFormsModal();
+                    }
+                } catch (e) {}
+            }
+
             try {
                 if (isCoSignerMode) {
                     // -------------------------------------------------------------
@@ -1168,6 +1184,12 @@
                     });
                     const result = await safeParseJson(response);
                     if (!result.success) throw new Error(result.error || result.message || 'Failed to submit co-signature');
+
+                    broadcastLegalFormUpdate({
+                        submissionId: (loadedSubmission && loadedSubmission.id) || submissionId,
+                        formType,
+                        status: 'PENDING_APPROVAL'
+                    });
 
                     // Show Co-Signer Thank You Modal
                     showCoSignerSuccessModal();
@@ -1225,6 +1247,12 @@
                     });
                     const result = await safeParseJson(response);
                     if (!result.success) throw new Error(result.error || result.message || 'Failed to approve agreement');
+
+                    broadcastLegalFormUpdate({
+                        submissionId,
+                        formType,
+                        status: 'APPROVED'
+                    });
 
                     const pEmail = document.getElementById('producerEmail')?.value || 'your email';
                     if (loadingOverlay) loadingOverlay.classList.remove('active');
@@ -1305,6 +1333,12 @@
                     });
                     const result = await safeParseJson(response);
                     if (!result.success) throw new Error(result.error || result.message || 'Failed to submit agreement');
+
+                    broadcastLegalFormUpdate({
+                        submissionId: result.firestoreDocId,
+                        formType,
+                        status: (result.status === 'APPROVED' || result.status === 'completed') ? 'APPROVED' : 'AWAITING_COSIGN'
+                    });
 
                     const pEmail = document.getElementById('producerEmail')?.value || getResolvedProducerProfile().email;
                     if (loadingOverlay) loadingOverlay.classList.remove('active');

@@ -25,6 +25,7 @@ Thumbs.db
 
 # Scratch
 scratch/
+*.mp4
 
 # Environment configurations
 .env
