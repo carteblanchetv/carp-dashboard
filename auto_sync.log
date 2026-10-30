@@ -412,3 +412,35 @@
 [2026-10-30 17:20:44]     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
 [2026-10-30 17:20:44]     at node:internal/main/run_main_module:33:47
 [2026-10-30 17:20:44] Changes detected. Syncing...
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/footage_release_agreement.html', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/insert_sheet.html', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/js/footage_release_agreement.js', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/js/form_submission_helper.js', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/js/insert_sheet.js', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/js/location_agreement.js', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/js/minor_release.js', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/js/music_agreement.js', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/js/participant_release.js', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/location_agreement.html', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/minor_release.html', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/music_agreement.html', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] warning: in the working copy of 'frontend/participant_release.html', LF will be replaced by CRLF the next time Git touches it
+[2026-10-30 17:20:44] [main 61178dd] auto-sync: 2026-10-30 17:20
+[2026-10-30 17:20:44]  14 files changed, 360 insertions(+), 288 deletions(-)
+[2026-10-30 17:20:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-10-30 17:20:44]    5dd5b61..61178dd  main -> main
+[2026-10-30 17:20:44] Sync complete.
+[2026-10-30 17:50:43] Running Microsoft Graph Email Importer...
+[2026-10-30 17:50:43] Starting Graph API Email Importer... Mode: LIVE
+[2026-10-30 17:50:43] Error during Graph email import execution: Error: Missing Microsoft Graph API credentials in environment.
+[2026-10-30 17:50:43]     at getMicrosoftAccessToken (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:61:11)
+[2026-10-30 17:50:43]     at runImporter (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:153:31)
+[2026-10-30 17:50:43]     at Object.<anonymous> (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:362:3)
+[2026-10-30 17:50:43]     at Module._compile (node:internal/modules/cjs/loader:1812:14)
+[2026-10-30 17:50:43]     at Object..js (node:internal/modules/cjs/loader:1943:10)
+[2026-10-30 17:50:43]     at Module.load (node:internal/modules/cjs/loader:1533:32)
+[2026-10-30 17:50:43]     at Module._load (node:internal/modules/cjs/loader:1335:12)
+[2026-10-30 17:50:43]     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+[2026-10-30 17:50:43]     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+[2026-10-30 17:50:43]     at node:internal/main/run_main_module:33:47
+[2026-10-30 17:50:43] Changes detected. Syncing...
