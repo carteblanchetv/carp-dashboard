@@ -1,213 +1,3 @@
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_714.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_715.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_716.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_717.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_718.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_719.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_720.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_721.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_722.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_723.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_724.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_725.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_726.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_727.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_728.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_729.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_730.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_731.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_732.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_733.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_734.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_735.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_736.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_737.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_738.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_739.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_740.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_741.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_742.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_743.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_744.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_745.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_746.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_747.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_748.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_749.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_750.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_751.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_752.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_753.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_754.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_755.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_756.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_757.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_758.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_759.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_760.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_761.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_762.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_763.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_764.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_765.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_766.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_767.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_768.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_769.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_770.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_771.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_772.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_773.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_774.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_775.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_776.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_777.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_778.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_779.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_780.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_781.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_782.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_783.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_784.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_785.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_786.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_787.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_788.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_789.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_790.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_791.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_792.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_793.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_794.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_795.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_796.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_797.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_798.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_799.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_800.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_801.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_802.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_803.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_804.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_805.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_806.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_807.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_808.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_809.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_810.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_811.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_812.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_813.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_814.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_815.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_816.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_817.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_818.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_819.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_820.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_821.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_822.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_823.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_824.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_825.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_826.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_827.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_828.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_829.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_830.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_831.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_832.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_833.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_834.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_835.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_836.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_837.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_838.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_839.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_840.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_841.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_842.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_843.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_844.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_845.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_846.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_847.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_848.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_849.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_850.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_851.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_852.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_853.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_854.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_855.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_856.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_857.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_858.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_859.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_860.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_861.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_862.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_863.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_864.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_865.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_866.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_867.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_868.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_869.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_870.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_871.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_872.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_873.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_874.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_875.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_876.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_877.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_878.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_879.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_880.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_881.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_882.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_883.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_884.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_885.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_886.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_887.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_888.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_889.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_890.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_891.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_892.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_893.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_894.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_895.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_896.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_897.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_898.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_899.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_900.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_901.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_902.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_903.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_904.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_905.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_906.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_907.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_908.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_909.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_910.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_911.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_912.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_913.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_914.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_915.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_916.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_917.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_918.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_919.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_920.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_921.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_922.json
-[2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_923.json
 [2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_924.json
 [2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_925.json
 [2026-06-21 12:40:41]  create mode 100644 scraper/exports/reports/item_926.json
@@ -603,3 +393,120 @@
 [2026-10-30 19:20:43] 
 [2026-10-30 19:20:43] Microsoft Graph email import cycle completed successfully.
 [2026-10-30 19:20:43] Changes detected. Syncing...
+[2026-10-30 19:20:43] [main b2cc04c] auto-sync: 2026-10-30 19:22
+[2026-10-30 19:20:43]  1 file changed, 121 insertions(+)
+[2026-10-30 19:20:43] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-10-30 19:20:43]    dcf8d3a..b2cc04c  main -> main
+[2026-10-30 19:20:43] Sync complete.
+[2026-10-30 19:50:43] Running Microsoft Graph Email Importer...
+[2026-10-30 19:50:43] Starting Graph API Email Importer... Mode: LIVE
+[2026-10-30 19:50:43] Fetching messages from Microsoft Graph...
+[2026-10-30 19:50:43] Fetching messages from Microsoft Graph...
+[2026-10-30 19:50:43] Fetching messages from Microsoft Graph...
+[2026-10-30 19:50:43] Found 103 email(s) since 1 May 2026 to check.
+[2026-10-30 19:50:43] Skipping duplicate: "Story Proposal - Project 170" from Caleb Matthew <calebmatthew980603@gmail.com> (received: 2026-10-27T19:25:21Z)
+[2026-10-30 19:50:43] Skipping duplicate: "The Montreal Book 2026" from Hotel Booking Team <reservations@swift-checkin.com> (received: 2026-10-27T20:01:42Z)
+[2026-10-30 19:50:43] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-10-30 19:50:43] Skipping duplicate: "Healthcare Support & intervention(HPCSA), Department of Justice and Constitutional Development (DOJ),South African Police Service, South African Government =ƒç+=ƒçª" from Nathan Petzer <nathan.petzer@gmail.com> (received: 2026-10-27T20:50:08Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-27T20:51:42Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Level up Winners and BBXPO" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-10-27T22:58:52Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T06:47:22Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T06:50:11Z)
+[2026-10-30 19:50:43] Skipping duplicate: "6996 - Worth... Everything - Insert Sheet / Footage Declaration - Kate Nokwe" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:22:56Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Sibaya Decision to Withhold Billions from Market Ensures Protection of Critical Ecosystem" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za> (received: 2026-10-28T07:26:33Z)
+[2026-10-30 19:50:43] Skipping duplicate: "CALL SHEET for 7011 Helihack Mission" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:36:48Z)
+[2026-10-30 19:50:43] Skipping duplicate: "CALL SHEET for 7011 Helihack Mission" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:36:50Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Automatic reply: CALL SHEET for 7011 Helihack Mission" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T07:36:52Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Re:CRM : 166854  |  Cancellation  |  Outstanding Memorandum of Agreement" from Amanda Peter's <mandypeter777@gmail.com> (received: 2026-10-28T08:18:42Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Milk + Cookies 2027 presale is live + media accreditation info" from Nash Chikazunga <nash@arxna.com> (received: 2026-10-28T08:19:26Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Re:MIOSA REF: 524337 ISUZU Peters |  Outstanding Memorandum of Agreement  |  CRM : 166854" from Amanda Peter's <mandypeter777@gmail.com> (received: 2026-10-28T08:19:39Z)
+[2026-10-30 19:50:43] Skipping duplicate: "New Proposal: Unlikely Hero - Beth Neale" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:22:45Z)
+[2026-10-30 19:50:43] Skipping duplicate: "New Proposal: Unlikely Hero - Beth Neale" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:22:49Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Automatic reply: New Proposal: Unlikely Hero - Beth Neale" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:22:50Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Re:" from Marius Calitz <mariuscalitz54@gmail.com> (received: 2026-10-28T08:29:53Z)
+[2026-10-30 19:50:43] Skipping duplicate: "airport luggage theft" from Samantha Watkins <watkinssamantha62@gmail.com> (received: 2026-10-28T08:32:02Z)
+[2026-10-30 19:50:43] Skipping duplicate: "7020 - Cost of gold - Participant Release Form - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:36:08Z)
+[2026-10-30 19:50:43] Skipping duplicate: "S39 | New Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:40:43Z)
+[2026-10-30 19:50:43] Skipping duplicate: "S39 | New Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:40:44Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Automatic reply: S39 | New Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:40:48Z)
+[2026-10-30 19:50:43] Skipping duplicate: "S39 | Update to Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:43:45Z)
+[2026-10-30 19:50:43] Skipping duplicate: "S39 | Update to Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:43:47Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Automatic reply: S39 | Update to Commission: Unlikely Hero | 7023" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:43:49Z)
+[2026-10-30 19:50:43] Skipping duplicate: "7020 - The Cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T08:48:30Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Nigel high nagmerry" from Junita Piek <junita.piek@gmail.com> (received: 2026-10-28T09:08:51Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T09:10:07Z)
+[2026-10-30 19:50:43] Skipping duplicate: "(No Subject)" from Leonie van Metzinger <leonievanmetzinger@gmail.com> (received: 2026-10-28T09:14:11Z)
+[2026-10-30 19:50:43] Skipping duplicate: "7009 - Donkey & Horse Trade - Insert Sheet / Footage Declaration - Carol Albertyn Christie" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T09:18:29Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Medical discovery about the brain and human origin." from Brendan Evans <baimagineer@gmail.com> (received: 2026-10-28T09:33:36Z)
+[2026-10-30 19:50:43] Skipping duplicate: "7020 - Cost of gold - Participant Release Form - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T09:40:20Z)
+[2026-10-30 19:50:43] Skipping duplicate: "7020 - The cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T09:42:51Z)
+[2026-10-30 19:50:43] Skipping duplicate: "(No Subject)" from Muhammed Ibrahim Hamid <moehamid61@gmail.com> (received: 2026-10-28T09:53:54Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T13:17:33Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Let them Roam, please" from Cera-Jane Catton <cerajanec@gmail.com> (received: 2026-10-28T14:39:43Z)
+[2026-10-30 19:50:43] Skipping duplicate: "7020 - Cost of gold - Participant Release Form - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T14:46:05Z)
+[2026-10-30 19:50:43] Skipping duplicate: "7020 - Cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T14:48:20Z)
+[2026-10-30 19:50:43] Skipping duplicate: "7020 - Cost of gold - Footage Agreement - Graham Coetzer" from Submissions <story@combinedartists.co.za> (received: 2026-10-28T15:13:37Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Bettersure or Worstsure Riaan Kemp ID 7707095015080" from Riaan Kemp <riaank17@gmail.com> (received: 2026-10-28T16:02:05Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Animal cruelty and the law" from Soula Foord <soulafoord406@gmail.com> (received: 2026-10-28T16:13:49Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Fw: Act Urgently" from Inandasaps <inandasapsiscaptured@proton.me> (received: 2026-10-28T16:38:23Z)
+[2026-10-30 19:50:43] Skipping duplicate: "myOUTA Oct/Nov 2026 Newsletter " from info@outa.co.za <info@outa.co.za> (received: 2026-10-28T17:01:14Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Fwd: Cape winelands international school" from Jacobus Wentzel <jdjwentzeldirect@gmail.com> (received: 2026-10-28T17:02:49Z)
+[2026-10-30 19:50:43] Skipping duplicate: "To Whom It May Concern, How can it be acceptable for Rustenburg residents to be left without water for days, and in some cases, weeks? We have now been without water for seven days, and this is completely unacceptable. Without water, we cannot bathe, p..." from Henjoronika Nel <henjoronikanel@gmail.com> (received: 2026-10-28T17:31:33Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Re: WATER" from Henjoronika Nel <henjoronikanel@gmail.com> (received: 2026-10-28T17:44:04Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T18:07:03Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T19:05:11Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T19:07:58Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-28T20:26:09Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Story Pitch : Cape Town Mom featured in Sunday Times needs help with visibility for 2nd Breast Cancer BackaBuddy" from Berenice Dalwai <berenicedalwai@gmail.com> (received: 2026-10-28T22:23:53Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Urgent Investigation Request: Bonitas medical fund- Unpaid Claims and Serious Administrative Failures" from alriede van der merwe <alriedevdm@yahoo.com> (received: 2026-10-29T05:08:35Z)
+[2026-10-30 19:50:43] Skipping duplicate: "The scam that keeps on scamming_rental fraud and identity theft" from Amelia Hayes <ameliahayes49@gmail.com> (received: 2026-10-29T05:09:21Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Coalition fights to save pristine Limpopo bushveld from huge Chinese industrial land grab" from conorw <conorw@mweb.co.za> (received: 2026-10-29T06:50:11Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T06:54:57Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Developer Defeats Municipality's Appeal Bid in 4,947 m-¦ Open-Space Dispute" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za> (received: 2026-10-29T07:17:36Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T07:22:39Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Meta A. I Scamming" from Zunette Bothma <zunettebothma@gmail.com> (received: 2026-10-29T07:27:31Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Re: Automatic reply: Meta A. I Scamming" from Zunette Bothma <zunettebothma@gmail.com> (received: 2026-10-29T07:29:33Z)
+[2026-10-30 19:50:43] Skipping duplicate: "(No Subject)" from Alridge Rhodes <alridgerhodes@yahoo.com> (received: 2026-10-29T07:34:17Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Re: HELLOPETER HANDOFF L1- Zay R - Ref. [OLCMAN30851253] inappropriate deceit upon a claim patient informed policy canceled in 2024 yet proof of iwyze debiting client each month beware consumers, patients being deceived inappropriately" from Michael House <michaelhouse786@gmail.com> (received: 2026-10-29T07:49:32Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Re: We've received your complaint GÇô BSH00140331" from Riaan Kemp <riaank17@gmail.com> (received: 2026-10-29T07:59:26Z)
+[2026-10-30 19:50:43] Skipping duplicate: "We've received your complaint GÇô BSH00140331" from Complaints <complaints@bettersure.co.za> (received: 2026-10-29T08:49:02Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Our team has received your query, your case number is  00696340." from Complaints auto-response <noreply@bettersure.co.za> (received: 2026-10-29T08:49:56Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Witpoortjie Water Crisis & lack of service delivery" from Wendy Mitchell <wendy.mitchell9@gmail.com> (received: 2026-10-29T10:05:21Z)
+[2026-10-30 19:50:43] Skipping duplicate: "RE: Re: We've received your complaint GÇô BSH00140331" from Gavin van Niekerk <Gavin.vanNiekerk@bettersure.co.za> (received: 2026-10-29T10:16:29Z)
+[2026-10-30 19:50:43] Skipping duplicate: "CALL SHEET for 7019 JMPD ARMOURY" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:17Z)
+[2026-10-30 19:50:43] Skipping duplicate: "CALL SHEET for 7019 JMPD ARMOURY" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:19Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Automatic reply: CALL SHEET for 7019 JMPD ARMOURY" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:20Z)
+[2026-10-30 19:50:43] Skipping duplicate: "CALL SHEET for 7022 Video Piracy" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:22Z)
+[2026-10-30 19:50:43] Skipping duplicate: "CALL SHEET for 7022 Video Piracy" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:23Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Automatic reply: CALL SHEET for 7022 Video Piracy" from Submissions <story@combinedartists.co.za> (received: 2026-10-29T10:17:24Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Re: Re: We've received your complaint GÇô BSH00140331" from Riaan Kemp <riaank17@gmail.com> (received: 2026-10-29T10:29:15Z)
+[2026-10-30 19:50:43] Skipping duplicate: "RE: Re: We've received your complaint GÇô BSH00140331" from Gavin van Niekerk <Gavin.vanNiekerk@bettersure.co.za> (received: 2026-10-29T11:12:18Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Re: Re: We've received your complaint GÇô BSH00140331" from Riaan Kemp <riaank17@gmail.com> (received: 2026-10-29T11:19:18Z)
+[2026-10-30 19:50:43] Skipping duplicate: "SCAM ARTIST TO BE SHAMED" from Theresa Lukan <theresa.l@mweb.co.za> (received: 2026-10-29T12:00:56Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T12:13:35Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Rudger Van Wyk, changing the narrative of wine drinking in South Africa" from gillian@wordzmiths.co.za <gillian@wordzmiths.co.za> (received: 2026-10-29T12:44:49Z)
+[2026-10-30 19:50:43] Skipping duplicate: "SUNET SAAYMAN CONSULTENCY SERVICES (PTY) LTS" from Erika Nel <erikanel370@gmail.com> (received: 2026-10-29T13:23:17Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Fwd: SUNET SAAYMAN CONSULTANCY SERVICES (PTY) LTD" from Erika Nel <erikanel370@gmail.com> (received: 2026-10-29T14:18:48Z)
+[2026-10-30 19:50:43] Skipping duplicate: "LSSA CONGRATULATES JUDGE NAVANETHEM (NAVI) PILLAY ON THE 2026 NOBEL PEACE PRIZE" from Law Society of South Africa <contact@lssa.org.za> (received: 2026-10-29T14:32:39Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T14:52:04Z)
+[2026-10-30 19:50:43] Skipping duplicate: "CROSS-BORDER FRAUD TO REMOVE FATHER NAME OFF BIRTH REGISTER WITHOUT MOTHERS CONSENT - SYSTEM FAILURE BY THE VERY PEOPLE WHO ARE SUPPOSED TO PROTECT THE CHILD" from Leanne Mikkelsen <lmikkelsen13@gmail.com> (received: 2026-10-29T15:23:37Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Highly Confidential " from Kenneth Mathebe <mathebek@icloud.com> (received: 2026-10-29T15:32:25Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T15:59:04Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T17:55:15Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T17:57:30Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T18:35:06Z)
+[2026-10-30 19:50:43] Skipping duplicate: "AdsGPT Camp-¦ign Ads Manager Platform OpCo, LLC has invited you to test -PpenAI -ÉdsGPT -íampaign AI." from AdsGPT Camp-¦ign Ads Manager Platform OpCo, LLC via TestFlight <testflight_no_reply@email.apple.com> (received: 2026-10-29T19:24:02Z)
+[2026-10-30 19:50:43] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-10-30 19:50:43] Skipping duplicate: "N/ Dossier 204 SCMS - Em+¡lia Costa" from Alberto Da Costa <dukedacosta@gmail.com> (received: 2026-10-30T05:09:11Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Fwd: A Sacred Invitation to Empathy: The Launch of the Adoptee Remembrance Day Manifesto, Global Pledge, and Official AGÇª" from Nathan Petzer <nathan.petzer@gmail.com> (received: 2026-10-30T05:39:54Z)
+[2026-10-30 19:50:43] Skipping duplicate: "EMS Foundation response Re: Let them Roam, please" from Megan Carr <megan@emsfoundation.org.za> (received: 2026-10-30T07:43:55Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T10:14:23Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T10:39:59Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T12:06:42Z)
+[2026-10-30 19:50:43] Skipping duplicate: "RX Radio Newsletter" from RX Radio SA <pofficer@rxradio.co.za> (received: 2026-10-30T12:55:43Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Re: EMS Foundation response Re: Let them Roam, please" from Cera-Jane Catton <cerajanec@gmail.com> (received: 2026-10-30T13:57:22Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T14:03:39Z)
+[2026-10-30 19:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T17:15:27Z)
+[2026-10-30 19:50:43] 
+[2026-10-30 19:50:43] Microsoft Graph email import cycle completed successfully.
+[2026-10-30 19:50:43] Changes detected. Syncing...
