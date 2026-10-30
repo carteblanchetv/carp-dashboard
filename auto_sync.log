@@ -444,3 +444,22 @@
 [2026-10-30 17:50:43]     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
 [2026-10-30 17:50:43]     at node:internal/main/run_main_module:33:47
 [2026-10-30 17:50:43] Changes detected. Syncing...
+[2026-10-30 17:50:43] [main 39554c8] auto-sync: 2026-10-30 17:50
+[2026-10-30 17:50:43]  1 file changed, 32 insertions(+)
+[2026-10-30 17:50:43] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-10-30 17:50:43]    61178dd..39554c8  main -> main
+[2026-10-30 17:50:43] Sync complete.
+[2026-10-30 18:20:43] Running Microsoft Graph Email Importer...
+[2026-10-30 18:20:43] Starting Graph API Email Importer... Mode: LIVE
+[2026-10-30 18:20:43] Error during Graph email import execution: Error: Missing Microsoft Graph API credentials in environment.
+[2026-10-30 18:20:43]     at getMicrosoftAccessToken (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:61:11)
+[2026-10-30 18:20:43]     at runImporter (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:153:31)
+[2026-10-30 18:20:43]     at Object.<anonymous> (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:362:3)
+[2026-10-30 18:20:43]     at Module._compile (node:internal/modules/cjs/loader:1812:14)
+[2026-10-30 18:20:43]     at Object..js (node:internal/modules/cjs/loader:1943:10)
+[2026-10-30 18:20:43]     at Module.load (node:internal/modules/cjs/loader:1533:32)
+[2026-10-30 18:20:43]     at Module._load (node:internal/modules/cjs/loader:1335:12)
+[2026-10-30 18:20:43]     at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+[2026-10-30 18:20:43]     at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)
+[2026-10-30 18:20:43]     at node:internal/main/run_main_module:33:47
+[2026-10-30 18:20:43] Changes detected. Syncing...
