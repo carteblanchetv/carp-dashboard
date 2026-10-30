@@ -1,4 +1,4 @@
-$action   = New-ScheduledTaskAction -Execute 'wscript.exe' -Argument '"C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms\auto_sync.vbs"'
+$action   = New-ScheduledTaskAction -Execute 'wscript.exe' -Argument '"C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\auto_sync.vbs"'
 $trigger  = New-ScheduledTaskTrigger -RepetitionInterval (New-TimeSpan -Minutes 30) -Once -At (Get-Date)
 $settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit (New-TimeSpan -Minutes 5) -StartWhenAvailable
 
@@ -7,7 +7,7 @@ Register-ScheduledTask `
     -Action     $action `
     -Trigger    $trigger `
     -Settings   $settings `
-    -Description 'Auto-commits and pushes cb-deliverables changes to GitHub every 30 minutes' `
+    -Description 'Runs graph_importer.js and syncs carp-dashboard changes to GitHub every 30 minutes' `
     -Force
 
 Write-Host 'Scheduled task registered successfully.' -ForegroundColor Green

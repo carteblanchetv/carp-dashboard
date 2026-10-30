@@ -4,7 +4,7 @@
 # ============================================================
 
 $GIT       = "C:\Program Files\Git\cmd\git.exe"
-$REPO_DIR  = "C:\Users\lizzy\.gemini\antigravity\scratch\cb_forms"
+$REPO_DIR  = "C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard"
 $LOG_FILE  = "$REPO_DIR\auto_sync.log"
 $TIMESTAMP = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
