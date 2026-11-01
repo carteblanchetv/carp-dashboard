@@ -1,120 +1,3 @@
-[2026-11-01 11:55:42]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-11-01 11:55:42]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-11-01 11:55:42]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-11-01 11:55:42]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-11-01 11:55:42]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-11-01 11:55:42]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-11-01 11:55:42]   config: {
-[2026-11-01 11:55:42]     method: 'POST',
-[2026-11-01 11:55:42]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1793527042273_Untapped-AI-Carte-Blanche-Briefing.pdf&uploadType=resumable',
-[2026-11-01 11:55:42]     params: {
-[2026-11-01 11:55:42]       name: 'submissions/email_submission/1793527042273_Untapped-AI-Carte-Blanche-Briefing.pdf',
-[2026-11-01 11:55:42]       uploadType: 'resumable'
-[2026-11-01 11:55:42]     },
-[2026-11-01 11:55:42]     data: {},
-[2026-11-01 11:55:42]     headers: {
-[2026-11-01 11:55:42]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-11-01 11:55:42]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/6c91b100-fba5-4697-8050-3374b3e39d45',
-[2026-11-01 11:55:42]       'X-Upload-Content-Type': 'application/pdf',
-[2026-11-01 11:55:42]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-11-01 11:55:42]       'Content-Type': 'application/json'
-[2026-11-01 11:55:42]     },
-[2026-11-01 11:55:42]     validateStatus: [Function (anonymous)],
-[2026-11-01 11:55:42]     paramsSerializer: [Function: paramsSerializer],
-[2026-11-01 11:55:42]     body: '{}',
-[2026-11-01 11:55:42]     responseType: 'unknown',
-[2026-11-01 11:55:42]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-01 11:55:42]   },
-[2026-11-01 11:55:42]   response: {
-[2026-11-01 11:55:42]     config: {
-[2026-11-01 11:55:42]       method: 'POST',
-[2026-11-01 11:55:42]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1793527042273_Untapped-AI-Carte-Blanche-Briefing.pdf&uploadType=resumable',
-[2026-11-01 11:55:42]       params: [Object],
-[2026-11-01 11:55:42]       data: {},
-[2026-11-01 11:55:42]       headers: [Object],
-[2026-11-01 11:55:42]       validateStatus: [Function (anonymous)],
-[2026-11-01 11:55:42]       paramsSerializer: [Function: paramsSerializer],
-[2026-11-01 11:55:42]       body: '{}',
-[2026-11-01 11:55:42]       responseType: 'unknown',
-[2026-11-01 11:55:42]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-01 11:55:42]     },
-[2026-11-01 11:55:42]     data: '{\n' +
-[2026-11-01 11:55:42]       '  "error": {\n' +
-[2026-11-01 11:55:42]       '    "code": 404,\n' +
-[2026-11-01 11:55:42]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-11-01 11:55:42]       '    "errors": [\n' +
-[2026-11-01 11:55:42]       '      {\n' +
-[2026-11-01 11:55:42]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-11-01 11:55:42]       '        "domain": "global",\n' +
-[2026-11-01 11:55:42]       '        "reason": "notFound"\n' +
-[2026-11-01 11:55:42]       '      }\n' +
-[2026-11-01 11:55:42]       '    ]\n' +
-[2026-11-01 11:55:42]       '  }\n' +
-[2026-11-01 11:55:42]       '}\n',
-[2026-11-01 11:55:42]     headers: {
-[2026-11-01 11:55:42]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-11-01 11:55:42]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-11-01 11:55:42]       'content-length': '247',
-[2026-11-01 11:55:42]       'content-type': 'text/html; charset=UTF-8',
-[2026-11-01 11:55:42]       date: 'Sun, 01 Nov 2026 09:57:19 GMT',
-[2026-11-01 11:55:42]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-11-01 11:55:42]       pragma: 'no-cache',
-[2026-11-01 11:55:42]       server: 'UploadServer',
-[2026-11-01 11:55:42]       vary: 'Origin, X-Origin',
-[2026-11-01 11:55:42]       'x-goog-gcs-base-ts': '1a1968ac6d0',
-[2026-11-01 11:55:42]       'x-guploader-uploadid': 'AFy3sg2fVmd-cLVXK3mTXseoyNGB-61yTlirE4jrk3s4ckX8mkwGtfphM2s4TXxgAH7lp--ekqEUCjwssVbYBEfupboQiAF0740eDHVpwwPZ0-8'
-[2026-11-01 11:55:42]     },
-[2026-11-01 11:55:42]     status: 404,
-[2026-11-01 11:55:42]     statusText: 'Not Found',
-[2026-11-01 11:55:42]     request: {
-[2026-11-01 11:55:42]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1793527042273_Untapped-AI-Carte-Blanche-Briefing.pdf&uploadType=resumable'
-[2026-11-01 11:55:42]     }
-[2026-11-01 11:55:42]   },
-[2026-11-01 11:55:42]   error: undefined,
-[2026-11-01 11:55:42]   status: 404,
-[2026-11-01 11:55:42]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-11-01 11:55:42] }
-[2026-11-01 11:55:42] Saved submission successfully to Firestore: submissions/qv912nbFy0rkXAcMe4yt
-[2026-11-01 11:55:42] Marked email as read on Microsoft Graph.
-[2026-11-01 11:55:42] 
-[2026-11-01 11:55:42] Processing: "Diabetic patient ill treatment at " from caley.gray@icloud.com <caley.gray@icloud.com>
-[2026-11-01 11:55:42] Identified formType: email_submission
-[2026-11-01 11:55:42] Saved submission successfully to Firestore: submissions/4R3TDl4VnBQbM2DBXoJ4
-[2026-11-01 11:55:42] Marked email as read on Microsoft Graph.
-[2026-11-01 11:55:42] 
-[2026-11-01 11:55:42] Processing: "Admission to Hospital in Pretoria compromised for life saving cancer treatment putting patients at risk of losing the agreed procedure schedule." from Walter Gygax <walter.gygax@gmail.com>
-[2026-11-01 11:55:42] Identified formType: email_submission
-[2026-11-01 11:55:42] Saved submission successfully to Firestore: submissions/684Wh1dTdsCyFrkmVG5b
-[2026-11-01 11:55:42] Marked email as read on Microsoft Graph.
-[2026-11-01 11:55:42] 
-[2026-11-01 11:55:42] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
-[2026-11-01 11:55:42] Identified formType: dstv_tipoff
-[2026-11-01 11:55:42] Saved submission successfully to Firestore: submissions/mDz6qa3uP8f6QN4WjXVO
-[2026-11-01 11:55:42] Marked email as read on Microsoft Graph.
-[2026-11-01 11:55:42] 
-[2026-11-01 11:55:42] Processing: "The Montreal Book 2026" from Hotel Booking Team <reservations@swift-checkin.com>
-[2026-11-01 11:55:42] Identified formType: email_submission
-[2026-11-01 11:55:42] Saved submission successfully to Firestore: submissions/c6uQUjFvhc3EDw4PUAU4
-[2026-11-01 11:55:42] Marked email as read on Microsoft Graph.
-[2026-11-01 11:55:42] 
-[2026-11-01 11:55:42] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
-[2026-11-01 11:55:42] Identified formType: dstv_tipoff
-[2026-11-01 11:55:42] Saved submission successfully to Firestore: submissions/Pfl1HMmHdQ6hvPbuOiUa
-[2026-11-01 11:55:42] Marked email as read on Microsoft Graph.
-[2026-11-01 11:55:42] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-31T18:57:03Z)
-[2026-11-01 11:55:42] 
-[2026-11-01 11:55:42] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
-[2026-11-01 11:55:42] Identified formType: dstv_tipoff
-[2026-11-01 11:55:42] Saved submission successfully to Firestore: submissions/SkCmsJm0QLFCYfn6k3p9
-[2026-11-01 11:55:42] Marked email as read on Microsoft Graph.
-[2026-11-01 11:55:42] 
-[2026-11-01 11:55:42] Processing: "pension surplus matter" from Floyd Bonhomme <fmbsolutions@yahoo.com>
-[2026-11-01 11:55:42] Identified formType: email_submission
-[2026-11-01 11:55:42] Saved submission successfully to Firestore: submissions/VPgeVZx7PF49x3BGVXe5
-[2026-11-01 11:55:42] Marked email as read on Microsoft Graph.
-[2026-11-01 11:55:42] 
-[2026-11-01 11:55:42] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
-[2026-11-01 11:55:42] Identified formType: dstv_tipoff
 [2026-11-01 11:55:42] Saved submission successfully to Firestore: submissions/9uakeL7iWcSNFu9Amkxl
 [2026-11-01 11:55:42] Marked email as read on Microsoft Graph.
 [2026-11-01 11:55:42] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-01T07:02:23Z)
@@ -510,3 +393,61 @@
 [2026-11-01 14:50:44] 
 [2026-11-01 14:50:44] Microsoft Graph email import cycle completed successfully.
 [2026-11-01 14:50:44] Changes detected. Syncing...
+[2026-11-01 14:50:44] [main 8e847dd] auto-sync: 2026-11-01 14:51
+[2026-11-01 14:50:44]  1 file changed, 58 insertions(+)
+[2026-11-01 14:50:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-11-01 14:50:44]    07c88b6..8e847dd  main -> main
+[2026-11-01 14:50:44] Sync complete.
+[2026-11-01 15:20:44] Running Microsoft Graph Email Importer...
+[2026-11-01 15:20:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-11-01 15:20:44] Fetching messages from Microsoft Graph...
+[2026-11-01 15:20:44] Found 46 email(s) since 1 May 2026 to check.
+[2026-11-01 15:20:44] Skipping duplicate: "SUNET SAAYMAN CONSULTENCY SERVICES (PTY) LTS" from Erika Nel <erikanel370@gmail.com> (received: 2026-10-29T13:23:17Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Fwd: SUNET SAAYMAN CONSULTANCY SERVICES (PTY) LTD" from Erika Nel <erikanel370@gmail.com> (received: 2026-10-29T14:18:48Z)
+[2026-11-01 15:20:44] Skipping duplicate: "LSSA CONGRATULATES JUDGE NAVANETHEM (NAVI) PILLAY ON THE 2026 NOBEL PEACE PRIZE" from Law Society of South Africa <contact@lssa.org.za> (received: 2026-10-29T14:32:39Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T14:52:04Z)
+[2026-11-01 15:20:44] Skipping duplicate: "CROSS-BORDER FRAUD TO REMOVE FATHER NAME OFF BIRTH REGISTER WITHOUT MOTHERS CONSENT - SYSTEM FAILURE BY THE VERY PEOPLE WHO ARE SUPPOSED TO PROTECT THE CHILD" from Leanne Mikkelsen <lmikkelsen13@gmail.com> (received: 2026-10-29T15:23:37Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Highly Confidential " from Kenneth Mathebe <mathebek@icloud.com> (received: 2026-10-29T15:32:25Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T15:59:04Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T17:55:15Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T17:57:30Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-29T18:35:06Z)
+[2026-11-01 15:20:44] Skipping duplicate: "AdsGPT Camp-¦ign Ads Manager Platform OpCo, LLC has invited you to test -PpenAI -ÉdsGPT -íampaign AI." from AdsGPT Camp-¦ign Ads Manager Platform OpCo, LLC via TestFlight <testflight_no_reply@email.apple.com> (received: 2026-10-29T19:24:02Z)
+[2026-11-01 15:20:44] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-01 15:20:44] Skipping duplicate: "N/ Dossier 204 SCMS - Em+¡lia Costa" from Alberto Da Costa <dukedacosta@gmail.com> (received: 2026-10-30T05:09:11Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Fwd: A Sacred Invitation to Empathy: The Launch of the Adoptee Remembrance Day Manifesto, Global Pledge, and Official AGÇª" from Nathan Petzer <nathan.petzer@gmail.com> (received: 2026-10-30T05:39:54Z)
+[2026-11-01 15:20:44] Skipping duplicate: "EMS Foundation response Re: Let them Roam, please" from Megan Carr <megan@emsfoundation.org.za> (received: 2026-10-30T07:43:55Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T10:14:23Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T10:39:59Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T12:06:42Z)
+[2026-11-01 15:20:44] Skipping duplicate: "RX Radio Newsletter" from RX Radio SA <pofficer@rxradio.co.za> (received: 2026-10-30T12:55:43Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Re: EMS Foundation response Re: Let them Roam, please" from Cera-Jane Catton <cerajanec@gmail.com> (received: 2026-10-30T13:57:22Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T14:03:39Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T17:15:27Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T20:52:48Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-30T21:32:13Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Durban High Court Renovation Project GÇô Public Funds, Apprenticeship Failures and Financial Concerns" from Matilda Green <matildagreen092@gmail.com> (received: 2026-10-30T21:36:57Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-31T05:40:09Z)
+[2026-11-01 15:20:44] Skipping duplicate: "I wish to remain anonymous" from Nadine Pelser <nadinepelser@gmail.com> (received: 2026-10-31T05:45:45Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-31T08:14:07Z)
+[2026-11-01 15:20:44] Skipping duplicate: "HARE KRISHNA ......INVESTIGATIVE MEDIA BRIEF / PRESS EXPOS+ë" from Leal Birball <lcbirball@gmail.com> (received: 2026-10-31T11:07:50Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-31T12:25:41Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Attention : SIM card Fraud - Untapped Ai " from Lloyd Matthew | Untapped Connectivity <lloyd@untapped.co.za> (received: 2026-10-31T14:51:50Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Diabetic patient ill treatment at " from caley.gray@icloud.com <caley.gray@icloud.com> (received: 2026-10-31T15:15:58Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Admission to Hospital in Pretoria compromised for life saving cancer treatment putting patients at risk of losing the agreed procedure schedule." from Walter Gygax <walter.gygax@gmail.com> (received: 2026-10-31T15:26:26Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-31T16:19:08Z)
+[2026-11-01 15:20:44] Skipping duplicate: "The Montreal Book 2026" from Hotel Booking Team <reservations@swift-checkin.com> (received: 2026-10-31T18:30:35Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-31T18:56:59Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-31T18:57:03Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-10-31T18:57:04Z)
+[2026-11-01 15:20:44] Skipping duplicate: "pension surplus matter" from Floyd Bonhomme <fmbsolutions@yahoo.com> (received: 2026-11-01T06:20:58Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-01T07:02:21Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-01T07:02:23Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-01T07:04:05Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-01T07:15:23Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-01T09:27:17Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-01T09:39:29Z)
+[2026-11-01 15:20:44] Skipping duplicate: "Elegant dumping" from Lanese Van Der Merwe <lanesevdm@gmail.com> (received: 2026-11-01T11:23:02Z)
+[2026-11-01 15:20:44] 
+[2026-11-01 15:20:44] Microsoft Graph email import cycle completed successfully.
+[2026-11-01 15:20:44] Changes detected. Syncing...
