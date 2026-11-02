@@ -10,8 +10,8 @@ import {
     prepareTemplatePdf,
     drawInFieldBox,
     drawSignatureInFieldBox
-} from './form_submission_helper.js?v=5.4.0';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.0';
+} from './form_submission_helper.js?v=5.4.1';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.1';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialise Dual-Mode Signature Pads
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     emailEl.value = loadedSubmission.submittedByEmail || loadedSubmission.producerEmail || 'release@carteblanche.co.za';
                 }
 
-                if (loadedSubmission.status === 'completed') {
+                if (loadedSubmission.status === 'completed' || loadedSubmission.status === 'APPROVED' || loadedSubmission.isLocked) {
                     renderCoSignBanner(container, {
                         title: 'Agreement Completed',
                         subtitle: 'This agreement has already been fully signed by both parties.',
@@ -119,8 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         producerPad.loadDataURL(loadedSubmission.producerSignature, loadedSubmission.producerName);
                         producerPad.lock('Signed by Producer');
                     }
-                    if (loadedSubmission.parentSignature) {
-                        parentPad.loadDataURL(loadedSubmission.parentSignature, loadedSubmission.parentName || loadedSubmission.guardianName);
+                    if (loadedSubmission.parentSignature || loadedSubmission.guardianSignature) {
+                        parentPad.loadDataURL(loadedSubmission.parentSignature || loadedSubmission.guardianSignature, loadedSubmission.parentName || loadedSubmission.guardianName);
                         parentPad.lock('Signed by Parent / Guardian');
                     }
                     document.getElementById('submitFormBtn').disabled = true;
@@ -196,23 +196,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const { pdfBlob, filename } = await buildCompletedPDF(parentPad, producerPad);
+            const parentId = document.getElementById('parentId')?.value.trim() || '';
+            const submitterEmail = document.getElementById('submitterEmail')?.value.trim() || (window.auth?.getCurrentUser?.()?.email) || (window.auth?.currentUser?.email) || '';
 
             const formData = new FormData();
             formData.append('pdf', pdfBlob, filename);
             formData.append('formType', 'minor_release');
             formData.append('formTitle', 'Minor Release Form 2026');
             formData.append('storyName', story);
+            formData.append('storyTitle', story);
             formData.append('commissionNumber', comm);
             formData.append('producerName', producer);
-            formData.append('producerEmail', (window.auth?.currentUser?.email) || '');
+            formData.append('producerEmail', submitterEmail);
+            formData.append('submitterEmail', submitterEmail);
             formData.append('producerSignature', producerPad.toDataURL());
             formData.append('contributorName', parentName ? `${parentName} (Parent of ${childName || 'Minor'})` : 'Parent / Guardian');
+            formData.append('childName', childName);
+            formData.append('minorName', childName);
+            formData.append('parentName', parentName);
+            formData.append('guardianName', parentName);
+            formData.append('parentIdNumber', parentId);
+            formData.append('guardianId', parentId);
             formData.append('place', place);
+            formData.append('producerSignedAt', place);
             formData.append('dateVal', dateVal);
+            formData.append('producerSignedDate', dateVal);
             formData.append('metadata', JSON.stringify({
                 childName: childName,
                 parentName: parentName,
-                parentId: document.getElementById('parentId')?.value.trim() || ''
+                parentId: parentId
             }));
 
             const res = await initCoSignAgreement(formData);
@@ -293,16 +305,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (emailEl && !emailEl.value.trim()) {
             if (loadedSubmission) {
                 emailEl.value = loadedSubmission.submittedByEmail || loadedSubmission.producerEmail || 'release@carteblanche.co.za';
-            } else if (window.auth?.currentUser?.email) {
-                emailEl.value = window.auth.currentUser.email;
+            } else if (window.auth?.getCurrentUser?.()?.email || window.auth?.currentUser?.email) {
+                emailEl.value = window.auth?.getCurrentUser?.()?.email || window.auth?.currentUser?.email;
             } else {
                 emailEl.value = 'release@carteblanche.co.za';
             }
-        }
-
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
         }
 
         if (!loadedSubmission && parentPad.isEmpty() && !producerPad.isEmpty()) {
@@ -310,6 +317,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleSendForCoSign();
                 return;
             }
+        }
+
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
         }
 
         if (parentPad.isEmpty()) {

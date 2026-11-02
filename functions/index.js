@@ -1263,6 +1263,7 @@ async function validateFirebaseIdToken(req, res, next) {
   const publicFormRoutes = [
     '/s',
     '/sign',
+    '/api/init-co-sign-agreement',
     '/api/send-participant-release',
     '/api/send-minor-release',
     '/api/send-location-agreement',
@@ -2161,6 +2162,115 @@ app.post('/api/send-footage-agreement', async (req, res) => {
   }
 });
 
+app.post('/api/init-co-sign-agreement', async (req, res) => {
+  try {
+    const { fields, files } = await parseMultipart(req);
+    if (files.length === 0) return res.status(400).json({ success: false, error: 'No PDF file provided' });
+
+    const rawFormType = (fields.formType || 'participant_release').trim();
+    const formType = rawFormType === 'footage_release_agreement' || rawFormType === 'footage_release'
+      ? 'footage_agreement'
+      : rawFormType;
+    const formTitle = fields.formTitle || RELEASE_FORM_TITLE_MAP[formType] || 'Release Agreement';
+
+    let parsedMeta = {};
+    if (fields.metadata) {
+      try {
+        parsedMeta = typeof fields.metadata === 'string' ? JSON.parse(fields.metadata) : fields.metadata;
+      } catch (e) {}
+    }
+
+    const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
+    const storyTitle = fields.storyTitle || fields.storyName || 'Story';
+    const storyName = storyTitle;
+
+    const resolvedProd = await resolveProducerDetails({
+      req,
+      fields,
+      commissionNumber,
+      producerName: fields.producerName,
+      producerEmail: fields.producerEmail
+    });
+    const producerEmail = resolvedProd.producerEmail;
+    const producerName = resolvedProd.producerName;
+
+    const contributorName = fields.contributorName || fields.participantName || fields.fullName || fields.parentName || fields.ownerName || fields.ownerSignatory || parsedMeta.parentName || parsedMeta.ownerName || parsedMeta.ownerSignatory || 'Co-Signer';
+
+    const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
+    const protocol = (req && req.get('x-forwarded-proto')) || 'https';
+    const baseUrl = `${protocol}://${host}`;
+    const { shareToken, tokenExpiresAt, shareUrl } = createFormShareMetadata(baseUrl);
+
+    const dbResult = await processMultiFileStorageAndFirestore(
+      req, formType, formType, files,
+      {
+        ...parsedMeta,
+        ...fields,
+        formType,
+        formTitle,
+        storyName,
+        storyTitle,
+        commissionNumber,
+        producerName,
+        producerEmail,
+        contributorName,
+        fullName: fields.fullName || fields.participantName || contributorName,
+        participantName: fields.participantName || fields.fullName || contributorName,
+        idNumber: fields.idNumber || parsedMeta.participantId || '',
+        phone: fields.phone || fields.contactNumber || parsedMeta.participantContact || '',
+        contactNumber: fields.contactNumber || fields.phone || parsedMeta.participantContact || '',
+        childName: fields.childName || fields.minorName || parsedMeta.childName || '',
+        minorName: fields.minorName || fields.childName || parsedMeta.childName || '',
+        parentName: fields.parentName || fields.guardianName || parsedMeta.parentName || '',
+        guardianName: fields.guardianName || fields.parentName || parsedMeta.parentName || '',
+        parentIdNumber: fields.parentIdNumber || fields.guardianId || parsedMeta.parentId || '',
+        guardianId: fields.guardianId || fields.parentIdNumber || parsedMeta.parentId || '',
+        locationAddress: fields.locationAddress || fields.propertyAddress || parsedMeta.locationAddress || fields.place || '',
+        propertyAddress: fields.propertyAddress || fields.locationAddress || parsedMeta.locationAddress || fields.place || '',
+        dateOfFilming: fields.dateOfFilming || parsedMeta.dateOfFilming || fields.dateVal || '',
+        ownerName: fields.ownerName || fields.ownerSignatory || parsedMeta.ownerName || parsedMeta.ownerSignatory || '',
+        ownerSignatory: fields.ownerSignatory || fields.ownerName || parsedMeta.ownerSignatory || '',
+        ownerEntity: fields.ownerEntity || parsedMeta.ownerEntity || '',
+        footageDescription: fields.footageDescription || parsedMeta.footageDescription || '',
+        musicTracks: fields.musicTracks || parsedMeta.musicTracks || '',
+        broadcastDate: fields.broadcastDate || parsedMeta.broadcastDate || fields.dateVal || '',
+        place: fields.place || '',
+        dateVal: fields.dateVal || '',
+        status: 'PARTIALLY_SIGNED',
+        shareToken,
+        tokenExpiresAt,
+        shareUrl,
+        producerSignature: fields.producerSignature || null,
+        participantSignature: fields.participantSignature || null
+      }
+    );
+
+    await sendProducerShareLinkEmail({
+      submissionId: dbResult.firestoreDocId,
+      formType,
+      formTitle,
+      commissionNumber,
+      storyTitle,
+      producerName,
+      producerEmail,
+      contributorName,
+      shareUrl,
+      req
+    });
+
+    return res.status(200).json({
+      success: true,
+      status: 'PARTIALLY_SIGNED',
+      firestoreDocId: dbResult.firestoreDocId,
+      shareToken,
+      shareUrl
+    });
+  } catch (error) {
+    console.error('[INIT-COSIGN] Error creating co-sign agreement:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.get('/api/get-form-for-countersign/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -2396,6 +2506,10 @@ app.post('/api/countersign-form', async (req, res) => {
     const updatePayload = {
       status: 'APPROVED',
       producerSignature: producerSignature || subData.producerSignature || null,
+      participantSignature: fields.participantSignature || fields.ownerSignature || fields.parentSignature || fields.guardianSignature || subData.participantSignature || null,
+      ownerSignature: fields.ownerSignature || fields.participantSignature || subData.ownerSignature || null,
+      parentSignature: fields.parentSignature || fields.guardianSignature || subData.parentSignature || null,
+      guardianSignature: fields.guardianSignature || fields.parentSignature || subData.guardianSignature || null,
       producerName: pName,
       producerEmail: pEmail,
       countersignedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -2407,15 +2521,15 @@ app.post('/api/countersign-form', async (req, res) => {
     // Persist any edited fields from resubmission (e.g., typos, story name, ID numbers, address)
     const editableFieldKeys = [
       'storyName', 'storyTitle', 'commissionNumber',
-      'fullName', 'contributorName', 'artistName', 'guardianName', 'ownerName', 'licensorName',
-      'idNumber', 'guardianId', 'ownerId',
-      'phone', 'email',
-      'minorName', 'minorAge',
-      'propertyAddress', 'filmingDate',
-      'trackTitle', 'trackDuration', 'publisherName',
-      'licensorEntity', 'footageDescription', 'courtesyCredit', 'broadcastDate',
-      'participantSignedAt', 'participantSignedDate', 'signedAt', 'signedDate',
-      'producerSignedAt', 'producerSignedDate'
+      'fullName', 'participantName', 'contributorName', 'artistName', 'guardianName', 'parentName', 'ownerName', 'locationOwnerName', 'licensorName', 'footageOwnerName', 'musicOwnerName', 'ownerSignatory',
+      'idNumber', 'guardianId', 'parentId', 'parentIdNumber', 'ownerId',
+      'phone', 'contactNumber', 'email', 'submitterEmail',
+      'minorName', 'childName', 'minorAge',
+      'propertyAddress', 'locationAddress', 'place', 'filmingDate', 'dateOfFilming',
+      'trackTitle', 'musicTracks', 'trackDuration', 'publisherName', 'musicOwnerCompany', 'ownerEntity',
+      'licensorEntity', 'footageOwnerCompany', 'footageDescription', 'courtesyCredit', 'broadcastDate', 'broadcastDated',
+      'participantSignedAt', 'participantSignedDate', 'signedAt', 'signedDate', 'dateVal',
+      'producerSignedAt', 'producerSignedDate', 'metadata'
     ];
 
     editableFieldKeys.forEach(k => {
@@ -2645,13 +2759,20 @@ app.post('/api/send-participant-release', async (req, res) => {
     const { fields, files } = await parseMultipart(req);
     if (files.length === 0) return res.status(400).json({ success: false, error: 'No files provided' });
 
-    const fullName = fields.participantName || fields.participant || fields.fullName || 'Participant';
-    const idNumber = fields.idNumber || '';
-    const phone = fields.contactNumber || fields.phone || '';
+    let parsedMeta = {};
+    if (fields.metadata) {
+      try {
+        parsedMeta = typeof fields.metadata === 'string' ? JSON.parse(fields.metadata) : fields.metadata;
+      } catch (e) {}
+    }
+
+    const fullName = fields.participantName || fields.participant || fields.fullName || fields.contributorName || 'Participant';
+    const idNumber = fields.idNumber || parsedMeta.participantId || '';
+    const phone = fields.contactNumber || fields.phone || parsedMeta.participantContact || '';
     const email = fields.email || '';
     const storyTitle = fields.storyTitle || fields.storyName || 'Story';
     const storyName = storyTitle;
-    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
+    const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.submitterEmail || fields.email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
 
@@ -2690,6 +2811,7 @@ app.post('/api/send-participant-release', async (req, res) => {
       {
         fullName,
         participantName: fullName,
+        contributorName: fullName,
         idNumber,
         phone,
         contactNumber: phone,
@@ -2699,10 +2821,13 @@ app.post('/api/send-participant-release', async (req, res) => {
         commissionNumber,
         producerName,
         producerEmail,
-        participantSignedAt: fields.participantSignedAt || fields.signedAt || null,
+        place: fields.place || fields.producerSignedAt || fields.participantSignedAt || null,
+        dateVal: fields.dateVal || null,
+        metadata: fields.metadata || null,
+        participantSignedAt: fields.participantSignedAt || fields.signedAt || fields.place || null,
         participantSignedDate: fields.participantSignedDate || fields.signedDate || null,
-        producerSignedAt: fields.producerSignedAt || null,
-        producerSignedDate: fields.producerSignedDate || null,
+        producerSignedAt: fields.producerSignedAt || fields.place || null,
+        producerSignedDate: fields.producerSignedDate || fields.dateVal || null,
         status: formStatus,
         shareToken,
         tokenExpiresAt,

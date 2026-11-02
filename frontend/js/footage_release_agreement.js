@@ -10,8 +10,8 @@ import {
     prepareTemplatePdf,
     drawInFieldBox,
     drawSignatureInFieldBox
-} from './form_submission_helper.js?v=5.4.0';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.0';
+} from './form_submission_helper.js?v=5.4.1';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.1';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialise Dual-Mode Signature Pads
@@ -95,12 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const el = document.getElementById('footageDescription');
                     if (el) el.value = loadedSubmission.footageDescription;
                 }
-                if (loadedSubmission.ownerEntity) {
+                if (loadedSubmission.ownerEntity || loadedSubmission.footageOwnerCompany || loadedSubmission.licensorEntity) {
                     const el = document.getElementById('ownerEntity');
-                    if (el) el.value = loadedSubmission.ownerEntity;
+                    if (el) el.value = loadedSubmission.ownerEntity || loadedSubmission.footageOwnerCompany || loadedSubmission.licensorEntity;
                 }
-                const ownerVal = loadedSubmission.ownerSignatory || loadedSubmission.ownerName || '';
-                if (ownerVal) {
+                const ownerVal = loadedSubmission.ownerSignatory || loadedSubmission.footageOwnerName || loadedSubmission.licensorName || loadedSubmission.ownerName || '';
+                if (ownerVal && !ownerVal.includes('Footage Owner')) {
                     const sEl = document.getElementById('ownerSignatory');
                     const nEl = document.getElementById('ownerName');
                     if (sEl && !sEl.value) sEl.value = ownerVal;
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     emailEl.value = loadedSubmission.submittedByEmail || loadedSubmission.producerEmail || 'release@carteblanche.co.za';
                 }
 
-                if (loadedSubmission.status === 'completed') {
+                if (loadedSubmission.status === 'completed' || loadedSubmission.status === 'APPROVED' || loadedSubmission.isLocked) {
                     renderCoSignBanner(container, {
                         title: 'Agreement Completed',
                         subtitle: 'This footage agreement has already been fully signed by both parties.',
@@ -333,16 +333,16 @@ document.addEventListener('DOMContentLoaded', () => {
             pDateEl.value = new Date().toISOString().split('T')[0];
         }
 
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
-
         if (!loadedSubmission && ownerPad.isEmpty() && !producerPad.isEmpty()) {
             if (confirm('Footage Licensor signature is empty. Would you like to create a secure co-signing link with your Producer signature and share it with the rights owner?')) {
                 handleSendForCoSign();
                 return;
             }
+        }
+
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
         }
 
         if (ownerPad.isEmpty()) {
