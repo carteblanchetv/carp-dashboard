@@ -38,27 +38,34 @@ export async function submitLegalForm(formData) {
 }
 
 /**
- * Initiates an agreement where one party (e.g. Producer) signs first and requests co-signature
+ * Initiates an agreement where one party (e.g. Producer) signs first and requests co-signature.
+ * Uses the form-specific legal submission endpoint (which natively creates PARTIALLY_SIGNED
+ * co-sign records and returns shareUrl), with fallback to /api/init-co-sign-agreement.
  */
 export async function initCoSignAgreement(formData) {
-    let response = null;
+    const response = await submitLegalForm(formData);
+    if (response && response.status !== 404) {
+        return response;
+    }
+
+    let fallbackResponse = null;
     if (window.auth && typeof window.auth.fetchWithAuth === 'function') {
         try {
-            response = await window.auth.fetchWithAuth('/api/init-co-sign-agreement', {
+            fallbackResponse = await window.auth.fetchWithAuth('/api/init-co-sign-agreement', {
                 method: 'POST',
                 body: formData
             });
         } catch (e) {
-            console.warn('[initCoSignAgreement] fetchWithAuth failed, falling back to fetch:', e);
+            console.warn('[initCoSignAgreement] fetchWithAuth fallback failed:', e);
         }
     }
-    if (!response) {
-        response = await fetch('/api/init-co-sign-agreement', {
+    if (!fallbackResponse) {
+        fallbackResponse = await fetch('/api/init-co-sign-agreement', {
             method: 'POST',
             body: formData
         });
     }
-    return response;
+    return fallbackResponse;
 }
 
 /**

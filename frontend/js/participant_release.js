@@ -10,8 +10,8 @@ import {
     prepareTemplatePdf,
     drawInFieldBox,
     drawSignatureInFieldBox
-} from './form_submission_helper.js?v=5.4.0';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.0';
+} from './form_submission_helper.js?v=5.4.1';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.1';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialise Dual-Mode Signature Pads
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     emailEl.value = loadedSubmission.submittedByEmail || loadedSubmission.producerEmail || 'release@carteblanche.co.za';
                 }
 
-                if (loadedSubmission.status === 'completed') {
+                if (loadedSubmission.status === 'completed' || loadedSubmission.status === 'APPROVED' || loadedSubmission.isLocked) {
                     renderCoSignBanner(container, {
                         title: 'Agreement Completed',
                         subtitle: 'This agreement has already been fully signed by both parties.',
@@ -201,22 +201,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const { pdfBlob, filename } = await buildCompletedPDF(participantPad, producerPad);
+            const participantId = document.getElementById('participantId')?.value.trim() || '';
+            const participantContact = document.getElementById('participantContact')?.value.trim() || '';
+            const submitterEmail = document.getElementById('submitterEmail')?.value.trim() || (window.auth?.getCurrentUser?.()?.email) || (window.auth?.currentUser?.email) || '';
 
             const formData = new FormData();
             formData.append('pdf', pdfBlob, filename);
             formData.append('formType', 'participant_release');
             formData.append('formTitle', 'Participant Release Form 2026');
             formData.append('storyName', story);
+            formData.append('storyTitle', story);
             formData.append('commissionNumber', comm);
             formData.append('producerName', producer);
-            formData.append('producerEmail', (window.auth?.currentUser?.email) || '');
+            formData.append('producerEmail', submitterEmail);
+            formData.append('submitterEmail', submitterEmail);
             formData.append('producerSignature', producerPad.toDataURL());
             formData.append('contributorName', participant);
+            formData.append('participantName', participant);
+            formData.append('fullName', participant);
+            formData.append('idNumber', participantId);
+            formData.append('contactNumber', participantContact);
+            formData.append('phone', participantContact);
             formData.append('place', place);
+            formData.append('producerSignedAt', place);
             formData.append('dateVal', dateVal);
+            formData.append('producerSignedDate', dateVal);
             formData.append('metadata', JSON.stringify({
-                participantId: document.getElementById('participantId')?.value.trim() || '',
-                participantContact: document.getElementById('participantContact')?.value.trim() || ''
+                participantId,
+                participantContact
             }));
 
             const res = await initCoSignAgreement(formData);
@@ -298,16 +310,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (emailEl && !emailEl.value.trim()) {
             if (loadedSubmission) {
                 emailEl.value = loadedSubmission.submittedByEmail || loadedSubmission.producerEmail || 'release@carteblanche.co.za';
-            } else if (window.auth?.currentUser?.email) {
-                emailEl.value = window.auth.currentUser.email;
+            } else if (window.auth?.getCurrentUser?.()?.email || window.auth?.currentUser?.email) {
+                emailEl.value = window.auth?.getCurrentUser?.()?.email || window.auth?.currentUser?.email;
             } else {
                 emailEl.value = 'release@carteblanche.co.za';
             }
-        }
-
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
         }
 
         // If producer signed first but participant has not yet signed, offer to send for co-signing
@@ -316,6 +323,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleSendForCoSign();
                 return;
             }
+        }
+
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
         }
 
         if (participantPad.isEmpty()) {
