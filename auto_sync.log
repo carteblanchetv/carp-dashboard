@@ -1,129 +1,3 @@
-[2026-11-07 17:50:43] Skipping duplicate: "I have a story about a dangerous woman in Cape Town." from Andisiwe Pikisa <pikisaandisiwe@gmail.com> (received: 2026-11-07T09:15:13Z)
-[2026-11-07 17:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T09:22:12Z)
-[2026-11-07 17:50:43] Skipping duplicate: "Re: [Sunbet#1068305][Sunbet#998625][Sunbet#997052]Account Under Review" from Stephan Evans <ekkeevans@gmail.com> (received: 2026-11-07T09:41:51Z)
-[2026-11-07 17:50:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T14:34:52Z)
-[2026-11-07 17:50:43] 
-[2026-11-07 17:50:43] Microsoft Graph email import cycle completed successfully.
-[2026-11-07 17:50:43] Changes detected. Syncing...
-[2026-11-07 17:50:43] [main 6fc08f0] auto-sync: 2026-11-07 17:51
-[2026-11-07 17:50:43]  1 file changed, 67 insertions(+)
-[2026-11-07 17:50:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-11-07 17:50:43]    3f863b1..6fc08f0  main -> main
-[2026-11-07 17:50:43] Sync complete.
-[2026-11-07 18:20:43] Running Microsoft Graph Email Importer...
-[2026-11-07 18:20:43] Starting Graph API Email Importer... Mode: LIVE
-[2026-11-07 18:20:43] Fetching messages from Microsoft Graph...
-[2026-11-07 18:20:43] Fetching messages from Microsoft Graph...
-[2026-11-07 18:20:43] Found 53 email(s) since 1 May 2026 to check.
-[2026-11-07 18:20:43] Skipping duplicate: "Urgent Investigation Request GÇô Disturbing Hygiene Conditions and Inhumane Treatment at Tembisa HospitalGÇÖs Maternity Ward" from Olefa Yalo <olefayalo@gmail.com> (received: 2026-11-04T16:33:27Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Urgent Investigation Request GÇô Disturbing Hygiene Conditions and Inhumane Treatment at Tembisa HospitalGÇÖs Maternity Ward" from Olefa Yalo <olefayalo@gmail.com> (received: 2026-11-04T16:46:15Z)
-[2026-11-07 18:20:43] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
-[2026-11-07 18:20:43] Skipping duplicate: "Fwd: My daughters ordeal at the hands of a teacher" from Charlene Howard <charlenehoward03@gmail.com> (received: 2026-11-04T18:16:59Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-04T20:06:10Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Story Proposal - Project 170" from Caleb Matthew <calebmatthew980603@gmail.com> (received: 2026-11-04T20:07:40Z)
-[2026-11-07 18:20:43] Skipping duplicate: "INVESTIGATIVE PITCH: National Statutory Board Risking Member Funds and Breaking Laws Over Personal Executive Grudge" from zanelyndachshunds <zanelyndachshunds@gmail.com> (received: 2026-11-05T02:26:50Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Court Order Service render & Order Settlement for your ref" from Valentine Coetzee <Valentine.Coetzee@ECHEALTH.GOV.ZA> (received: 2026-11-05T06:07:28Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Company operating illegally" from Jeanne Hopwood <jeannehopwood@gmail.com> (received: 2026-11-05T06:39:30Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-05T07:04:03Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-05T07:13:38Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Media invitation: ESACD to examine alternatives to imprisonment for minor drug offences" from Darren Brookbanks <darren.brookbanks@globalinitiative.net> (received: 2026-11-05T07:14:40Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Re: Enquiry: Permission to use the Carte Blanche format- McDonald's " from Noni Khanye (Omnicom) <nonhlanhla.khanye@omc.com> (received: 2026-11-05T07:16:14Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Decades outstanding PTSD case" from Monique Reyneke <moniquereyneke63@gmail.com> (received: 2026-11-05T07:22:26Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Enquiry: Permission to use the Carte Blanche format- McDonald's " from Noni Khanye (Omnicom) <nonhlanhla.khanye@omc.com> (received: 2026-11-05T08:06:45Z)
-[2026-11-07 18:20:43] Skipping duplicate: "URGENT: Rustenburg & Zeerust GÇö 3 WEEKS Without Water, 5+ Days Without Power, No Answers" from Jacques Du Toit <jdutoit81@gmail.com> (received: 2026-11-05T09:09:15Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Hartswater donkie horse trade" from Johann Zondagh Raubenheimer <johannraub@gmail.com> (received: 2026-11-05T09:30:50Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Re: VIEWING OF SCRIPTS AFTER REMARKING" from Quanitah Kaffoor-Karlie <quanitahkk@gmail.com> (received: 2026-11-05T09:47:35Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Re: 77701-GAP76729S-Tar Mahomed Cancellation request" from Mahomed Hassen <hassenhg@googlemail.com> (received: 2026-11-05T10:04:19Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Re: 77701-GAP76729S-Tar Mahomed FORMAL NOTICE OF CANCELLATION GÇô GAP COVER WITH IMMEDIATE EFFECT" from Mahomed Hassen <hassenhg@googlemail.com> (received: 2026-11-05T10:04:50Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Re: NSPCA to open criminal case against SAPS officials after police dog's death" from Penny Collett <pennyc659@gmail.com> (received: 2026-11-05T13:32:41Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-05T13:35:11Z)
-[2026-11-07 18:20:43] Skipping duplicate: "IFAD at COP31: IFAD scales climate adaptation investments in rural communities feeding the world" from IFAD Newsroom <delivery@agilitypr.delivery> (received: 2026-11-05T16:04:16Z)
-[2026-11-07 18:20:43] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
-[2026-11-07 18:20:43] Skipping duplicate: "Subject: URGENT STORY PITCH: The Security Industrial Complex GÇô Corruption, POPIA Breaches, and Worker Exploitation at a National Level" from Alfa Romeo <alfaromeokilo1984@gmail.com> (received: 2026-11-05T17:55:44Z)
-[2026-11-07 18:20:43] Skipping duplicate: "CONSUMER AND FINANCIAL FRAUD ACCOCIATED WITH PIE ACT" from Deidre Pretorius <deedee.pretorius33@gmail.com> (received: 2026-11-05T18:52:29Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T03:14:26Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Re: URGENT: Request for intervention on exclusionary SANRAL RRM tender criteria" from Kulubuse007 <kulubuse007@gmail.com> (received: 2026-11-06T06:45:19Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T07:25:46Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Fw: COMPREHENSIVE FORENSIC SUBMISSION AND JURISDICTIONAL COMPULSION MANDATE IN RE: SYSTEMIC DATA SCRUBBING AND RE-ALLOCATION OF RETENTION RESIDUES" from Floyd Bonhomme <fmbsolutions@yahoo.com> (received: 2026-11-06T07:41:12Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Re: Response to your Liberty Policy Complaint" from Rofhiwa Thovhakale <rthovhakale@gmail.com> (received: 2026-11-06T07:44:55Z)
-[2026-11-07 18:20:43] Skipping duplicate: "BBEXPO 2026 Celebrated local business and recognises emerging business talent" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-11-06T07:45:44Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Re: URGENT: Request for intervention on exclusionary SANRAL RRM tender criteria" from Manqoba M <manqoba.m001@gmail.com> (received: 2026-11-06T08:31:20Z)
-[2026-11-07 18:20:43] Skipping duplicate: "(No Subject)" from Ana Maria De Caires <anamaria76242339@gmail.com> (received: 2026-11-06T09:05:34Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Re: Automatic reply:" from Ana Maria De Caires <anamaria76242339@gmail.com> (received: 2026-11-06T09:17:29Z)
-[2026-11-07 18:20:43] Skipping duplicate: "My story" from Natalie Wolmarans <natwolmarans@gmail.com> (received: 2026-11-06T09:24:00Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Re: Automatic reply:" from Ana Maria De Caires <anamaria76242339@gmail.com> (received: 2026-11-06T09:33:47Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Attempted Hijack" from John H M Carter <molyneuxcarter@gmail.com> (received: 2026-11-06T11:17:32Z)
-[2026-11-07 18:20:43] Skipping duplicate: "EVENT ANNOUNCEMENT - I LOVE CY LIVE MUSIC PARK FESTIVAL" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-11-06T15:50:33Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T16:42:54Z)
-[2026-11-07 18:20:43] Skipping duplicate: "(No Subject)" from Donovan Bartie <donovanbartie1234@gmail.com> (received: 2026-11-06T17:09:02Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T17:17:28Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T17:43:14Z)
-[2026-11-07 18:20:43] Skipping duplicate: "STORY PITCH / INVESTIGATIVE EXPOS+ë: The Under-Regulated Danger of Facial Dermal Reversals & Medical Gaslighting of Women In Aesthetic Medicine" from Jenna Van Der Burg <jenna.vdb@gmail.com> (received: 2026-11-06T18:07:38Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T00:17:34Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T00:17:41Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T00:23:14Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Eskom" from Hanna Harvey <hannaharvey16@gmail.com> (received: 2026-11-07T03:56:01Z)
-[2026-11-07 18:20:43] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
-[2026-11-07 18:20:43] Skipping duplicate: "I have a story about a dangerous woman in Cape Town." from Andisiwe Pikisa <pikisaandisiwe@gmail.com> (received: 2026-11-07T09:15:13Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T09:22:12Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Re: [Sunbet#1068305][Sunbet#998625][Sunbet#997052]Account Under Review" from Stephan Evans <ekkeevans@gmail.com> (received: 2026-11-07T09:41:51Z)
-[2026-11-07 18:20:43] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T14:34:52Z)
-[2026-11-07 18:20:43] 
-[2026-11-07 18:20:43] Microsoft Graph email import cycle completed successfully.
-[2026-11-07 18:20:43] Changes detected. Syncing...
-[2026-11-07 18:20:43] [main cc8b7d6] auto-sync: 2026-11-07 18:21
-[2026-11-07 18:20:43]  1 file changed, 66 insertions(+), 134 deletions(-)
-[2026-11-07 18:20:43] To https://github.com/carteblanchetv/carp-dashboard.git
-[2026-11-07 18:20:43]    6fc08f0..cc8b7d6  main -> main
-[2026-11-07 18:20:43] Sync complete.
-[2026-11-07 18:50:44] Running Microsoft Graph Email Importer...
-[2026-11-07 18:50:44] Starting Graph API Email Importer... Mode: LIVE
-[2026-11-07 18:50:44] Fetching messages from Microsoft Graph...
-[2026-11-07 18:50:44] Fetching messages from Microsoft Graph...
-[2026-11-07 18:50:44] Found 51 email(s) since 1 May 2026 to check.
-[2026-11-07 18:50:44] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
-[2026-11-07 18:50:44] Skipping duplicate: "Fwd: My daughters ordeal at the hands of a teacher" from Charlene Howard <charlenehoward03@gmail.com> (received: 2026-11-04T18:16:59Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-04T20:06:10Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Story Proposal - Project 170" from Caleb Matthew <calebmatthew980603@gmail.com> (received: 2026-11-04T20:07:40Z)
-[2026-11-07 18:50:44] Skipping duplicate: "INVESTIGATIVE PITCH: National Statutory Board Risking Member Funds and Breaking Laws Over Personal Executive Grudge" from zanelyndachshunds <zanelyndachshunds@gmail.com> (received: 2026-11-05T02:26:50Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Court Order Service render & Order Settlement for your ref" from Valentine Coetzee <Valentine.Coetzee@ECHEALTH.GOV.ZA> (received: 2026-11-05T06:07:28Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Company operating illegally" from Jeanne Hopwood <jeannehopwood@gmail.com> (received: 2026-11-05T06:39:30Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-05T07:04:03Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-05T07:13:38Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Media invitation: ESACD to examine alternatives to imprisonment for minor drug offences" from Darren Brookbanks <darren.brookbanks@globalinitiative.net> (received: 2026-11-05T07:14:40Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Re: Enquiry: Permission to use the Carte Blanche format- McDonald's " from Noni Khanye (Omnicom) <nonhlanhla.khanye@omc.com> (received: 2026-11-05T07:16:14Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Decades outstanding PTSD case" from Monique Reyneke <moniquereyneke63@gmail.com> (received: 2026-11-05T07:22:26Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Enquiry: Permission to use the Carte Blanche format- McDonald's " from Noni Khanye (Omnicom) <nonhlanhla.khanye@omc.com> (received: 2026-11-05T08:06:45Z)
-[2026-11-07 18:50:44] Skipping duplicate: "URGENT: Rustenburg & Zeerust GÇö 3 WEEKS Without Water, 5+ Days Without Power, No Answers" from Jacques Du Toit <jdutoit81@gmail.com> (received: 2026-11-05T09:09:15Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Hartswater donkie horse trade" from Johann Zondagh Raubenheimer <johannraub@gmail.com> (received: 2026-11-05T09:30:50Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Re: VIEWING OF SCRIPTS AFTER REMARKING" from Quanitah Kaffoor-Karlie <quanitahkk@gmail.com> (received: 2026-11-05T09:47:35Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Re: 77701-GAP76729S-Tar Mahomed Cancellation request" from Mahomed Hassen <hassenhg@googlemail.com> (received: 2026-11-05T10:04:19Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Re: 77701-GAP76729S-Tar Mahomed FORMAL NOTICE OF CANCELLATION GÇô GAP COVER WITH IMMEDIATE EFFECT" from Mahomed Hassen <hassenhg@googlemail.com> (received: 2026-11-05T10:04:50Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Re: NSPCA to open criminal case against SAPS officials after police dog's death" from Penny Collett <pennyc659@gmail.com> (received: 2026-11-05T13:32:41Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-05T13:35:11Z)
-[2026-11-07 18:50:44] Skipping duplicate: "IFAD at COP31: IFAD scales climate adaptation investments in rural communities feeding the world" from IFAD Newsroom <delivery@agilitypr.delivery> (received: 2026-11-05T16:04:16Z)
-[2026-11-07 18:50:44] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
-[2026-11-07 18:50:44] Skipping duplicate: "Subject: URGENT STORY PITCH: The Security Industrial Complex GÇô Corruption, POPIA Breaches, and Worker Exploitation at a National Level" from Alfa Romeo <alfaromeokilo1984@gmail.com> (received: 2026-11-05T17:55:44Z)
-[2026-11-07 18:50:44] Skipping duplicate: "CONSUMER AND FINANCIAL FRAUD ACCOCIATED WITH PIE ACT" from Deidre Pretorius <deedee.pretorius33@gmail.com> (received: 2026-11-05T18:52:29Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T03:14:26Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Re: URGENT: Request for intervention on exclusionary SANRAL RRM tender criteria" from Kulubuse007 <kulubuse007@gmail.com> (received: 2026-11-06T06:45:19Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T07:25:46Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Fw: COMPREHENSIVE FORENSIC SUBMISSION AND JURISDICTIONAL COMPULSION MANDATE IN RE: SYSTEMIC DATA SCRUBBING AND RE-ALLOCATION OF RETENTION RESIDUES" from Floyd Bonhomme <fmbsolutions@yahoo.com> (received: 2026-11-06T07:41:12Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Re: Response to your Liberty Policy Complaint" from Rofhiwa Thovhakale <rthovhakale@gmail.com> (received: 2026-11-06T07:44:55Z)
-[2026-11-07 18:50:44] Skipping duplicate: "BBEXPO 2026 Celebrated local business and recognises emerging business talent" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-11-06T07:45:44Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Re: URGENT: Request for intervention on exclusionary SANRAL RRM tender criteria" from Manqoba M <manqoba.m001@gmail.com> (received: 2026-11-06T08:31:20Z)
-[2026-11-07 18:50:44] Skipping duplicate: "(No Subject)" from Ana Maria De Caires <anamaria76242339@gmail.com> (received: 2026-11-06T09:05:34Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Re: Automatic reply:" from Ana Maria De Caires <anamaria76242339@gmail.com> (received: 2026-11-06T09:17:29Z)
-[2026-11-07 18:50:44] Skipping duplicate: "My story" from Natalie Wolmarans <natwolmarans@gmail.com> (received: 2026-11-06T09:24:00Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Re: Automatic reply:" from Ana Maria De Caires <anamaria76242339@gmail.com> (received: 2026-11-06T09:33:47Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Attempted Hijack" from John H M Carter <molyneuxcarter@gmail.com> (received: 2026-11-06T11:17:32Z)
-[2026-11-07 18:50:44] Skipping duplicate: "EVENT ANNOUNCEMENT - I LOVE CY LIVE MUSIC PARK FESTIVAL" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-11-06T15:50:33Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T16:42:54Z)
-[2026-11-07 18:50:44] Skipping duplicate: "(No Subject)" from Donovan Bartie <donovanbartie1234@gmail.com> (received: 2026-11-06T17:09:02Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T17:17:28Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T17:43:14Z)
-[2026-11-07 18:50:44] Skipping duplicate: "STORY PITCH / INVESTIGATIVE EXPOS+ë: The Under-Regulated Danger of Facial Dermal Reversals & Medical Gaslighting of Women In Aesthetic Medicine" from Jenna Van Der Burg <jenna.vdb@gmail.com> (received: 2026-11-06T18:07:38Z)
-[2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T00:17:34Z)
 [2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T00:17:41Z)
 [2026-11-07 18:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T00:23:14Z)
 [2026-11-07 18:50:44] Skipping duplicate: "Eskom" from Hanna Harvey <hannaharvey16@gmail.com> (received: 2026-11-07T03:56:01Z)
@@ -519,3 +393,249 @@
 [2026-11-07 21:50:44] 
 [2026-11-07 21:50:44] Microsoft Graph email import cycle completed successfully.
 [2026-11-07 21:50:44] Changes detected. Syncing...
+[2026-11-07 21:50:44] [main f57db73] auto-sync: 2026-11-07 21:51
+[2026-11-07 21:50:44]  1 file changed, 63 insertions(+)
+[2026-11-07 21:50:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-11-07 21:50:44]    9e02237..f57db73  main -> main
+[2026-11-07 21:50:44] Sync complete.
+[2026-11-08 11:07:00] Running Microsoft Graph Email Importer...
+[2026-11-08 11:07:00] Starting Graph API Email Importer... Mode: LIVE
+[2026-11-08 11:07:00] Fetching messages from Microsoft Graph...
+[2026-11-08 11:07:00] Found 42 email(s) since 1 May 2026 to check.
+[2026-11-08 11:07:00] Skipping duplicate: "URGENT: Rustenburg & Zeerust GÇö 3 WEEKS Without Water, 5+ Days Without Power, No Answers" from Jacques Du Toit <jdutoit81@gmail.com> (received: 2026-11-05T09:09:15Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Hartswater donkie horse trade" from Johann Zondagh Raubenheimer <johannraub@gmail.com> (received: 2026-11-05T09:30:50Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Re: VIEWING OF SCRIPTS AFTER REMARKING" from Quanitah Kaffoor-Karlie <quanitahkk@gmail.com> (received: 2026-11-05T09:47:35Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Re: 77701-GAP76729S-Tar Mahomed Cancellation request" from Mahomed Hassen <hassenhg@googlemail.com> (received: 2026-11-05T10:04:19Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Re: 77701-GAP76729S-Tar Mahomed FORMAL NOTICE OF CANCELLATION GÇô GAP COVER WITH IMMEDIATE EFFECT" from Mahomed Hassen <hassenhg@googlemail.com> (received: 2026-11-05T10:04:50Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Re: NSPCA to open criminal case against SAPS officials after police dog's death" from Penny Collett <pennyc659@gmail.com> (received: 2026-11-05T13:32:41Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-05T13:35:11Z)
+[2026-11-08 11:07:00] Skipping duplicate: "IFAD at COP31: IFAD scales climate adaptation investments in rural communities feeding the world" from IFAD Newsroom <delivery@agilitypr.delivery> (received: 2026-11-05T16:04:16Z)
+[2026-11-08 11:07:00] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-08 11:07:00] Skipping duplicate: "Subject: URGENT STORY PITCH: The Security Industrial Complex GÇô Corruption, POPIA Breaches, and Worker Exploitation at a National Level" from Alfa Romeo <alfaromeokilo1984@gmail.com> (received: 2026-11-05T17:55:44Z)
+[2026-11-08 11:07:00] Skipping duplicate: "CONSUMER AND FINANCIAL FRAUD ACCOCIATED WITH PIE ACT" from Deidre Pretorius <deedee.pretorius33@gmail.com> (received: 2026-11-05T18:52:29Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T03:14:26Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Re: URGENT: Request for intervention on exclusionary SANRAL RRM tender criteria" from Kulubuse007 <kulubuse007@gmail.com> (received: 2026-11-06T06:45:19Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T07:25:46Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Fw: COMPREHENSIVE FORENSIC SUBMISSION AND JURISDICTIONAL COMPULSION MANDATE IN RE: SYSTEMIC DATA SCRUBBING AND RE-ALLOCATION OF RETENTION RESIDUES" from Floyd Bonhomme <fmbsolutions@yahoo.com> (received: 2026-11-06T07:41:12Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Re: Response to your Liberty Policy Complaint" from Rofhiwa Thovhakale <rthovhakale@gmail.com> (received: 2026-11-06T07:44:55Z)
+[2026-11-08 11:07:00] Skipping duplicate: "BBEXPO 2026 Celebrated local business and recognises emerging business talent" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-11-06T07:45:44Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Re: URGENT: Request for intervention on exclusionary SANRAL RRM tender criteria" from Manqoba M <manqoba.m001@gmail.com> (received: 2026-11-06T08:31:20Z)
+[2026-11-08 11:07:00] Skipping duplicate: "(No Subject)" from Ana Maria De Caires <anamaria76242339@gmail.com> (received: 2026-11-06T09:05:34Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Re: Automatic reply:" from Ana Maria De Caires <anamaria76242339@gmail.com> (received: 2026-11-06T09:17:29Z)
+[2026-11-08 11:07:00] Skipping duplicate: "My story" from Natalie Wolmarans <natwolmarans@gmail.com> (received: 2026-11-06T09:24:00Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Re: Automatic reply:" from Ana Maria De Caires <anamaria76242339@gmail.com> (received: 2026-11-06T09:33:47Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Attempted Hijack" from John H M Carter <molyneuxcarter@gmail.com> (received: 2026-11-06T11:17:32Z)
+[2026-11-08 11:07:00] Skipping duplicate: "EVENT ANNOUNCEMENT - I LOVE CY LIVE MUSIC PARK FESTIVAL" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-11-06T15:50:33Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T16:42:54Z)
+[2026-11-08 11:07:00] Skipping duplicate: "(No Subject)" from Donovan Bartie <donovanbartie1234@gmail.com> (received: 2026-11-06T17:09:02Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T17:17:28Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-06T17:43:14Z)
+[2026-11-08 11:07:00] Skipping duplicate: "STORY PITCH / INVESTIGATIVE EXPOS+ë: The Under-Regulated Danger of Facial Dermal Reversals & Medical Gaslighting of Women In Aesthetic Medicine" from Jenna Van Der Burg <jenna.vdb@gmail.com> (received: 2026-11-06T18:07:38Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T00:17:34Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T00:17:41Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T00:23:14Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Eskom" from Hanna Harvey <hannaharvey16@gmail.com> (received: 2026-11-07T03:56:01Z)
+[2026-11-08 11:07:00] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-08 11:07:00] Skipping duplicate: "I have a story about a dangerous woman in Cape Town." from Andisiwe Pikisa <pikisaandisiwe@gmail.com> (received: 2026-11-07T09:15:13Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T09:22:12Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Re: [Sunbet#1068305][Sunbet#998625][Sunbet#997052]Account Under Review" from Stephan Evans <ekkeevans@gmail.com> (received: 2026-11-07T09:41:51Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T14:34:52Z)
+[2026-11-08 11:07:00] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T18:02:17Z)
+[2026-11-08 11:07:00] 
+[2026-11-08 11:07:00] Processing: "Investigative Story Tip GÇô Ongoing Fraud Involving Motorcycle and Quad Parts" from Kyle Lewin <kylelewin@hotmail.co.za>
+[2026-11-08 11:07:00] Identified formType: email_submission
+[2026-11-08 11:07:00] Saved submission successfully to Firestore: submissions/Eik8ahwlVf0iDIXNzvvO
+[2026-11-08 11:07:00] Marked email as read on Microsoft Graph.
+[2026-11-08 11:07:00] 
+[2026-11-08 11:07:00] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-08 11:07:00] Identified formType: dstv_tipoff
+[2026-11-08 11:07:00] Failed to process attachment whatsapp_image_2026-11-07_at_22.48.43__1_.jpeg: GaxiosError: {
+[2026-11-08 11:07:00]   "error": {
+[2026-11-08 11:07:00]     "code": 404,
+[2026-11-08 11:07:00]     "message": "The specified bucket does not exist.",
+[2026-11-08 11:07:00]     "errors": [
+[2026-11-08 11:07:00]       {
+[2026-11-08 11:07:00]         "message": "The specified bucket does not exist.",
+[2026-11-08 11:07:00]         "domain": "global",
+[2026-11-08 11:07:00]         "reason": "notFound"
+[2026-11-08 11:07:00]       }
+[2026-11-08 11:07:00]     ]
+[2026-11-08 11:07:00]   }
+[2026-11-08 11:07:00] }
+[2026-11-08 11:07:00] System.Management.Automation.RemoteException
+[2026-11-08 11:07:00]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-08 11:07:00]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-08 11:07:00]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-08 11:07:00]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-08 11:07:00]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-08 11:07:00]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-08 11:07:00]   config: {
+[2026-11-08 11:07:00]     method: 'POST',
+[2026-11-08 11:07:00]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794128859485_whatsapp_image_2026-11-07_at_22.48.43__1_.jpeg&uploadType=resumable',
+[2026-11-08 11:07:00]     params: {
+[2026-11-08 11:07:00]       name: 'submissions/dstv_tipoff/1794128859485_whatsapp_image_2026-11-07_at_22.48.43__1_.jpeg',
+[2026-11-08 11:07:00]       uploadType: 'resumable'
+[2026-11-08 11:07:00]     },
+[2026-11-08 11:07:00]     data: {},
+[2026-11-08 11:07:00]     headers: {
+[2026-11-08 11:07:00]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-08 11:07:00]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/4d636440-d5d8-4fe1-a14b-956908fd0ac1',
+[2026-11-08 11:07:00]       'X-Upload-Content-Type': 'application/octet-stream',
+[2026-11-08 11:07:00]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-08 11:07:00]       'Content-Type': 'application/json'
+[2026-11-08 11:07:00]     },
+[2026-11-08 11:07:00]     validateStatus: [Function (anonymous)],
+[2026-11-08 11:07:00]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-08 11:07:00]     body: '{}',
+[2026-11-08 11:07:00]     responseType: 'unknown',
+[2026-11-08 11:07:00]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-08 11:07:00]   },
+[2026-11-08 11:07:00]   response: {
+[2026-11-08 11:07:00]     config: {
+[2026-11-08 11:07:00]       method: 'POST',
+[2026-11-08 11:07:00]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794128859485_whatsapp_image_2026-11-07_at_22.48.43__1_.jpeg&uploadType=resumable',
+[2026-11-08 11:07:00]       params: [Object],
+[2026-11-08 11:07:00]       data: {},
+[2026-11-08 11:07:00]       headers: [Object],
+[2026-11-08 11:07:00]       validateStatus: [Function (anonymous)],
+[2026-11-08 11:07:00]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-08 11:07:00]       body: '{}',
+[2026-11-08 11:07:00]       responseType: 'unknown',
+[2026-11-08 11:07:00]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-08 11:07:00]     },
+[2026-11-08 11:07:00]     data: '{\n' +
+[2026-11-08 11:07:00]       '  "error": {\n' +
+[2026-11-08 11:07:00]       '    "code": 404,\n' +
+[2026-11-08 11:07:00]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-08 11:07:00]       '    "errors": [\n' +
+[2026-11-08 11:07:00]       '      {\n' +
+[2026-11-08 11:07:00]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-08 11:07:00]       '        "domain": "global",\n' +
+[2026-11-08 11:07:00]       '        "reason": "notFound"\n' +
+[2026-11-08 11:07:00]       '      }\n' +
+[2026-11-08 11:07:00]       '    ]\n' +
+[2026-11-08 11:07:00]       '  }\n' +
+[2026-11-08 11:07:00]       '}\n',
+[2026-11-08 11:07:00]     headers: {
+[2026-11-08 11:07:00]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-08 11:07:00]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-08 11:07:00]       'content-length': '247',
+[2026-11-08 11:07:00]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-08 11:07:00]       date: 'Sun, 08 Nov 2026 09:07:40 GMT',
+[2026-11-08 11:07:00]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-08 11:07:00]       pragma: 'no-cache',
+[2026-11-08 11:07:00]       server: 'UploadServer',
+[2026-11-08 11:07:00]       vary: 'Origin, X-Origin',
+[2026-11-08 11:07:00]       'x-goog-gcs-base-ts': '1a1ba69d395',
+[2026-11-08 11:07:00]       'x-guploader-uploadid': 'AFy3sg1cacN0bP1ftNyV_0RxBNqmaGHOTwG8s5Dh3jupPwmyEweRH4j5ZioMr4ixDXWplxzFF3nLiTuQ2FlIQ9h0TgbPcAQzz7KBQRIFH-nS2A'
+[2026-11-08 11:07:00]     },
+[2026-11-08 11:07:00]     status: 404,
+[2026-11-08 11:07:00]     statusText: 'Not Found',
+[2026-11-08 11:07:00]     request: {
+[2026-11-08 11:07:00]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794128859485_whatsapp_image_2026-11-07_at_22.48.43__1_.jpeg&uploadType=resumable'
+[2026-11-08 11:07:00]     }
+[2026-11-08 11:07:00]   },
+[2026-11-08 11:07:00]   error: undefined,
+[2026-11-08 11:07:00]   status: 404,
+[2026-11-08 11:07:00]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-08 11:07:00] }
+[2026-11-08 11:07:00] Failed to process attachment whatsapp_image_2026-11-07_at_22.48.43.jpeg: GaxiosError: {
+[2026-11-08 11:07:00]   "error": {
+[2026-11-08 11:07:00]     "code": 404,
+[2026-11-08 11:07:00]     "message": "The specified bucket does not exist.",
+[2026-11-08 11:07:00]     "errors": [
+[2026-11-08 11:07:00]       {
+[2026-11-08 11:07:00]         "message": "The specified bucket does not exist.",
+[2026-11-08 11:07:00]         "domain": "global",
+[2026-11-08 11:07:00]         "reason": "notFound"
+[2026-11-08 11:07:00]       }
+[2026-11-08 11:07:00]     ]
+[2026-11-08 11:07:00]   }
+[2026-11-08 11:07:00] }
+[2026-11-08 11:07:00] System.Management.Automation.RemoteException
+[2026-11-08 11:07:00]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-08 11:07:00]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-08 11:07:00]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-08 11:07:00]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-08 11:07:00]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-08 11:07:00]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-08 11:07:00]   config: {
+[2026-11-08 11:07:00]     method: 'POST',
+[2026-11-08 11:07:00]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794128861132_whatsapp_image_2026-11-07_at_22.48.43.jpeg&uploadType=resumable',
+[2026-11-08 11:07:00]     params: {
+[2026-11-08 11:07:00]       name: 'submissions/dstv_tipoff/1794128861132_whatsapp_image_2026-11-07_at_22.48.43.jpeg',
+[2026-11-08 11:07:00]       uploadType: 'resumable'
+[2026-11-08 11:07:00]     },
+[2026-11-08 11:07:00]     data: {},
+[2026-11-08 11:07:00]     headers: {
+[2026-11-08 11:07:00]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-08 11:07:00]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/37a0a67e-4586-4fd3-b3d2-2f65fdd385e1',
+[2026-11-08 11:07:00]       'X-Upload-Content-Type': 'application/octet-stream',
+[2026-11-08 11:07:00]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-08 11:07:00]       'Content-Type': 'application/json'
+[2026-11-08 11:07:00]     },
+[2026-11-08 11:07:00]     validateStatus: [Function (anonymous)],
+[2026-11-08 11:07:00]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-08 11:07:00]     body: '{}',
+[2026-11-08 11:07:00]     responseType: 'unknown',
+[2026-11-08 11:07:00]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-08 11:07:00]   },
+[2026-11-08 11:07:00]   response: {
+[2026-11-08 11:07:00]     config: {
+[2026-11-08 11:07:00]       method: 'POST',
+[2026-11-08 11:07:00]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794128861132_whatsapp_image_2026-11-07_at_22.48.43.jpeg&uploadType=resumable',
+[2026-11-08 11:07:00]       params: [Object],
+[2026-11-08 11:07:00]       data: {},
+[2026-11-08 11:07:00]       headers: [Object],
+[2026-11-08 11:07:00]       validateStatus: [Function (anonymous)],
+[2026-11-08 11:07:00]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-08 11:07:00]       body: '{}',
+[2026-11-08 11:07:00]       responseType: 'unknown',
+[2026-11-08 11:07:00]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-08 11:07:00]     },
+[2026-11-08 11:07:00]     data: '{\n' +
+[2026-11-08 11:07:00]       '  "error": {\n' +
+[2026-11-08 11:07:00]       '    "code": 404,\n' +
+[2026-11-08 11:07:00]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-08 11:07:00]       '    "errors": [\n' +
+[2026-11-08 11:07:00]       '      {\n' +
+[2026-11-08 11:07:00]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-08 11:07:00]       '        "domain": "global",\n' +
+[2026-11-08 11:07:00]       '        "reason": "notFound"\n' +
+[2026-11-08 11:07:00]       '      }\n' +
+[2026-11-08 11:07:00]       '    ]\n' +
+[2026-11-08 11:07:00]       '  }\n' +
+[2026-11-08 11:07:00]       '}\n',
+[2026-11-08 11:07:00]     headers: {
+[2026-11-08 11:07:00]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-08 11:07:00]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-08 11:07:00]       'content-length': '247',
+[2026-11-08 11:07:00]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-08 11:07:00]       date: 'Sun, 08 Nov 2026 09:07:40 GMT',
+[2026-11-08 11:07:00]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-08 11:07:00]       pragma: 'no-cache',
+[2026-11-08 11:07:00]       server: 'UploadServer',
+[2026-11-08 11:07:00]       vary: 'Origin, X-Origin',
+[2026-11-08 11:07:00]       'x-goog-gcs-base-ts': '1a1ba69d665',
+[2026-11-08 11:07:00]       'x-guploader-uploadid': 'AFy3sg20DDLNg9CoUfr5saJt3E7iF-HDdJLXmhcW8DPeJu_bYHpwoZcZk7qdJJjGni0ZjJ_wID6cbqXCZcqQ0Qd4Wpqgb_lpXarl-IEyBmZzEOY'
+[2026-11-08 11:07:00]     },
+[2026-11-08 11:07:00]     status: 404,
+[2026-11-08 11:07:00]     statusText: 'Not Found',
+[2026-11-08 11:07:00]     request: {
+[2026-11-08 11:07:00]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794128861132_whatsapp_image_2026-11-07_at_22.48.43.jpeg&uploadType=resumable'
+[2026-11-08 11:07:00]     }
+[2026-11-08 11:07:00]   },
+[2026-11-08 11:07:00]   error: undefined,
+[2026-11-08 11:07:00]   status: 404,
+[2026-11-08 11:07:00]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-08 11:07:00] }
+[2026-11-08 11:07:00] Saved submission successfully to Firestore: submissions/tL2RlYk3miqzwWdx6rEj
+[2026-11-08 11:07:00] Marked email as read on Microsoft Graph.
+[2026-11-08 11:07:00] 
+[2026-11-08 11:07:00] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-08 11:07:00] Identified formType: dstv_tipoff
+[2026-11-08 11:07:00] Saved submission successfully to Firestore: submissions/8MECx3m0EIbVcyNg0OhY
+[2026-11-08 11:07:00] Marked email as read on Microsoft Graph.
+[2026-11-08 11:07:00] 
+[2026-11-08 11:07:00] Microsoft Graph email import cycle completed successfully.
+[2026-11-08 11:07:00] Changes detected. Syncing...
