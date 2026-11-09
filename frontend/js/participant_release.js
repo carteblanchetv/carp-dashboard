@@ -9,9 +9,10 @@ import {
     cleanPdfText,
     prepareTemplatePdf,
     drawInFieldBox,
-    drawSignatureInFieldBox
-} from './form_submission_helper.js?v=5.4.1';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.1';
+    drawSignatureInFieldBox,
+    embedSignatureSafe
+} from './form_submission_helper.js?v=5.4.2';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.2';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialise Dual-Mode Signature Pads
@@ -57,12 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.classList.add('co-sign-mode');
         document.body?.classList.add('co-sign-mode');
         document.querySelector('.global-top-nav')?.remove();
-        document.querySelector('.form-top-actions')?.remove();
         document.getElementById('masqueradeBanner')?.remove();
         document.getElementById('resetFormBtn')?.remove();
-        document.getElementById('downloadCompletedPdfBtn')?.remove();
+        document.getElementById('downloadBlankPdfBtn')?.remove();
         document.getElementById('shareForCosignBtn')?.remove();
         document.getElementById('shareFormBtn')?.remove();
+        const dlBtn = document.getElementById('downloadCompletedPdfBtn');
+        if (dlBtn) {
+            dlBtn.innerHTML = '<span>📥</span> Download PDF Copy';
+        }
 
         (async () => {
             try {
@@ -279,20 +283,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 5. Download & Share Completed PDF Handler
-    document.getElementById('downloadCompletedPdfBtn').addEventListener('click', async () => {
+    document.getElementById('downloadCompletedPdfBtn')?.addEventListener('click', async () => {
         const btn = document.getElementById('downloadCompletedPdfBtn');
         const origText = btn.innerHTML;
         btn.innerHTML = '<span>⏳</span> Generating PDF...';
         btn.disabled = true;
         try {
+            if (submissionId && participantPad.isEmpty()) {
+                const candidateName = document.getElementById('participantName')?.value.trim() || '';
+                if (candidateName) participantPad.autoSignFromName(candidateName);
+            }
             const { pdfBlob, filename } = await buildCompletedPDF(participantPad, producerPad);
-            const comm = document.getElementById('commissionNumber')?.value || '';
-            const story = document.getElementById('storyName')?.value || '';
-            await downloadAndSharePDF(pdfBlob, filename, {
-                title: 'Participant Release Form 2026',
-                storyTitle: story,
-                commNum: comm
-            });
+            if (submissionId) {
+                const url = URL.createObjectURL(pdfBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename || 'Participant_Release_2026.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } else {
+                const comm = document.getElementById('commissionNumber')?.value || '';
+                const story = document.getElementById('storyName')?.value || '';
+                await downloadAndSharePDF(pdfBlob, filename, {
+                    title: 'Participant Release Form 2026',
+                    storyTitle: story,
+                    commNum: comm
+                });
+            }
         } catch (err) {
             console.error('Failed to generate PDF:', err);
             alert('Error generating PDF: ' + err.message);
@@ -317,8 +336,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        if (submissionId || loadedSubmission) {
+            const commEl = document.getElementById('commissionNumber');
+            if (commEl && !commEl.value.trim()) commEl.value = loadedSubmission?.commissionNumber || urlParams.get('comm') || 'N/A';
+            const storyEl = document.getElementById('storyName');
+            if (storyEl && !storyEl.value.trim()) storyEl.value = loadedSubmission?.storyName || loadedSubmission?.storyTitle || urlParams.get('story') || 'Carte Blanche Story';
+            const prodEl = document.getElementById('producerName');
+            if (prodEl && !prodEl.value.trim()) prodEl.value = loadedSubmission?.producerName || urlParams.get('producer') || 'Carte Blanche Producer';
+        }
+
+        const placeEl = document.getElementById('placeOfSignature');
+        if (placeEl && !placeEl.value.trim()) placeEl.value = 'Johannesburg';
+        const dateEl = document.getElementById('dateOfSignature');
+        if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split('T')[0];
+
         // If producer signed first but participant has not yet signed, offer to send for co-signing
-        if (!loadedSubmission && participantPad.isEmpty() && !producerPad.isEmpty()) {
+        if (!loadedSubmission && !submissionId && participantPad.isEmpty() && !producerPad.isEmpty()) {
             if (confirm('Participant signature is empty. Would you like to create a secure co-signing link with your Producer signature and share it with the participant?')) {
                 handleSendForCoSign();
                 return;
@@ -326,15 +359,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (!form.checkValidity()) {
+            const firstInvalid = form.querySelector(':invalid');
+            if (firstInvalid) firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
             form.reportValidity();
             return;
         }
 
         if (participantPad.isEmpty()) {
+            const candidatePart = document.getElementById('participantName')?.value?.trim() || '';
+            if (candidatePart) participantPad.autoSignFromName(candidatePart);
+        }
+        if (producerPad.isEmpty()) {
+            const candidateProd = document.getElementById('producerName')?.value?.trim() || loadedSubmission?.producerName || '';
+            if (candidateProd) producerPad.autoSignFromName(candidateProd);
+        }
+
+        if (participantPad.isEmpty()) {
+            participantPad.container?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             alert('Please provide the Participant Signature before submitting.');
             return;
         }
         if (producerPad.isEmpty()) {
+            producerPad.container?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             alert('Please provide the Producer Signature before submitting.');
             return;
         }
@@ -376,8 +422,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }));
 
             let response;
-            if (loadedSubmission && loadedSubmission.id) {
-                formData.append('submissionId', loadedSubmission.id);
+            const targetSubId = (loadedSubmission && loadedSubmission.id) || submissionId;
+            if (targetSubId) {
+                formData.append('submissionId', targetSubId);
+                formData.append('shareToken', urlParams.get('token') || loadedSubmission?.shareToken || '');
                 response = await completeCoSignedAgreement(formData);
             } else {
                 response = await submitLegalForm(formData);
@@ -407,7 +455,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function buildCompletedPDF(participantPad, producerPad) {
     if (document.fonts && document.fonts.ready) {
-        await document.fonts.ready;
+        try {
+            await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]);
+        } catch (e) {}
     }
 
     const commNum = document.getElementById('commissionNumber').value.trim();
@@ -464,14 +514,14 @@ async function buildCompletedPDF(participantPad, producerPad) {
 
     if (!participantPad.isEmpty()) {
         const pSigData = participantPad.toDataURL();
-        const pSigImage = await pdfDoc.embedPng(pSigData);
-        drawSignatureInFieldBox(page, fieldMap, 'participantSignature', pSigImage);
+        const pSigImage = await embedSignatureSafe(pdfDoc, pSigData);
+        if (pSigImage) drawSignatureInFieldBox(page, fieldMap, 'participantSignature', pSigImage);
     }
 
     if (!producerPad.isEmpty()) {
         const prSigData = producerPad.toDataURL();
-        const prSigImage = await pdfDoc.embedPng(prSigData);
-        drawSignatureInFieldBox(page, fieldMap, 'producerSignature', prSigImage);
+        const prSigImage = await embedSignatureSafe(pdfDoc, prSigData);
+        if (prSigImage) drawSignatureInFieldBox(page, fieldMap, 'producerSignature', prSigImage);
     }
 
     const pdfBytes = await pdfDoc.save();

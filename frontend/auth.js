@@ -508,19 +508,60 @@ export function checkAuth(redirectIfNotLogged = true) {
 export async function getIdToken() {
     // 1. Resolve immediately if user is already available
     if (auth.currentUser) {
-        return await auth.currentUser.getIdToken();
+        try {
+            return await auth.currentUser.getIdToken();
+        } catch (e) {
+            console.warn('[Auth] Failed to get ID token from currentUser:', e);
+            return null;
+        }
     }
 
-    // 2. Otherwise wait for state change
+    // 2. Otherwise wait for state change with a 2.5s safety timeout so guest/co-signer requests never hang
     return new Promise((resolve) => {
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const token = await user.getIdToken();
-                resolve(token);
-            } else {
+        let settled = false;
+        let unsubscribe = null;
+        const timer = setTimeout(() => {
+            if (!settled) {
+                settled = true;
+                if (typeof unsubscribe === 'function') {
+                    try { unsubscribe(); } catch (e) {}
+                }
                 resolve(null);
             }
-        });
+        }, 2500);
+
+        try {
+            unsubscribe = onAuthStateChanged(auth, async (user) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                if (typeof unsubscribe === 'function') {
+                    try { unsubscribe(); } catch (e) {}
+                }
+                if (user) {
+                    try {
+                        const token = await user.getIdToken();
+                        resolve(token);
+                    } catch (e) {
+                        resolve(null);
+                    }
+                } else {
+                    resolve(null);
+                }
+            }, () => {
+                if (!settled) {
+                    settled = true;
+                    clearTimeout(timer);
+                    resolve(null);
+                }
+            });
+        } catch (e) {
+            if (!settled) {
+                settled = true;
+                clearTimeout(timer);
+                resolve(null);
+            }
+        }
     });
 }
 
@@ -633,9 +674,11 @@ export async function fetchWithAuth(url, options = {}) {
 
     const token = await getIdToken();
     const headers = {
-        ...options.headers,
-        'Authorization': `Bearer ${token}`
+        ...options.headers
     };
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
 
     if (target && target.uid && (target.viewMode || 'user') === 'user') {
         headers['X-Masquerade-UID'] = target.uid;

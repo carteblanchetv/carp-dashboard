@@ -89,6 +89,7 @@ class DualSignaturePad {
 
             this.canvas.width = targetW;
             this.canvas.height = targetH;
+            this.canvas.style.touchAction = 'none';
             this.ctx.scale(dpr, dpr);
             this.ctx.lineWidth = 2.4;
             this.ctx.lineCap = 'round';
@@ -136,12 +137,13 @@ class DualSignaturePad {
             this.typeInput.addEventListener('input', () => this.updateTypedPreview());
         }
 
-        // Canvas drawing
+        // Canvas drawing (supports Mouse, Touch, and Windows Ink / Stylus Pointer events)
         if (this.canvas) {
+            this.canvas.style.touchAction = 'none';
             const getPos = (e) => {
                 const rect = this.canvas.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                const clientX = (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX;
+                const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
                 return {
                     x: clientX - rect.left,
                     y: clientY - rect.top
@@ -149,7 +151,10 @@ class DualSignaturePad {
             };
 
             const start = (e) => {
+                if (this.isLocked) return;
+                if (e.button !== undefined && e.button !== 0) return;
                 e.preventDefault();
+                this.initCanvas();
                 this.isDrawing = true;
                 this.hasDrawn = true;
                 if (this.placeholder) this.placeholder.style.display = 'none';
@@ -161,7 +166,7 @@ class DualSignaturePad {
             };
 
             const move = (e) => {
-                if (!this.isDrawing) return;
+                if (!this.isDrawing || this.isLocked) return;
                 e.preventDefault();
                 const pos = getPos(e);
                 this.ctx.lineTo(pos.x, pos.y);
@@ -170,18 +175,25 @@ class DualSignaturePad {
 
             const stop = (e) => {
                 if (this.isDrawing) {
-                    e.preventDefault();
+                    if (e && e.cancelable) e.preventDefault();
                     this.isDrawing = false;
                 }
             };
 
-            this.canvas.addEventListener('mousedown', start);
-            this.canvas.addEventListener('mousemove', move);
-            window.addEventListener('mouseup', stop);
+            if (window.PointerEvent) {
+                this.canvas.addEventListener('pointerdown', start);
+                this.canvas.addEventListener('pointermove', move);
+                window.addEventListener('pointerup', stop);
+                window.addEventListener('pointercancel', stop);
+            } else {
+                this.canvas.addEventListener('mousedown', start);
+                this.canvas.addEventListener('mousemove', move);
+                window.addEventListener('mouseup', stop);
 
-            this.canvas.addEventListener('touchstart', start, { passive: false });
-            this.canvas.addEventListener('touchmove', move, { passive: false });
-            window.addEventListener('touchend', stop);
+                this.canvas.addEventListener('touchstart', start, { passive: false });
+                this.canvas.addEventListener('touchmove', move, { passive: false });
+                window.addEventListener('touchend', stop);
+            }
 
             window.addEventListener('resize', () => {
                 if (this.mode === 'draw') {
@@ -255,13 +267,38 @@ class DualSignaturePad {
         }
     }
 
+    /**
+     * Automatically converts a typed full name from the form into a cursive typed signature
+     * when the user clicks Submit without having drawn on the canvas.
+     */
+    autoSignFromName(fallbackName = '') {
+        if (!this.isEmpty() || this.isLocked) return !this.isEmpty();
+        let candidate = (fallbackName || '').trim();
+        if (!candidate && this.options.nameSourceId) {
+            const el = document.getElementById(this.options.nameSourceId);
+            if (el && el.value) candidate = el.value.trim();
+        }
+        if (!candidate) return false;
+        this.setMode('type');
+        if (this.typeInput) {
+            this.typeInput.value = candidate;
+        }
+        this.typedText = candidate;
+        this.updateTypedPreview();
+        return true;
+    }
+
     loadDataURL(dataUrl, signerName = '') {
         if (!dataUrl && !signerName) return;
         this.setMode('draw');
         this.hasDrawn = true;
 
+        if (!dataUrl && signerName) {
+            dataUrl = DualSignaturePad.generateTypedDataURL(signerName, this.options.fontFamily, this.options.strokeColor);
+        }
+
         // Auto-upgrade legacy chunky/comic typed signatures if signerName is available
-        if (signerName && (dataUrl.length === 6742 || dataUrl.length === 6740 || dataUrl.length === 6744 || (dataUrl.length < 8000 && !dataUrl.startsWith('data:image/svg')))) {
+        if (signerName && dataUrl && (dataUrl.length === 6742 || dataUrl.length === 6740 || dataUrl.length === 6744 || (dataUrl.length < 8000 && !dataUrl.startsWith('data:image/svg')))) {
             const neatUrl = DualSignaturePad.generateTypedDataURL(signerName, this.options.fontFamily, this.options.strokeColor);
             if (neatUrl) {
                 dataUrl = neatUrl;

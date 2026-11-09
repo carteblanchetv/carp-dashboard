@@ -2345,6 +2345,8 @@ input:checked + .slider:before {
     /* Show only the report/form and its contents */
     .admin-report, .admin-report *,
     .form-wrapper, .form-wrapper *,
+    .form-page-container, .form-page-container *,
+    .form-card-container, .form-card-container *,
     #callSheetSection, #callSheetSection * {
         visibility: visible;
     }
@@ -2354,20 +2356,61 @@ input:checked + .slider:before {
         -webkit-filter: brightness(0) grayscale(1) !important;
     }
 
-    .admin-report, .form-wrapper {
+    .admin-report, .form-wrapper, .form-page-container {
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
-        margin: 0;
-        padding: 0;
-        box-shadow: none;
-        border: none;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+    }
+
+    .form-card-container {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: none !important;
+        padding: 1.5rem !important;
+    }
+
+    .form-card-container h1,
+    .form-card-container h2,
+    .form-card-container h3,
+    .form-card-container h4,
+    .form-card-container p,
+    .form-card-container li,
+    .form-card-container label,
+    .form-card-container span {
+        color: #0f172a !important;
+    }
+
+    .form-card-container input,
+    .form-card-container select,
+    .form-card-container textarea {
+        background: #f8fafc !important;
+        color: #0f172a !important;
+        border: 1px solid #94a3b8 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .sig-pad-wrapper,
+    .sig-canvas-container {
+        background: #ffffff !important;
+        border: 1px solid #94a3b8 !important;
+        page-break-inside: avoid;
     }
 
     /* Hide specific non-report elements */
-    #viewModeBanner, .loading-overlay, .remove-btn, .add-btn, #backToAdminBtn, #printReportBtn,
-    .no-print, .global-top-nav, .form-actions, #productionPhaseBar, #viewActions, .edit-mode-badge {
+    #viewModeBanner, #masqueradeBanner, .loading-overlay, .remove-btn, .add-btn, #backToAdminBtn, #printReportBtn,
+    .no-print, .global-top-nav, .form-actions, .form-top-actions, .form-bottom-actions,
+    .sig-mode-tabs, .btn-clear-sig, .sig-pad-footer, #carpCoSignBanner,
+    #productionPhaseBar, #viewActions, .edit-mode-badge {
         display: none !important;
     }
 
@@ -3636,22 +3679,18 @@ a#formsHubCard.app-card {
 /* ========================================================
    CO-SIGNER ISOLATED VIEW (Clean Mode)
    When an external contributor/co-signer opens the form (?id=...),
-   they only see the form and the Submit button.
+   they only see the form, Download PDF Copy, and the Submit button.
    ======================================================== */
 .co-sign-mode .global-top-nav,
 .co-sign-mode #masqueradeBanner,
-.co-sign-mode .form-top-actions,
 .co-sign-mode #resetFormBtn,
-.co-sign-mode #downloadCompletedPdfBtn,
 .co-sign-mode #downloadBlankPdfBtn,
 .co-sign-mode #shareForCosignBtn,
 .co-sign-mode #shareFormBtn,
 .co-sign-mode .gnav-actions,
 body.co-sign-mode .global-top-nav,
 body.co-sign-mode #masqueradeBanner,
-body.co-sign-mode .form-top-actions,
 body.co-sign-mode #resetFormBtn,
-body.co-sign-mode #downloadCompletedPdfBtn,
 body.co-sign-mode #downloadBlankPdfBtn,
 body.co-sign-mode #shareForCosignBtn,
 body.co-sign-mode #shareFormBtn {

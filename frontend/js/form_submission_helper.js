@@ -1,3 +1,18 @@
+function isExternalGuestOrCoSigner() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('id')) return true;
+        if (document.body?.classList.contains('co-sign-mode') || document.documentElement?.classList.contains('co-sign-mode')) {
+            return true;
+        }
+        const currentUser = window.auth?.getCurrentUser?.() || window.auth?.currentUser;
+        if (!currentUser && !localStorage.getItem('cb_auth_user')) {
+            return true;
+        }
+    } catch (e) {}
+    return false;
+}
+
 /**
  * Dispatches form submission to the appropriate API endpoint with auth token fallback
  */
@@ -18,7 +33,7 @@ export async function submitLegalForm(formData) {
     const targetUrl = endpointMap[formType] || '/api/submit-legal-form';
 
     let response = null;
-    if (window.auth && typeof window.auth.fetchWithAuth === 'function') {
+    if (!isExternalGuestOrCoSigner() && window.auth && typeof window.auth.fetchWithAuth === 'function') {
         try {
             response = await window.auth.fetchWithAuth(targetUrl, {
                 method: 'POST',
@@ -49,7 +64,7 @@ export async function initCoSignAgreement(formData) {
     }
 
     let fallbackResponse = null;
-    if (window.auth && typeof window.auth.fetchWithAuth === 'function') {
+    if (!isExternalGuestOrCoSigner() && window.auth && typeof window.auth.fetchWithAuth === 'function') {
         try {
             fallbackResponse = await window.auth.fetchWithAuth('/api/init-co-sign-agreement', {
                 method: 'POST',
@@ -88,7 +103,8 @@ export async function getAgreementForCoSign(submissionId) {
  */
 export async function completeCoSignedAgreement(formData) {
     let response = null;
-    if (window.auth && typeof window.auth.fetchWithAuth === 'function') {
+    // External co-signers submit directly via fetch without waiting for Firebase Auth initialization
+    if (!isExternalGuestOrCoSigner() && window.auth && typeof window.auth.fetchWithAuth === 'function') {
         try {
             response = await window.auth.fetchWithAuth('/api/countersign-form', {
                 method: 'POST',
@@ -417,30 +433,75 @@ export function drawInFieldBox(page, fieldMap, fieldName, text, options = {}) {
 }
 
 /**
+ * Safely embeds a signature data URL (PNG or JPEG) into a pdf-lib PDFDocument without throwing.
+ */
+export async function embedSignatureSafe(pdfDoc, dataUrl) {
+    if (!pdfDoc || !dataUrl || typeof dataUrl !== 'string') return null;
+    try {
+        if (dataUrl.startsWith('data:image/jpeg') || dataUrl.startsWith('data:image/jpg')) {
+            return await pdfDoc.embedJpg(dataUrl);
+        }
+        return await pdfDoc.embedPng(dataUrl);
+    } catch (e) {
+        console.warn('[embedSignatureSafe] Direct embed failed, attempting canvas conversion:', e);
+        try {
+            const converted = await new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    try {
+                        const c = document.createElement('canvas');
+                        c.width = img.naturalWidth || img.width || 400;
+                        c.height = img.naturalHeight || img.height || 140;
+                        const ctx = c.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        resolve(c.toDataURL('image/png'));
+                    } catch (err) {
+                        resolve(null);
+                    }
+                };
+                img.onerror = () => resolve(null);
+                img.src = dataUrl;
+            });
+            if (converted) {
+                return await pdfDoc.embedPng(converted);
+            }
+        } catch (fallbackErr) {
+            console.warn('[embedSignatureSafe] Fallback embed failed:', fallbackErr);
+        }
+        return null;
+    }
+}
+
+/**
  * Draws an embedded PNG signature image proportionally scaled and centered inside a named template signature box.
  */
 export function drawSignatureInFieldBox(page, fieldMap, fieldName, sigImage, options = {}) {
-    if (!sigImage) return;
+    if (!sigImage || !page) return;
     const box = (fieldMap && fieldMap[fieldName]) || options.fallbackRect;
     if (!box) {
         console.warn(`[drawSignatureInFieldBox] Signature field "${fieldName}" not found in template fieldMap.`);
         return;
     }
 
-    const padX = options.padX !== undefined ? options.padX : 6;
-    const padY = options.padY !== undefined ? options.padY : 3;
-    const maxW = Math.max(20, box.width - padX * 2);
-    const maxH = Math.max(10, box.height - padY * 2);
+    try {
+        const padX = options.padX !== undefined ? options.padX : 6;
+        const padY = options.padY !== undefined ? options.padY : 3;
+        const maxW = Math.max(20, box.width - padX * 2);
+        const maxH = Math.max(10, box.height - padY * 2);
 
-    const dims = sigImage.scaleToFit(maxW, maxH);
-    const drawX = box.x + (box.width - dims.width) / 2;
-    const drawY = box.y + (box.height - dims.height) / 2;
+        const dims = sigImage.scaleToFit(maxW, maxH);
+        const drawX = box.x + (box.width - dims.width) / 2;
+        const drawY = box.y + (box.height - dims.height) / 2;
 
-    page.drawImage(sigImage, {
-        x: drawX,
-        y: drawY,
-        width: dims.width,
-        height: dims.height
-    });
+        page.drawImage(sigImage, {
+            x: drawX,
+            y: drawY,
+            width: dims.width,
+            height: dims.height
+        });
+    } catch (e) {
+        console.warn(`[drawSignatureInFieldBox] Failed to draw signature in "${fieldName}":`, e);
+    }
 }
 

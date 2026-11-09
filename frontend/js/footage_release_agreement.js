@@ -9,9 +9,10 @@ import {
     cleanPdfText,
     prepareTemplatePdf,
     drawInFieldBox,
-    drawSignatureInFieldBox
-} from './form_submission_helper.js?v=5.4.1';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.1';
+    drawSignatureInFieldBox,
+    embedSignatureSafe
+} from './form_submission_helper.js?v=5.4.2';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.2';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialise Dual-Mode Signature Pads
@@ -63,12 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.documentElement.classList.add('co-sign-mode');
         document.body?.classList.add('co-sign-mode');
         document.querySelector('.global-top-nav')?.remove();
-        document.querySelector('.form-top-actions')?.remove();
         document.getElementById('masqueradeBanner')?.remove();
         document.getElementById('resetFormBtn')?.remove();
-        document.getElementById('downloadCompletedPdfBtn')?.remove();
+        document.getElementById('downloadBlankPdfBtn')?.remove();
         document.getElementById('shareForCosignBtn')?.remove();
         document.getElementById('shareFormBtn')?.remove();
+        const dlBtn = document.getElementById('downloadCompletedPdfBtn');
+        if (dlBtn) {
+            dlBtn.innerHTML = '<span>📥</span> Download PDF Copy';
+        }
 
         (async () => {
             try {
@@ -270,20 +274,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 5. Download & Share Completed PDF Handler
-    document.getElementById('downloadCompletedPdfBtn').addEventListener('click', async () => {
+    document.getElementById('downloadCompletedPdfBtn')?.addEventListener('click', async () => {
         const btn = document.getElementById('downloadCompletedPdfBtn');
         const origText = btn.innerHTML;
         btn.innerHTML = '<span>⏳</span> Generating PDF...';
         btn.disabled = true;
         try {
+            if (submissionId && ownerPad.isEmpty()) {
+                const candidateName = document.getElementById('ownerName')?.value.trim() || document.getElementById('ownerSignatory')?.value.trim() || '';
+                if (candidateName) ownerPad.autoSignFromName(candidateName);
+            }
             const { pdfBlob, filename } = await buildCompletedPDF(producerPad, ownerPad);
-            const comm = document.getElementById('commissionNumber')?.value || '';
-            const story = document.getElementById('storyName')?.value || '';
-            await downloadAndSharePDF(pdfBlob, filename, {
-                title: 'Footage Agreement 2026',
-                storyTitle: story,
-                commNum: comm
-            });
+            if (submissionId) {
+                const url = URL.createObjectURL(pdfBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename || 'Footage_Agreement_2026.pdf';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } else {
+                const comm = document.getElementById('commissionNumber')?.value || '';
+                const story = document.getElementById('storyTitle')?.value || document.getElementById('storyName')?.value || '';
+                await downloadAndSharePDF(pdfBlob, filename, {
+                    title: 'Footage Agreement 2026',
+                    storyTitle: story,
+                    commNum: comm
+                });
+            }
         } catch (err) {
             console.error('Failed to generate PDF:', err);
             alert('Error generating PDF: ' + err.message);
@@ -305,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!sigEl.value && nameEl.value) sigEl.value = nameEl.value;
         }
 
-        // 2. Ensure submitterEmail has a valid fallback so co-signers never get blocked
+        // 2. Ensure submitterEmail and pre-filled fields have valid fallbacks so co-signers never get blocked
         const emailEl = document.getElementById('submitterEmail');
         if (emailEl && !emailEl.value.trim()) {
             if (loadedSubmission) {
@@ -317,6 +336,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        if (submissionId || loadedSubmission) {
+            const commEl = document.getElementById('commissionNumber');
+            if (commEl && !commEl.value.trim()) commEl.value = loadedSubmission?.commissionNumber || urlParams.get('comm') || 'N/A';
+            const storyEl = document.getElementById('storyTitle');
+            if (storyEl && !storyEl.value.trim()) storyEl.value = loadedSubmission?.storyTitle || loadedSubmission?.storyName || urlParams.get('story') || 'Carte Blanche Story';
+            const prodEl = document.getElementById('producerName');
+            if (prodEl && !prodEl.value.trim()) prodEl.value = loadedSubmission?.producerName || urlParams.get('producer') || 'Carte Blanche Producer';
+        }
+
         // 3. Fallback for ownerEntity
         const entityEl = document.getElementById('ownerEntity');
         if (entityEl && !entityEl.value.trim()) {
@@ -324,16 +352,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 4. Fallback for dates
-        const oDateEl = document.getElementById('ownerDate');
-        if (oDateEl && !oDateEl.value) {
-            oDateEl.value = new Date().toISOString().split('T')[0];
-        }
-        const pDateEl = document.getElementById('producerDate');
-        if (pDateEl && !pDateEl.value) {
-            pDateEl.value = new Date().toISOString().split('T')[0];
-        }
+        const todayStr = new Date().toISOString().split('T')[0];
+        ['broadcastDate', 'ownerDate', 'producerDate'].forEach(id => {
+            const dEl = document.getElementById(id);
+            if (dEl && !dEl.value) dEl.value = todayStr;
+        });
 
-        if (!loadedSubmission && ownerPad.isEmpty() && !producerPad.isEmpty()) {
+        if (!loadedSubmission && !submissionId && ownerPad.isEmpty() && !producerPad.isEmpty()) {
             if (confirm('Footage Licensor signature is empty. Would you like to create a secure co-signing link with your Producer signature and share it with the rights owner?')) {
                 handleSendForCoSign();
                 return;
@@ -341,15 +366,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (!form.checkValidity()) {
+            const firstInvalid = form.querySelector(':invalid');
+            if (firstInvalid) {
+                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
             form.reportValidity();
             return;
         }
 
+        // Auto-sign from entered name if signature pad was left in Draw mode without strokes
         if (ownerPad.isEmpty()) {
+            const candidateOwner = nameEl?.value?.trim() || sigEl?.value?.trim() || '';
+            if (candidateOwner) {
+                ownerPad.autoSignFromName(candidateOwner);
+            }
+        }
+        if (producerPad.isEmpty()) {
+            const candidateProd = document.getElementById('producerName')?.value?.trim() || loadedSubmission?.producerName || '';
+            if (candidateProd) {
+                producerPad.autoSignFromName(candidateProd);
+            }
+        }
+
+        if (ownerPad.isEmpty()) {
+            ownerPad.container?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             alert('Please provide the Owner Signatory Signature before submitting.');
             return;
         }
         if (producerPad.isEmpty()) {
+            producerPad.container?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             alert('Please provide the Producer Signature before submitting.');
             return;
         }
@@ -398,8 +443,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }));
 
             let response;
-            if (loadedSubmission && loadedSubmission.id) {
-                formData.append('submissionId', loadedSubmission.id);
+            const targetSubId = (loadedSubmission && loadedSubmission.id) || submissionId;
+            if (targetSubId) {
+                formData.append('submissionId', targetSubId);
+                formData.append('shareToken', urlParams.get('token') || loadedSubmission?.shareToken || '');
                 response = await completeCoSignedAgreement(formData);
             } else {
                 response = await submitLegalForm(formData);
@@ -437,7 +484,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function buildCompletedPDF(producerPad, ownerPad) {
     if (document.fonts && document.fonts.ready) {
-        await document.fonts.ready;
+        try {
+            await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]);
+        } catch (e) {}
     }
     const ownerSignatory = document.getElementById('ownerSignatory')?.value.trim() || '';
     const ownerName = document.getElementById('ownerName')?.value.trim() || ownerSignatory;
@@ -497,12 +546,12 @@ async function buildCompletedPDF(producerPad, ownerPad) {
     drawBox('producerSignedDate', formatDate(producerDate));
 
     if (!producerPad.isEmpty()) {
-        const pSig = await pdfDoc.embedPng(producerPad.toDataURL());
-        drawSignatureInFieldBox(page, fieldMap, 'producerSignature', pSig);
+        const pSig = await embedSignatureSafe(pdfDoc, producerPad.toDataURL());
+        if (pSig) drawSignatureInFieldBox(page, fieldMap, 'producerSignature', pSig);
     }
     if (!ownerPad.isEmpty()) {
-        const oSig = await pdfDoc.embedPng(ownerPad.toDataURL());
-        drawSignatureInFieldBox(page, fieldMap, 'ownerSignature', oSig);
+        const oSig = await embedSignatureSafe(pdfDoc, ownerPad.toDataURL());
+        if (oSig) drawSignatureInFieldBox(page, fieldMap, 'ownerSignature', oSig);
     }
 
     const pdfBytes = await pdfDoc.save();

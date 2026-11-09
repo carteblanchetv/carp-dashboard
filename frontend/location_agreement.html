@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Location Agreement 2026 - CARP Dashboard</title>
-    <link rel="stylesheet" href="style.css?v=5.3.1">
+    <link rel="stylesheet" href="style.css?v=5.4.2">
     <link rel="preload" href="fonts/priestacy.otf" as="font" type="font/otf" crossorigin>
     <link rel="preload" href="fonts/amsterdam.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@
     </script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script type="module">
-        import { checkAuth } from './auth.js?v=5.1.1';
+        import { checkAuth } from './auth.js?v=5.4.2';
         const isCoSign = new URLSearchParams(window.location.search).has('id');
         if (isCoSign) {
             document.body?.classList.add('co-sign-mode');
@@ -461,7 +461,7 @@
         </div>
     </div>
 
-    <script src="js/signature_pad.js?v=5.4.1"></script>
-    <script type="module" src="js/location_agreement.js?v=5.4.1"></script>
+    <script src="js/signature_pad.js?v=5.4.2"></script>
+    <script type="module" src="js/location_agreement.js?v=5.4.2"></script>
 </body>
 </html>

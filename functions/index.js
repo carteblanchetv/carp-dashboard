@@ -2441,15 +2441,28 @@ app.post('/api/cosign-form', async (req, res) => {
 app.post('/api/countersign-form', async (req, res) => {
   try {
     const { fields, files } = await parseMultipart(req);
-    const { submissionId, producerSignature, producerName, producerEmail } = fields;
+    const { submissionId, shareToken, producerSignature, producerName, producerEmail } = fields;
 
-    if (!submissionId) {
-      return res.status(400).json({ success: false, error: 'Missing submission ID for countersignature.' });
+    let subDocRef = null;
+    let subDoc = null;
+
+    if (submissionId && submissionId.trim()) {
+      subDocRef = admin.firestore().collection('submissions').doc(submissionId.trim());
+      subDoc = await subDocRef.get();
     }
 
-    const subDocRef = admin.firestore().collection('submissions').doc(submissionId);
-    const subDoc = await subDocRef.get();
-    if (!subDoc.exists) {
+    if ((!subDoc || !subDoc.exists) && shareToken && shareToken.trim()) {
+      const tokenSnap = await admin.firestore().collection('submissions')
+        .where('shareToken', '==', shareToken.trim())
+        .limit(1)
+        .get();
+      if (!tokenSnap.empty) {
+        subDoc = tokenSnap.docs[0];
+        subDocRef = subDoc.ref;
+      }
+    }
+
+    if (!subDoc || !subDoc.exists) {
       return res.status(404).json({ success: false, error: 'Original agreement submission not found.' });
     }
 
@@ -2598,7 +2611,13 @@ app.post('/api/countersign-form', async (req, res) => {
       console.warn(`[COUNTERSIGN-FORM] Email dispatch error: ${notifyErr.message}`);
     }
 
-    res.json({ success: true, status: 'APPROVED', message: 'Agreement successfully approved and dispatched.' });
+    const allRecipients = Array.from(new Set(['release@carteblanche.co.za', ...uniqueExtraRecipients]));
+    res.json({
+      success: true,
+      status: 'APPROVED',
+      recipients: allRecipients,
+      message: 'Agreement successfully approved and dispatched.'
+    });
   } catch (error) {
     console.error('Error countersigning agreement:', error);
     res.status(500).json({ success: false, error: error.message });
