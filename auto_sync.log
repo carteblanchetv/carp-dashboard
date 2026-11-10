@@ -476,3 +476,86 @@
 [2026-11-10 19:20:44] 
 [2026-11-10 19:20:44] Microsoft Graph email import cycle completed successfully.
 [2026-11-10 19:20:44] Changes detected. Syncing...
+[2026-11-10 19:20:44] [main d4ad9f0] auto-sync: 2026-11-10 19:21
+[2026-11-10 19:20:44]  1 file changed, 83 insertions(+), 1613 deletions(-)
+[2026-11-10 19:20:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-11-10 19:20:44]    8b607bd..d4ad9f0  main -> main
+[2026-11-10 19:20:44] Sync complete.
+[2026-11-10 19:50:44] Running Microsoft Graph Email Importer...
+[2026-11-10 19:50:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-11-10 19:50:44] Fetching messages from Microsoft Graph...
+[2026-11-10 19:50:44] Fetching messages from Microsoft Graph...
+[2026-11-10 19:50:44] Found 70 email(s) since 1 May 2026 to check.
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T18:02:17Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Investigative Story Tip GÇô Ongoing Fraud Involving Motorcycle and Quad Parts" from Kyle Lewin <kylelewin@hotmail.co.za> (received: 2026-11-07T20:28:18Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T20:50:30Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-07T21:19:43Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Media Reminder: ESACD to examine alternatives to imprisonment for minor drug offences" from Darren Brookbanks <darren.brookbanks@globalinitiative.net> (received: 2026-11-08T09:14:36Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-08T09:59:10Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-08T18:19:55Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-08T18:20:08Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-08T18:48:28Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Re: URGENT NTERVENTION: Systematic Abuse of Power, Contempt of Court, and Violation of the Rights to Health and Dignity (Msunduzi Municipality) Dear Sie/Madam" from Anzani Nzimande <anzankins@icloud.com> (received: 2026-11-08T19:07:02Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Fwd: URGENT: A PENSIONER BEING TORMENTED IN HER OWN HOME" from Katey <kissmekatey@gmail.com> (received: 2026-11-08T19:54:44Z)
+[2026-11-10 19:50:44] Skipping duplicate: "(No Subject)" from Ashlen Leonard <leonardhokke14@gmail.com> (received: 2026-11-08T20:12:26Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-08T21:00:45Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T03:24:28Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Corruption at SAPS westrand kagiso saps" from Belinda R Lottering <belindarlottering3@gmail.com> (received: 2026-11-09T04:44:56Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Water issue Zeerust North West." from Rudolph Human <computercorpzeerust@gmail.com> (received: 2026-11-09T05:43:36Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T05:56:41Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Fwd: News24 Feedback" from Kevin Kisogloo <kevin.kisogloo@antwire.co.za> (received: 2026-11-09T06:24:32Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T06:29:50Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Kindness Starts with Animals" from Deidre Daniels <deidre.daniels@four-paws.org> (received: 2026-11-09T09:12:22Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T09:34:39Z)
+[2026-11-10 19:50:44] Skipping duplicate: "PJT BUCKLE vs Lloyd Liellies" from Pieter Buckle <pieterbuckle538@gmail.com> (received: 2026-11-09T10:09:52Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Kaytranada returns to South Africa to kick off Milk + Cookies Music Week" from Nash Chikazunga <nash@arxna.com> (received: 2026-11-09T10:11:39Z)
+[2026-11-10 19:50:44] Skipping duplicate: "PJT BUCKLE vs Lloyd Lielies" from Pieter Buckle <pieterbuckle538@gmail.com> (received: 2026-11-09T10:11:47Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T10:49:46Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Re: Water issue Zeerust North West." from Rudolph Human <computercorpzeerust@gmail.com> (received: 2026-11-09T11:13:48Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Vee diefstal Edenburg" from Jaco Pienaar <bollapienaar3@gmail.com> (received: 2026-11-09T11:38:40Z)
+[2026-11-10 19:50:44] Skipping duplicate: "(No Subject)" from Tanya Ruth <tanyaruth69@gmail.com> (received: 2026-11-09T13:17:01Z)
+[2026-11-10 19:50:44] Skipping duplicate: "(No Subject)" from Tanya Ruth <tanyaruth69@gmail.com> (received: 2026-11-09T13:20:21Z)
+[2026-11-10 19:50:44] Skipping duplicate: "(No Subject)" from Louise Schultz <louiseschultz534@gmail.com> (received: 2026-11-09T13:27:28Z)
+[2026-11-10 19:50:44] Skipping duplicate: "PRESS RELEASE: AI and libraries: opportunity, not replacement" from Jeanine Liebenberg <jeanine@sabinetmailer.co.za> (received: 2026-11-09T14:01:26Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T14:35:39Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T14:35:44Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Re: Automatic reply:" from Louise Schultz <louiseschultz534@gmail.com> (received: 2026-11-09T14:39:20Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Sponsorship" from Chief <free.mbuso@gmail.com> (received: 2026-11-09T14:55:32Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T14:58:33Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T15:00:06Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Media release: ESACD moves towards practical solutions to drug-related harm and prison overcrowding" from Darren Brookbanks <darren.brookbanks@globalinitiative.net> (received: 2026-11-09T15:05:33Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T16:03:55Z)
+[2026-11-10 19:50:44] Skipping duplicate: "SCS368/07/2026" from Huibrecht Van Der Merwe <huibrecht71@gmail.com> (received: 2026-11-09T16:46:36Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T16:53:31Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T16:53:31Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T16:54:34Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T17:00:09Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T19:14:54Z)
+[2026-11-10 19:50:44] Skipping duplicate: "ANONYMOUS REPORT: Systemic Payroll Fraud and Salary Control by PayShield, SAMWU, and Micro-Lenders" from Ntombizodwa Malinga <mntombizodwa630@gmail.com> (received: 2026-11-09T19:29:28Z)
+[2026-11-10 19:50:44] Skipping backend spam/quarantine email: "Phishing to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-10 19:50:44] Skipping duplicate: "INVESTIGATION REQUEST: Alleged labour abuses at Safari Spar and other Spar outlets" from Bagasi Media <bagasimediabrod@gmail.com> (received: 2026-11-10T06:01:47Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T06:23:38Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Stormhaven High Court Judgment: Trustees Can Be Ordered to Pay Legal Bills Out Of Their Own Pockets" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za> (received: 2026-11-10T06:58:54Z)
+[2026-11-10 19:50:44] Skipping duplicate: "DonGÇÖt Go Broke Proving You Love Your Family: Avoiding The Festive Debt Trap After A Tough Economic Year" from Omega Ngema <omega@fwh.co.za> (received: 2026-11-10T07:16:07Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T07:33:51Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T08:00:42Z)
+[2026-11-10 19:50:44] Skipping duplicate: "CHANGE IS POSSIBLE, AND IT STARTS WITH YOU=ƒç+=ƒçª=ƒç+=ƒçª=ƒç+=ƒçª=ƒç+=ƒçª=ƒç+=ƒçª" from Nathan Petzer <nathan.petzer@gmail.com> (received: 2026-11-10T08:47:02Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Re:7820695733  HARTMAN,SCOTT" from Louise Hartman <countrygardendesign@gmail.com> (received: 2026-11-10T09:08:43Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T09:54:54Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T10:15:27Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T10:18:42Z)
+[2026-11-10 19:50:44] Skipping duplicate: "CARTE BLANCE - MY STORY - CCMA - Conse - WECT8412-26 Conse" from El'louise van Eck <ellyveck@gmail.com> (received: 2026-11-10T10:30:56Z)
+[2026-11-10 19:50:44] Skipping duplicate: "WCBS_Urgently_Appeals_For_Blood_Donors_As_O_Blood_Stocks_Drop" from Bongiwe Sipunzi <media@wcbs.org.za> (received: 2026-11-10T10:32:24Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Re: Deelkraal urgent news" from isabel duplessis <duplessisisabel7@gmail.com> (received: 2026-11-10T10:34:34Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Re: Automatic reply: Deelkraal urgent news" from isabel duplessis <duplessisisabel7@gmail.com> (received: 2026-11-10T11:22:10Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T12:01:23Z)
+[2026-11-10 19:50:44] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T12:12:49Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T12:22:01Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T12:39:34Z)
+[2026-11-10 19:50:44] Skipping duplicate: "Confidential Tip-Off: Request for Investigation into Alleged Professional Misconduct by a Practising Attorney" from Shane Du Plessis <shaneduplessis119@gmail.com> (received: 2026-11-10T13:11:45Z)
+[2026-11-10 19:50:44] Skipping duplicate: "The voters have spoken. WhatGÇÖs next?" from info@outa.co.za <info@outa.co.za> (received: 2026-11-10T16:20:37Z)
+[2026-11-10 19:50:44] Skipping duplicate: "FORMAL   COMPLAINT: ALLEGED FRAUDULENT VEHICLE SALES, ODOMETER TAMPERING, AND ROADWORTHY IRREGULARITIES GÇô D&D AUTO, EAST LONDON" from rtoody222 <rtoody222@proton.me> (received: 2026-11-10T16:33:00Z)
+[2026-11-10 19:50:44] 
+[2026-11-10 19:50:44] Microsoft Graph email import cycle completed successfully.
+[2026-11-10 19:50:44] Changes detected. Syncing...
