@@ -4239,6 +4239,26 @@ async function internalDeleteSubmission(id, user) {
   
   // 4. Delete from Firestore
   await docRef.delete();
+
+  // 5. If this was a story footage declaration linked to a proposal, clear the dangling footageId/hasFootage on the proposal
+  if (!isProposal && data.formType === 'insert_footage') {
+      const targetProjId = data.projectId || data.proposalId;
+      if (targetProjId) {
+          try {
+              const propRef = admin.firestore().collection('proposals').doc(targetProjId);
+              const propDoc = await propRef.get();
+              if (propDoc.exists && (!propDoc.data().footageId || propDoc.data().footageId === id)) {
+                  await propRef.update({
+                      hasFootage: false,
+                      footageId: admin.firestore.FieldValue.delete()
+                  });
+              }
+          } catch (clearErr) {
+              console.warn(`[DELETE] Could not clear footageId on proposal ${targetProjId}:`, clearErr.message);
+          }
+      }
+  }
+
   return isProposal;
 }
 
@@ -5226,7 +5246,10 @@ app.get('/api/proposal-legal-forms', async (req, res) => {
     }
 
     const snapshot = await query.get();
-    const forms = snapshot.docs.map(doc => {
+    const excludedDeliverableTypes = ['insert_footage', 'final_script'];
+    const forms = snapshot.docs
+      .filter(doc => !excludedDeliverableTypes.includes(doc.data().formType))
+      .map(doc => {
       const data = doc.data();
       const hasPartSig = !!(
         (data.participantSignature && data.participantSignature.trim().length > 50) ||
