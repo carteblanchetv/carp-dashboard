@@ -134,7 +134,10 @@ class DualSignaturePad {
 
         // Type input typing
         if (this.typeInput) {
-            this.typeInput.addEventListener('input', () => this.updateTypedPreview());
+            this.typeInput.addEventListener('input', () => {
+                if (!this.isLocked) this.savedDataUrl = null;
+                this.updateTypedPreview();
+            });
         }
 
         // Canvas drawing (supports Mouse, Touch, and Windows Ink / Stylus Pointer events)
@@ -154,6 +157,7 @@ class DualSignaturePad {
                 if (this.isLocked) return;
                 if (e.button !== undefined && e.button !== 0) return;
                 e.preventDefault();
+                this.savedDataUrl = null;
                 this.initCanvas();
                 this.isDrawing = true;
                 this.hasDrawn = true;
@@ -368,7 +372,23 @@ class DualSignaturePad {
             const wrapper = this.container.querySelector('.sig-canvas-wrapper') || this.container;
             wrapper.style.position = 'relative';
             wrapper.appendChild(badge);
+        } else {
+            badge.innerHTML = `<span>✓</span> <span>${badgeText}</span>`;
         }
+    }
+
+    unlock() {
+        this.isLocked = false;
+        if (this.tabDraw) this.tabDraw.style.pointerEvents = '';
+        if (this.tabType) this.tabType.style.pointerEvents = '';
+        if (this.clearBtn) this.clearBtn.style.display = '';
+        if (this.canvas) {
+            this.canvas.style.pointerEvents = '';
+            this.canvas.style.cursor = 'crosshair';
+        }
+        if (this.typeInput) this.typeInput.disabled = false;
+        const badge = this.container ? this.container.querySelector('.sig-locked-badge') : null;
+        if (badge) badge.remove();
     }
 
     static generateTypedDataURL(text, fontFamily = DualSignaturePad.FONTS.CO_SIGNER, strokeColor = '#0f172a') {

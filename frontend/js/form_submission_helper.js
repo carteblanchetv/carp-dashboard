@@ -1,16 +1,57 @@
 function isExternalGuestOrCoSigner() {
     try {
+        const currentUser = window.auth?.getCurrentUser?.() || window.auth?.currentUser;
+        if (currentUser) {
+            return false;
+        }
         const params = new URLSearchParams(window.location.search);
+        const isProducerAction = params.get('mode') === 'edit' || params.get('action') === 'approve' || params.get('action') === 'countersign';
+        if (isProducerAction && localStorage.getItem('login_timestamp')) {
+            return false;
+        }
         if (params.has('id')) return true;
         if (document.body?.classList.contains('co-sign-mode') || document.documentElement?.classList.contains('co-sign-mode')) {
             return true;
         }
-        const currentUser = window.auth?.getCurrentUser?.() || window.auth?.currentUser;
-        if (!currentUser && !localStorage.getItem('cb_auth_user')) {
+        if (!currentUser && !localStorage.getItem('login_timestamp') && !localStorage.getItem('cb_auth_user')) {
             return true;
         }
     } catch (e) {}
     return false;
+}
+
+export function notifyLegalFormsUpdated(status = 'UPDATED') {
+    try {
+        localStorage.setItem('carp_legal_form_last_updated', String(Date.now()));
+    } catch (e) {}
+    try {
+        const bc = new BroadcastChannel('carp_legal_forms_sync');
+        bc.postMessage({ type: 'LEGAL_FORM_UPDATED', status, timestamp: Date.now() });
+        setTimeout(() => { try { bc.close(); } catch (e) {} }, 250);
+    } catch (e) {}
+}
+
+export function normalizeDateForInput(val) {
+    if (!val || typeof val !== 'string') return '';
+    const trimmed = val.trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return trimmed;
+    const dmy = trimmed.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+    if (dmy) {
+        return `${dmy[3]}-${dmy[2].padStart(2, '0')}-${dmy[1].padStart(2, '0')}`;
+    }
+    const iso = trimmed.match(/^(\d{4}-\d{2}-\d{2})T/);
+    if (iso) return iso[1];
+    return '';
+}
+
+export function getActiveProducerEmail(fallback = '') {
+    try {
+        const u = window.auth?.getCurrentUser?.() || window.auth?.currentUser;
+        if (u && u.email) return u.email.trim();
+    } catch (e) {}
+    const trimmed = (fallback || '').trim();
+    if (trimmed && trimmed !== 'release@carteblanche.co.za') return trimmed;
+    return '';
 }
 
 /**
@@ -49,6 +90,9 @@ export async function submitLegalForm(formData) {
             body: formData
         });
     }
+    if (response && response.ok) {
+        notifyLegalFormsUpdated('SUBMITTED');
+    }
     return response;
 }
 
@@ -60,6 +104,7 @@ export async function submitLegalForm(formData) {
 export async function initCoSignAgreement(formData) {
     const response = await submitLegalForm(formData);
     if (response && response.status !== 404) {
+        notifyLegalFormsUpdated('PARTIALLY_SIGNED');
         return response;
     }
 
@@ -79,6 +124,9 @@ export async function initCoSignAgreement(formData) {
             method: 'POST',
             body: formData
         });
+    }
+    if (fallbackResponse && fallbackResponse.ok) {
+        notifyLegalFormsUpdated('PARTIALLY_SIGNED');
     }
     return fallbackResponse;
 }
@@ -120,13 +168,16 @@ export async function completeCoSignedAgreement(formData) {
             body: formData
         });
     }
+    if (response && response.ok) {
+        notifyLegalFormsUpdated('COMPLETED');
+    }
     return response;
 }
 
 /**
  * Renders a banner indicating the pre-signed co-signing state
  */
-export function renderCoSignBanner(targetContainer, { title, subtitle, status = 'info' }) {
+export function renderCoSignBanner(targetContainer, { title, subtitle, status = 'info', actionBtn = null }) {
     const existing = document.getElementById('carpCoSignBanner');
     if (existing) existing.remove();
 
@@ -138,17 +189,23 @@ export function renderCoSignBanner(targetContainer, { title, subtitle, status = 
     const borderColor = isCompleted ? '#10b981' : 'var(--primary, #008fbe)';
     const icon = isCompleted ? '✓' : '✍️';
 
-    banner.style.cssText = `background: ${bg}; border: 1.5px solid ${borderColor}; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.85rem; animation: modalFadeIn 0.2s ease-out;`;
+    banner.style.cssText = `background: ${bg}; border: 1.5px solid ${borderColor}; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.85rem; animation: modalFadeIn 0.2s ease-out;`;
     banner.innerHTML = `
-        <span style="font-size: 1.6rem; line-height: 1;">${icon}</span>
-        <div style="flex: 1;">
-            <h4 style="margin: 0; font-size: 1rem; color: var(--text-main); font-weight: 700;">${title}</h4>
-            ${subtitle ? `<p style="margin: 0.2rem 0 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">${subtitle}</p>` : ''}
+        <div style="display: flex; align-items: center; gap: 0.85rem; flex: 1; min-width: 240px;">
+            <span style="font-size: 1.6rem; line-height: 1;">${icon}</span>
+            <div style="flex: 1;">
+                <h4 style="margin: 0; font-size: 1rem; color: var(--text-main); font-weight: 700;">${title}</h4>
+                ${subtitle ? `<p style="margin: 0.2rem 0 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">${subtitle}</p>` : ''}
+            </div>
         </div>
+        ${actionBtn ? `<button type="button" id="carpBannerActionBtn" class="btn-soft" style="padding: 0.55rem 1rem; font-size: 0.85rem; font-weight: 700; background: var(--primary, #008fbe); color: #ffffff; border: none; border-radius: 6px; cursor: pointer; white-space: nowrap;">${actionBtn.label}</button>` : ''}
     `;
 
     if (targetContainer) {
         targetContainer.prepend(banner);
+        if (actionBtn && typeof actionBtn.onClick === 'function') {
+            banner.querySelector('#carpBannerActionBtn')?.addEventListener('click', actionBtn.onClick);
+        }
     }
 }
 
@@ -160,7 +217,8 @@ export function showSubmissionSuccessModal({ title, message, recipients = [], pd
     const existing = document.getElementById('submissionSuccessModal');
     if (existing) existing.remove();
 
-    const isCoSign = (typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('id')) || (!window.auth?.currentUser && !localStorage.getItem('cb_auth_user'));
+    notifyLegalFormsUpdated('COMPLETED');
+    const isCoSign = isExternalGuestOrCoSigner();
 
     const recipientBadges = recipients.length > 0
         ? recipients.map(r => `

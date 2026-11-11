@@ -16,18 +16,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Allura&family=Birthstone+Bounce:wght@400;500&family=Great+Vibes&family=Herr+Von+Muellerhoff&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
     <script>
-        if (new URLSearchParams(window.location.search).has('id')) {
-            document.documentElement.classList.add('co-sign-mode');
-        }
+        (function() {
+            const p = new URLSearchParams(window.location.search);
+            const isProducerAction = p.get('mode') === 'edit' || p.get('action') === 'approve' || p.get('action') === 'countersign';
+            if (p.has('id') && !isProducerAction) {
+                document.documentElement.classList.add('co-sign-mode');
+            }
+        })();
     </script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script type="module">
-        import { checkAuth } from './auth.js?v=5.4.2';
-        const isCoSign = new URLSearchParams(window.location.search).has('id');
+        import { checkAuth } from './auth.js?v=5.4.3';
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasId = urlParams.has('id');
+        const isProducerAction = urlParams.get('mode') === 'edit' || urlParams.get('action') === 'approve' || urlParams.get('action') === 'countersign';
+        const isCoSign = hasId && !isProducerAction;
         if (isCoSign) {
             document.body?.classList.add('co-sign-mode');
         }
-        checkAuth(!isCoSign).then(user => {
+        checkAuth(!hasId).then(user => {
             if (user) {
                 if (!isCoSign) {
                     window.auth.initNavBar(user);
@@ -38,7 +45,7 @@
                     if (name) prodInput.value = name;
                 }
                 const emailInput = document.getElementById('submitterEmail');
-                if (emailInput && !emailInput.value) {
+                if (emailInput && (!emailInput.value || emailInput.value === 'release@carteblanche.co.za')) {
                     emailInput.value = user.email || user.displayEmail || '';
                 }
             }
@@ -457,7 +464,7 @@
         </div>
     </div>
 
-    <script src="js/signature_pad.js?v=5.4.2"></script>
-    <script type="module" src="js/music_agreement.js?v=5.4.2"></script>
+    <script src="js/signature_pad.js?v=5.4.3"></script>
+    <script type="module" src="js/music_agreement.js?v=5.4.3"></script>
 </body>
 </html>
