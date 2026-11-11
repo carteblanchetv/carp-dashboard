@@ -5245,8 +5245,9 @@ app.get('/api/proposal-legal-forms', async (req, res) => {
       );
       const hasProdSig = !!(data.producerSignature && data.producerSignature.trim().length > 50);
 
-      let effectiveStatus = (data.formType === 'travel_booking' || data.formType === 'insert_sheet') ? 'completed' : (data.status || 'pending');
-      if (hasPartSig && effectiveStatus !== 'completed' && effectiveStatus !== 'APPROVED' && effectiveStatus !== 'approved') {
+      const isCoSignType = ['participant_release', 'minor_release', 'location_agreement', 'music_agreement', 'footage_agreement', 'footage_release_agreement', 'footage_release'].includes(data.formType);
+      let effectiveStatus = !isCoSignType ? 'completed' : (data.status || 'pending');
+      if (isCoSignType && hasPartSig && effectiveStatus !== 'completed' && effectiveStatus !== 'APPROVED' && effectiveStatus !== 'approved') {
         effectiveStatus = 'PENDING_APPROVAL';
       }
 

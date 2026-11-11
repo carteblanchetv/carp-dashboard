@@ -3842,7 +3842,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     { title: 'Music Agreement Forms', types: ['music_agreement'] },
                     { title: 'Location Agreement Forms', types: ['location_agreement'] },
                     { title: 'Footage Release Forms', types: ['footage_agreement', 'footage_release_agreement', 'footage_release'] },
-                    { title: 'Insert Sheets Form', types: ['insert_sheet'] }
+                    { title: 'Insert Sheets Form', types: ['insert_sheet'] },
+                    { title: 'Story Footage Declarations', types: ['insert_footage'] },
+                    { title: 'Travel Booking Forms', types: ['travel_booking'] }
                 ];
 
                 const formPageMap = {
@@ -3854,6 +3856,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     'footage_release_agreement': 'footage_release_agreement.html',
                     'footage_release': 'footage_release_agreement.html',
                     'insert_sheet': 'insert_sheet.html',
+                    'insert_footage': 'insert_footage_declaration.html',
+                    'final_script': 'final_script.html',
+                    'episode_footage': 'footage_agreement.html',
+                    'control_sheet': 'control_sheet.html',
                     'travel_booking': 'travel_booking.html'
                 };
 
@@ -3909,8 +3915,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                                 <div style="display: flex; flex-direction: column; gap: 0.6rem;">
                                     ${group.forms.map(f => {
-                                        const isCountersignable = !['travel_booking', 'insert_sheet'].includes(f.formType);
-                                        const isApprovedOrDone = f.status === 'completed' || 
+                                        const isCountersignable = ['participant_release', 'minor_release', 'location_agreement', 'music_agreement', 'footage_agreement', 'footage_release_agreement', 'footage_release'].includes(f.formType);
+                                        const isApprovedOrDone = !isCountersignable ||
+                                                                 f.status === 'completed' || 
                                                                  f.status === 'APPROVED' || 
                                                                  f.status === 'approved' || 
                                                                  f.status === 'COMPLETED' || 

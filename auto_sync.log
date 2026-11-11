@@ -1,189 +1,3 @@
-[2026-11-11 11:50:44]     "errors": [
-[2026-11-11 11:50:44]       {
-[2026-11-11 11:50:44]         "message": "The specified bucket does not exist.",
-[2026-11-11 11:50:44]         "domain": "global",
-[2026-11-11 11:50:44]         "reason": "notFound"
-[2026-11-11 11:50:44]       }
-[2026-11-11 11:50:44]     ]
-[2026-11-11 11:50:44]   }
-[2026-11-11 11:50:44] }
-[2026-11-11 11:50:44] System.Management.Automation.RemoteException
-[2026-11-11 11:50:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-11-11 11:50:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-11-11 11:50:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-11-11 11:50:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-11-11 11:50:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-11-11 11:50:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-11-11 11:50:44]   config: {
-[2026-11-11 11:50:44]     method: 'POST',
-[2026-11-11 11:50:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794390707517_Kalkfontein_468LQ_Consultation_Letter_and_Application_Extract_6_Photos.pdf&uploadType=resumable',
-[2026-11-11 11:50:44]     params: {
-[2026-11-11 11:50:44]       name: 'submissions/email_submission/1794390707517_Kalkfontein_468LQ_Consultation_Letter_and_Application_Extract_6_Photos.pdf',
-[2026-11-11 11:50:44]       uploadType: 'resumable'
-[2026-11-11 11:50:44]     },
-[2026-11-11 11:50:44]     data: {},
-[2026-11-11 11:50:44]     headers: {
-[2026-11-11 11:50:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-11-11 11:50:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/80042bc1-2572-4eec-8fa1-51934cd1d6b3',
-[2026-11-11 11:50:44]       'X-Upload-Content-Type': 'application/pdf',
-[2026-11-11 11:50:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-11-11 11:50:44]       'Content-Type': 'application/json'
-[2026-11-11 11:50:44]     },
-[2026-11-11 11:50:44]     validateStatus: [Function (anonymous)],
-[2026-11-11 11:50:44]     paramsSerializer: [Function: paramsSerializer],
-[2026-11-11 11:50:44]     body: '{}',
-[2026-11-11 11:50:44]     responseType: 'unknown',
-[2026-11-11 11:50:44]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-11 11:50:44]   },
-[2026-11-11 11:50:44]   response: {
-[2026-11-11 11:50:44]     config: {
-[2026-11-11 11:50:44]       method: 'POST',
-[2026-11-11 11:50:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794390707517_Kalkfontein_468LQ_Consultation_Letter_and_Application_Extract_6_Photos.pdf&uploadType=resumable',
-[2026-11-11 11:50:44]       params: [Object],
-[2026-11-11 11:50:44]       data: {},
-[2026-11-11 11:50:44]       headers: [Object],
-[2026-11-11 11:50:44]       validateStatus: [Function (anonymous)],
-[2026-11-11 11:50:44]       paramsSerializer: [Function: paramsSerializer],
-[2026-11-11 11:50:44]       body: '{}',
-[2026-11-11 11:50:44]       responseType: 'unknown',
-[2026-11-11 11:50:44]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-11 11:50:44]     },
-[2026-11-11 11:50:44]     data: '{\n' +
-[2026-11-11 11:50:44]       '  "error": {\n' +
-[2026-11-11 11:50:44]       '    "code": 404,\n' +
-[2026-11-11 11:50:44]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-11-11 11:50:44]       '    "errors": [\n' +
-[2026-11-11 11:50:44]       '      {\n' +
-[2026-11-11 11:50:44]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-11-11 11:50:44]       '        "domain": "global",\n' +
-[2026-11-11 11:50:44]       '        "reason": "notFound"\n' +
-[2026-11-11 11:50:44]       '      }\n' +
-[2026-11-11 11:50:44]       '    ]\n' +
-[2026-11-11 11:50:44]       '  }\n' +
-[2026-11-11 11:50:44]       '}\n',
-[2026-11-11 11:50:44]     headers: {
-[2026-11-11 11:50:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-11-11 11:50:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-11-11 11:50:44]       'content-length': '247',
-[2026-11-11 11:50:44]       'content-type': 'text/html; charset=UTF-8',
-[2026-11-11 11:50:44]       date: 'Wed, 11 Nov 2026 09:51:46 GMT',
-[2026-11-11 11:50:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-11-11 11:50:44]       pragma: 'no-cache',
-[2026-11-11 11:50:44]       server: 'UploadServer',
-[2026-11-11 11:50:44]       vary: 'Origin, X-Origin',
-[2026-11-11 11:50:44]       'x-goog-gcs-base-ts': '1a1ca054a21',
-[2026-11-11 11:50:44]       'x-guploader-uploadid': 'AFy3sg2tIDyMmxG6-8Xfn6zbcpOu4VojQnUuf5Pkv9ISNyFCV2pA4Moj-Fd7H5cEAYft-UFGWcb8CZsWQa9Tb5zBvJNdG9Q7cv1M0Q2W_qoEmw'
-[2026-11-11 11:50:44]     },
-[2026-11-11 11:50:44]     status: 404,
-[2026-11-11 11:50:44]     statusText: 'Not Found',
-[2026-11-11 11:50:44]     request: {
-[2026-11-11 11:50:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794390707517_Kalkfontein_468LQ_Consultation_Letter_and_Application_Extract_6_Photos.pdf&uploadType=resumable'
-[2026-11-11 11:50:44]     }
-[2026-11-11 11:50:44]   },
-[2026-11-11 11:50:44]   error: undefined,
-[2026-11-11 11:50:44]   status: 404,
-[2026-11-11 11:50:44]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-11-11 11:50:44] }
-[2026-11-11 11:50:44] Failed to process attachment Moorddrift Evidence Map 11-11-2026 Rev 0e.pdf: GaxiosError: {
-[2026-11-11 11:50:44]   "error": {
-[2026-11-11 11:50:44]     "code": 404,
-[2026-11-11 11:50:44]     "message": "The specified bucket does not exist.",
-[2026-11-11 11:50:44]     "errors": [
-[2026-11-11 11:50:44]       {
-[2026-11-11 11:50:44]         "message": "The specified bucket does not exist.",
-[2026-11-11 11:50:44]         "domain": "global",
-[2026-11-11 11:50:44]         "reason": "notFound"
-[2026-11-11 11:50:44]       }
-[2026-11-11 11:50:44]     ]
-[2026-11-11 11:50:44]   }
-[2026-11-11 11:50:44] }
-[2026-11-11 11:50:44] System.Management.Automation.RemoteException
-[2026-11-11 11:50:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-11-11 11:50:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-11-11 11:50:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-11-11 11:50:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-11-11 11:50:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-11-11 11:50:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-11-11 11:50:44]   config: {
-[2026-11-11 11:50:44]     method: 'POST',
-[2026-11-11 11:50:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794390708834_MoorddriftEvidenceMap11-11-2026Rev0e.pdf&uploadType=resumable',
-[2026-11-11 11:50:44]     params: {
-[2026-11-11 11:50:44]       name: 'submissions/email_submission/1794390708834_MoorddriftEvidenceMap11-11-2026Rev0e.pdf',
-[2026-11-11 11:50:44]       uploadType: 'resumable'
-[2026-11-11 11:50:44]     },
-[2026-11-11 11:50:44]     data: {},
-[2026-11-11 11:50:44]     headers: {
-[2026-11-11 11:50:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-11-11 11:50:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/053b4430-d385-4236-a8a9-55d3668820c5',
-[2026-11-11 11:50:44]       'X-Upload-Content-Type': 'application/pdf',
-[2026-11-11 11:50:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-11-11 11:50:44]       'Content-Type': 'application/json'
-[2026-11-11 11:50:44]     },
-[2026-11-11 11:50:44]     validateStatus: [Function (anonymous)],
-[2026-11-11 11:50:44]     paramsSerializer: [Function: paramsSerializer],
-[2026-11-11 11:50:44]     body: '{}',
-[2026-11-11 11:50:44]     responseType: 'unknown',
-[2026-11-11 11:50:44]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-11 11:50:44]   },
-[2026-11-11 11:50:44]   response: {
-[2026-11-11 11:50:44]     config: {
-[2026-11-11 11:50:44]       method: 'POST',
-[2026-11-11 11:50:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794390708834_MoorddriftEvidenceMap11-11-2026Rev0e.pdf&uploadType=resumable',
-[2026-11-11 11:50:44]       params: [Object],
-[2026-11-11 11:50:44]       data: {},
-[2026-11-11 11:50:44]       headers: [Object],
-[2026-11-11 11:50:44]       validateStatus: [Function (anonymous)],
-[2026-11-11 11:50:44]       paramsSerializer: [Function: paramsSerializer],
-[2026-11-11 11:50:44]       body: '{}',
-[2026-11-11 11:50:44]       responseType: 'unknown',
-[2026-11-11 11:50:44]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-11 11:50:44]     },
-[2026-11-11 11:50:44]     data: '{\n' +
-[2026-11-11 11:50:44]       '  "error": {\n' +
-[2026-11-11 11:50:44]       '    "code": 404,\n' +
-[2026-11-11 11:50:44]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-11-11 11:50:44]       '    "errors": [\n' +
-[2026-11-11 11:50:44]       '      {\n' +
-[2026-11-11 11:50:44]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-11-11 11:50:44]       '        "domain": "global",\n' +
-[2026-11-11 11:50:44]       '        "reason": "notFound"\n' +
-[2026-11-11 11:50:44]       '      }\n' +
-[2026-11-11 11:50:44]       '    ]\n' +
-[2026-11-11 11:50:44]       '  }\n' +
-[2026-11-11 11:50:44]       '}\n',
-[2026-11-11 11:50:44]     headers: {
-[2026-11-11 11:50:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-11-11 11:50:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-11-11 11:50:44]       'content-length': '247',
-[2026-11-11 11:50:44]       'content-type': 'text/html; charset=UTF-8',
-[2026-11-11 11:50:44]       date: 'Wed, 11 Nov 2026 09:51:47 GMT',
-[2026-11-11 11:50:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-11-11 11:50:44]       pragma: 'no-cache',
-[2026-11-11 11:50:44]       server: 'UploadServer',
-[2026-11-11 11:50:44]       vary: 'Origin, X-Origin',
-[2026-11-11 11:50:44]       'x-goog-gcs-base-ts': '1a1ca054c63',
-[2026-11-11 11:50:44]       'x-guploader-uploadid': 'AFy3sg3EkE5xZBvCY3FJrsbOF0iKzNRO39L4v3fl0ZW7BCc2fP4S1-V1UQZkvZEcAkra7DAX_w4i5JS76QujS-nOo4GhMPe9tfXHdQJldvYqfg'
-[2026-11-11 11:50:44]     },
-[2026-11-11 11:50:44]     status: 404,
-[2026-11-11 11:50:44]     statusText: 'Not Found',
-[2026-11-11 11:50:44]     request: {
-[2026-11-11 11:50:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794390708834_MoorddriftEvidenceMap11-11-2026Rev0e.pdf&uploadType=resumable'
-[2026-11-11 11:50:44]     }
-[2026-11-11 11:50:44]   },
-[2026-11-11 11:50:44]   error: undefined,
-[2026-11-11 11:50:44]   status: 404,
-[2026-11-11 11:50:44]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-11-11 11:50:44] }
-[2026-11-11 11:50:44] Saved submission successfully to Firestore: submissions/MR061axI3qcET3i27TDk
-[2026-11-11 11:50:44] Marked email as read on Microsoft Graph.
-[2026-11-11 11:50:44] 
-[2026-11-11 11:50:44] Processing: "Cable thief in the garden route" from Tessa Jones <tessa@silentk.co.za>
-[2026-11-11 11:50:44] Identified formType: email_submission
-[2026-11-11 11:50:44] Saved submission successfully to Firestore: submissions/IMVtIX4YZGFeuVb91h5s
-[2026-11-11 11:50:44] Marked email as read on Microsoft Graph.
-[2026-11-11 11:50:44] 
-[2026-11-11 11:50:44] Microsoft Graph email import cycle completed successfully.
-[2026-11-11 11:50:44] Changes detected. Syncing...
 [2026-11-11 11:50:44] warning: in the working copy of 'frontend/footage_release_agreement.html', LF will be replaced by CRLF the next time Git touches it
 [2026-11-11 11:50:44] warning: in the working copy of 'frontend/js/form_submission_helper.js', LF will be replaced by CRLF the next time Git touches it
 [2026-11-11 11:50:44] warning: in the working copy of 'frontend/js/signature_pad.js', LF will be replaced by CRLF the next time Git touches it
@@ -579,3 +393,1569 @@
 [2026-11-11 13:50:43] 
 [2026-11-11 13:50:43] Microsoft Graph email import cycle completed successfully.
 [2026-11-11 13:50:43] Changes detected. Syncing...
+[2026-11-11 13:50:43] [main 9a1005d] auto-sync: 2026-11-11 13:51
+[2026-11-11 13:50:43]  1 file changed, 93 insertions(+)
+[2026-11-11 13:50:43] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-11-11 13:50:43]    07e0ec6..9a1005d  main -> main
+[2026-11-11 13:50:43] Sync complete.
+[2026-11-11 14:20:44] Running Microsoft Graph Email Importer...
+[2026-11-11 14:20:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-11-11 14:20:44] Fetching messages from Microsoft Graph...
+[2026-11-11 14:20:44] Fetching messages from Microsoft Graph...
+[2026-11-11 14:20:44] Found 89 email(s) since 1 May 2026 to check.
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-08T18:19:55Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-08T18:20:08Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-08T18:48:28Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Re: URGENT NTERVENTION: Systematic Abuse of Power, Contempt of Court, and Violation of the Rights to Health and Dignity (Msunduzi Municipality) Dear Sie/Madam" from Anzani Nzimande <anzankins@icloud.com> (received: 2026-11-08T19:07:02Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Fwd: URGENT: A PENSIONER BEING TORMENTED IN HER OWN HOME" from Katey <kissmekatey@gmail.com> (received: 2026-11-08T19:54:44Z)
+[2026-11-11 14:20:44] Skipping duplicate: "(No Subject)" from Ashlen Leonard <leonardhokke14@gmail.com> (received: 2026-11-08T20:12:26Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-08T21:00:45Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T03:24:28Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Corruption at SAPS westrand kagiso saps" from Belinda R Lottering <belindarlottering3@gmail.com> (received: 2026-11-09T04:44:56Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Water issue Zeerust North West." from Rudolph Human <computercorpzeerust@gmail.com> (received: 2026-11-09T05:43:36Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T05:56:41Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Fwd: News24 Feedback" from Kevin Kisogloo <kevin.kisogloo@antwire.co.za> (received: 2026-11-09T06:24:32Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T06:29:50Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Kindness Starts with Animals" from Deidre Daniels <deidre.daniels@four-paws.org> (received: 2026-11-09T09:12:22Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T09:34:39Z)
+[2026-11-11 14:20:44] Skipping duplicate: "PJT BUCKLE vs Lloyd Liellies" from Pieter Buckle <pieterbuckle538@gmail.com> (received: 2026-11-09T10:09:52Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Kaytranada returns to South Africa to kick off Milk + Cookies Music Week" from Nash Chikazunga <nash@arxna.com> (received: 2026-11-09T10:11:39Z)
+[2026-11-11 14:20:44] Skipping duplicate: "PJT BUCKLE vs Lloyd Lielies" from Pieter Buckle <pieterbuckle538@gmail.com> (received: 2026-11-09T10:11:47Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T10:49:46Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Re: Water issue Zeerust North West." from Rudolph Human <computercorpzeerust@gmail.com> (received: 2026-11-09T11:13:48Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Vee diefstal Edenburg" from Jaco Pienaar <bollapienaar3@gmail.com> (received: 2026-11-09T11:38:40Z)
+[2026-11-11 14:20:44] Skipping duplicate: "(No Subject)" from Tanya Ruth <tanyaruth69@gmail.com> (received: 2026-11-09T13:17:01Z)
+[2026-11-11 14:20:44] Skipping duplicate: "(No Subject)" from Tanya Ruth <tanyaruth69@gmail.com> (received: 2026-11-09T13:20:21Z)
+[2026-11-11 14:20:44] Skipping duplicate: "(No Subject)" from Louise Schultz <louiseschultz534@gmail.com> (received: 2026-11-09T13:27:28Z)
+[2026-11-11 14:20:44] Skipping duplicate: "PRESS RELEASE: AI and libraries: opportunity, not replacement" from Jeanine Liebenberg <jeanine@sabinetmailer.co.za> (received: 2026-11-09T14:01:26Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T14:35:39Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T14:35:44Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Re: Automatic reply:" from Louise Schultz <louiseschultz534@gmail.com> (received: 2026-11-09T14:39:20Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Sponsorship" from Chief <free.mbuso@gmail.com> (received: 2026-11-09T14:55:32Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T14:58:33Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T15:00:06Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Media release: ESACD moves towards practical solutions to drug-related harm and prison overcrowding" from Darren Brookbanks <darren.brookbanks@globalinitiative.net> (received: 2026-11-09T15:05:33Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T16:03:55Z)
+[2026-11-11 14:20:44] Skipping duplicate: "SCS368/07/2026" from Huibrecht Van Der Merwe <huibrecht71@gmail.com> (received: 2026-11-09T16:46:36Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T16:53:31Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T16:53:31Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T16:54:34Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T17:00:09Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-09T19:14:54Z)
+[2026-11-11 14:20:44] Skipping duplicate: "ANONYMOUS REPORT: Systemic Payroll Fraud and Salary Control by PayShield, SAMWU, and Micro-Lenders" from Ntombizodwa Malinga <mntombizodwa630@gmail.com> (received: 2026-11-09T19:29:28Z)
+[2026-11-11 14:20:44] Skipping backend spam/quarantine email: "Phishing to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-11 14:20:44] Skipping duplicate: "INVESTIGATION REQUEST: Alleged labour abuses at Safari Spar and other Spar outlets" from Bagasi Media <bagasimediabrod@gmail.com> (received: 2026-11-10T06:01:47Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T06:23:38Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Stormhaven High Court Judgment: Trustees Can Be Ordered to Pay Legal Bills Out Of Their Own Pockets" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za> (received: 2026-11-10T06:58:54Z)
+[2026-11-11 14:20:44] Skipping duplicate: "DonGÇÖt Go Broke Proving You Love Your Family: Avoiding The Festive Debt Trap After A Tough Economic Year" from Omega Ngema <omega@fwh.co.za> (received: 2026-11-10T07:16:07Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T07:33:51Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T08:00:42Z)
+[2026-11-11 14:20:44] Skipping duplicate: "CHANGE IS POSSIBLE, AND IT STARTS WITH YOU=ƒç+=ƒçª=ƒç+=ƒçª=ƒç+=ƒçª=ƒç+=ƒçª=ƒç+=ƒçª" from Nathan Petzer <nathan.petzer@gmail.com> (received: 2026-11-10T08:47:02Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Re:7820695733  HARTMAN,SCOTT" from Louise Hartman <countrygardendesign@gmail.com> (received: 2026-11-10T09:08:43Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T09:54:54Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T10:15:27Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T10:18:42Z)
+[2026-11-11 14:20:44] Skipping duplicate: "CARTE BLANCE - MY STORY - CCMA - Conse - WECT8412-26 Conse" from El'louise van Eck <ellyveck@gmail.com> (received: 2026-11-10T10:30:56Z)
+[2026-11-11 14:20:44] Skipping duplicate: "WCBS_Urgently_Appeals_For_Blood_Donors_As_O_Blood_Stocks_Drop" from Bongiwe Sipunzi <media@wcbs.org.za> (received: 2026-11-10T10:32:24Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Re: Deelkraal urgent news" from isabel duplessis <duplessisisabel7@gmail.com> (received: 2026-11-10T10:34:34Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Re: Automatic reply: Deelkraal urgent news" from isabel duplessis <duplessisisabel7@gmail.com> (received: 2026-11-10T11:22:10Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T12:01:23Z)
+[2026-11-11 14:20:44] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T12:12:49Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T12:22:01Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T12:39:34Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Confidential Tip-Off: Request for Investigation into Alleged Professional Misconduct by a Practising Attorney" from Shane Du Plessis <shaneduplessis119@gmail.com> (received: 2026-11-10T13:11:45Z)
+[2026-11-11 14:20:44] Skipping duplicate: "The voters have spoken. WhatGÇÖs next?" from info@outa.co.za <info@outa.co.za> (received: 2026-11-10T16:20:37Z)
+[2026-11-11 14:20:44] Skipping duplicate: "FORMAL   COMPLAINT: ALLEGED FRAUDULENT VEHICLE SALES, ODOMETER TAMPERING, AND ROADWORTHY IRREGULARITIES GÇô D&D AUTO, EAST LONDON" from rtoody222 <rtoody222@proton.me> (received: 2026-11-10T16:33:00Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T21:35:47Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Pitch" from Thomo Nkgadima <thomo.nkgadima@gmail.com> (received: 2026-11-10T23:09:25Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Pitch" from Thomo Nkgadima <thomo.nkgadima@gmail.com> (received: 2026-11-10T23:14:13Z)
+[2026-11-11 14:20:44] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-11 14:20:44] Skipping duplicate: "BBEXPO 2026 Celebrated local business and recognises emerging business talent" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-11-11T05:47:25Z)
+[2026-11-11 14:20:44] Skipping duplicate: "The R30 / Litre Petrol Squeeze And Why Landlords Should Prioritise Good Tenants Over Increases" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za> (received: 2026-11-11T06:52:28Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T07:49:38Z)
+[2026-11-11 14:20:44] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T08:54:56Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Story tip: Proposed coal mining near Lephalale GÇö clearing, blasting and unresolved approval records" from Hoornbosch Boerdery <hoornbosch.boerdery@gmail.com> (received: 2026-11-11T09:22:25Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Cable thief in the garden route" from Tessa Jones <tessa@silentk.co.za> (received: 2026-11-11T09:27:54Z)
+[2026-11-11 14:20:44] Skipping backend spam/quarantine email: "Phishing to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-11 14:20:44] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-11 14:20:44] Skipping duplicate: "Recall: P Naick - Fraud Alert (PostBank/SASSA)" from Theesan Naick <theesan.naick@art22.co.za> (received: 2026-11-11T10:36:29Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T10:41:21Z)
+[2026-11-11 14:20:44] Skipping duplicate: "SU Experts: World Diabetes Day" from Lewis, AE, Mrs [alewis@sun.ac.za] <alewis@sun.ac.za> (received: 2026-11-11T10:44:21Z)
+[2026-11-11 14:20:44] 
+[2026-11-11 14:20:44] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-11 14:20:44] Identified formType: dstv_tipoff
+[2026-11-11 14:20:44] Saved submission successfully to Firestore: submissions/5NIdX4QwA0i4vDzMN59d
+[2026-11-11 14:20:44] Marked email as read on Microsoft Graph.
+[2026-11-11 14:20:44] 
+[2026-11-11 14:20:44] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-11 14:20:44] Identified formType: dstv_tipoff
+[2026-11-11 14:20:44] Saved submission successfully to Firestore: submissions/fU6Ms23uLBb26SiGszr6
+[2026-11-11 14:20:44] Marked email as read on Microsoft Graph.
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T11:51:28Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T11:51:28Z)
+[2026-11-11 14:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T11:51:29Z)
+[2026-11-11 14:20:44] 
+[2026-11-11 14:20:44] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-11 14:20:44] Identified formType: dstv_tipoff
+[2026-11-11 14:20:44] Saved submission successfully to Firestore: submissions/qhjbG5883f6Y2DmDbrES
+[2026-11-11 14:20:44] Marked email as read on Microsoft Graph.
+[2026-11-11 14:20:44] 
+[2026-11-11 14:20:44] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-11 14:20:44] Identified formType: dstv_tipoff
+[2026-11-11 14:20:44] Saved submission successfully to Firestore: submissions/yKlc4g0NSc3DAn2Rx7iy
+[2026-11-11 14:20:44] Marked email as read on Microsoft Graph.
+[2026-11-11 14:20:44] 
+[2026-11-11 14:20:44] Processing: "Re: INVESTIGATION: Vosloorus One-Day Flip - Absa Financed - High Court Case 2024-043949 " from amanda zwane <amandazwane96@gmail.com>
+[2026-11-11 14:20:44] Identified formType: email_submission
+[2026-11-11 14:20:44] Failed to process attachment replying affidavit rotated.pdf: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399728308_replyingaffidavitrotated.pdf&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399728308_replyingaffidavitrotated.pdf',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/3da9c3da-6bb9-4afa-83cf-1cb30a1ea61e',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'application/pdf',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399728308_replyingaffidavitrotated.pdf&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:07 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8ef01c',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg2ExHo7_WdfiSe7IXuN3RX_fxNMVFB-M9MwLeTd8-QVP9ReaonyDS1LCiPjonWEz4nS4RGSHCe1_zonF2dI750UlPM-Cjox4LsSxIYqOYM'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399728308_replyingaffidavitrotated.pdf&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment signed AA for RA.pdf: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399729727_signedAAforRA.pdf&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399729727_signedAAforRA.pdf',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/1af07e7d-4151-46d2-8c04-ef0a05d7daf6',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'application/pdf',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399729727_signedAAforRA.pdf&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:08 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8ef1f8',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg2byG1roVjVhdEbbC54LwpnkU3RrpOFbb2kZCbsETCZhBTyLj5Q4v7wEHHTEfVARCoLAtNly5TlsmwEWYq6557fS1c5UPbkkmaDrueVnUg'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399729727_signedAAforRA.pdf&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment Replying Affidavit1.pdf: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399730199_ReplyingAffidavit1.pdf&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399730199_ReplyingAffidavit1.pdf',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/fab5d0b6-6b5a-495b-b393-ae26e58f0b5a',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'application/pdf',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399730199_ReplyingAffidavit1.pdf&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:08 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8ef3ee',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg15L0SG5BfJwdGIyEb5yzrC0X0CSsrpAgHc6zXmqpsgq9MQWwpQvafar0joeWtE8mmQEAd5GDsrULL_Vi41CCOVr6873jWWeh_-q99_LHI'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399730199_ReplyingAffidavit1.pdf&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment Annexures.pdf: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399730710_Annexures.pdf&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399730710_Annexures.pdf',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/4648c6e1-865a-4698-8640-854aad814bcb',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'application/pdf',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399730710_Annexures.pdf&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:08 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8ef55d',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg0__vG6TGrgVfSlvF84PIPeQ1msW476D1u9cfCv8UY6OJtLzv8McnDTAECgo23hXI4MXsWsVSU5Rr48YPdxYJwrdvVWuDdAK3j5Fs7aRIY'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399730710_Annexures.pdf&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Saved submission successfully to Firestore: submissions/iAtMvyvAHkkjqQ706YO6
+[2026-11-11 14:20:44] Marked email as read on Microsoft Graph.
+[2026-11-11 14:20:44] 
+[2026-11-11 14:20:44] Processing: "Fwd: URGENT: Confidential and Anonymous Request for Investigation into a ChildGÇÖs Suspicious Death and the Safety of Two Surviving Children" from Bianca wolmarans <wolmaransbianca870@gmail.com>
+[2026-11-11 14:20:44] Identified formType: email_submission
+[2026-11-11 14:20:44] Failed to process attachment image001.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399733145_image001.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399733145_image001.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/3b4d244c-826b-4592-8f10-0d47a24a51fb',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399733145_image001.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:11 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8eff79',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg1BfWqSPW9SnYLY45_Fqn_LuhEqzh_KK3KI8ZYGcjI0V7aLB5CArfWJDQjEMvxYDIwBojsaswpeDtfbOECqMU1OEe4F5gWMhmHs_do1ICc'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399733145_image001.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment image001.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399733655_image001.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399733655_image001.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/3b29dee1-3ef4-4711-9204-9f8be3fb7b49',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399733655_image001.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:12 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8f0164',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg3TEcib13nNlvhZ9VUjbBjL2YoK82umcmLRAg4g4PHT7XJhFm5rGNnewAA5Cdh7XEPGrCAOb23TpzoHrTfqtLZZof-zrGHYyj6bd6LwQA'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399733655_image001.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment 01b75648-9d63-42ff-a655-016f4fef5d3e.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399734147_01b75648-9d63-42ff-a655-016f4fef5d3e.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399734147_01b75648-9d63-42ff-a655-016f4fef5d3e.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/013a224e-b01e-4651-89a2-30d8a9a486e3',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399734147_01b75648-9d63-42ff-a655-016f4fef5d3e.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:12 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8f0350',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg2MeJ03UwKJI96pYGa_nXWCZNz2usns-kDKXR3nurWDjBuImRAbuZHm4dh_T-CrhlgKFSbM8E8Z7NSKNVzVuG-OWL5dOkr3NnjWIDYugRU'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399734147_01b75648-9d63-42ff-a655-016f4fef5d3e.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment 1b7dc7c9-7760-48b5-9fa3-bff5b9b4966c.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399734639_1b7dc7c9-7760-48b5-9fa3-bff5b9b4966c.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399734639_1b7dc7c9-7760-48b5-9fa3-bff5b9b4966c.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/95dc8720-476a-4bd0-99c9-0027c0a68a4e',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399734639_1b7dc7c9-7760-48b5-9fa3-bff5b9b4966c.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:12 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8f04e0',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg22iBppv3yV5AbLL1TVN44l2qJ72iiPq2I03HNDXe-oCPM_A7OMT-cW6tvQcBDG4lim8dvIuiXSgEJotbp63Nq3fvIjweiHJE2FToTZgg'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399734639_1b7dc7c9-7760-48b5-9fa3-bff5b9b4966c.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment 6ffd72cc-f39f-4a2e-9fba-1bfc9a1f6681.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399735039_6ffd72cc-f39f-4a2e-9fba-1bfc9a1f6681.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399735039_6ffd72cc-f39f-4a2e-9fba-1bfc9a1f6681.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/818b07b4-e7ed-469b-96b1-6852ad72d3f1',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399735039_6ffd72cc-f39f-4a2e-9fba-1bfc9a1f6681.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:13 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8f06ad',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg3Kz9TYPlbClCH_6AiwHxh4NLMRTP5uCR3MSMm5rrpQslrdKl0K8-3SyJ69rsii950mF86wgN0BdDEBWpDrIJFqqRT33lHq8irNQkfkYNw'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399735039_6ffd72cc-f39f-4a2e-9fba-1bfc9a1f6681.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment 9bff44e5-e084-4090-a960-a8c78ac27161.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399735499_9bff44e5-e084-4090-a960-a8c78ac27161.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399735499_9bff44e5-e084-4090-a960-a8c78ac27161.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/fc4a3ab5-1009-4361-bd4d-c86032c4ce3e',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399735499_9bff44e5-e084-4090-a960-a8c78ac27161.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:13 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8f089c',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg2aOHdMYb4g0-QZo4szQbblm7KXia5fU_qqReFX1FR3BzKP0G3xHxgEysPcNe6Ra1ojnhTViOO3-T-9yDdL6CQaU8cgrDxRH2DdiSMMZNA'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399735499_9bff44e5-e084-4090-a960-a8c78ac27161.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment 63d9e4f4-753d-4e2b-8001-b5ab4f2fb9e1.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399735995_63d9e4f4-753d-4e2b-8001-b5ab4f2fb9e1.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399735995_63d9e4f4-753d-4e2b-8001-b5ab4f2fb9e1.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/5a71eac8-5889-4c50-b04f-66705699fafb',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399735995_63d9e4f4-753d-4e2b-8001-b5ab4f2fb9e1.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:14 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8f0a60',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg0Eu__x3BgS_GeNGj5kuq7nFvp02D_tPO9DoJ4Po0YUqtq9xq8ERVQv4VqUrSeUCo3OiXmtKmanxZMSe8jW1nUiuP-fH0sP1rKEm-vwxg'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399735995_63d9e4f4-753d-4e2b-8001-b5ab4f2fb9e1.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment 66e82226-8119-48ab-96b2-8c9707f251a0.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399736447_66e82226-8119-48ab-96b2-8c9707f251a0.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399736447_66e82226-8119-48ab-96b2-8c9707f251a0.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/0b50d808-8994-41dd-bd7a-e1183bc48337',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399736447_66e82226-8119-48ab-96b2-8c9707f251a0.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:14 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8f0be7',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg09WHY28E9pMxCdYd3mj3IzWP2mDnlFteHMmwidptTWPxrTU9S0Ut0-pQTafYW1S8HixjEHe7DvmUb-_Dt06aVerWf5PmfCUmD-yj_5ZQ'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399736447_66e82226-8119-48ab-96b2-8c9707f251a0.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment 41145fe9-a527-496f-ad45-6a95cc29d0d7.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399736837_41145fe9-a527-496f-ad45-6a95cc29d0d7.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399736837_41145fe9-a527-496f-ad45-6a95cc29d0d7.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/e26d8d14-551f-4371-9515-25013937ef4c',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399736837_41145fe9-a527-496f-ad45-6a95cc29d0d7.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:15 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8f0dd4',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg1Sq2MV-jhn2hidOZPLz9UAXViRxKkX1lmQbVyv6dxLJUA7hNB-uRz-uR6CUBO5JYOqcreznaiadMRGJm8QCY3QD9E1p8mcKtsICCEtyR4'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399736837_41145fe9-a527-496f-ad45-6a95cc29d0d7.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment 90523721-f090-4400-9c11-4b4222a23e0d.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399737344_90523721-f090-4400-9c11-4b4222a23e0d.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399737344_90523721-f090-4400-9c11-4b4222a23e0d.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/5607d71d-8dab-459d-8cd2-5c01dd955ca3',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399737344_90523721-f090-4400-9c11-4b4222a23e0d.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:15 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8f0fde',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg3zG9HEE2b8yh_EUP5jWT9kbtSALArcDOUvn_xXeZTmnutqAexahqDp7KHFFqE9gw1_a9EFwNRRqkN9te2n8FqSKwb-VjSXnp6n_moYfUQ'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399737344_90523721-f090-4400-9c11-4b4222a23e0d.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment ac519667-eac1-4a48-9a4c-e517b5706335.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399737852_ac519667-eac1-4a48-9a4c-e517b5706335.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399737852_ac519667-eac1-4a48-9a4c-e517b5706335.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/8c0b866b-c7c1-4137-b5e9-fedf3177659e',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399737852_ac519667-eac1-4a48-9a4c-e517b5706335.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:16 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8f11d6',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg3gLMilc42nlqpFluGiPPN_9Nk1A_7oP7VdoEdriLZaab_L9STsQbJDCuH45Z0aPg96Mr0xJ0ELn7JhdMfgvAuaRhfFgbMoRmSjczfw5Q'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399737852_ac519667-eac1-4a48-9a4c-e517b5706335.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Failed to process attachment fe4336fe-e871-480f-a254-8e8af662f5f3.jpg: GaxiosError: {
+[2026-11-11 14:20:44]   "error": {
+[2026-11-11 14:20:44]     "code": 404,
+[2026-11-11 14:20:44]     "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]     "errors": [
+[2026-11-11 14:20:44]       {
+[2026-11-11 14:20:44]         "message": "The specified bucket does not exist.",
+[2026-11-11 14:20:44]         "domain": "global",
+[2026-11-11 14:20:44]         "reason": "notFound"
+[2026-11-11 14:20:44]       }
+[2026-11-11 14:20:44]     ]
+[2026-11-11 14:20:44]   }
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] System.Management.Automation.RemoteException
+[2026-11-11 14:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
+[2026-11-11 14:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-11 14:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
+[2026-11-11 14:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
+[2026-11-11 14:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
+[2026-11-11 14:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
+[2026-11-11 14:20:44]   config: {
+[2026-11-11 14:20:44]     method: 'POST',
+[2026-11-11 14:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399738358_fe4336fe-e871-480f-a254-8e8af662f5f3.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]     params: {
+[2026-11-11 14:20:44]       name: 'submissions/email_submission/1794399738358_fe4336fe-e871-480f-a254-8e8af662f5f3.jpg',
+[2026-11-11 14:20:44]       uploadType: 'resumable'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: {},
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
+[2026-11-11 14:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/4ebe3bcc-2fd2-4685-9b26-1aa203fd10f4',
+[2026-11-11 14:20:44]       'X-Upload-Content-Type': 'image/jpeg',
+[2026-11-11 14:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
+[2026-11-11 14:20:44]       'Content-Type': 'application/json'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]     paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]     body: '{}',
+[2026-11-11 14:20:44]     responseType: 'unknown',
+[2026-11-11 14:20:44]     errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   response: {
+[2026-11-11 14:20:44]     config: {
+[2026-11-11 14:20:44]       method: 'POST',
+[2026-11-11 14:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399738358_fe4336fe-e871-480f-a254-8e8af662f5f3.jpg&uploadType=resumable',
+[2026-11-11 14:20:44]       params: [Object],
+[2026-11-11 14:20:44]       data: {},
+[2026-11-11 14:20:44]       headers: [Object],
+[2026-11-11 14:20:44]       validateStatus: [Function (anonymous)],
+[2026-11-11 14:20:44]       paramsSerializer: [Function: paramsSerializer],
+[2026-11-11 14:20:44]       body: '{}',
+[2026-11-11 14:20:44]       responseType: 'unknown',
+[2026-11-11 14:20:44]       errorRedactor: [Function: defaultErrorRedactor]
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     data: '{\n' +
+[2026-11-11 14:20:44]       '  "error": {\n' +
+[2026-11-11 14:20:44]       '    "code": 404,\n' +
+[2026-11-11 14:20:44]       '    "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '    "errors": [\n' +
+[2026-11-11 14:20:44]       '      {\n' +
+[2026-11-11 14:20:44]       '        "message": "The specified bucket does not exist.",\n' +
+[2026-11-11 14:20:44]       '        "domain": "global",\n' +
+[2026-11-11 14:20:44]       '        "reason": "notFound"\n' +
+[2026-11-11 14:20:44]       '      }\n' +
+[2026-11-11 14:20:44]       '    ]\n' +
+[2026-11-11 14:20:44]       '  }\n' +
+[2026-11-11 14:20:44]       '}\n',
+[2026-11-11 14:20:44]     headers: {
+[2026-11-11 14:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+[2026-11-11 14:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
+[2026-11-11 14:20:44]       'content-length': '247',
+[2026-11-11 14:20:44]       'content-type': 'text/html; charset=UTF-8',
+[2026-11-11 14:20:44]       date: 'Wed, 11 Nov 2026 12:22:16 GMT',
+[2026-11-11 14:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+[2026-11-11 14:20:44]       pragma: 'no-cache',
+[2026-11-11 14:20:44]       server: 'UploadServer',
+[2026-11-11 14:20:44]       vary: 'Origin, X-Origin',
+[2026-11-11 14:20:44]       'x-goog-gcs-base-ts': '1a1ca8f1361',
+[2026-11-11 14:20:44]       'x-guploader-uploadid': 'AFy3sg1zHs-pq7Y5he5M6QKW8QgpXiC5tKXz2n-JeVspbvfCftPwuyt_PSPWUPs8l4Ki-AUwp_kECNihV7opHi4VVXPfdiYKvkIEyGrySK7KOw'
+[2026-11-11 14:20:44]     },
+[2026-11-11 14:20:44]     status: 404,
+[2026-11-11 14:20:44]     statusText: 'Not Found',
+[2026-11-11 14:20:44]     request: {
+[2026-11-11 14:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Femail_submission%2F1794399738358_fe4336fe-e871-480f-a254-8e8af662f5f3.jpg&uploadType=resumable'
+[2026-11-11 14:20:44]     }
+[2026-11-11 14:20:44]   },
+[2026-11-11 14:20:44]   error: undefined,
+[2026-11-11 14:20:44]   status: 404,
+[2026-11-11 14:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
+[2026-11-11 14:20:44] }
+[2026-11-11 14:20:44] Saved submission successfully to Firestore: submissions/hw3fU0d5Dt5T0UKquW60
+[2026-11-11 14:20:44] Marked email as read on Microsoft Graph.
+[2026-11-11 14:20:44] 
+[2026-11-11 14:20:44] Microsoft Graph email import cycle completed successfully.
+[2026-11-11 14:20:44] Changes detected. Syncing...

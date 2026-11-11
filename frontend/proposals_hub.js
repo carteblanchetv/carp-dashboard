@@ -287,8 +287,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 container.innerHTML = `
                     <div id="storyLegalFormsList" style="display: flex; flex-direction: column; gap: 0.75rem;">
                         ${data.forms.map(f => {
-                            const isCountersignable = !['travel_booking', 'insert_sheet'].includes(f.formType);
-                            const isApprovedOrDone = f.status === 'completed' || 
+                            const isCountersignable = ['participant_release', 'minor_release', 'location_agreement', 'music_agreement', 'footage_agreement', 'footage_release_agreement', 'footage_release'].includes(f.formType);
+                            const isApprovedOrDone = !isCountersignable ||
+                                                     f.status === 'completed' || 
                                                      f.status === 'APPROVED' || 
                                                      f.status === 'approved' || 
                                                      f.status === 'COMPLETED' || 
@@ -337,6 +338,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 'footage_release_agreement': 'footage_release_agreement.html',
                                 'footage_release': 'footage_release_agreement.html',
                                 'insert_sheet': 'insert_sheet.html',
+                                'insert_footage': 'insert_footage_declaration.html',
+                                'final_script': 'final_script.html',
+                                'episode_footage': 'footage_agreement.html',
+                                'control_sheet': 'control_sheet.html',
                                 'travel_booking': 'travel_booking.html'
                             };
                             const targetPage = formPageMap[f.formType] || `${f.formType}.html`;
