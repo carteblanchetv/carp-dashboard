@@ -1,5 +1,5 @@
-import { submitLegalForm, showSubmissionSuccessModal, cleanPdfText } from './form_submission_helper.js?v=5.3.1';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.3.1';
+import { submitLegalForm, getAgreementForCoSign, renderCoSignBanner, showSubmissionSuccessModal, cleanPdfText, getActiveProducerEmail } from './form_submission_helper.js?v=5.4.3';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.3';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Toggles for sections
@@ -31,9 +31,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 5. Pre-fill from URL params
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('commNum')) document.getElementById('commissionNumber').value = urlParams.get('commNum');
+    const submissionId = urlParams.get('id');
+    const isEditMode = urlParams.get('mode') === 'edit';
+    const commVal = urlParams.get('commNum') || urlParams.get('comm');
+    if (commVal) document.getElementById('commissionNumber').value = commVal;
     if (urlParams.get('story')) document.getElementById('storyName').value = urlParams.get('story');
     if (urlParams.get('producer')) document.getElementById('requestorName').value = urlParams.get('producer');
+
+    if (submissionId) {
+        (async () => {
+            try {
+                const loadedSubmission = await getAgreementForCoSign(submissionId);
+                if (loadedSubmission.commissionNumber) document.getElementById('commissionNumber').value = loadedSubmission.commissionNumber;
+                if (loadedSubmission.storyName || loadedSubmission.storyTitle) document.getElementById('storyName').value = loadedSubmission.storyName || loadedSubmission.storyTitle;
+                if (loadedSubmission.producerName) document.getElementById('requestorName').value = loadedSubmission.producerName;
+                const emailEl = document.getElementById('submitterEmail');
+                if (emailEl && !emailEl.value) {
+                    emailEl.value = getActiveProducerEmail(loadedSubmission.submittedByEmail || loadedSubmission.producerEmail) || '';
+                }
+                if (isEditMode) {
+                    const container = document.querySelector('.form-card-container') || document.querySelector('.form-container') || document.querySelector('form');
+                    renderCoSignBanner(container, {
+                        title: '✏️ Edit Mode — Updating Existing Travel Booking',
+                        subtitle: 'Modify any fields below and click Save & Update Travel Booking.',
+                        status: 'info'
+                    });
+                    const submitBtn = document.getElementById('submitFormBtn');
+                    if (submitBtn) submitBtn.innerHTML = '<span>💾</span> Save & Update Travel Booking';
+                }
+            } catch (err) {
+                console.error('Failed to load Travel Booking:', err);
+            }
+        })();
+    }
 
     // 6. Download & Share Completed PDF Handler
     document.getElementById('downloadCompletedPdfBtn').addEventListener('click', async () => {
@@ -74,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const { pdfBlob, filename, metadata } = await buildTravelBookingPDF();
 
             const formData = new FormData();
+            if (submissionId) formData.append('submissionId', submissionId);
             formData.append('pdf', pdfBlob, filename);
             formData.append('formType', 'travel_booking');
             formData.append('formTitle', 'Travel Booking Form 2026');

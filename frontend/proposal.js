@@ -3857,6 +3857,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     'travel_booking': 'travel_booking.html'
                 };
 
+                if (!window.copyLegalFormShareLink) {
+                    window.copyLegalFormShareLink = async (shareUrl, btnEl) => {
+                        try {
+                            await navigator.clipboard.writeText(shareUrl);
+                            if (btnEl) {
+                                const orig = btnEl.innerHTML;
+                                btnEl.innerHTML = '✓ Link Copied!';
+                                setTimeout(() => { btnEl.innerHTML = orig; }, 2200);
+                            }
+                        } catch (e) {
+                            prompt('Copy Co-Signer Link:', shareUrl);
+                        }
+                    };
+                }
+
                 const groupsWithForms = categoryConfigs.map(cat => {
                     const matched = data.forms.filter(f => cat.types.includes(f.formType));
                     return { title: cat.title, forms: matched };
@@ -3960,6 +3975,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                                                 ✅ Review &amp; Approve
                                                             </a>
                                                         ` : `
+                                                            <button type="button" class="btn-soft" onclick="window.copyLegalFormShareLink('${(f.shareUrl || `${window.location.origin}/s/${f.shareToken || f.id}`).replace(/'/g, "\\'")}', this)" style="font-size: 0.75rem; padding: 0.35rem 0.65rem; background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; border-radius: 4px; font-weight: 600; cursor: pointer;" title="Copy co-signing link to share with participant/owner">
+                                                                🔗 Copy Link
+                                                            </button>
                                                             <a href="${targetPage}?id=${f.id}&action=countersign" target="_blank" class="btn-soft" style="font-size: 0.75rem; text-decoration: none; padding: 0.35rem 0.65rem; background: #008fbe; color: white; border-radius: 4px; font-weight: 600;" title="Open to sign or generate co-signer link">
                                                                 ✍️ Countersign
                                                             </a>

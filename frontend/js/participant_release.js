@@ -5,14 +5,16 @@ import {
     completeCoSignedAgreement,
     renderCoSignBanner,
     showSubmissionSuccessModal,
+    normalizeDateForInput,
+    getActiveProducerEmail,
     safeDrawField,
     cleanPdfText,
     prepareTemplatePdf,
     drawInFieldBox,
     drawSignatureInFieldBox,
     embedSignatureSafe
-} from './form_submission_helper.js?v=5.4.2';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.2';
+} from './form_submission_helper.js?v=5.4.3';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.3';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialise Dual-Mode Signature Pads
@@ -40,6 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Pre-fill from URL parameters (e.g. ?commNum=7002&story=Title or ?id=submissionId)
     const urlParams = new URLSearchParams(window.location.search);
     const submissionId = urlParams.get('id');
+    const actionParam = urlParams.get('action') || '';
+    const isEditMode = urlParams.get('mode') === 'edit';
+    const isProducerAction = isEditMode || actionParam === 'approve' || actionParam === 'countersign';
+    const isExternalCoSign = Boolean(submissionId && !isProducerAction);
     let loadedSubmission = null;
 
     const commVal = urlParams.get('commNum') || urlParams.get('comm');
@@ -53,16 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('producerName').value = urlParams.get('producer');
     }
 
-    // Check if loading an existing agreement for co-signing
+    // Check if loading an existing agreement for co-signing, approval, or editing
     if (submissionId) {
-        document.documentElement.classList.add('co-sign-mode');
-        document.body?.classList.add('co-sign-mode');
-        document.querySelector('.global-top-nav')?.remove();
-        document.getElementById('masqueradeBanner')?.remove();
-        document.getElementById('resetFormBtn')?.remove();
-        document.getElementById('downloadBlankPdfBtn')?.remove();
-        document.getElementById('shareForCosignBtn')?.remove();
-        document.getElementById('shareFormBtn')?.remove();
+        if (isExternalCoSign) {
+            document.documentElement.classList.add('co-sign-mode');
+            document.body?.classList.add('co-sign-mode');
+            document.querySelector('.global-top-nav')?.remove();
+            document.getElementById('masqueradeBanner')?.remove();
+            document.getElementById('resetFormBtn')?.remove();
+            document.getElementById('downloadBlankPdfBtn')?.remove();
+            document.getElementById('shareForCosignBtn')?.remove();
+            document.getElementById('shareFormBtn')?.remove();
+        }
         const dlBtn = document.getElementById('downloadCompletedPdfBtn');
         if (dlBtn) {
             dlBtn.innerHTML = '<span>📥</span> Download PDF Copy';
@@ -73,30 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadedSubmission = await getAgreementForCoSign(submissionId);
                 const container = document.querySelector('.form-card-container') || document.querySelector('.form-container') || document.querySelector('form');
 
-                if (loadedSubmission.commissionNumber) {
-                    const el = document.getElementById('commissionNumber');
-                    el.value = loadedSubmission.commissionNumber;
-                    el.readOnly = true;
-                }
-                if (loadedSubmission.storyName || loadedSubmission.storyTitle) {
-                    const el = document.getElementById('storyName');
-                    el.value = loadedSubmission.storyName || loadedSubmission.storyTitle;
-                    el.readOnly = true;
-                }
-                if (loadedSubmission.producerName) {
-                    const el = document.getElementById('producerName');
-                    el.value = loadedSubmission.producerName;
-                    el.readOnly = true;
-                }
-                if (loadedSubmission.place) {
-                    document.getElementById('placeOfSignature').value = loadedSubmission.place;
-                }
-                if (loadedSubmission.fullName || loadedSubmission.participantName) {
-                    const val = loadedSubmission.fullName || loadedSubmission.participantName;
-                    if (val && !val.includes('Pending')) {
-                        document.getElementById('participantName').value = val;
-                    }
-                }
                 let parsedMeta = {};
                 if (loadedSubmission.metadata) {
                     try {
@@ -105,70 +89,157 @@ document.addEventListener('DOMContentLoaded', () => {
                             : loadedSubmission.metadata;
                     } catch (e) {}
                 }
-                if (loadedSubmission.idNumber || parsedMeta.participantId) {
-                    document.getElementById('participantId').value = loadedSubmission.idNumber || parsedMeta.participantId;
+
+                if (loadedSubmission.commissionNumber || parsedMeta.commissionNumber) {
+                    const el = document.getElementById('commissionNumber');
+                    el.value = loadedSubmission.commissionNumber || parsedMeta.commissionNumber;
+                    el.readOnly = isExternalCoSign;
                 }
-                if (loadedSubmission.phone || loadedSubmission.contactNumber || parsedMeta.participantContact) {
-                    document.getElementById('participantContact').value = loadedSubmission.phone || loadedSubmission.contactNumber || parsedMeta.participantContact;
+                if (loadedSubmission.storyName || loadedSubmission.storyTitle || parsedMeta.storyName || parsedMeta.storyTitle) {
+                    const el = document.getElementById('storyName');
+                    el.value = loadedSubmission.storyName || loadedSubmission.storyTitle || parsedMeta.storyName || parsedMeta.storyTitle;
+                    el.readOnly = isExternalCoSign;
+                }
+                if (loadedSubmission.producerName || parsedMeta.producerName) {
+                    const el = document.getElementById('producerName');
+                    el.value = loadedSubmission.producerName || parsedMeta.producerName;
+                    el.readOnly = isExternalCoSign;
+                }
+                const resolvedPlace = loadedSubmission.place || loadedSubmission.participantSignedAt || loadedSubmission.producerSignedAt || parsedMeta.place;
+                if (resolvedPlace) {
+                    document.getElementById('placeOfSignature').value = resolvedPlace;
+                }
+                const resolvedDate = normalizeDateForInput(loadedSubmission.dateVal || loadedSubmission.participantSignedDate || loadedSubmission.producerSignedDate || parsedMeta.dateVal);
+                if (resolvedDate && dateInput) {
+                    dateInput.value = resolvedDate;
+                }
+                const resolvedName = loadedSubmission.fullName || loadedSubmission.participantName || loadedSubmission.contributorName || parsedMeta.participantName;
+                if (resolvedName && !resolvedName.includes('Pending') && resolvedName !== 'Co-Signer') {
+                    document.getElementById('participantName').value = resolvedName;
+                }
+                const resolvedId = loadedSubmission.idNumber || loadedSubmission.participantId || parsedMeta.participantId || parsedMeta.idNumber;
+                if (resolvedId) {
+                    document.getElementById('participantId').value = resolvedId;
+                }
+                const resolvedContact = loadedSubmission.phone || loadedSubmission.contactNumber || loadedSubmission.participantContact || parsedMeta.participantContact || parsedMeta.phone || parsedMeta.contactNumber;
+                if (resolvedContact) {
+                    document.getElementById('participantContact').value = resolvedContact;
                 }
                 const emailEl = document.getElementById('submitterEmail');
-                if (emailEl && !emailEl.value) {
-                    emailEl.value = loadedSubmission.submittedByEmail || loadedSubmission.producerEmail || 'release@carteblanche.co.za';
+                if (emailEl && (!emailEl.value || emailEl.value === 'release@carteblanche.co.za')) {
+                    const candidateEmail = (loadedSubmission.producerEmail && loadedSubmission.producerEmail !== 'lezanne@carteblanche.co.za')
+                        ? loadedSubmission.producerEmail
+                        : (loadedSubmission.submittedByEmail || loadedSubmission.producerEmail || '');
+                    emailEl.value = getActiveProducerEmail(candidateEmail) || 'release@carteblanche.co.za';
                 }
 
-                if (loadedSubmission.status === 'completed' || loadedSubmission.status === 'APPROVED' || loadedSubmission.isLocked) {
+                const hasProdSig = Boolean(loadedSubmission.producerSignature);
+                const hasPartSig = Boolean(loadedSubmission.participantSignature);
+
+                if (hasProdSig) {
+                    producerPad.loadDataURL(loadedSubmission.producerSignature, loadedSubmission.producerName);
+                    if (!isEditMode) {
+                        producerPad.lock(`Signed by Producer: ${loadedSubmission.producerName || ''}`);
+                    }
+                }
+                if (hasPartSig) {
+                    participantPad.loadDataURL(loadedSubmission.participantSignature, loadedSubmission.participantName || loadedSubmission.fullName);
+                    if (!isEditMode) {
+                        participantPad.lock(`Signed by Participant: ${loadedSubmission.participantName || loadedSubmission.fullName || ''}`);
+                    }
+                }
+
+                const submitBtn = document.getElementById('submitFormBtn');
+                const shareCosignBtn = document.getElementById('shareForCosignBtn');
+
+                if (isEditMode) {
+                    renderCoSignBanner(container, {
+                        title: '✏️ Edit Mode — Modify Agreement Details',
+                        subtitle: hasPartSig
+                            ? 'Update any fields or signatures below and click "Save Updated Agreement" to regenerate the signed PDF.'
+                            : 'Update any fields below, then click "Save & Share Co-Sign Link" to send to the participant, or complete both signatures to finalize.',
+                        status: 'info',
+                        actionBtn: !hasPartSig ? { label: '🔗 Share Co-Signer Link', onClick: () => handleSendForCoSign() } : null
+                    });
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.style.display = '';
+                        submitBtn.innerHTML = hasPartSig
+                            ? '<span>💾</span> Save Updated Agreement'
+                            : '<span>✍️</span> Co-Sign & Complete Agreement';
+                    }
+                    if (shareCosignBtn) {
+                        if (hasPartSig) {
+                            shareCosignBtn.remove();
+                        } else {
+                            shareCosignBtn.innerHTML = '<span>🔗</span> Save & Share Co-Sign Link';
+                        }
+                    }
+                    return;
+                }
+
+                if (loadedSubmission.status === 'completed' || loadedSubmission.status === 'APPROVED' || (isExternalCoSign && loadedSubmission.isLocked)) {
                     renderCoSignBanner(container, {
                         title: 'Agreement Completed',
                         subtitle: 'This agreement has already been fully signed by both parties.',
                         status: 'completed'
                     });
-                    if (loadedSubmission.producerSignature) {
-                        producerPad.loadDataURL(loadedSubmission.producerSignature, loadedSubmission.producerName);
-                        producerPad.lock('Signed by Producer');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.style.display = 'none';
                     }
-                    if (loadedSubmission.participantSignature) {
-                        participantPad.loadDataURL(loadedSubmission.participantSignature, loadedSubmission.participantName || loadedSubmission.fullName);
-                        participantPad.lock('Signed by Participant');
-                    }
-                    document.getElementById('submitFormBtn').disabled = true;
-                    document.getElementById('submitFormBtn').style.display = 'none';
-                    document.getElementById('shareForCosignBtn')?.remove();
+                    shareCosignBtn?.remove();
                     return;
                 }
 
-                // Producer signed first -> Participant needs to sign
-                if (loadedSubmission.producerSignature) {
-                    producerPad.loadDataURL(loadedSubmission.producerSignature, loadedSubmission.producerName);
-                    producerPad.lock(`Signed by Producer: ${loadedSubmission.producerName || ''}`);
-                    
+                if (hasProdSig && hasPartSig) {
                     renderCoSignBanner(container, {
-                        title: `Pre-signed by Producer: ${loadedSubmission.producerName || 'Producer'}`,
-                        subtitle: 'Please review the agreement, complete your participant details, and sign below to finalize.',
+                        title: '✅ Co-Signed by Participant — Ready for Producer Approval',
+                        subtitle: 'Both signatures are recorded. Please review the details below and click "Approve & Finalize Agreement" to complete and email the executed PDF.',
                         status: 'info'
                     });
-
-                    const submitBtn = document.getElementById('submitFormBtn');
-                    submitBtn.innerHTML = '<span>✍️</span> Co-Sign & Complete Agreement';
-                    document.getElementById('shareForCosignBtn')?.remove();
-
-                    // Scroll to participant signature area
-                    setTimeout(() => {
-                        document.getElementById('participantName')?.focus();
-                    }, 400);
-                } else if (loadedSubmission.participantSignature) {
-                    // Participant signed first -> Producer countersigning
-                    participantPad.loadDataURL(loadedSubmission.participantSignature);
-                    participantPad.lock(`Signed by Participant: ${loadedSubmission.participantName || ''}`);
-                    
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<span>✅</span> Approve & Finalize Agreement';
+                    }
+                    shareCosignBtn?.remove();
+                } else if (hasProdSig && !hasPartSig) {
+                    if (isProducerAction) {
+                        renderCoSignBanner(container, {
+                            title: `⏳ Pre-Signed by Producer (${loadedSubmission.producerName || 'Producer'}) — Awaiting Participant`,
+                            subtitle: 'Click "Share Co-Signer Link" to send the signing link to the participant, or have them complete their details and sign below in person.',
+                            status: 'info',
+                            actionBtn: { label: '🔗 Share Co-Signer Link', onClick: () => handleSendForCoSign() }
+                        });
+                        if (shareCosignBtn) {
+                            shareCosignBtn.innerHTML = '<span>🔗</span> Share Co-Signer Link';
+                        }
+                        if (submitBtn) {
+                            submitBtn.innerHTML = '<span>✍️</span> Co-Sign & Complete Agreement';
+                        }
+                    } else {
+                        renderCoSignBanner(container, {
+                            title: `Pre-signed by Producer: ${loadedSubmission.producerName || 'Producer'}`,
+                            subtitle: 'Please review the agreement, complete your participant details, and sign below to finalize.',
+                            status: 'info'
+                        });
+                        if (submitBtn) {
+                            submitBtn.innerHTML = '<span>✍️</span> Co-Sign & Complete Agreement';
+                        }
+                        shareCosignBtn?.remove();
+                        setTimeout(() => {
+                            document.getElementById('participantName')?.focus();
+                        }, 400);
+                    }
+                } else if (!hasProdSig && hasPartSig) {
                     renderCoSignBanner(container, {
-                        title: `Pre-signed by Participant: ${loadedSubmission.participantName || 'Participant'}`,
+                        title: `Pre-signed by Participant: ${loadedSubmission.participantName || loadedSubmission.fullName || 'Participant'}`,
                         subtitle: 'Please review the agreement and sign as Producer to complete.',
                         status: 'info'
                     });
-
-                    const submitBtn = document.getElementById('submitFormBtn');
-                    submitBtn.innerHTML = '<span>✍️</span> Countersign & Complete Agreement';
-                    document.getElementById('shareForCosignBtn')?.remove();
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<span>✍️</span> Countersign & Complete Agreement';
+                    }
+                    shareCosignBtn?.remove();
                 }
             } catch (err) {
                 console.error('Failed to load co-sign agreement:', err);
@@ -193,23 +264,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (producerPad.isEmpty()) {
+            producerPad.autoSignFromName(producer);
+        }
+
+        if (producerPad.isEmpty()) {
             alert('Please sign your Producer Signature pad before sending for co-signing.');
             producerPad.container.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
 
         const btn = document.getElementById('shareForCosignBtn') || document.getElementById('shareFormBtn');
-        const origText = btn.innerHTML;
-        btn.innerHTML = '<span>⏳</span> Creating Co-Sign Link...';
-        btn.disabled = true;
+        const origText = btn ? btn.innerHTML : '';
+        if (btn) {
+            btn.innerHTML = '<span>⏳</span> Creating Co-Sign Link...';
+            btn.disabled = true;
+        }
 
         try {
             const { pdfBlob, filename } = await buildCompletedPDF(participantPad, producerPad);
             const participantId = document.getElementById('participantId')?.value.trim() || '';
             const participantContact = document.getElementById('participantContact')?.value.trim() || '';
-            const submitterEmail = document.getElementById('submitterEmail')?.value.trim() || (window.auth?.getCurrentUser?.()?.email) || (window.auth?.currentUser?.email) || '';
+            const submitterEmail = getActiveProducerEmail(document.getElementById('submitterEmail')?.value.trim());
 
             const formData = new FormData();
+            const targetSubId = (loadedSubmission && loadedSubmission.id) || submissionId;
+            if (targetSubId) {
+                formData.append('submissionId', targetSubId);
+                if (loadedSubmission?.shareToken || urlParams.get('token')) {
+                    formData.append('shareToken', loadedSubmission?.shareToken || urlParams.get('token'));
+                }
+            }
             formData.append('pdf', pdfBlob, filename);
             formData.append('formType', 'participant_release');
             formData.append('formTitle', 'Participant Release Form 2026');
@@ -224,8 +308,10 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('participantName', participant);
             formData.append('fullName', participant);
             formData.append('idNumber', participantId);
+            formData.append('participantId', participantId);
             formData.append('contactNumber', participantContact);
             formData.append('phone', participantContact);
+            formData.append('participantContact', participantContact);
             formData.append('place', place);
             formData.append('producerSignedAt', place);
             formData.append('dateVal', dateVal);
@@ -241,9 +327,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(result.error || 'Server error creating co-sign link.');
             }
 
+            const finalShareUrl = result.shareUrl || loadedSubmission?.shareUrl || `${window.location.origin}/s/${result.shareToken || loadedSubmission?.shareToken || targetSubId}`;
             openShareModal({
                 title: 'Participant Release Form 2026',
-                url: result.shareUrl,
+                url: finalShareUrl,
                 storyTitle: story,
                 commNum: comm
             });
@@ -251,15 +338,17 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Send for co-sign failed:', err);
             alert('Error creating co-sign link: ' + err.message);
         } finally {
-            btn.innerHTML = origText;
-            btn.disabled = false;
+            if (btn) {
+                btn.innerHTML = origText;
+                btn.disabled = false;
+            }
         }
     }
 
     // Share Form Handler (Top Button)
     document.getElementById('shareFormBtn')?.addEventListener('click', () => {
         // If producer has signed, offer co-signing link with signature
-        if (!producerPad.isEmpty() && (!loadedSubmission || loadedSubmission.status !== 'completed')) {
+        if (!producerPad.isEmpty() && (!loadedSubmission || (loadedSubmission.status !== 'completed' && loadedSubmission.status !== 'APPROVED'))) {
             handleSendForCoSign();
             return;
         }
@@ -277,9 +366,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('shareForCosignBtn')?.addEventListener('click', handleSendForCoSign);
 
     // 4. Reset Form Event
-    document.getElementById('resetFormBtn').addEventListener('click', () => {
-        if (!loadedSubmission || !loadedSubmission.participantSignature) participantPad.clear();
-        if (!loadedSubmission || !loadedSubmission.producerSignature) producerPad.clear();
+    document.getElementById('resetFormBtn')?.addEventListener('click', () => {
+        if (!loadedSubmission || !loadedSubmission.participantSignature || isEditMode) participantPad.clear();
+        if (!loadedSubmission || !loadedSubmission.producerSignature || isEditMode) producerPad.clear();
     });
 
     // 5. Download & Share Completed PDF Handler
@@ -289,12 +378,12 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerHTML = '<span>⏳</span> Generating PDF...';
         btn.disabled = true;
         try {
-            if (submissionId && participantPad.isEmpty()) {
+            if (isExternalCoSign && participantPad.isEmpty()) {
                 const candidateName = document.getElementById('participantName')?.value.trim() || '';
                 if (candidateName) participantPad.autoSignFromName(candidateName);
             }
             const { pdfBlob, filename } = await buildCompletedPDF(participantPad, producerPad);
-            if (submissionId) {
+            if (isExternalCoSign) {
                 const url = URL.createObjectURL(pdfBlob);
                 const a = document.createElement('a');
                 a.href = url;
@@ -326,14 +415,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('participantReleaseForm');
 
         const emailEl = document.getElementById('submitterEmail');
-        if (emailEl && !emailEl.value.trim()) {
-            if (loadedSubmission) {
-                emailEl.value = loadedSubmission.submittedByEmail || loadedSubmission.producerEmail || 'release@carteblanche.co.za';
-            } else if (window.auth?.getCurrentUser?.()?.email || window.auth?.currentUser?.email) {
-                emailEl.value = window.auth?.getCurrentUser?.()?.email || window.auth?.currentUser?.email;
-            } else {
-                emailEl.value = 'release@carteblanche.co.za';
-            }
+        if (emailEl && (!emailEl.value.trim() || emailEl.value.trim() === 'release@carteblanche.co.za')) {
+            const activeEmail = getActiveProducerEmail(
+                loadedSubmission?.producerEmail !== 'lezanne@carteblanche.co.za'
+                    ? (loadedSubmission?.producerEmail || loadedSubmission?.submittedByEmail)
+                    : (loadedSubmission?.submittedByEmail || loadedSubmission?.producerEmail)
+            );
+            emailEl.value = activeEmail || 'release@carteblanche.co.za';
         }
 
         if (submissionId || loadedSubmission) {
@@ -350,9 +438,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateEl = document.getElementById('dateOfSignature');
         if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split('T')[0];
 
-        // If producer signed first but participant has not yet signed, offer to send for co-signing
-        if (!loadedSubmission && !submissionId && participantPad.isEmpty() && !producerPad.isEmpty()) {
-            if (confirm('Participant signature is empty. Would you like to create a secure co-signing link with your Producer signature and share it with the participant?')) {
+        // If producer is on CARP and participant has not yet signed, offer to save & share the co-signing link
+        if (!isExternalCoSign && participantPad.isEmpty() && !producerPad.isEmpty()) {
+            if (confirm('Participant signature is empty.\n\nClick OK to save changes and open the secure Co-Signer Share Link to send to the participant.\nClick Cancel if the participant is with you in person and ready to sign now.')) {
                 handleSendForCoSign();
                 return;
             }
@@ -365,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (participantPad.isEmpty()) {
+        if (isExternalCoSign && participantPad.isEmpty()) {
             const candidatePart = document.getElementById('participantName')?.value?.trim() || '';
             if (candidatePart) participantPad.autoSignFromName(candidatePart);
         }
@@ -376,7 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (participantPad.isEmpty()) {
             participantPad.container?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            alert('Please provide the Participant Signature before submitting.');
+            alert('Please provide the Participant Signature (Draw or Type) before submitting, or click "Send to Co-Signer" to share a signing link.');
             return;
         }
         if (producerPad.isEmpty()) {
@@ -398,14 +486,19 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('formType', 'participant_release');
             formData.append('formTitle', 'Participant Release Form 2026');
             formData.append('storyName', metadata.storyName);
+            formData.append('storyTitle', metadata.storyName);
             formData.append('commissionNumber', metadata.commNum);
             formData.append('producerName', metadata.producerName);
+            formData.append('producerEmail', metadata.submitterEmail);
             formData.append('signatoryName', metadata.participantName);
+            formData.append('contributorName', metadata.participantName);
             formData.append('participantName', metadata.participantName);
             formData.append('fullName', metadata.participantName);
             formData.append('idNumber', metadata.participantId);
+            formData.append('participantId', metadata.participantId);
             formData.append('contactNumber', metadata.participantContact);
             formData.append('phone', metadata.participantContact);
+            formData.append('participantContact', metadata.participantContact);
             formData.append('submitterEmail', metadata.submitterEmail);
             formData.append('email', metadata.submitterEmail);
             formData.append('place', metadata.place);

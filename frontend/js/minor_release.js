@@ -10,9 +10,11 @@ import {
     prepareTemplatePdf,
     drawInFieldBox,
     drawSignatureInFieldBox,
-    embedSignatureSafe
-} from './form_submission_helper.js?v=5.4.2';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.2';
+    embedSignatureSafe,
+    normalizeDateForInput,
+    getActiveProducerEmail
+} from './form_submission_helper.js?v=5.4.3';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.3';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialise Dual-Mode Signature Pads
@@ -40,6 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Pre-fill from URL parameters (e.g. ?commNum=7002&story=Title or ?id=submissionId)
     const urlParams = new URLSearchParams(window.location.search);
     const submissionId = urlParams.get('id');
+    const actionParam = urlParams.get('action') || '';
+    const isEditMode = urlParams.get('mode') === 'edit';
+    const isProducerAction = isEditMode || actionParam === 'approve' || actionParam === 'countersign';
+    const isExternalCoSign = Boolean(submissionId && !isProducerAction && !window.auth?.getCurrentUser?.());
     let loadedSubmission = null;
 
     const commVal = urlParams.get('commNum') || urlParams.get('comm');
@@ -53,19 +59,21 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('producerName').value = urlParams.get('producer');
     }
 
-    // Check if loading an existing agreement for co-signing
+    // Check if loading an existing agreement for co-signing or editing
     if (submissionId) {
-        document.documentElement.classList.add('co-sign-mode');
-        document.body?.classList.add('co-sign-mode');
-        document.querySelector('.global-top-nav')?.remove();
-        document.getElementById('masqueradeBanner')?.remove();
-        document.getElementById('resetFormBtn')?.remove();
-        document.getElementById('downloadBlankPdfBtn')?.remove();
-        document.getElementById('shareForCosignBtn')?.remove();
-        document.getElementById('shareFormBtn')?.remove();
-        const dlBtn = document.getElementById('downloadCompletedPdfBtn');
-        if (dlBtn) {
-            dlBtn.innerHTML = '<span>📥</span> Download PDF Copy';
+        if (isExternalCoSign) {
+            document.documentElement.classList.add('co-sign-mode');
+            document.body?.classList.add('co-sign-mode');
+            document.querySelector('.global-top-nav')?.remove();
+            document.getElementById('masqueradeBanner')?.remove();
+            document.getElementById('resetFormBtn')?.remove();
+            document.getElementById('downloadBlankPdfBtn')?.remove();
+            document.getElementById('shareForCosignBtn')?.remove();
+            document.getElementById('shareFormBtn')?.remove();
+            const dlBtn = document.getElementById('downloadCompletedPdfBtn');
+            if (dlBtn) {
+                dlBtn.innerHTML = '<span>📥</span> Download PDF Copy';
+            }
         }
 
         (async () => {
@@ -73,24 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadedSubmission = await getAgreementForCoSign(submissionId);
                 const container = document.querySelector('.form-card-container') || document.querySelector('.form-container') || document.querySelector('form');
 
-                if (loadedSubmission.commissionNumber) {
-                    const el = document.getElementById('commissionNumber');
-                    el.value = loadedSubmission.commissionNumber;
-                    el.readOnly = true;
-                }
-                if (loadedSubmission.storyName || loadedSubmission.storyTitle) {
-                    const el = document.getElementById('storyName');
-                    el.value = loadedSubmission.storyName || loadedSubmission.storyTitle;
-                    el.readOnly = true;
-                }
-                if (loadedSubmission.producerName) {
-                    const el = document.getElementById('producerName');
-                    el.value = loadedSubmission.producerName;
-                    el.readOnly = true;
-                }
-                if (loadedSubmission.place) {
-                    document.getElementById('signedAt').value = loadedSubmission.place;
-                }
                 let parsedMeta = {};
                 if (loadedSubmission.metadata) {
                     try {
@@ -99,61 +89,146 @@ document.addEventListener('DOMContentLoaded', () => {
                             : loadedSubmission.metadata;
                     } catch (e) {}
                 }
+
+                if (loadedSubmission.commissionNumber) {
+                    const el = document.getElementById('commissionNumber');
+                    el.value = loadedSubmission.commissionNumber;
+                    el.readOnly = isExternalCoSign;
+                }
+                if (loadedSubmission.storyName || loadedSubmission.storyTitle) {
+                    const el = document.getElementById('storyName');
+                    el.value = loadedSubmission.storyName || loadedSubmission.storyTitle;
+                    el.readOnly = isExternalCoSign;
+                }
+                if (loadedSubmission.producerName) {
+                    const el = document.getElementById('producerName');
+                    el.value = loadedSubmission.producerName;
+                    el.readOnly = isExternalCoSign;
+                }
+                if (loadedSubmission.place || parsedMeta.place) {
+                    document.getElementById('signedAt').value = loadedSubmission.place || parsedMeta.place;
+                }
+                const normDate = normalizeDateForInput(loadedSubmission.dateVal || loadedSubmission.producerSignedDate || parsedMeta.formattedDate);
+                if (normDate && dateInput) {
+                    dateInput.value = normDate;
+                }
                 if (loadedSubmission.guardianName || loadedSubmission.parentName || parsedMeta.parentName) {
                     document.getElementById('parentName').value = loadedSubmission.guardianName || loadedSubmission.parentName || parsedMeta.parentName;
                 }
                 if (loadedSubmission.minorName || loadedSubmission.childName || parsedMeta.childName) {
                     document.getElementById('childName').value = loadedSubmission.minorName || loadedSubmission.childName || parsedMeta.childName;
                 }
-                if (loadedSubmission.guardianId || loadedSubmission.parentId || loadedSubmission.parentIdNumber || parsedMeta.parentId) {
-                    document.getElementById('parentId').value = loadedSubmission.guardianId || loadedSubmission.parentId || loadedSubmission.parentIdNumber || parsedMeta.parentId;
+                const idVal = loadedSubmission.guardianId || loadedSubmission.parentId || loadedSubmission.parentIdNumber || loadedSubmission.idNumber || parsedMeta.parentId || parsedMeta.parentIdNumber || parsedMeta.guardianId || '';
+                if (idVal) {
+                    document.getElementById('parentId').value = idVal;
                 }
                 const emailEl = document.getElementById('submitterEmail');
                 if (emailEl && !emailEl.value) {
-                    emailEl.value = loadedSubmission.submittedByEmail || loadedSubmission.producerEmail || 'release@carteblanche.co.za';
+                    emailEl.value = getActiveProducerEmail(loadedSubmission.submittedByEmail || loadedSubmission.producerEmail) || 'release@carteblanche.co.za';
                 }
 
-                if (loadedSubmission.status === 'completed' || loadedSubmission.status === 'APPROVED' || loadedSubmission.isLocked) {
+                const hasProdSig = Boolean(loadedSubmission.producerSignature);
+                const parentSigVal = loadedSubmission.parentSignature || loadedSubmission.guardianSignature || loadedSubmission.participantSignature || '';
+                const hasParentSig = Boolean(parentSigVal);
+
+                if (hasProdSig) {
+                    producerPad.loadDataURL(loadedSubmission.producerSignature, loadedSubmission.producerName);
+                    if (!isEditMode) {
+                        producerPad.lock(`Signed by Producer: ${loadedSubmission.producerName || ''}`);
+                    }
+                }
+                if (hasParentSig) {
+                    parentPad.loadDataURL(parentSigVal, loadedSubmission.parentName || loadedSubmission.guardianName);
+                    if (!isEditMode) {
+                        parentPad.lock(`Signed by Parent/Guardian: ${loadedSubmission.parentName || loadedSubmission.guardianName || ''}`);
+                    }
+                }
+
+                const openExistingShareModal = () => {
+                    const shareUrl = loadedSubmission.shareUrl || (loadedSubmission.shareToken ? `${window.location.origin}/s/${loadedSubmission.shareToken}` : `${window.location.origin}/minor_release.html?id=${submissionId}`);
+                    openShareModal({
+                        title: 'Minor Release Form 2026',
+                        url: shareUrl,
+                        storyTitle: document.getElementById('storyName')?.value || '',
+                        commNum: document.getElementById('commissionNumber')?.value || ''
+                    });
+                };
+
+                if (isEditMode) {
+                    renderCoSignBanner(container, {
+                        title: '✏️ Edit Mode — Updating Existing Submission',
+                        subtitle: 'Modify any form fields or signatures below and click Save Changes to update this agreement in place.',
+                        status: 'info',
+                        actionBtn: (hasProdSig && !hasParentSig) ? {
+                            label: '🔗 Copy / Share Co-Signer Link',
+                            onClick: openExistingShareModal
+                        } : null
+                    });
+                    const submitBtn = document.getElementById('submitFormBtn');
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<span>💾</span> Save & Update Agreement';
+                        submitBtn.disabled = false;
+                        submitBtn.style.display = '';
+                    }
+                    return;
+                }
+
+                if (loadedSubmission.status === 'completed' || loadedSubmission.status === 'APPROVED' || (loadedSubmission.isLocked && actionParam !== 'approve')) {
                     renderCoSignBanner(container, {
                         title: 'Agreement Completed',
                         subtitle: 'This agreement has already been fully signed by both parties.',
                         status: 'completed'
                     });
-                    if (loadedSubmission.producerSignature) {
-                        producerPad.loadDataURL(loadedSubmission.producerSignature, loadedSubmission.producerName);
-                        producerPad.lock('Signed by Producer');
-                    }
-                    if (loadedSubmission.parentSignature || loadedSubmission.guardianSignature) {
-                        parentPad.loadDataURL(loadedSubmission.parentSignature || loadedSubmission.guardianSignature, loadedSubmission.parentName || loadedSubmission.guardianName);
-                        parentPad.lock('Signed by Parent / Guardian');
-                    }
                     document.getElementById('submitFormBtn').disabled = true;
                     document.getElementById('submitFormBtn').style.display = 'none';
                     document.getElementById('shareForCosignBtn')?.remove();
                     return;
                 }
 
-                if (loadedSubmission.producerSignature) {
-                    producerPad.loadDataURL(loadedSubmission.producerSignature, loadedSubmission.producerName);
-                    producerPad.lock(`Signed by Producer: ${loadedSubmission.producerName || ''}`);
-                    
+                if (hasProdSig && hasParentSig) {
                     renderCoSignBanner(container, {
-                        title: `Pre-signed by Producer: ${loadedSubmission.producerName || 'Producer'}`,
-                        subtitle: 'Please review the agreement, complete the parent/guardian details, and sign below to finalize.',
+                        title: 'Both Parties Have Signed — Ready for Final Approval',
+                        subtitle: 'Please review the completed details and both signatures below, then click Approve & Finalize.',
                         status: 'info'
                     });
+                    const submitBtn = document.getElementById('submitFormBtn');
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<span>✅</span> Approve & Finalize Agreement';
+                        submitBtn.disabled = false;
+                        submitBtn.style.display = '';
+                    }
+                    document.getElementById('shareForCosignBtn')?.remove();
+                } else if (hasProdSig && !hasParentSig) {
+                    if (isProducerAction) {
+                        renderCoSignBanner(container, {
+                            title: `Awaiting Parent/Guardian Co-Signature`,
+                            subtitle: 'You have already signed as Producer. Share the co-signing link with the Parent/Guardian, or have them sign below on this device.',
+                            status: 'info',
+                            actionBtn: {
+                                label: '🔗 Share Co-Signer Link',
+                                onClick: openExistingShareModal
+                            }
+                        });
+                        const shareBtn = document.getElementById('shareForCosignBtn');
+                        if (shareBtn) {
+                            shareBtn.innerHTML = '<span>🔗</span> Share Co-Signer Link';
+                        }
+                    } else {
+                        renderCoSignBanner(container, {
+                            title: `Pre-signed by Producer: ${loadedSubmission.producerName || 'Producer'}`,
+                            subtitle: 'Please review the agreement, complete the parent/guardian details, and sign below to finalize.',
+                            status: 'info'
+                        });
+                        document.getElementById('shareForCosignBtn')?.remove();
+                    }
 
                     const submitBtn = document.getElementById('submitFormBtn');
                     submitBtn.innerHTML = '<span>✍️</span> Co-Sign & Complete Agreement';
-                    document.getElementById('shareForCosignBtn')?.remove();
 
                     setTimeout(() => {
                         document.getElementById('childName')?.focus();
                     }, 400);
-                } else if (loadedSubmission.parentSignature) {
-                    parentPad.loadDataURL(loadedSubmission.parentSignature);
-                    parentPad.lock(`Signed by Parent/Guardian: ${loadedSubmission.parentName || ''}`);
-                    
+                } else if (hasParentSig && !hasProdSig) {
                     renderCoSignBanner(container, {
                         title: `Pre-signed by Parent/Guardian: ${loadedSubmission.parentName || 'Parent'}`,
                         subtitle: 'Please review the agreement and sign as Producer to complete.',
@@ -201,9 +276,13 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const { pdfBlob, filename } = await buildCompletedPDF(parentPad, producerPad);
             const parentId = document.getElementById('parentId')?.value.trim() || '';
-            const submitterEmail = document.getElementById('submitterEmail')?.value.trim() || (window.auth?.getCurrentUser?.()?.email) || (window.auth?.currentUser?.email) || '';
+            const submitterEmail = getActiveProducerEmail(document.getElementById('submitterEmail')?.value.trim() || loadedSubmission?.producerEmail);
 
             const formData = new FormData();
+            const targetSubId = (loadedSubmission && loadedSubmission.id) || submissionId;
+            if (targetSubId) {
+                formData.append('submissionId', targetSubId);
+            }
             formData.append('pdf', pdfBlob, filename);
             formData.append('formType', 'minor_release');
             formData.append('formTitle', 'Minor Release Form 2026');
@@ -219,6 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('minorName', childName);
             formData.append('parentName', parentName);
             formData.append('guardianName', parentName);
+            formData.append('parentId', parentId);
             formData.append('parentIdNumber', parentId);
             formData.append('guardianId', parentId);
             formData.append('place', place);
@@ -228,13 +308,19 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('metadata', JSON.stringify({
                 childName: childName,
                 parentName: parentName,
-                parentId: parentId
+                parentId: parentId,
+                parentIdNumber: parentId
             }));
 
             const res = await initCoSignAgreement(formData);
             const result = await res.json();
             if (!res.ok || !result.success) {
                 throw new Error(result.error || 'Server error creating co-sign link.');
+            }
+
+            if (loadedSubmission && result.shareUrl) {
+                loadedSubmission.shareUrl = result.shareUrl;
+                loadedSubmission.shareToken = result.shareToken || loadedSubmission.shareToken;
             }
 
             openShareModal({
@@ -272,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('shareForCosignBtn')?.addEventListener('click', handleSendForCoSign);
 
     // 4. Reset Form Event
-    document.getElementById('resetFormBtn').addEventListener('click', () => {
+    document.getElementById('resetFormBtn')?.addEventListener('click', () => {
         if (!loadedSubmission || !loadedSubmission.parentSignature) parentPad.clear();
         if (!loadedSubmission || !loadedSubmission.producerSignature) producerPad.clear();
     });
@@ -284,12 +370,12 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.innerHTML = '<span>⏳</span> Generating PDF...';
         btn.disabled = true;
         try {
-            if (submissionId && parentPad.isEmpty()) {
+            if (isExternalCoSign && parentPad.isEmpty()) {
                 const candidateName = document.getElementById('parentName')?.value.trim() || '';
                 if (candidateName) parentPad.autoSignFromName(candidateName);
             }
             const { pdfBlob, filename } = await buildCompletedPDF(parentPad, producerPad);
-            if (submissionId) {
+            if (isExternalCoSign) {
                 const url = URL.createObjectURL(pdfBlob);
                 const a = document.createElement('a');
                 a.href = url;
@@ -322,13 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const emailEl = document.getElementById('submitterEmail');
         if (emailEl && !emailEl.value.trim()) {
-            if (loadedSubmission) {
-                emailEl.value = loadedSubmission.submittedByEmail || loadedSubmission.producerEmail || 'release@carteblanche.co.za';
-            } else if (window.auth?.getCurrentUser?.()?.email || window.auth?.currentUser?.email) {
-                emailEl.value = window.auth?.getCurrentUser?.()?.email || window.auth?.currentUser?.email;
-            } else {
-                emailEl.value = 'release@carteblanche.co.za';
-            }
+            emailEl.value = getActiveProducerEmail(loadedSubmission?.submittedByEmail || loadedSubmission?.producerEmail) || 'release@carteblanche.co.za';
         }
 
         if (submissionId || loadedSubmission) {
@@ -345,8 +425,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateEl = document.getElementById('signedOn');
         if (dateEl && !dateEl.value) dateEl.value = new Date().toISOString().split('T')[0];
 
-        if (!loadedSubmission && !submissionId && parentPad.isEmpty() && !producerPad.isEmpty()) {
-            if (confirm('Parent / Guardian signature is empty. Would you like to create a secure co-signing link with your Producer signature and share it with the parent?')) {
+        if (!isExternalCoSign && parentPad.isEmpty() && !producerPad.isEmpty()) {
+            if (confirm('Parent / Guardian signature is empty. Would you like to create/update a secure co-signing link with your Producer signature and share it with the parent?')) {
+                handleSendForCoSign();
+                return;
+            }
+            if (isEditMode) {
                 handleSendForCoSign();
                 return;
             }
@@ -359,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (parentPad.isEmpty()) {
+        if (isExternalCoSign && parentPad.isEmpty()) {
             const candidateParent = document.getElementById('parentName')?.value?.trim() || '';
             if (candidateParent) parentPad.autoSignFromName(candidateParent);
         }
@@ -370,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (parentPad.isEmpty()) {
             parentPad.container?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            alert('Please provide the Parent / Guardian Signature before submitting.');
+            alert('Please provide the Parent / Guardian Signature before submitting (or click "Send to Co-Signer" to share a signing link).');
             return;
         }
         if (producerPad.isEmpty()) {
@@ -392,22 +476,31 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('formType', 'minor_release');
             formData.append('formTitle', 'Minor Release Form 2026');
             formData.append('storyName', metadata.storyName);
+            formData.append('storyTitle', metadata.storyName);
             formData.append('commissionNumber', metadata.commNum);
             formData.append('producerName', metadata.producerName);
+            formData.append('producerEmail', metadata.submitterEmail);
             formData.append('signatoryName', `${metadata.childName} (Parent: ${metadata.parentName})`);
             formData.append('contributorName', `${metadata.parentName} (Parent of ${metadata.childName})`);
             formData.append('guardianName', metadata.parentName);
+            formData.append('parentName', metadata.parentName);
             formData.append('minorName', metadata.childName);
+            formData.append('childName', metadata.childName);
+            formData.append('parentId', metadata.parentId);
+            formData.append('parentIdNumber', metadata.parentId);
+            formData.append('guardianId', metadata.parentId);
             formData.append('submitterEmail', metadata.submitterEmail);
             formData.append('email', metadata.submitterEmail);
             formData.append('place', metadata.place);
             formData.append('dateVal', metadata.formattedDate);
             formData.append('parentSignature', parentPad.toDataURL());
+            formData.append('participantSignature', parentPad.toDataURL());
             formData.append('producerSignature', producerPad.toDataURL());
             formData.append('metadata', JSON.stringify({
                 childName: metadata.childName,
                 parentName: metadata.parentName,
-                parentId: metadata.parentId
+                parentId: metadata.parentId,
+                parentIdNumber: metadata.parentId
             }));
 
             let response;

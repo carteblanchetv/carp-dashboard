@@ -659,8 +659,31 @@ function buildFormEmailDetails({ formTitle, commissionNumber, storyTitle, produc
  * Resilient helper to resolve producer name and email from fields, Firestore proposals, user token, or submission data
  */
 async function resolveProducerDetails({ req, fields = {}, commissionNumber, producerName, producerEmail, fallbackSubData = {} }) {
-  let finalEmail = (producerEmail || fields.producerEmail || fields.producer_email || fields.producerSignerEmail || fields.prodSignerEmail || fallbackSubData.producerEmail || fallbackSubData.producerSignerEmail || '').trim();
+  let finalEmail = (producerEmail || fields.producerEmail || fields.producer_email || fields.producerSignerEmail || fields.prodSignerEmail || fields.submitterEmail || fallbackSubData.producerEmail || fallbackSubData.producerSignerEmail || '').trim();
   let finalName = (producerName || fields.producerName || fields.producer || fields.producerSignerName || fields.prodSignerName || fallbackSubData.producerName || fallbackSubData.producerSignerName || '').trim();
+
+  const isPlaceholderEmail = (em, nameHint) => {
+    if (!em || typeof em !== 'string' || !em.includes('@')) return true;
+    const low = em.toLowerCase().trim();
+    if (low === 'release@carteblanche.co.za' || low.includes('@guest')) return true;
+    if (low === 'lezanne@carteblanche.co.za') {
+      const nLow = (nameHint || '').toLowerCase();
+      const reqLow = (req && req.user && req.user.email ? req.user.email : '').toLowerCase();
+      if (!nLow.includes('lezanne') && reqLow !== 'lezanne@carteblanche.co.za') {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  if (isPlaceholderEmail(finalEmail, finalName)) {
+    finalEmail = '';
+  }
+
+  // Prefer authenticated CARP producer's email if available
+  if (!finalEmail && req && req.user && req.user.email && !isPlaceholderEmail(req.user.email, finalName)) {
+    finalEmail = req.user.email.trim();
+  }
 
   const comm = (commissionNumber || fields.commissionNumber || fields.commission_number || fallbackSubData.commissionNumber || '').trim();
 
@@ -683,7 +706,7 @@ async function resolveProducerDetails({ req, fields = {}, commissionNumber, prod
         const pData = propSnap.docs[0].data();
         if (!finalEmail) {
           const rawEmail = pData.producerEmail || pData.producer_email || pData.submittedByEmail || (pData.submittedBy && typeof pData.submittedBy === 'string' && pData.submittedBy.includes('@') ? pData.submittedBy : '');
-          if (typeof rawEmail === 'string' && rawEmail.includes('@')) {
+          if (typeof rawEmail === 'string' && rawEmail.includes('@') && !isPlaceholderEmail(rawEmail, finalName || pData.producerName)) {
             finalEmail = rawEmail.trim();
           }
         }
@@ -742,10 +765,13 @@ async function resolveProducerDetails({ req, fields = {}, commissionNumber, prod
   }
 
   // 3. Fallback to submitter info if email present
-  if (!finalEmail && fields.submittedByEmail && typeof fields.submittedByEmail === 'string' && fields.submittedByEmail.includes('@') && !fields.submittedByEmail.includes('@guest')) {
+  if (!finalEmail && fields.submitterEmail && typeof fields.submitterEmail === 'string' && !isPlaceholderEmail(fields.submitterEmail, finalName)) {
+    finalEmail = fields.submitterEmail.trim();
+  }
+  if (!finalEmail && fields.submittedByEmail && typeof fields.submittedByEmail === 'string' && !isPlaceholderEmail(fields.submittedByEmail, finalName)) {
     finalEmail = fields.submittedByEmail.trim();
   }
-  if (!finalEmail && fallbackSubData.submittedByEmail && typeof fallbackSubData.submittedByEmail === 'string' && fallbackSubData.submittedByEmail.includes('@') && !fallbackSubData.submittedByEmail.includes('@guest')) {
+  if (!finalEmail && fallbackSubData.submittedByEmail && typeof fallbackSubData.submittedByEmail === 'string' && !isPlaceholderEmail(fallbackSubData.submittedByEmail, finalName)) {
     finalEmail = fallbackSubData.submittedByEmail.trim();
   }
 
@@ -2026,9 +2052,53 @@ async function processMultiFileStorageAndFirestore(req, formType, subfolder, fil
     }
   }
 
+  // If submissionId is passed and exists, update in-place instead of creating a duplicate
+  const existingId = metadata.submissionId && typeof metadata.submissionId === 'string' ? metadata.submissionId.trim() : '';
+  if (existingId) {
+    try {
+      const existingRef = admin.firestore().collection('submissions').doc(existingId);
+      const existingSnap = await existingRef.get();
+      if (existingSnap.exists) {
+        const prev = existingSnap.data();
+        if (prev.shareToken) docData.shareToken = prev.shareToken;
+        if (prev.tokenExpiresAt) docData.tokenExpiresAt = prev.tokenExpiresAt;
+        if (prev.shareUrl) docData.shareUrl = prev.shareUrl;
+        if (!docData.proposalId && prev.proposalId) docData.proposalId = prev.proposalId;
+        if (!docData.projectId && prev.projectId) docData.projectId = prev.projectId;
+        if (docData.submittedBy === 'guest_participant' && prev.submittedBy && prev.submittedBy !== 'guest_participant') {
+          docData.submittedBy = prev.submittedBy;
+        }
+        if ((docData.submittedByEmail === 'participant@guest' || docData.submittedByEmail === 'release@carteblanche.co.za') && prev.submittedByEmail && prev.submittedByEmail !== 'participant@guest') {
+          docData.submittedByEmail = prev.submittedByEmail;
+        }
+        docData.files = [...(prev.files || []), ...fileRecords];
+        delete docData.submissionId;
+        await existingRef.set(docData, { merge: true });
+        return {
+          firestoreDocId: existingRef.id,
+          submissionPath,
+          fileRecords: docData.files,
+          proposalId: docData.proposalId || null,
+          shareToken: docData.shareToken || null,
+          shareUrl: docData.shareUrl || null
+        };
+      }
+    } catch (updErr) {
+      console.warn(`[STORAGE] Could not update existing submission ${existingId}, creating new:`, updErr.message);
+    }
+  }
+
+  delete docData.submissionId;
   const docRef = await admin.firestore().collection('submissions').add(docData);
   
-  return { firestoreDocId: docRef.id, submissionPath, fileRecords, proposalId: docData.proposalId || null };
+  return {
+    firestoreDocId: docRef.id,
+    submissionPath,
+    fileRecords,
+    proposalId: docData.proposalId || null,
+    shareToken: docData.shareToken || null,
+    shareUrl: docData.shareUrl || null
+  };
 }
 
 // ------------------------------------------------------------------
@@ -2216,15 +2286,18 @@ app.post('/api/init-co-sign-agreement', async (req, res) => {
         contributorName,
         fullName: fields.fullName || fields.participantName || contributorName,
         participantName: fields.participantName || fields.fullName || contributorName,
-        idNumber: fields.idNumber || parsedMeta.participantId || '',
-        phone: fields.phone || fields.contactNumber || parsedMeta.participantContact || '',
-        contactNumber: fields.contactNumber || fields.phone || parsedMeta.participantContact || '',
+        idNumber: fields.idNumber || fields.participantId || parsedMeta.participantId || '',
+        participantId: fields.idNumber || fields.participantId || parsedMeta.participantId || '',
+        phone: fields.phone || fields.contactNumber || fields.participantContact || parsedMeta.participantContact || '',
+        contactNumber: fields.contactNumber || fields.phone || fields.participantContact || parsedMeta.participantContact || '',
+        participantContact: fields.contactNumber || fields.phone || fields.participantContact || parsedMeta.participantContact || '',
         childName: fields.childName || fields.minorName || parsedMeta.childName || '',
         minorName: fields.minorName || fields.childName || parsedMeta.childName || '',
         parentName: fields.parentName || fields.guardianName || parsedMeta.parentName || '',
         guardianName: fields.guardianName || fields.parentName || parsedMeta.parentName || '',
-        parentIdNumber: fields.parentIdNumber || fields.guardianId || parsedMeta.parentId || '',
-        guardianId: fields.guardianId || fields.parentIdNumber || parsedMeta.parentId || '',
+        parentId: fields.parentId || fields.parentIdNumber || fields.guardianId || parsedMeta.parentId || '',
+        parentIdNumber: fields.parentIdNumber || fields.parentId || fields.guardianId || parsedMeta.parentId || '',
+        guardianId: fields.guardianId || fields.parentIdNumber || fields.parentId || parsedMeta.parentId || '',
         locationAddress: fields.locationAddress || fields.propertyAddress || parsedMeta.locationAddress || fields.place || '',
         propertyAddress: fields.propertyAddress || fields.locationAddress || parsedMeta.locationAddress || fields.place || '',
         dateOfFilming: fields.dateOfFilming || parsedMeta.dateOfFilming || fields.dateVal || '',
@@ -2245,6 +2318,9 @@ app.post('/api/init-co-sign-agreement', async (req, res) => {
       }
     );
 
+    const finalShareToken = dbResult.shareToken || shareToken;
+    const finalShareUrl = dbResult.shareUrl || shareUrl;
+
     await sendProducerShareLinkEmail({
       submissionId: dbResult.firestoreDocId,
       formType,
@@ -2254,7 +2330,7 @@ app.post('/api/init-co-sign-agreement', async (req, res) => {
       producerName,
       producerEmail,
       contributorName,
-      shareUrl,
+      shareUrl: finalShareUrl,
       req
     });
 
@@ -2262,8 +2338,8 @@ app.post('/api/init-co-sign-agreement', async (req, res) => {
       success: true,
       status: 'PARTIALLY_SIGNED',
       firestoreDocId: dbResult.firestoreDocId,
-      shareToken,
-      shareUrl
+      shareToken: finalShareToken,
+      shareUrl: finalShareUrl
     });
   } catch (error) {
     console.error('[INIT-COSIGN] Error creating co-sign agreement:', error);
@@ -2493,12 +2569,18 @@ app.post('/api/countersign-form', async (req, res) => {
     const storyTitle = subData.storyName || subData.storyTitle || 'Story';
     const submitterEmail = subData.submittedByEmail || subData.email || '';
 
+    const finalProdSig = producerSignature || subData.producerSignature || null;
+    const finalPartSig = fields.participantSignature || fields.ownerSignature || fields.parentSignature || fields.guardianSignature || fields.artistSignature || fields.licensorSignature || subData.participantSignature || subData.ownerSignature || subData.parentSignature || subData.guardianSignature || subData.artistSignature || subData.licensorSignature || null;
+    const hasProdSig = Boolean(finalProdSig && String(finalProdSig).trim().length > 50);
+    const hasPartSig = Boolean(finalPartSig && String(finalPartSig).trim().length > 50);
+
     // If a dual-signed PDF was generated and uploaded
     let fileRecords = subData.files || [];
     if (files && files.length > 0) {
       const pdfFile = files[0];
       const timestamp = Date.now();
-      const storagePath = `submissions/${formType}/${timestamp}/DualSigned_${pdfFile.filename || 'agreement.pdf'}`;
+      const prefix = (hasProdSig && hasPartSig) ? 'DualSigned_' : '';
+      const storagePath = `submissions/${formType}/${timestamp}/${prefix}${pdfFile.filename || 'agreement.pdf'}`;
       const encryptedBuffer = encryptBuffer(pdfFile.buffer);
 
       await defaultBucket.file(storagePath).save(encryptedBuffer, {
@@ -2508,35 +2590,44 @@ app.post('/api/countersign-form', async (req, res) => {
       });
 
       fileRecords.push({
-        filename: pdfFile.filename || 'DualSigned_agreement.pdf',
+        filename: `${prefix}${pdfFile.filename || 'agreement.pdf'}`,
         storagePath: storagePath,
-        fieldname: 'dualSignedPdf',
+        fieldname: (hasProdSig && hasPartSig) ? 'dualSignedPdf' : 'pdf',
         uploadedAt: new Date().toISOString()
       });
     }
 
+    const effectiveStatus = (hasProdSig && hasPartSig)
+      ? 'APPROVED'
+      : (hasPartSig && !hasProdSig ? 'PENDING_APPROVAL' : 'PARTIALLY_SIGNED');
+
     // Update Firestore submission record with updated fields and countersignature
     const updatePayload = {
-      status: 'APPROVED',
-      producerSignature: producerSignature || subData.producerSignature || null,
-      participantSignature: fields.participantSignature || fields.ownerSignature || fields.parentSignature || fields.guardianSignature || subData.participantSignature || null,
+      status: effectiveStatus,
+      producerSignature: finalProdSig,
+      participantSignature: finalPartSig,
       ownerSignature: fields.ownerSignature || fields.participantSignature || subData.ownerSignature || null,
       parentSignature: fields.parentSignature || fields.guardianSignature || subData.parentSignature || null,
       guardianSignature: fields.guardianSignature || fields.parentSignature || subData.guardianSignature || null,
       producerName: pName,
       producerEmail: pEmail,
-      countersignedAt: admin.firestore.FieldValue.serverTimestamp(),
-      approvedAt: admin.firestore.FieldValue.serverTimestamp(),
-      completedAt: admin.firestore.FieldValue.serverTimestamp(),
       files: fileRecords
     };
+
+    if (effectiveStatus === 'APPROVED') {
+      updatePayload.countersignedAt = admin.firestore.FieldValue.serverTimestamp();
+      updatePayload.approvedAt = admin.firestore.FieldValue.serverTimestamp();
+      updatePayload.completedAt = admin.firestore.FieldValue.serverTimestamp();
+    } else if (effectiveStatus === 'PENDING_APPROVAL' && !subData.cosignedAt) {
+      updatePayload.cosignedAt = admin.firestore.FieldValue.serverTimestamp();
+    }
 
     // Persist any edited fields from resubmission (e.g., typos, story name, ID numbers, address)
     const editableFieldKeys = [
       'storyName', 'storyTitle', 'commissionNumber',
       'fullName', 'participantName', 'contributorName', 'artistName', 'guardianName', 'parentName', 'ownerName', 'locationOwnerName', 'licensorName', 'footageOwnerName', 'musicOwnerName', 'ownerSignatory',
-      'idNumber', 'guardianId', 'parentId', 'parentIdNumber', 'ownerId',
-      'phone', 'contactNumber', 'email', 'submitterEmail',
+      'idNumber', 'participantId', 'guardianId', 'parentId', 'parentIdNumber', 'ownerId',
+      'phone', 'contactNumber', 'participantContact', 'email', 'submitterEmail',
       'minorName', 'childName', 'minorAge',
       'propertyAddress', 'locationAddress', 'place', 'filmingDate', 'dateOfFilming',
       'trackTitle', 'musicTracks', 'trackDuration', 'publisherName', 'musicOwnerCompany', 'ownerEntity',
@@ -2556,6 +2647,10 @@ app.post('/api/countersign-form', async (req, res) => {
     if (fields.storyTitle && !fields.storyName) updatePayload.storyName = fields.storyTitle.trim();
     if (fields.fullName && !fields.contributorName) updatePayload.contributorName = fields.fullName.trim();
     if (fields.contributorName && !fields.fullName) updatePayload.fullName = fields.contributorName.trim();
+    if (fields.idNumber && !fields.participantId) updatePayload.participantId = fields.idNumber.trim();
+    if (fields.participantId && !fields.idNumber) updatePayload.idNumber = fields.participantId.trim();
+    if (fields.phone && !fields.participantContact) updatePayload.participantContact = fields.phone.trim();
+    if (fields.contactNumber && !fields.participantContact) updatePayload.participantContact = fields.contactNumber.trim();
 
     if (!subData.proposalId && commNum && commNum.trim() && commNum.trim() !== 'N/A' && commNum.trim() !== '—') {
       try {
@@ -2570,7 +2665,49 @@ app.post('/api/countersign-form', async (req, res) => {
       } catch (err) {}
     }
 
+    if (effectiveStatus === 'PARTIALLY_SIGNED' && (!subData.shareToken || !subData.shareUrl)) {
+      const host = (req && (req.get('x-forwarded-host') || req.get('host'))) || 'cb-deliverables.web.app';
+      const protocol = (req && req.get('x-forwarded-proto')) || 'https';
+      const baseUrl = `${protocol}://${host}`;
+      const shareMeta = createFormShareMetadata(baseUrl);
+      updatePayload.shareToken = subData.shareToken || shareMeta.shareToken;
+      updatePayload.tokenExpiresAt = subData.tokenExpiresAt || shareMeta.tokenExpiresAt;
+      updatePayload.shareUrl = subData.shareUrl || shareMeta.shareUrl;
+    }
+
     await subDocRef.update(updatePayload);
+
+    if (effectiveStatus === 'PARTIALLY_SIGNED') {
+      return res.json({
+        success: true,
+        status: 'PARTIALLY_SIGNED',
+        shareToken: updatePayload.shareToken || subData.shareToken,
+        shareUrl: updatePayload.shareUrl || subData.shareUrl,
+        recipients: [pEmail],
+        message: 'Agreement updated and awaiting co-signature.'
+      });
+    }
+
+    if (effectiveStatus === 'PENDING_APPROVAL') {
+      const cosignerName = updatePayload.fullName || updatePayload.participantName || updatePayload.contributorName || subData.fullName || subData.contributorName || 'Co-signer';
+      await sendProducerCosignedNotification({
+        submissionId: subDoc.id,
+        formType,
+        formTitle,
+        commissionNumber: commNum,
+        storyTitle,
+        producerName: pName,
+        producerEmail: pEmail,
+        contributorName: cosignerName,
+        req
+      });
+      return res.json({
+        success: true,
+        status: 'PENDING_APPROVAL',
+        recipients: [pEmail],
+        message: 'Co-signature recorded successfully. Producer has been notified for final approval.'
+      });
+    }
 
     // Build finalized email details
     const { subject, html } = buildFormEmailDetails({
@@ -2828,12 +2965,15 @@ app.post('/api/send-participant-release', async (req, res) => {
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'participant_release', 'participant_release', files,
       {
+        submissionId: fields.submissionId || null,
         fullName,
         participantName: fullName,
         contributorName: fullName,
         idNumber,
+        participantId: idNumber,
         phone,
         contactNumber: phone,
+        participantContact: phone,
         email,
         storyName,
         storyTitle,
@@ -2982,24 +3122,29 @@ app.post('/api/send-minor-release', async (req, res) => {
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'minor_release', 'minor_release', files,
       {
+        submissionId: fields.submissionId || null,
         childName, minorName, minorAge,
-        parentName, guardianName, fullName: parentName,
-        parentIdNumber, guardianId: parentIdNumber,
+        parentName, guardianName, fullName: parentName, contributorName: `${guardianName} (Parent/Guardian of ${minorName || 'Child'})`,
+        parentId: parentIdNumber, parentIdNumber, guardianId: parentIdNumber,
         phone,
         contactNumber: phone,
         email,
         storyName, storyTitle,
         commissionNumber, producerName, producerEmail,
-        parentSignedAt: fields.parentSignedAt || fields.signedAt || null,
+        place: fields.place || fields.producerSignedAt || fields.parentSignedAt || null,
+        dateVal: fields.dateVal || null,
+        metadata: fields.metadata || null,
+        parentSignedAt: fields.parentSignedAt || fields.signedAt || fields.place || null,
         parentSignedDate: fields.parentSignedDate || fields.signedDate || null,
-        producerSignedAt: fields.producerSignedAt || null,
-        producerSignedDate: fields.producerSignedDate || null,
+        producerSignedAt: fields.producerSignedAt || fields.place || null,
+        producerSignedDate: fields.producerSignedDate || fields.dateVal || null,
         status: formStatus,
         shareToken,
         tokenExpiresAt,
         shareUrl,
         guardianSignature: fields.parentSignature || fields.guardianSignature || fields.participantSignature || null,
         parentSignature: fields.parentSignature || fields.guardianSignature || fields.participantSignature || null,
+        participantSignature: fields.parentSignature || fields.guardianSignature || fields.participantSignature || null,
         producerSignature: hasProducerSig ? fields.producerSignature : null,
         completedAt: formStatus === 'APPROVED' ? admin.firestore.FieldValue.serverTimestamp() : null
       }
@@ -3128,14 +3273,18 @@ app.post('/api/send-location-agreement', async (req, res) => {
     const dbResult = await processMultiFileStorageAndFirestore(
       req, 'location_agreement', 'location_agreement', files,
       {
+        submissionId: fields.submissionId || null,
         locationOwnerName,
         ownerName: locationOwnerName,
         fullName: locationOwnerName,
         contributorName: locationOwnerName || 'Location Owner',
         locationAddress,
         propertyAddress: locationAddress,
+        place: locationAddress,
         dateOfFilming,
         filmingDate: dateOfFilming,
+        dateVal: dateOfFilming,
+        metadata: fields.metadata || null,
         ownerSignedAt,
         ownerSignedDate,
         producerSignedAt,
@@ -5111,6 +5260,8 @@ app.get('/api/proposal-legal-forms', async (req, res) => {
         status: effectiveStatus,
         hasParticipantSig: hasPartSig,
         hasProducerSig: hasProdSig,
+        shareToken: data.shareToken || null,
+        shareUrl: data.shareUrl || (data.shareToken ? `https://cb-deliverables.web.app/s/${data.shareToken}` : `https://cb-deliverables.web.app/s/${doc.id}`),
         cosignedAt: data.cosignedAt || null,
         submittedAt: data.submittedAt || null,
         approvedAt: data.approvedAt || null,

@@ -1,5 +1,5 @@
-import { submitLegalForm, showSubmissionSuccessModal, safeDrawField, cleanPdfText, prepareTemplatePdf, drawInFieldBox } from './form_submission_helper.js?v=5.4.0';
-import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.0';
+import { submitLegalForm, getAgreementForCoSign, renderCoSignBanner, showSubmissionSuccessModal, safeDrawField, cleanPdfText, prepareTemplatePdf, drawInFieldBox, normalizeDateForInput, getActiveProducerEmail } from './form_submission_helper.js?v=5.4.3';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.3';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Default TX Date
@@ -9,10 +9,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Pre-fill from URL parameters
     const urlParams = new URLSearchParams(window.location.search);
+    const submissionId = urlParams.get('id');
+    const isEditMode = urlParams.get('mode') === 'edit';
+    let loadedSubmission = null;
+
     const commVal = urlParams.get('commNum') || urlParams.get('comm');
     if (commVal) document.getElementById('commissionNumber').value = commVal;
     if (urlParams.get('story')) document.getElementById('storyName').value = urlParams.get('story');
     if (urlParams.get('producer')) document.getElementById('producerName').value = urlParams.get('producer');
+
+    if (submissionId) {
+        (async () => {
+            try {
+                loadedSubmission = await getAgreementForCoSign(submissionId);
+                let parsedMeta = {};
+                if (loadedSubmission.metadata) {
+                    try {
+                        parsedMeta = typeof loadedSubmission.metadata === 'string'
+                            ? JSON.parse(loadedSubmission.metadata)
+                            : loadedSubmission.metadata;
+                    } catch (e) {}
+                }
+                if (loadedSubmission.commissionNumber) document.getElementById('commissionNumber').value = loadedSubmission.commissionNumber;
+                if (loadedSubmission.storyName || loadedSubmission.storyTitle) document.getElementById('storyName').value = loadedSubmission.storyName || loadedSubmission.storyTitle;
+                if (loadedSubmission.producerName) document.getElementById('producerName').value = loadedSubmission.producerName;
+                const normTx = normalizeDateForInput(loadedSubmission.dateVal || loadedSubmission.txDate || parsedMeta.txDate);
+                if (normTx && txInput) txInput.value = normTx;
+                if (loadedSubmission.presenter || parsedMeta.presenterName) document.getElementById('presenterName').value = loadedSubmission.presenter || parsedMeta.presenterName;
+                if (loadedSubmission.dop || parsedMeta.cameraName) document.getElementById('cameraName').value = loadedSubmission.dop || parsedMeta.cameraName;
+                if (loadedSubmission.camAssist || parsedMeta.researcherName) document.getElementById('researcherName').value = loadedSubmission.camAssist || parsedMeta.researcherName;
+                if (loadedSubmission.editor || parsedMeta.editorName) document.getElementById('editorName').value = loadedSubmission.editor || parsedMeta.editorName;
+                if (loadedSubmission.finalMix || parsedMeta.soundName) document.getElementById('soundName').value = loadedSubmission.finalMix || parsedMeta.soundName;
+                if (loadedSubmission.insertDuration || parsedMeta.duration) document.getElementById('storyDuration').value = loadedSubmission.insertDuration || parsedMeta.duration;
+                if (loadedSubmission.thirdPartyFootage || parsedMeta.music) document.getElementById('musicDetails').value = loadedSubmission.thirdPartyFootage || parsedMeta.music;
+                if ((loadedSubmission.notes || parsedMeta.notes) && document.getElementById('notes')) document.getElementById('notes').value = loadedSubmission.notes || parsedMeta.notes;
+                const emailEl = document.getElementById('submitterEmail');
+                if (emailEl && !emailEl.value) {
+                    emailEl.value = getActiveProducerEmail(loadedSubmission.submittedByEmail || loadedSubmission.producerEmail) || '';
+                }
+                const extra = parsedMeta.extraCredits || [];
+                if (Array.isArray(extra) && window.addCreditRow) {
+                    extra.forEach(c => window.addCreditRow(c.role || '', c.name || ''));
+                }
+                if (isEditMode) {
+                    const container = document.querySelector('.form-card-container') || document.querySelector('.form-container') || document.querySelector('form');
+                    renderCoSignBanner(container, {
+                        title: '✏️ Edit Mode — Updating Existing Insert Sheet',
+                        subtitle: 'Modify any fields below and click Save & Update Insert Sheet.',
+                        status: 'info'
+                    });
+                    const submitBtn = document.getElementById('submitFormBtn');
+                    if (submitBtn) submitBtn.innerHTML = '<span>💾</span> Save & Update Insert Sheet';
+                }
+            } catch (err) {
+                console.error('Failed to load Insert Sheet:', err);
+            }
+        })();
+    }
 
     // Share Form Handler
     document.getElementById('shareFormBtn')?.addEventListener('click', () => {
@@ -116,6 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const { pdfBlob, filename, metadata } = await buildCompletedPDF();
 
             const formData = new FormData();
+            if (submissionId) formData.append('submissionId', submissionId);
             formData.append('pdf', pdfBlob, filename);
             formData.append('formType', 'insert_sheet');
             formData.append('formTitle', 'Insert Sheet 2026');
