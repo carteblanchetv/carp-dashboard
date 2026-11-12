@@ -491,3 +491,15 @@
 [2026-11-12 19:20:44] 
 [2026-11-12 19:20:44] Microsoft Graph email import cycle completed successfully.
 [2026-11-12 19:20:44] Changes detected. Syncing...
+[2026-11-12 19:20:44] [main 2fb2282] auto-sync: 2026-11-12 19:21
+[2026-11-12 19:20:44]  1 file changed, 98 insertions(+), 102 deletions(-)
+[2026-11-12 19:20:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-11-12 19:20:44]    a36cc95..2fb2282  main -> main
+[2026-11-12 19:20:44] Sync complete.
+[2026-11-12 19:50:44] Running Microsoft Graph Email Importer...
+[2026-11-12 19:50:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-11-12 19:50:44] Fetching messages from Microsoft Graph...
+[2026-11-12 19:50:44] Error during Graph email import execution: Error: Failed to fetch messages: Bad Gateway - {"error":{"code":"UnknownError","message":"","innerError":{"date":"2026-11-12T17:51:05","request-id":"8830b36e-62c4-4a6c-afc1-28bbe4d7ff94","client-request-id":"8830b36e-62c4-4a6c-afc1-28bbe4d7ff94"}}}
+[2026-11-12 19:50:44]     at runImporter (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:175:15)
+[2026-11-12 19:50:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-12 19:50:44] Changes detected. Syncing...
