@@ -4605,8 +4605,8 @@ app.post('/api/submit-proposal', express.json(), async (req, res) => {
   try {
     let { id, ...payload } = req.body;
 
-    if (payload.story_title && payload.story_title.trim().length > 20) {
-      return res.status(400).json({ success: false, error: 'Story title cannot exceed 20 characters.' });
+    if (payload.story_title && payload.story_title.trim().length > 30) {
+      return res.status(400).json({ success: false, error: 'Story title cannot exceed 30 characters.' });
     }
     
     // Sensitivity defaults
@@ -5049,8 +5049,8 @@ app.post('/api/update-proposal-details', express.json(), async (req, res) => {
     }
 
     const { story_title, show, one_liner, summary, extra_budget, locations, ...others } = req.body;
-    if (story_title && story_title.trim().length > 20) {
-      return res.status(400).json({ success: false, error: 'Story title cannot exceed 20 characters.' });
+    if (story_title && story_title.trim().length > 30) {
+      return res.status(400).json({ success: false, error: 'Story title cannot exceed 30 characters.' });
     }
     const updateData = {};
     

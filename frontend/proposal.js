@@ -2413,8 +2413,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("Please provide at least a Story Title and One-liner to save a draft.");
                 return;
             }
-            if (form.story_title.value.trim().length > 20) {
-                alert("Story title cannot exceed 20 characters.");
+            if (form.story_title.value.trim().length > 30) {
+                alert("Story title cannot exceed 30 characters.");
                 return;
             }
             const container2 = document.getElementById('phase2Container');
@@ -2440,8 +2440,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Force sync rich editor to textarea before validation
         if (summaryEditor && summaryTextarea) summaryTextarea.value = summaryEditor.innerHTML;
 
-        if (form.story_title.value.trim().length > 20) {
-            alert("Story title cannot exceed 20 characters.");
+        if (form.story_title.value.trim().length > 30) {
+            alert("Story title cannot exceed 30 characters.");
             return;
         }
 
