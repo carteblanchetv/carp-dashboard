@@ -4574,6 +4574,33 @@ app.get('/api/get-file', async (req, res) => {
   }
 });
 
+/**
+ * Temporary override: Suppress email notifications when lezanne@carteblanche.co.za
+ * adds, commissions, or updates past stories on the Commission Dashboard.
+ */
+const MUTED_STORY_ADDITION_USERS = new Set([
+  'lezanne@carteblanche.co.za'
+]);
+
+function isStoryNotificationMutedForUser(user, proposalData = null) {
+  if (user) {
+    const email = (user.email || '').toLowerCase().trim();
+    const adminEmail = (user.adminEmail || '').toLowerCase().trim();
+    if (MUTED_STORY_ADDITION_USERS.has(email) || MUTED_STORY_ADDITION_USERS.has(adminEmail)) {
+      return true;
+    }
+  }
+  if (proposalData) {
+    if (proposalData.notificationsMuted === true) return true;
+    const subEmail = (proposalData.submittedByEmail || '').toLowerCase().trim();
+    const createdByAdmin = (proposalData.createdByAdminEmail || '').toLowerCase().trim();
+    if (MUTED_STORY_ADDITION_USERS.has(subEmail) || MUTED_STORY_ADDITION_USERS.has(createdByAdmin)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 app.post('/api/submit-proposal', express.json(), async (req, res) => {
   try {
     let { id, ...payload } = req.body;
@@ -4595,6 +4622,7 @@ app.post('/api/submit-proposal', express.json(), async (req, res) => {
     }
 
     let isNewSubmission = false;
+    let existingPropData = null;
     const finalStatus = payload.status || 'pending';
 
     if (id) {
@@ -4602,10 +4630,11 @@ app.post('/api/submit-proposal', express.json(), async (req, res) => {
         const docRef = admin.firestore().collection('proposals').doc(id);
         const doc = await docRef.get();
         if (!doc.exists) return res.status(404).json({ success: false, error: 'Not found' });
-        if (!canEditProposal(doc.data(), req.user)) return res.status(403).json({ success: false, error: 'Unauthorized' });
+        existingPropData = doc.data();
+        if (!canEditProposal(existingPropData, req.user)) return res.status(403).json({ success: false, error: 'Unauthorized' });
 
         let updatedPayload = { ...payload };
-        const currentStatus = doc.data().status;
+        const currentStatus = existingPropData.status;
         
         // Prevent downgrading an accepted or paid story back to pending or draft
         if (currentStatus === 'accepted' || currentStatus === 'paid') {
@@ -4640,6 +4669,8 @@ app.post('/api/submit-proposal', express.json(), async (req, res) => {
             ...payload,
             submittedBy: req.user.uid,
             submittedByEmail: req.user.email,
+            ...(req.user.adminEmail ? { createdByAdminEmail: req.user.adminEmail } : {}),
+            ...(isStoryNotificationMutedForUser(req.user) ? { notificationsMuted: true } : {}),
             submittedAt: admin.firestore.FieldValue.serverTimestamp(),
             status: finalStatus,
             commissionNumber: null
@@ -4649,19 +4680,23 @@ app.post('/api/submit-proposal', express.json(), async (req, res) => {
     }
 
     if (isNewSubmission) {
-         await notifyRelevantUsers(
-             'proposal',
-             `New Proposal: ${payload.story_title} - ${req.user.firstName} ${req.user.lastName}`,
-             `<p>${req.user.firstName} ${req.user.lastName} has submitted a new story proposal for review.</p>
-              <p><b>PROPOSAL SUMMARY</b></p>
-              <ul>
-                <li><b>Story Title:</b> ${payload.story_title}</li>
-                <li>${payload.one_liner || 'N/A'}</li>
-                <li><b>Submitted By:</b> ${req.user.firstName} ${req.user.lastName}</li>
-              </ul>
-              <hr/>
-              <p><a href="https://cb-deliverables.web.app/proposal.html?id=${id}&view=admin">Approve / Reject Story Proposal</a></p>`
-         );
+         if (isStoryNotificationMutedForUser(req.user, existingPropData || payload)) {
+             console.log(`[NOTIFY] Suppressed 'proposal' notification for story '${payload.story_title}' (user ${req.user.adminEmail || req.user.email} has story addition notifications muted).`);
+         } else {
+             await notifyRelevantUsers(
+                 'proposal',
+                 `New Proposal: ${payload.story_title} - ${req.user.firstName} ${req.user.lastName}`,
+                 `<p>${req.user.firstName} ${req.user.lastName} has submitted a new story proposal for review.</p>
+                  <p><b>PROPOSAL SUMMARY</b></p>
+                  <ul>
+                    <li><b>Story Title:</b> ${payload.story_title}</li>
+                    <li>${payload.one_liner || 'N/A'}</li>
+                    <li><b>Submitted By:</b> ${req.user.firstName} ${req.user.lastName}</li>
+                  </ul>
+                  <hr/>
+                  <p><a href="https://cb-deliverables.web.app/proposal.html?id=${id}&view=admin">Approve / Reject Story Proposal</a></p>`
+             );
+         }
     }
 
     return res.json({ success: true, id: id });
@@ -4725,6 +4760,9 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
 
       // --- EMAIL NOTIFICATION FOR NEW COMMISSION ---
       if (!wasAlreadyAccepted) {
+          if (isStoryNotificationMutedForUser(req.user, existingData)) {
+              console.log(`[NOTIFY] Suppressed 'proposal_commission' notification for Story: ${existingData?.story_title || id} (muted for ${req.user.adminEmail || req.user.email}).`);
+          } else {
           try {
               const producerEmail = existingData.submittedByEmail || "Unknown";
               let producerName = producerEmail;
@@ -4771,6 +4809,7 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
               console.log(`[NOTIFY] Commission email sent for Story: ${storyTitle}`);
           } catch (emailErr) {
               console.error("[NOTIFY] Failed to send commission email:", emailErr);
+          }
           }
       }
       res.json({ success: true, commissionNumber });
@@ -4888,6 +4927,9 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
       if (presenter !== undefined && presenter !== accDetails.presenter) changes.push(`Presenter: ${accDetails.presenter || 'TBA'} -> ${presenter || 'TBA'}`);
       
       if (changes.length > 0) {
+          if (isStoryNotificationMutedForUser(req.user, existingData)) {
+              console.log(`[NOTIFY] Suppressed 'proposal_commission_update' notification for Story: ${existingData?.story_title || id} (muted for ${req.user.adminEmail || req.user.email}).`);
+          } else {
           try {
               const storyTitle = existingData.story_title || "Untitled Story";
               const commNum = newCommNum !== undefined ? newCommNum : existingData.commissionNumber;
@@ -4930,6 +4972,7 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
               console.log(`[NOTIFY] Commission update email sent for Story: ${storyTitle}`);
           } catch (emailErr) {
               console.error("[NOTIFY] Failed to send commission update email:", emailErr);
+          }
           }
       }
 
@@ -5050,6 +5093,9 @@ app.post('/api/update-proposal-details', express.json(), async (req, res) => {
     });
 
     if (req.body.isSubmitCallSheet && req.body.callSheetPdfB64) {
+        if (isStoryNotificationMutedForUser(req.user, doc.data())) {
+            console.log(`[NOTIFY] Suppressed 'call_sheet' notification for story '${req.body.story_title || doc.data()?.story_title || id}' (muted for ${req.user.adminEmail || req.user.email}).`);
+        } else {
         try {
             const pdfBuffer = Buffer.from(req.body.callSheetPdfB64, 'base64');
             const proposalData = doc.data() || {};
@@ -5068,6 +5114,7 @@ app.post('/api/update-proposal-details', express.json(), async (req, res) => {
             notifyRelevantUsers('call_sheet', emailSubject, emailHtml, attachments);
         } catch (err) {
             console.error('[NOTIFY] Error preparing Call Sheet notification:', err);
+        }
         }
     }
 
