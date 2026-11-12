@@ -268,7 +268,7 @@ function renderProposals(proposals, canDelete) {
         toShow.forEach(p => {
             const tr = document.createElement('tr');
             const date = formatDate(p.submittedAt);
-            const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : p.submittedByEmail;
+            const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : (p.historicalSubmitterName || p.producerName || p.producer || p.submittedByName || p.submittedByEmail);
             tr.innerHTML = `
                 <td data-label="Date">${date}</td>
                 <td data-label="Story Title" class="col-story-title"><a href="proposal?id=${p.id}&view=admin" class="story-title-link">${p.story_title}</a></td>
@@ -331,7 +331,7 @@ function renderProposals(proposals, canDelete) {
         const toShow = accepted.slice(startIndex, startIndex + PAGE_SIZE);
         toShow.forEach(p => {
             const tr = document.createElement('tr');
-            const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : p.submittedByEmail;
+            const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : (p.historicalSubmitterName || p.producerName || p.producer || p.submittedByName || p.submittedByEmail);
             tr.innerHTML = `
                 <td data-label="Comm #">${renderCommNumberHtml(p.commissionNumber)}</td>
                 <td data-label="Story Title">
@@ -408,7 +408,7 @@ function renderProposals(proposals, canDelete) {
             const txDateDisplay = rawFormattedTx !== '—' 
                 ? `<a href="#" onclick="event.preventDefault(); window.setTxDateFilter('${rawFormattedTx}')" style="color: var(--primary); text-decoration: underline;" title="View all stories for this episode">${rawFormattedTx}</a>`
                 : paidDate;
-            const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : p.submittedByEmail;
+            const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : (p.historicalSubmitterName || p.producerName || p.producer || p.submittedByName || p.submittedByEmail);
             tr.innerHTML = `
                 <td data-label="Comm #">${renderCommNumberHtml(p.commissionNumber)}</td>
                 <td data-label="Story Title">
@@ -467,7 +467,7 @@ function renderProposals(proposals, canDelete) {
             toShow.forEach(p => {
                 const tr = document.createElement('tr');
                 const decDate = formatDate(p.decommissionedAt);
-                const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : p.submittedByEmail;
+                const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : (p.historicalSubmitterName || p.producerName || p.producer || p.submittedByName || p.submittedByEmail);
                 const reason = p.decommissionReason ? p.decommissionReason : '<i>No reason provided</i>';
                 tr.innerHTML = `
                     <td data-label="Comm #">${renderCommNumberHtml(p.commissionNumber)}</td>

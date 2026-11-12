@@ -5250,7 +5250,7 @@ app.get('/api/commissioned-stories', async (req, res) => {
           commissionNumber: comm,
           producerName: (data.submittedByName && data.submittedBySurname) 
             ? `${data.submittedByName} ${data.submittedBySurname}` 
-            : (data.producerName || data.producer || ''),
+            : (data.historicalSubmitterName || data.producerName || data.producer || data.submittedByName || ''),
           producerEmail: data.producerEmail || data.submittedByEmail || data.submittedBy || ''
         });
       }
@@ -5631,6 +5631,10 @@ app.get('/api/admin/proposals', async (req, res) => {
       if (data.submittedBy && userMap[data.submittedBy]) {
           data.submittedByName = userMap[data.submittedBy].name;
           data.submittedBySurname = userMap[data.submittedBy].surname;
+      } else if (!data.submittedByName && data.historicalSubmitterName) {
+          const parts = String(data.historicalSubmitterName).trim().split(/\s+/);
+          data.submittedByName = parts[0] || data.historicalSubmitterName;
+          data.submittedBySurname = parts.slice(1).join(' ') || '';
       }
 
       if (data.caseStudies && data.caseStudies._encrypted) {

@@ -83,7 +83,7 @@ function populateAgreement(sub, currentUser) {
     
     document.getElementById('pageHeading').textContent = `INSERT COMMISSION AGREEMENT - CBD 2026/${commNum}`;
     
-    const producerName = `${sub.submittedByName || ''} ${sub.submittedBySurname || ''}`.trim() || sub.submittedByEmail;
+    const producerName = `${sub.submittedByName || ''} ${sub.submittedBySurname || ''}`.trim() || sub.historicalSubmitterName || sub.producerName || sub.producer || sub.submittedByEmail;
     document.getElementById('producerNameDisplay').textContent = producerName;
     document.getElementById('sigProducerName').textContent = producerName;
     
@@ -160,7 +160,7 @@ async function generatePDF(sub, currentUser, commNum, commDate) {
     y += 12;
 
     // Parties (Centred)
-    const producerName = `${sub.submittedByName || ''} ${sub.submittedBySurname || ''}`.trim() || sub.submittedByEmail;
+    const producerName = `${sub.submittedByName || ''} ${sub.submittedBySurname || ''}`.trim() || sub.historicalSubmitterName || sub.producerName || sub.producer || sub.submittedByEmail;
     
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
