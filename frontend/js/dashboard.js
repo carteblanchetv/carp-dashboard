@@ -186,12 +186,12 @@ checkAuth().then(user => {
                 const result = await response.json();
                 if (result.success) {
                     // Update cache manually to remove the item immediately
-                    const cacheKey = `proposals_cache_${user.uid}`;
+                    const cacheKey = getProposalsCacheKey(user);
                     const cachedData = localStorage.getItem(cacheKey);
                     if (cachedData) {
                         const proposals = JSON.parse(cachedData).filter(p => p.id !== id);
                         localStorage.setItem(cacheKey, JSON.stringify(proposals));
-                        renderProposalsData(proposals);
+                        renderProposalsData(proposals, null, null, user);
                     }
                     loadProposals(user); // Still fetch fresh data
                 } else {
@@ -204,17 +204,142 @@ checkAuth().then(user => {
     }
 });
 
+const LEZANNE_EMAIL = 'lezanne@carteblanche.co.za';
+
+function getProposalsCacheKey(user) {
+    const masqTarget = window.auth?.getMasqueradeTarget ? window.auth.getMasqueradeTarget() : null;
+    if (masqTarget && (masqTarget.uid || masqTarget.email)) {
+        return `proposals_cache_masq_${masqTarget.uid || masqTarget.email}`;
+    }
+    return `proposals_cache_${user?.uid || 'anon'}`;
+}
+
+function isStoryLinkedToLezanne(p, lezanneUid) {
+    if (!p) return false;
+
+    const prodEmail = String(p.producerEmail || p.producer_email || '').toLowerCase().trim();
+    if (prodEmail && prodEmail !== 'unknown' && prodEmail !== LEZANNE_EMAIL) {
+        return false;
+    }
+
+    const subEmail = String(p.submittedByEmail || '').toLowerCase().trim();
+    if (subEmail && subEmail !== 'unknown' && subEmail !== 'imported@carteblanche.co.za' && subEmail !== LEZANNE_EMAIL) {
+        return false;
+    }
+
+    const subBy = String(p.submittedBy || '').trim();
+    const subByLower = subBy.toLowerCase();
+    if (subBy && subBy !== 'HISTORICAL_IMPORT' && subByLower !== 'unknown') {
+        if (lezanneUid && subBy !== lezanneUid && subByLower !== LEZANNE_EMAIL) {
+            return false;
+        }
+        if (!lezanneUid && subBy.includes('@') && subByLower !== LEZANNE_EMAIL) {
+            return false;
+        }
+    }
+
+    const prodName = String(p.producerName || p.producer || '').toLowerCase().trim();
+    if (prodName && prodName !== 'unknown' && !prodName.includes('lezanne')) {
+        return false;
+    }
+
+    const histName = String(p.historicalSubmitterName || '').toLowerCase().trim();
+    if (histName && histName !== 'unknown' && !histName.includes('lezanne')) {
+        return false;
+    }
+
+    const subFullName = `${p.submittedByName || ''} ${p.submittedBySurname || ''}`.toLowerCase().trim();
+    if (subFullName && subFullName !== 'unknown' && !subFullName.includes('lezanne')) {
+        return false;
+    }
+
+    let csProducerLinked = false;
+    const crew = p.details?.callSheet?.crew;
+    if (Array.isArray(crew)) {
+        for (const member of crew) {
+            if (!member || String(member.role || '').toLowerCase().trim() !== 'producer') continue;
+            const mEmail = String(member.email || '').toLowerCase().trim();
+            const mName = `${member.name || ''} ${member.surname || ''}`.toLowerCase().trim();
+            if (mEmail && mEmail !== LEZANNE_EMAIL) return false;
+            if (mName && !mName.includes('lezanne')) return false;
+            if (mEmail === LEZANNE_EMAIL || mName.includes('lezanne')) {
+                csProducerLinked = true;
+            }
+        }
+    }
+
+    return Boolean(
+        (lezanneUid && subBy === lezanneUid) ||
+        subByLower === LEZANNE_EMAIL ||
+        subEmail === LEZANNE_EMAIL ||
+        prodEmail === LEZANNE_EMAIL ||
+        prodName.includes('lezanne') ||
+        histName.includes('lezanne') ||
+        subFullName.includes('lezanne') ||
+        csProducerLinked
+    );
+}
+
+function isStoryLinkedToTargetUser(p, target) {
+    if (!p || !target) return false;
+    const tUid = String(target.uid || '').trim();
+    const tEmail = String(target.email || '').toLowerCase().trim();
+    if (tEmail === LEZANNE_EMAIL) {
+        return isStoryLinkedToLezanne(p, tUid);
+    }
+
+    const subBy = String(p.submittedBy || '').trim();
+    const subEmail = String(p.submittedByEmail || '').toLowerCase().trim();
+    const prodEmail = String(p.producerEmail || p.producer_email || '').toLowerCase().trim();
+
+    if (tUid && subBy === tUid) return true;
+    if (tEmail && (subBy.toLowerCase() === tEmail || subEmail === tEmail || prodEmail === tEmail)) return true;
+
+    const crew = p.details?.callSheet?.crew;
+    if (tEmail && Array.isArray(crew)) {
+        for (const member of crew) {
+            if (member?.email && String(member.email).toLowerCase().trim() === tEmail) return true;
+        }
+    }
+
+    const tName = String(target.name || '').toLowerCase().trim();
+    const prodName = String(p.producerName || p.producer || '').toLowerCase().trim();
+    if (tName && prodName && prodName === tName) return true;
+
+    return false;
+}
+
+function filterProposalsForUser(proposals, user) {
+    if (!Array.isArray(proposals)) return [];
+    const masqTarget = window.auth?.getMasqueradeTarget ? window.auth.getMasqueradeTarget() : null;
+    const isMasqUserView = Boolean(masqTarget && (masqTarget.uid || masqTarget.email) && (masqTarget.viewMode || 'user') === 'user');
+
+    if (isMasqUserView) {
+        return proposals.filter(p => isStoryLinkedToTargetUser(p, masqTarget));
+    }
+
+    const uEmail = String(user?.email || '').toLowerCase().trim();
+    if (uEmail === LEZANNE_EMAIL) {
+        return proposals.filter(p => isStoryLinkedToLezanne(p, user?.uid));
+    }
+
+    return proposals;
+}
+
 // --- LOAD PROPOSALS ---
+let currentDashboardUser = null;
+
 async function loadProposals(user) {
     if (!user) return;
-    const cacheKey = `proposals_cache_${user.uid}`;
+    currentDashboardUser = user;
+    const cacheKey = getProposalsCacheKey(user);
     const cachedData = localStorage.getItem(cacheKey);
     
     // 1. Initial render from cache if available
     if (cachedData) {
         try {
-            const proposals = JSON.parse(cachedData);
-            renderProposalsData(proposals);
+            const proposals = filterProposalsForUser(JSON.parse(cachedData), user);
+            renderProposalsData(proposals, null, null, user);
         } catch (e) {}
     }
 
@@ -231,11 +356,12 @@ async function loadProposals(user) {
         const projectMap = footResult.success ? footResult.projectMapping : {};
         
         if (result.success && result.proposals) {
-            // 2. Cache the new data
-            localStorage.setItem(cacheKey, JSON.stringify(result.proposals));
+            const filteredProposals = filterProposalsForUser(result.proposals, user);
+            // 2. Cache the filtered data
+            localStorage.setItem(cacheKey, JSON.stringify(filteredProposals));
             
             // 3. Render fresh data
-            renderProposalsData(result.proposals, footageMap, projectMap);
+            renderProposalsData(filteredProposals, footageMap, projectMap, user);
         }
     } catch (err) { console.error("Proposals fetch failed:", err); }
 }
@@ -251,12 +377,14 @@ function getProposalTimestamp(p) {
     return isNaN(parsed) ? 0 : parsed;
 }
 
-function renderProposalsData(proposals) {
+function renderProposalsData(proposals, footageMap, projectMap, user = currentDashboardUser) {
     const proposalsSection = document.getElementById('storiesSection');
     const list = document.getElementById('storiesList');
     if (!list) return;
 
-    if (!proposals || proposals.length === 0) {
+    const filtered = user ? filterProposalsForUser(proposals, user) : (proposals || []);
+
+    if (!filtered || filtered.length === 0) {
         proposalsSection.classList.add('hidden');
         return;
     }
@@ -264,7 +392,7 @@ function renderProposalsData(proposals) {
     proposalsSection.classList.remove('hidden');
     
     // Sort by submitted/proposal date (newest to oldest, ignoring later edits)
-    const sorted = [...proposals].sort((a, b) => {
+    const sorted = [...filtered].sort((a, b) => {
         return getProposalTimestamp(b) - getProposalTimestamp(a);
     });
 

@@ -145,8 +145,70 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    const LEZANNE_EMAIL = 'lezanne@carteblanche.co.za';
+
+    function isStoryLinkedToLezanne(p, lezanneUid) {
+        if (!p) return false;
+        const prodEmail = String(p.producerEmail || p.producer_email || '').toLowerCase().trim();
+        if (prodEmail && prodEmail !== 'unknown' && prodEmail !== LEZANNE_EMAIL) return false;
+
+        const subEmail = String(p.submittedByEmail || '').toLowerCase().trim();
+        if (subEmail && subEmail !== 'unknown' && subEmail !== 'imported@carteblanche.co.za' && subEmail !== LEZANNE_EMAIL) return false;
+
+        const subBy = String(p.submittedBy || '').trim();
+        const subByLower = subBy.toLowerCase();
+        if (subBy && subBy !== 'HISTORICAL_IMPORT' && subByLower !== 'unknown') {
+            if (lezanneUid && subBy !== lezanneUid && subByLower !== LEZANNE_EMAIL) return false;
+            if (!lezanneUid && subBy.includes('@') && subByLower !== LEZANNE_EMAIL) return false;
+        }
+
+        const prodName = String(p.producerName || p.producer || '').toLowerCase().trim();
+        if (prodName && prodName !== 'unknown' && !prodName.includes('lezanne')) return false;
+
+        const histName = String(p.historicalSubmitterName || '').toLowerCase().trim();
+        if (histName && histName !== 'unknown' && !histName.includes('lezanne')) return false;
+
+        const subFullName = `${p.submittedByName || ''} ${p.submittedBySurname || ''}`.toLowerCase().trim();
+        if (subFullName && subFullName !== 'unknown' && !subFullName.includes('lezanne')) return false;
+
+        let csProducerLinked = false;
+        const crew = p.details?.callSheet?.crew;
+        if (Array.isArray(crew)) {
+            for (const member of crew) {
+                if (!member || String(member.role || '').toLowerCase().trim() !== 'producer') continue;
+                const mEmail = String(member.email || '').toLowerCase().trim();
+                const mName = `${member.name || ''} ${member.surname || ''}`.toLowerCase().trim();
+                if (mEmail && mEmail !== LEZANNE_EMAIL) return false;
+                if (mName && !mName.includes('lezanne')) return false;
+                if (mEmail === LEZANNE_EMAIL || mName.includes('lezanne')) csProducerLinked = true;
+            }
+        }
+
+        return Boolean(
+            (lezanneUid && subBy === lezanneUid) ||
+            subByLower === LEZANNE_EMAIL ||
+            subEmail === LEZANNE_EMAIL ||
+            prodEmail === LEZANNE_EMAIL ||
+            prodName.includes('lezanne') ||
+            histName.includes('lezanne') ||
+            subFullName.includes('lezanne') ||
+            csProducerLinked
+        );
+    }
+
+    function filterProposalsForUser(proposals) {
+        if (!Array.isArray(proposals)) return [];
+        const masqTarget = window.auth?.getMasqueradeTarget ? window.auth.getMasqueradeTarget() : null;
+        const isMasqUserView = Boolean(masqTarget && (masqTarget.uid || masqTarget.email) && (masqTarget.viewMode || 'user') === 'user');
+        if (!isMasqUserView && String(user?.email || '').toLowerCase().trim() === LEZANNE_EMAIL) {
+            return proposals.filter(p => isStoryLinkedToLezanne(p, user?.uid));
+        }
+        return proposals;
+    }
+
     function renderProposals(proposals) {
-        if (!proposals || proposals.length === 0) {
+        const filtered = filterProposalsForUser(proposals);
+        if (!filtered || filtered.length === 0) {
             proposalsList.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 3rem; color: var(--text-muted);">No stories found.</td></tr>`;
             return;
         }
@@ -163,7 +225,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return isNaN(parsed) ? 0 : parsed;
         };
 
-        const sorted = [...proposals].sort((a, b) => {
+        const sorted = [...filtered].sort((a, b) => {
             return getProposalTimestamp(b) - getProposalTimestamp(a);
         });
 

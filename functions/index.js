@@ -19,8 +19,7 @@ const AUTHORIZED_LOGGED_IN_ROLES = ['admin', 'super-admin', 'editorial-productio
 
 function hasAdminAccess(user) {
     if (!user) return false;
-    // Allow access if the user's current role is admin OR if they are an admin masquerading
-    return AUTHORIZED_ADMIN_ROLES.includes(user.role) || (user.adminRole && AUTHORIZED_ADMIN_ROLES.includes(user.adminRole));
+    return AUTHORIZED_ADMIN_ROLES.includes(user.role);
 }
 
 function isOwnerOfData(data, user) {
@@ -28,31 +27,104 @@ function isOwnerOfData(data, user) {
     const uEmail = (user.email || '').toLowerCase().trim();
     const uUid = user.uid;
 
-    if (data.submittedBy && (data.submittedBy === uUid || data.submittedBy.toLowerCase() === uEmail)) return true;
-    if (data.submittedByEmail && data.submittedByEmail.toLowerCase().trim() === uEmail) return true;
-    if (data.producerEmail && data.producerEmail.toLowerCase().trim() === uEmail) return true;
-    if (data.producer_email && data.producer_email.toLowerCase().trim() === uEmail) return true;
-    if (Array.isArray(data.permittedUids) && uUid && data.permittedUids.includes(uUid)) return true;
-
-    if (data.details && data.details.callSheet && Array.isArray(data.details.callSheet.crew)) {
-        for (const member of data.details.callSheet.crew) {
-            if (member.email && member.email.toLowerCase().trim() === uEmail) return true;
-        }
-    }
+    if (data.submittedBy && data.submittedBy !== 'HISTORICAL_IMPORT' && ((uUid && uUid !== 'HISTORICAL_IMPORT' && data.submittedBy === uUid) || (uEmail && data.submittedBy.toLowerCase() === uEmail))) return true;
+    if (uEmail && data.submittedByEmail && data.submittedByEmail.toLowerCase().trim() === uEmail) return true;
+    if (uEmail && data.producerEmail && data.producerEmail.toLowerCase().trim() === uEmail) return true;
+    if (uEmail && data.producer_email && data.producer_email.toLowerCase().trim() === uEmail) return true;
+    if (Array.isArray(data.permittedUids) && uUid && uUid !== 'HISTORICAL_IMPORT' && data.permittedUids.includes(uUid)) return true;
 
     const uFirst = (user.firstName || '').toLowerCase().trim();
     const uLast = (user.lastName || '').toLowerCase().trim();
     const uFullName = `${uFirst} ${uLast}`.trim();
     const uDisplayName = (user.name || '').toLowerCase().trim();
 
-    const dataProd = (data.producerName || data.producer || '').toLowerCase().trim();
-    if (dataProd) {
+    if (data.details && data.details.callSheet && Array.isArray(data.details.callSheet.crew)) {
+        for (const member of data.details.callSheet.crew) {
+            if (uEmail && member.email && member.email.toLowerCase().trim() === uEmail) return true;
+            if ((member.role || '').toLowerCase().trim() === 'producer' && uFirst && uLast) {
+                const mName = `${member.name || ''} ${member.surname || ''}`.toLowerCase().trim();
+                if (mName && mName.includes(uFirst) && mName.includes(uLast)) return true;
+            }
+        }
+    }
+
+    const primaryProd = (data.producerName || data.producer || '').toLowerCase().trim();
+    const fallbackProd = (data.historicalSubmitterName || `${data.submittedByName || ''} ${data.submittedBySurname || ''}`).toLowerCase().trim();
+    const dataProd = (primaryProd && primaryProd !== 'unknown') ? primaryProd : fallbackProd;
+    if (dataProd && dataProd !== 'unknown') {
         if (uFullName && dataProd === uFullName) return true;
         if (uDisplayName && dataProd === uDisplayName) return true;
         if (uFirst && uLast && dataProd.includes(uFirst) && dataProd.includes(uLast)) return true;
     }
 
     return false;
+}
+
+function isStoryLinkedToLezanne(data, lezanneUid) {
+    if (!data) return false;
+    const LEZANNE_EMAIL = 'lezanne@carteblanche.co.za';
+
+    const prodEmail = String(data.producerEmail || data.producer_email || '').toLowerCase().trim();
+    if (prodEmail && prodEmail !== 'unknown' && prodEmail !== LEZANNE_EMAIL) {
+        return false;
+    }
+
+    const subEmail = String(data.submittedByEmail || '').toLowerCase().trim();
+    if (subEmail && subEmail !== 'unknown' && subEmail !== 'imported@carteblanche.co.za' && subEmail !== LEZANNE_EMAIL) {
+        return false;
+    }
+
+    const subBy = String(data.submittedBy || '').trim();
+    const subByLower = subBy.toLowerCase();
+    if (subBy && subBy !== 'HISTORICAL_IMPORT' && subByLower !== 'unknown') {
+        if (lezanneUid && subBy !== lezanneUid && subByLower !== LEZANNE_EMAIL) {
+            return false;
+        }
+        if (!lezanneUid && subBy.includes('@') && subByLower !== LEZANNE_EMAIL) {
+            return false;
+        }
+    }
+
+    const prodName = String(data.producerName || data.producer || '').toLowerCase().trim();
+    if (prodName && prodName !== 'unknown' && !prodName.includes('lezanne')) {
+        return false;
+    }
+
+    const histName = String(data.historicalSubmitterName || '').toLowerCase().trim();
+    if (histName && histName !== 'unknown' && !histName.includes('lezanne')) {
+        return false;
+    }
+
+    const subFullName = `${data.submittedByName || ''} ${data.submittedBySurname || ''}`.toLowerCase().trim();
+    if (subFullName && subFullName !== 'unknown' && !subFullName.includes('lezanne')) {
+        return false;
+    }
+
+    let csProducerLinked = false;
+    const crew = data.details && data.details.callSheet && data.details.callSheet.crew;
+    if (Array.isArray(crew)) {
+        for (const member of crew) {
+            if (!member || String(member.role || '').toLowerCase().trim() !== 'producer') continue;
+            const mEmail = String(member.email || '').toLowerCase().trim();
+            const mName = `${member.name || ''} ${member.surname || ''}`.toLowerCase().trim();
+            if (mEmail && mEmail !== LEZANNE_EMAIL) return false;
+            if (mName && !mName.includes('lezanne')) return false;
+            if (mEmail === LEZANNE_EMAIL || mName.includes('lezanne')) {
+                csProducerLinked = true;
+            }
+        }
+    }
+
+    return Boolean(
+        (lezanneUid && subBy === lezanneUid) ||
+        subByLower === LEZANNE_EMAIL ||
+        subEmail === LEZANNE_EMAIL ||
+        prodEmail === LEZANNE_EMAIL ||
+        prodName.includes('lezanne') ||
+        histName.includes('lezanne') ||
+        subFullName.includes('lezanne') ||
+        csProducerLinked
+    );
 }
 
 function canEditProposal(proposalData, user) {
@@ -1395,25 +1467,48 @@ async function validateFirebaseIdToken(req, res, next) {
     // --- MASQUERADE LOGIC ---
     const masqueradeUid = req.headers['x-masquerade-uid'];
     const masqueradeEmail = req.headers['x-masquerade-user'];
+    const masqueradeName = req.headers['x-masquerade-name'];
     
     const canMasquerade = isLezanne || role === 'super-admin' || role === 'admin';
-    if ((masqueradeUid || masqueradeEmail) && canMasquerade) {
-        console.log(`[AUTH] Masquerade attempt by Super Admin. UID: ${masqueradeUid}, Email: ${masqueradeEmail}`);
+    if ((masqueradeUid || masqueradeEmail || masqueradeName) && canMasquerade) {
+        console.log(`[AUTH] Masquerade attempt by Super Admin. UID: ${masqueradeUid}, Email: ${masqueradeEmail}, Name: ${masqueradeName}`);
         
         let targetDoc;
-        if (masqueradeUid) {
+        if (masqueradeUid && masqueradeUid !== 'HISTORICAL_IMPORT') {
             targetDoc = await admin.firestore().collection('users').doc(masqueradeUid).get();
         }
         
-        // Fallback to searching by email if UID doc not found
+        // Fallback to searching by email doc ID if UID doc not found
         if ((!targetDoc || !targetDoc.exists) && masqueradeEmail) {
             targetDoc = await admin.firestore().collection('users').doc(masqueradeEmail.toLowerCase().trim()).get();
         }
 
+        // Fallback to scanning users collection by decrypted email or full name
+        if (!targetDoc || !targetDoc.exists) {
+            const targetEmailNorm = (masqueradeEmail || (masqueradeUid && masqueradeUid.includes('@') ? masqueradeUid : '')).toLowerCase().trim();
+            const targetNameNorm = (masqueradeName || '').toLowerCase().trim();
+            const allUsersSnap = await admin.firestore().collection('users').get();
+            for (const uDoc of allUsersSnap.docs) {
+                const uData = uDoc.data();
+                const decEmail = String(decrypt(uData.email) || uDoc.id || '').toLowerCase().trim();
+                const decFirst = String(decrypt(uData.name) || '').trim();
+                const decLast = String(decrypt(uData.surname) || '').trim();
+                const decFull = `${decFirst} ${decLast}`.toLowerCase().trim();
+                if (targetEmailNorm && decEmail === targetEmailNorm) {
+                    targetDoc = uDoc;
+                    break;
+                }
+                if (targetNameNorm && decFull && (decFull === targetNameNorm || (decFirst && decLast && targetNameNorm.includes(decFirst.toLowerCase()) && targetNameNorm.includes(decLast.toLowerCase())))) {
+                    targetDoc = uDoc;
+                    break;
+                }
+            }
+        }
+
+        const originalRole = role;
         if (targetDoc && targetDoc.exists) {
             const targetData = targetDoc.data();
             const targetEmail = decrypt(targetData.email) || targetDoc.id;
-            const originalRole = role;
             
             // Override user context for identity while preserving admin audit trail
             req.user = {
@@ -1429,7 +1524,19 @@ async function validateFirebaseIdToken(req, res, next) {
             };
             console.log(`[AUTH] Masquerade SUCCESS: Acting as ${targetEmail} (${req.user.role}). Admin Role: ${req.user.adminRole}`);
         } else {
-             console.warn(`[AUTH] Masquerade FAILED: Target identity not found (UID: ${masqueradeUid}, Email: ${masqueradeEmail}).`);
+            const nameParts = String(masqueradeName || '').trim().split(/\s+/).filter(Boolean);
+            req.user = {
+                uid: (masqueradeUid && masqueradeUid !== 'HISTORICAL_IMPORT') ? masqueradeUid : 'masqueraded_producer',
+                email: (masqueradeEmail || '').toLowerCase().trim(),
+                role: 'producer',
+                adminRole: originalRole,
+                isEnabled: true,
+                isMasquerading: true,
+                adminEmail: decodedIdToken.email,
+                firstName: nameParts[0] || '',
+                lastName: nameParts.slice(1).join(' ') || ''
+            };
+            console.log(`[AUTH] Masquerade Fallback Identity: Acting as ${masqueradeName || masqueradeEmail} (producer).`);
         }
     }
 
@@ -3607,24 +3714,25 @@ app.get('/api/list-producers', async (req, res) => {
     const seenEmails = new Map(); // email -> best doc entry
     snapshot.docs.forEach(doc => {
       const d = doc.data();
-      const email = decrypt(d.email) || '';
+      const email = (decrypt(d.email) || (doc.id.includes('@') ? doc.id : '')).toLowerCase().trim();
       const name = decrypt(d.name) || 'N/A';
       const surname = decrypt(d.surname) || '';
+      const role = d.role || 'producer';
       const isLegacyKey = doc.id.includes('@'); // old format: doc ID was the email
 
       if (!seenEmails.has(email)) {
-        seenEmails.set(email, { id: doc.id, name, surname, isLegacyKey });
+        seenEmails.set(email, { id: doc.id, name, surname, email, role, isLegacyKey });
       } else {
         // Prefer the non-legacy (UID-based) document
         const existing = seenEmails.get(email);
         if (existing.isLegacyKey && !isLegacyKey) {
-          seenEmails.set(email, { id: doc.id, name, surname, isLegacyKey });
+          seenEmails.set(email, { id: doc.id, name, surname, email, role, isLegacyKey });
         }
       }
     });
 
     const producers = Array.from(seenEmails.values())
-      .map(({ id, name, surname }) => ({ id, name, surname }))
+      .map(({ id, name, surname, email, role }) => ({ id, name, surname, email, role }))
       .sort((a, b) => a.name.localeCompare(b.name));
 
     res.json({ success: true, producers });
@@ -4915,6 +5023,21 @@ app.post('/api/admin/handle-proposal', express.json(), async (req, res) => {
               updatePayload.producerName = pFullName;
               updatePayload.producerEmail = pEmail;
               updatePayload.producer_email = pEmail;
+
+              if (existingData.details && existingData.details.callSheet && Array.isArray(existingData.details.callSheet.crew)) {
+                  const updatedCrew = existingData.details.callSheet.crew.map(member => {
+                      if (member && String(member.role || '').toLowerCase().trim() === 'producer') {
+                          return {
+                              ...member,
+                              name: pName,
+                              surname: pSurname,
+                              email: pEmail
+                          };
+                      }
+                      return member;
+                  });
+                  updatePayload['details.callSheet.crew'] = updatedCrew;
+              }
           }
       }
 
@@ -5190,12 +5313,19 @@ app.post('/api/delete-proposal', express.json(), async (req, res) => {
 app.get('/api/proposals', async (req, res) => {
   try {
     const isAdmin = hasAdminAccess(req.user);
+    const uEmail = String(req.user?.email || '').toLowerCase().trim();
+    const isLezanne = uEmail === 'lezanne@carteblanche.co.za';
+    const isMasqProducer = Boolean(req.user?.isMasquerading && !AUTHORIZED_ADMIN_ROLES.includes(req.user?.role));
     const snapshot = await admin.firestore().collection('proposals').get();
     
     const proposals = [];
     snapshot.docs.forEach(doc => {
       const data = doc.data();
-      if (!isAdmin && !isOwnerOfData(data, req.user)) {
+      if (isLezanne) {
+        if (!isStoryLinkedToLezanne(data, req.user.uid)) {
+          return;
+        }
+      } else if ((!isAdmin || isMasqProducer) && !isOwnerOfData(data, req.user)) {
         return;
       }
 
@@ -5747,18 +5877,31 @@ app.get('/api/list-reviewers', async (req, res) => {
 app.get('/api/profile', async (req, res) => {
   try {
     const uid = req.user.uid;
-    const doc = await admin.firestore().collection('users').doc(uid).get();
+    const doc = uid ? await admin.firestore().collection('users').doc(uid).get() : null;
     
-    if (!doc.exists) {
-        // Fallback for Super Admin if doc doesn't exist yet
-        if (req.user.email.toLowerCase() === 'lezanne@carteblanche.co.za') {
+    if (!doc || !doc.exists) {
+        if ((req.user.email || '').toLowerCase() === 'lezanne@carteblanche.co.za') {
             return res.json({
                 success: true,
                 profile: {
+                    uid: req.user.uid,
                     name: 'Lezanne',
                     surname: 'Janse van Rensburg',
                     email: req.user.email,
                     role: 'super-admin',
+                    notifications: {}
+                }
+            });
+        }
+        if (req.user.isMasquerading) {
+            return res.json({
+                success: true,
+                profile: {
+                    uid: req.user.uid,
+                    name: req.user.firstName || '',
+                    surname: req.user.lastName || '',
+                    email: req.user.email || '',
+                    role: req.user.role || 'producer',
                     notifications: {}
                 }
             });
@@ -5774,10 +5917,11 @@ app.get('/api/profile', async (req, res) => {
     res.json({ 
       success: true, 
       profile: { 
+        uid: doc.id,
         name, 
         surname, 
         email, 
-        role: data.role,
+        role: data.role || 'producer',
         notifications: data.notifications || {} 
       } 
     });

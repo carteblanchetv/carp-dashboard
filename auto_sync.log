@@ -453,3 +453,15 @@
 [2026-11-13 10:20:43]     at runImporter (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:175:15)
 [2026-11-13 10:20:43]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
 [2026-11-13 10:20:43] Changes detected. Syncing...
+[2026-11-13 10:20:43] [main 88724da] auto-sync: 2026-11-13 10:21
+[2026-11-13 10:20:43]  7 files changed, 74 insertions(+), 21 deletions(-)
+[2026-11-13 10:20:43] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-11-13 10:20:43]    994242b..88724da  main -> main
+[2026-11-13 10:20:43] Sync complete.
+[2026-11-13 10:50:44] Running Microsoft Graph Email Importer...
+[2026-11-13 10:50:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-11-13 10:50:44] Fetching messages from Microsoft Graph...
+[2026-11-13 10:50:44] Error during Graph email import execution: Error: Failed to fetch messages: Bad Gateway - {"error":{"code":"UnknownError","message":"","innerError":{"date":"2026-11-13T08:51:04","request-id":"a6c8e5fd-dd76-42fd-ba03-7b4e8287b428","client-request-id":"a6c8e5fd-dd76-42fd-ba03-7b4e8287b428"}}}
+[2026-11-13 10:50:44]     at runImporter (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:175:15)
+[2026-11-13 10:50:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-13 10:50:44] Changes detected. Syncing...
