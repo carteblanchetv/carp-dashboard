@@ -1,293 +1,3 @@
-[2026-11-13 18:20:44]       '  }\n' +
-[2026-11-13 18:20:44]       '}\n',
-[2026-11-13 18:20:44]     headers: {
-[2026-11-13 18:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-11-13 18:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-11-13 18:20:44]       'content-length': '247',
-[2026-11-13 18:20:44]       'content-type': 'text/html; charset=UTF-8',
-[2026-11-13 18:20:44]       date: 'Fri, 13 Nov 2026 16:22:01 GMT',
-[2026-11-13 18:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-11-13 18:20:44]       pragma: 'no-cache',
-[2026-11-13 18:20:44]       server: 'UploadServer',
-[2026-11-13 18:20:44]       vary: 'Origin, X-Origin',
-[2026-11-13 18:20:44]       'x-goog-gcs-base-ts': '1a1d5b74b71',
-[2026-11-13 18:20:44]       'x-guploader-uploadid': 'AFy3sg3M4zpYdE4mvDgollTtn_8r0W0t1ULgFvwAMCvtlFbc6kYvhT3wrYpqT8xqp-RCkdkfhKEeMyitefDjX2v_Zg2XG2cQwkd-J5X-6N5yHKc'
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     status: 404,
-[2026-11-13 18:20:44]     statusText: 'Not Found',
-[2026-11-13 18:20:44]     request: {
-[2026-11-13 18:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794586921298_img_2286.jpeg&uploadType=resumable'
-[2026-11-13 18:20:44]     }
-[2026-11-13 18:20:44]   },
-[2026-11-13 18:20:44]   error: undefined,
-[2026-11-13 18:20:44]   status: 404,
-[2026-11-13 18:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-11-13 18:20:44] }
-[2026-11-13 18:20:44] Failed to process attachment img_2285.jpeg: GaxiosError: {
-[2026-11-13 18:20:44]   "error": {
-[2026-11-13 18:20:44]     "code": 404,
-[2026-11-13 18:20:44]     "message": "The specified bucket does not exist.",
-[2026-11-13 18:20:44]     "errors": [
-[2026-11-13 18:20:44]       {
-[2026-11-13 18:20:44]         "message": "The specified bucket does not exist.",
-[2026-11-13 18:20:44]         "domain": "global",
-[2026-11-13 18:20:44]         "reason": "notFound"
-[2026-11-13 18:20:44]       }
-[2026-11-13 18:20:44]     ]
-[2026-11-13 18:20:44]   }
-[2026-11-13 18:20:44] }
-[2026-11-13 18:20:44] System.Management.Automation.RemoteException
-[2026-11-13 18:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-11-13 18:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-11-13 18:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-11-13 18:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-11-13 18:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-11-13 18:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-11-13 18:20:44]   config: {
-[2026-11-13 18:20:44]     method: 'POST',
-[2026-11-13 18:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794586921810_img_2285.jpeg&uploadType=resumable',
-[2026-11-13 18:20:44]     params: {
-[2026-11-13 18:20:44]       name: 'submissions/dstv_tipoff/1794586921810_img_2285.jpeg',
-[2026-11-13 18:20:44]       uploadType: 'resumable'
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     data: {},
-[2026-11-13 18:20:44]     headers: {
-[2026-11-13 18:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-11-13 18:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/7439574e-48ed-4745-95ff-efb4a643e7a9',
-[2026-11-13 18:20:44]       'X-Upload-Content-Type': 'application/octet-stream',
-[2026-11-13 18:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-11-13 18:20:44]       'Content-Type': 'application/json'
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     validateStatus: [Function (anonymous)],
-[2026-11-13 18:20:44]     paramsSerializer: [Function: paramsSerializer],
-[2026-11-13 18:20:44]     body: '{}',
-[2026-11-13 18:20:44]     responseType: 'unknown',
-[2026-11-13 18:20:44]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-13 18:20:44]   },
-[2026-11-13 18:20:44]   response: {
-[2026-11-13 18:20:44]     config: {
-[2026-11-13 18:20:44]       method: 'POST',
-[2026-11-13 18:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794586921810_img_2285.jpeg&uploadType=resumable',
-[2026-11-13 18:20:44]       params: [Object],
-[2026-11-13 18:20:44]       data: {},
-[2026-11-13 18:20:44]       headers: [Object],
-[2026-11-13 18:20:44]       validateStatus: [Function (anonymous)],
-[2026-11-13 18:20:44]       paramsSerializer: [Function: paramsSerializer],
-[2026-11-13 18:20:44]       body: '{}',
-[2026-11-13 18:20:44]       responseType: 'unknown',
-[2026-11-13 18:20:44]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     data: '{\n' +
-[2026-11-13 18:20:44]       '  "error": {\n' +
-[2026-11-13 18:20:44]       '    "code": 404,\n' +
-[2026-11-13 18:20:44]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-11-13 18:20:44]       '    "errors": [\n' +
-[2026-11-13 18:20:44]       '      {\n' +
-[2026-11-13 18:20:44]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-11-13 18:20:44]       '        "domain": "global",\n' +
-[2026-11-13 18:20:44]       '        "reason": "notFound"\n' +
-[2026-11-13 18:20:44]       '      }\n' +
-[2026-11-13 18:20:44]       '    ]\n' +
-[2026-11-13 18:20:44]       '  }\n' +
-[2026-11-13 18:20:44]       '}\n',
-[2026-11-13 18:20:44]     headers: {
-[2026-11-13 18:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-11-13 18:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-11-13 18:20:44]       'content-length': '247',
-[2026-11-13 18:20:44]       'content-type': 'text/html; charset=UTF-8',
-[2026-11-13 18:20:44]       date: 'Fri, 13 Nov 2026 16:22:02 GMT',
-[2026-11-13 18:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-11-13 18:20:44]       pragma: 'no-cache',
-[2026-11-13 18:20:44]       server: 'UploadServer',
-[2026-11-13 18:20:44]       vary: 'Origin, X-Origin',
-[2026-11-13 18:20:44]       'x-goog-gcs-base-ts': '1a1d5b74d2a',
-[2026-11-13 18:20:44]       'x-guploader-uploadid': 'AFy3sg2ApJXsgMQyDZ6G2jpG_7QUD4AjZ-OGce95hWEUOtcmXThRijiVfsQVu812VlIU0vkYbjwRhe9dk6FJdqlpca6F4aI5-ksjtgeWVokQ1-0'
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     status: 404,
-[2026-11-13 18:20:44]     statusText: 'Not Found',
-[2026-11-13 18:20:44]     request: {
-[2026-11-13 18:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794586921810_img_2285.jpeg&uploadType=resumable'
-[2026-11-13 18:20:44]     }
-[2026-11-13 18:20:44]   },
-[2026-11-13 18:20:44]   error: undefined,
-[2026-11-13 18:20:44]   status: 404,
-[2026-11-13 18:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-11-13 18:20:44] }
-[2026-11-13 18:20:44] Saved submission successfully to Firestore: submissions/ijceSDXXUEBbLCX9aoFt
-[2026-11-13 18:20:44] Marked email as read on Microsoft Graph.
-[2026-11-13 18:20:44] 
-[2026-11-13 18:20:44] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
-[2026-11-13 18:20:44] Identified formType: dstv_tipoff
-[2026-11-13 18:20:44] Failed to process attachment img_2287.jpeg: GaxiosError: {
-[2026-11-13 18:20:44]   "error": {
-[2026-11-13 18:20:44]     "code": 404,
-[2026-11-13 18:20:44]     "message": "The specified bucket does not exist.",
-[2026-11-13 18:20:44]     "errors": [
-[2026-11-13 18:20:44]       {
-[2026-11-13 18:20:44]         "message": "The specified bucket does not exist.",
-[2026-11-13 18:20:44]         "domain": "global",
-[2026-11-13 18:20:44]         "reason": "notFound"
-[2026-11-13 18:20:44]       }
-[2026-11-13 18:20:44]     ]
-[2026-11-13 18:20:44]   }
-[2026-11-13 18:20:44] }
-[2026-11-13 18:20:44] System.Management.Automation.RemoteException
-[2026-11-13 18:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-11-13 18:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-11-13 18:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-11-13 18:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-11-13 18:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-11-13 18:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-11-13 18:20:44]   config: {
-[2026-11-13 18:20:44]     method: 'POST',
-[2026-11-13 18:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794586926290_img_2287.jpeg&uploadType=resumable',
-[2026-11-13 18:20:44]     params: {
-[2026-11-13 18:20:44]       name: 'submissions/dstv_tipoff/1794586926290_img_2287.jpeg',
-[2026-11-13 18:20:44]       uploadType: 'resumable'
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     data: {},
-[2026-11-13 18:20:44]     headers: {
-[2026-11-13 18:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-11-13 18:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/f3029a9c-d485-4f3f-9346-c40d6297e965',
-[2026-11-13 18:20:44]       'X-Upload-Content-Type': 'application/octet-stream',
-[2026-11-13 18:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-11-13 18:20:44]       'Content-Type': 'application/json'
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     validateStatus: [Function (anonymous)],
-[2026-11-13 18:20:44]     paramsSerializer: [Function: paramsSerializer],
-[2026-11-13 18:20:44]     body: '{}',
-[2026-11-13 18:20:44]     responseType: 'unknown',
-[2026-11-13 18:20:44]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-13 18:20:44]   },
-[2026-11-13 18:20:44]   response: {
-[2026-11-13 18:20:44]     config: {
-[2026-11-13 18:20:44]       method: 'POST',
-[2026-11-13 18:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794586926290_img_2287.jpeg&uploadType=resumable',
-[2026-11-13 18:20:44]       params: [Object],
-[2026-11-13 18:20:44]       data: {},
-[2026-11-13 18:20:44]       headers: [Object],
-[2026-11-13 18:20:44]       validateStatus: [Function (anonymous)],
-[2026-11-13 18:20:44]       paramsSerializer: [Function: paramsSerializer],
-[2026-11-13 18:20:44]       body: '{}',
-[2026-11-13 18:20:44]       responseType: 'unknown',
-[2026-11-13 18:20:44]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     data: '{\n' +
-[2026-11-13 18:20:44]       '  "error": {\n' +
-[2026-11-13 18:20:44]       '    "code": 404,\n' +
-[2026-11-13 18:20:44]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-11-13 18:20:44]       '    "errors": [\n' +
-[2026-11-13 18:20:44]       '      {\n' +
-[2026-11-13 18:20:44]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-11-13 18:20:44]       '        "domain": "global",\n' +
-[2026-11-13 18:20:44]       '        "reason": "notFound"\n' +
-[2026-11-13 18:20:44]       '      }\n' +
-[2026-11-13 18:20:44]       '    ]\n' +
-[2026-11-13 18:20:44]       '  }\n' +
-[2026-11-13 18:20:44]       '}\n',
-[2026-11-13 18:20:44]     headers: {
-[2026-11-13 18:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-11-13 18:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-11-13 18:20:44]       'content-length': '247',
-[2026-11-13 18:20:44]       'content-type': 'text/html; charset=UTF-8',
-[2026-11-13 18:20:44]       date: 'Fri, 13 Nov 2026 16:22:06 GMT',
-[2026-11-13 18:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-11-13 18:20:44]       pragma: 'no-cache',
-[2026-11-13 18:20:44]       server: 'UploadServer',
-[2026-11-13 18:20:44]       vary: 'Origin, X-Origin',
-[2026-11-13 18:20:44]       'x-goog-gcs-base-ts': '1a1d5b75ed8',
-[2026-11-13 18:20:44]       'x-guploader-uploadid': 'AFy3sg1ZvfQyNdpJUOszFrTvLe7M5M1_H1dAcA87P229g9XRgAjtarZaU90ZvtJgvOQcTX7EI9e_eifo91uHhFVXPmB3BXmZYSJTYKOKf2fONQ'
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     status: 404,
-[2026-11-13 18:20:44]     statusText: 'Not Found',
-[2026-11-13 18:20:44]     request: {
-[2026-11-13 18:20:44]       responseURL: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794586926290_img_2287.jpeg&uploadType=resumable'
-[2026-11-13 18:20:44]     }
-[2026-11-13 18:20:44]   },
-[2026-11-13 18:20:44]   error: undefined,
-[2026-11-13 18:20:44]   status: 404,
-[2026-11-13 18:20:44]   Symbol(gaxios-gaxios-error): '6.7.1'
-[2026-11-13 18:20:44] }
-[2026-11-13 18:20:44] Failed to process attachment img_2286.jpeg: GaxiosError: {
-[2026-11-13 18:20:44]   "error": {
-[2026-11-13 18:20:44]     "code": 404,
-[2026-11-13 18:20:44]     "message": "The specified bucket does not exist.",
-[2026-11-13 18:20:44]     "errors": [
-[2026-11-13 18:20:44]       {
-[2026-11-13 18:20:44]         "message": "The specified bucket does not exist.",
-[2026-11-13 18:20:44]         "domain": "global",
-[2026-11-13 18:20:44]         "reason": "notFound"
-[2026-11-13 18:20:44]       }
-[2026-11-13 18:20:44]     ]
-[2026-11-13 18:20:44]   }
-[2026-11-13 18:20:44] }
-[2026-11-13 18:20:44] System.Management.Automation.RemoteException
-[2026-11-13 18:20:44]     at Gaxios._request (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\gaxios\build\src\gaxios.js:142:23)
-[2026-11-13 18:20:44]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[2026-11-13 18:20:44]     at async JWT.requestAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\google-auth-library\build\src\auth\oauth2client.js:429:18)
-[2026-11-13 18:20:44]     at async Upload.makeRequest (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:824:21)
-[2026-11-13 18:20:44]     at async uri.retries (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:461:29)
-[2026-11-13 18:20:44]     at async Upload.createURIAsync (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\node_modules\@google-cloud\storage\build\cjs\src\resumable-upload.js:458:21) {
-[2026-11-13 18:20:44]   config: {
-[2026-11-13 18:20:44]     method: 'POST',
-[2026-11-13 18:20:44]     url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794586926776_img_2286.jpeg&uploadType=resumable',
-[2026-11-13 18:20:44]     params: {
-[2026-11-13 18:20:44]       name: 'submissions/dstv_tipoff/1794586926776_img_2286.jpeg',
-[2026-11-13 18:20:44]       uploadType: 'resumable'
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     data: {},
-[2026-11-13 18:20:44]     headers: {
-[2026-11-13 18:20:44]       'User-Agent': 'gcloud-node-storage/7.19.0 google-api-nodejs-client/9.15.1',
-[2026-11-13 18:20:44]       'x-goog-api-client': 'gl-node/24.14.1 gccl/7.19.0-CJS gccl-invocation-id/c4fbfe17-b01a-463b-840f-5e5981e01fa5',
-[2026-11-13 18:20:44]       'X-Upload-Content-Type': 'application/octet-stream',
-[2026-11-13 18:20:44]       Authorization: '<<REDACTED> - See `errorRedactor` option in `gaxios` for configuration>.',
-[2026-11-13 18:20:44]       'Content-Type': 'application/json'
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     validateStatus: [Function (anonymous)],
-[2026-11-13 18:20:44]     paramsSerializer: [Function: paramsSerializer],
-[2026-11-13 18:20:44]     body: '{}',
-[2026-11-13 18:20:44]     responseType: 'unknown',
-[2026-11-13 18:20:44]     errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-13 18:20:44]   },
-[2026-11-13 18:20:44]   response: {
-[2026-11-13 18:20:44]     config: {
-[2026-11-13 18:20:44]       method: 'POST',
-[2026-11-13 18:20:44]       url: 'https://storage.googleapis.com/upload/storage/v1/b/cb-deliverables.appspot.com/o?name=submissions%2Fdstv_tipoff%2F1794586926776_img_2286.jpeg&uploadType=resumable',
-[2026-11-13 18:20:44]       params: [Object],
-[2026-11-13 18:20:44]       data: {},
-[2026-11-13 18:20:44]       headers: [Object],
-[2026-11-13 18:20:44]       validateStatus: [Function (anonymous)],
-[2026-11-13 18:20:44]       paramsSerializer: [Function: paramsSerializer],
-[2026-11-13 18:20:44]       body: '{}',
-[2026-11-13 18:20:44]       responseType: 'unknown',
-[2026-11-13 18:20:44]       errorRedactor: [Function: defaultErrorRedactor]
-[2026-11-13 18:20:44]     },
-[2026-11-13 18:20:44]     data: '{\n' +
-[2026-11-13 18:20:44]       '  "error": {\n' +
-[2026-11-13 18:20:44]       '    "code": 404,\n' +
-[2026-11-13 18:20:44]       '    "message": "The specified bucket does not exist.",\n' +
-[2026-11-13 18:20:44]       '    "errors": [\n' +
-[2026-11-13 18:20:44]       '      {\n' +
-[2026-11-13 18:20:44]       '        "message": "The specified bucket does not exist.",\n' +
-[2026-11-13 18:20:44]       '        "domain": "global",\n' +
-[2026-11-13 18:20:44]       '        "reason": "notFound"\n' +
-[2026-11-13 18:20:44]       '      }\n' +
-[2026-11-13 18:20:44]       '    ]\n' +
-[2026-11-13 18:20:44]       '  }\n' +
-[2026-11-13 18:20:44]       '}\n',
-[2026-11-13 18:20:44]     headers: {
-[2026-11-13 18:20:44]       'alt-svc': 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
-[2026-11-13 18:20:44]       'cache-control': 'no-cache, no-store, max-age=0, must-revalidate',
-[2026-11-13 18:20:44]       'content-length': '247',
-[2026-11-13 18:20:44]       'content-type': 'text/html; charset=UTF-8',
-[2026-11-13 18:20:44]       date: 'Fri, 13 Nov 2026 16:22:07 GMT',
-[2026-11-13 18:20:44]       expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-[2026-11-13 18:20:44]       pragma: 'no-cache',
-[2026-11-13 18:20:44]       server: 'UploadServer',
-[2026-11-13 18:20:44]       vary: 'Origin, X-Origin',
-[2026-11-13 18:20:44]       'x-goog-gcs-base-ts': '1a1d5b760c2',
-[2026-11-13 18:20:44]       'x-guploader-uploadid': 'AFy3sg2guBXzppYLKQmA_TjK4GYOedYCQDStWCkpMHmHLNYrf8IRoNc3SmJn22pIT4af0cZ16v3gUYp6kd1nSMKXKdbIOrQwmrLny_Nkr6sWeA'
-[2026-11-13 18:20:44]     },
 [2026-11-13 18:20:44]     status: 404,
 [2026-11-13 18:20:44]     statusText: 'Not Found',
 [2026-11-13 18:20:44]     request: {
@@ -683,3 +393,101 @@
 [2026-11-13 18:50:44] 
 [2026-11-13 18:50:44] Microsoft Graph email import cycle completed successfully.
 [2026-11-13 18:50:44] Changes detected. Syncing...
+[2026-11-13 18:50:44] [main 46345f1] auto-sync: 2026-11-13 18:51
+[2026-11-13 18:50:44]  1 file changed, 290 insertions(+), 1372 deletions(-)
+[2026-11-13 18:50:44] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-11-13 18:50:44]    ba640b8..46345f1  main -> main
+[2026-11-13 18:50:44] Sync complete.
+[2026-11-13 19:20:44] Running Microsoft Graph Email Importer...
+[2026-11-13 19:20:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-11-13 19:20:44] Fetching messages from Microsoft Graph...
+[2026-11-13 19:20:44] Fetching messages from Microsoft Graph...
+[2026-11-13 19:20:44] Found 85 email(s) since 1 May 2026 to check.
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-10T21:35:47Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Pitch" from Thomo Nkgadima <thomo.nkgadima@gmail.com> (received: 2026-11-10T23:09:25Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Pitch" from Thomo Nkgadima <thomo.nkgadima@gmail.com> (received: 2026-11-10T23:14:13Z)
+[2026-11-13 19:20:44] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-13 19:20:44] Skipping duplicate: "BBEXPO 2026 Celebrated local business and recognises emerging business talent" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-11-11T05:47:25Z)
+[2026-11-13 19:20:44] Skipping duplicate: "The R30 / Litre Petrol Squeeze And Why Landlords Should Prioritise Good Tenants Over Increases" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za> (received: 2026-11-11T06:52:28Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T07:49:38Z)
+[2026-11-13 19:20:44] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T08:54:56Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Story tip: Proposed coal mining near Lephalale G현 clearing, blasting and unresolved approval records" from Hoornbosch Boerdery <hoornbosch.boerdery@gmail.com> (received: 2026-11-11T09:22:25Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Cable thief in the garden route" from Tessa Jones <tessa@silentk.co.za> (received: 2026-11-11T09:27:54Z)
+[2026-11-13 19:20:44] Skipping backend spam/quarantine email: "Phishing to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-13 19:20:44] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-13 19:20:44] Skipping duplicate: "Recall: P Naick - Fraud Alert (PostBank/SASSA)" from Theesan Naick <theesan.naick@art22.co.za> (received: 2026-11-11T10:36:29Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T10:41:21Z)
+[2026-11-13 19:20:44] Skipping duplicate: "SU Experts: World Diabetes Day" from Lewis, AE, Mrs [alewis@sun.ac.za] <alewis@sun.ac.za> (received: 2026-11-11T10:44:21Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T11:50:49Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T11:51:25Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T11:51:28Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T11:51:28Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T11:51:29Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T11:51:30Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T11:51:35Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Re: INVESTIGATION: Vosloorus One-Day Flip - Absa Financed - High Court Case 2024-043949 " from amanda zwane <amandazwane96@gmail.com> (received: 2026-11-11T12:04:09Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Fwd: URGENT: Confidential and Anonymous Request for Investigation into a ChildG핫s Suspicious Death and the Safety of Two Surviving Children" from Bianca wolmarans <wolmaransbianca870@gmail.com> (received: 2026-11-11T12:10:09Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T13:22:54Z)
+[2026-11-13 19:20:44] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T14:13:23Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T14:15:11Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T14:18:06Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Standard Bank admits R71,552 in-duplum breach in writing, still demands R237k from medically boarded client who paid R287k on R120k loan" from Mohini Ramoudh <mohiniramoudh@gmail.com> (received: 2026-11-11T14:43:20Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Re: URGENT FOLLOW-UP G혀 FAILURE TO RESPOND AND NOTICE OF LEGAL ESCALATION" from Michele Pietrucci <michpietrucci@gmail.com> (received: 2026-11-11T15:11:49Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T15:14:26Z)
+[2026-11-13 19:20:44] Skipping duplicate: "INVESTIGATION REQUEST: Farm Murder and Massive Looting Ignored at Kaalfontein G현 Case 435/10/2026 DATELINE: VEREENIGING G현 A brutal farm murder and a coordinated raid resulting in hundreds of thousands of Rands in stolen property have left a local black-..." from Moeketsi Mahasa <mahasamoeketsi2@gmail.com> (received: 2026-11-11T15:53:20Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Sponsorship" from Chief <free.mbuso@gmail.com> (received: 2026-11-11T17:43:17Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T18:53:56Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T19:13:22Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-11T19:43:06Z)
+[2026-11-13 19:20:44] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-13 19:20:44] Skipping duplicate: "EVENT ANNOUNCEMENT - I LOVE CY LIVE MUSIC PARK FESTIVAL" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-11-12T05:33:15Z)
+[2026-11-13 19:20:44] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-13 19:20:44] Skipping duplicate: "Hacking information and Scams - People loosing lots and lots of Money" from Rudolph Viljoen <rudolph@ruvil.co.za> (received: 2026-11-12T06:30:40Z)
+[2026-11-13 19:20:44] Skipping duplicate: "PJT BUCKLE vs LLOYD LIELIES" from Pieter Buckle <pieterbuckle538@gmail.com> (received: 2026-11-12T09:13:55Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T10:13:19Z)
+[2026-11-13 19:20:44] Skipping duplicate: "This Deserves to be Heard." from Costa Franco <gofastperform@gmail.com> (received: 2026-11-12T10:21:35Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Animal abuse for 4 years reported to spca..aacl..nspca." from Maria Viveiros <viveiros.maria64@gmail.com> (received: 2026-11-12T10:28:24Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Bonitas Medical Aid Fund/ Momentum shocking service" from des.michaelides <des.michaelides@yahoo.com> (received: 2026-11-12T11:22:51Z)
+[2026-11-13 19:20:44] Skipping duplicate: "CONTAMINATED DIESEL" from gm@mweb.co.za <gm@mweb.co.za> (received: 2026-11-12T11:39:04Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Witrand" from Talisha Marks <talishamarks95@gmail.com> (received: 2026-11-12T11:48:56Z)
+[2026-11-13 19:20:44] Skipping duplicate: "ALRSA Media Statement for Immediate Release: Woolworths required to amend animal welfare advertising" from Paula Knipe <paulaknipe@animallawreform.org> (received: 2026-11-12T11:56:06Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Re: Automatic reply: PJT BUCKLE vs LLOYD LIELIES" from Pieter Buckle <pieterbuckle538@gmail.com> (received: 2026-11-12T12:08:21Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T12:37:32Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T13:15:04Z)
+[2026-11-13 19:20:44] Skipping duplicate: "(No Subject)" from Soula Foord <soulafoord406@gmail.com> (received: 2026-11-12T13:27:37Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Story proposal" from Eddy Scheffer <eddyscheffer@me.com> (received: 2026-11-12T14:02:09Z)
+[2026-11-13 19:20:44] Skipping duplicate: "south african police fails a 6 year old" from Tanya Debeer <tanyadebeer39@gmail.com> (received: 2026-11-12T14:55:47Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T15:37:14Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T15:46:14Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T16:09:28Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T17:34:39Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Alberton - non stop electricity issues" from Peter Roos <proos323@gmail.com> (received: 2026-11-12T17:55:53Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Unfair employment treatment by Ndalama Capital Mining " from Keobakile Dithato <dithatosk@hotmail.com> (received: 2026-11-12T18:36:09Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T18:53:48Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T18:54:40Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T18:57:58Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T18:58:17Z)
+[2026-11-13 19:20:44] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-12T21:58:37Z)
+[2026-11-13 19:20:44] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-13T06:09:43Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-13T06:51:55Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Humanitarian call" from Ricardo Tsimakwane <ricardotsimakwane50@gmail.com> (received: 2026-11-13T07:07:29Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Supernumerary Posts" from Linda van der Westhuizen <drlindavdw@gmail.com> (received: 2026-11-13T08:34:59Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Alberton, Gauteng G현 Years of power outages, potholes and unanswered complaints" from Vaughn Taylor <vaughn.locgov@gmail.com> (received: 2026-11-13T11:40:08Z)
+[2026-11-13 19:20:44] Skipping duplicate: "48% of SA Career Changers Fear AI: Top Future-Proof Jobs Revealed" from Leandre Morake <delivery@agilitypr.delivery> (received: 2026-11-13T12:26:39Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-13T13:13:23Z)
+[2026-11-13 19:20:44] Skipping duplicate: "(No Subject)" from Soula Foord <soulafoord406@gmail.com> (received: 2026-11-13T15:41:22Z)
+[2026-11-13 19:20:44] Skipping duplicate: "URGENT CHILD SAFETY ESCALATION: Uber Driver Plate FTT 098 L (Benoni, SA) " from Sue Webber <sue_webber@hotmail.com> (received: 2026-11-13T15:45:29Z)
+[2026-11-13 19:20:44] Skipping duplicate: "STORY PITCH: Ermelo SAPS K9 Officer Charged with Assault GBH Shielded by Two-Year Cover-Up, High Court Intervention & State Vehicle Intimidation" from Johann Van Niekerk <johannesvan04@gmail.com> (received: 2026-11-13T15:50:52Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Stanza Bopape Clinic in Mamelodi East next to Mamelodi Square is Failing the Mamelodians and is not delivering on its Mandate" from Thabo Moshiga <thabomoshiga@gmail.com> (received: 2026-11-13T16:12:15Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-13T16:20:25Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-13T16:20:32Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-13T16:22:00Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-13T16:32:20Z)
+[2026-11-13 19:20:44] Skipping duplicate: "Fwd: URGENT: Please Help Us G혀 My Son Is Fighting for His Life After Alleged Hospital Negligence in Rustenburg" from Rolindi Theart <roltheart@gmail.com> (received: 2026-11-13T16:38:15Z)
+[2026-11-13 19:20:44] 
+[2026-11-13 19:20:44] Microsoft Graph email import cycle completed successfully.
+[2026-11-13 19:20:44] Changes detected. Syncing...
