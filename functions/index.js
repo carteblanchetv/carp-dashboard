@@ -127,6 +127,55 @@ function isStoryLinkedToLezanne(data, lezanneUid) {
     );
 }
 
+function getProposalSubmitterDisplay(data) {
+    if (!data) return '';
+    if (data.submittedByName && data.submittedBySurname) {
+        return `${data.submittedByName} ${data.submittedBySurname}`.trim();
+    }
+    return String(data.historicalSubmitterName || data.producerName || data.producer || data.submittedByName || '').trim();
+}
+
+function isStorySubmittedByUser(data, user) {
+    if (!data || !user) return false;
+    const uEmail = String(user.email || '').toLowerCase().trim();
+    const uUid = String(user.uid || '').trim();
+    if (uEmail === 'lezanne@carteblanche.co.za') {
+        return isStoryLinkedToLezanne(data, uUid);
+    }
+
+    const uFirst = String(user.firstName || '').toLowerCase().trim();
+    const uLast = String(user.lastName || '').toLowerCase().trim();
+    const uFullName = `${uFirst} ${uLast}`.trim();
+    const uDisplayName = String(user.name || '').toLowerCase().trim();
+
+    const subDisp = getProposalSubmitterDisplay(data).toLowerCase();
+    if (subDisp && subDisp !== 'unknown' && !subDisp.includes('@')) {
+        if (uFullName && subDisp === uFullName) return true;
+        if (uDisplayName && subDisp === uDisplayName) return true;
+        if (uFirst && uLast && subDisp.includes(uFirst) && subDisp.includes(uLast)) return true;
+        if (uFullName || (uFirst && uLast)) {
+            return false;
+        }
+    }
+
+    if (data.submittedBy && data.submittedBy !== 'HISTORICAL_IMPORT' && ((uUid && uUid !== 'HISTORICAL_IMPORT' && data.submittedBy === uUid) || (uEmail && data.submittedBy.toLowerCase() === uEmail))) return true;
+    if (uEmail && data.submittedByEmail && data.submittedByEmail.toLowerCase().trim() === uEmail) return true;
+    if (uEmail && data.producerEmail && data.producerEmail.toLowerCase().trim() === uEmail) return true;
+    if (uEmail && data.producer_email && data.producer_email.toLowerCase().trim() === uEmail) return true;
+
+    if (data.details && data.details.callSheet && Array.isArray(data.details.callSheet.crew)) {
+        for (const member of data.details.callSheet.crew) {
+            if (uEmail && member.email && member.email.toLowerCase().trim() === uEmail) return true;
+            if ((member.role || '').toLowerCase().trim() === 'producer' && uFirst && uLast) {
+                const mName = `${member.name || ''} ${member.surname || ''}`.toLowerCase().trim();
+                if (mName && mName.includes(uFirst) && mName.includes(uLast)) return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 function canEditProposal(proposalData, user) {
     if (hasAdminAccess(user)) return true;
     return isOwnerOfData(proposalData, user);
@@ -5315,17 +5364,42 @@ app.get('/api/proposals', async (req, res) => {
     const isAdmin = hasAdminAccess(req.user);
     const uEmail = String(req.user?.email || '').toLowerCase().trim();
     const isLezanne = uEmail === 'lezanne@carteblanche.co.za';
-    const isMasqProducer = Boolean(req.user?.isMasquerading && !AUTHORIZED_ADMIN_ROLES.includes(req.user?.role));
-    const snapshot = await admin.firestore().collection('proposals').get();
+    const isMasq = Boolean(req.user?.isMasquerading);
+    const [snapshot, userSnapshot] = await Promise.all([
+      admin.firestore().collection('proposals').get(),
+      admin.firestore().collection('users').get()
+    ]);
+
+    const userMap = {};
+    userSnapshot.docs.forEach(udoc => {
+      const udata = udoc.data();
+      userMap[udoc.id] = {
+        name: decrypt(udata.name) || '',
+        surname: decrypt(udata.surname) || '',
+        email: (decrypt(udata.email) || (udoc.id.includes('@') ? udoc.id : '')).toLowerCase().trim()
+      };
+    });
     
     const proposals = [];
     snapshot.docs.forEach(doc => {
       const data = doc.data();
+      const isTestAccount = String(data.historicalSubmitterName || '').toLowerCase().trim() === 'test account';
+      if (!isTestAccount && data.submittedBy && userMap[data.submittedBy]) {
+        data.submittedByName = userMap[data.submittedBy].name;
+        data.submittedBySurname = userMap[data.submittedBy].surname;
+      } else if (!data.submittedByName && data.historicalSubmitterName) {
+        const parts = String(data.historicalSubmitterName).trim().split(/\s+/);
+        data.submittedByName = parts[0] || data.historicalSubmitterName;
+        data.submittedBySurname = parts.slice(1).join(' ') || '';
+      }
+
       if (isLezanne) {
         if (!isStoryLinkedToLezanne(data, req.user.uid)) {
           return;
         }
-      } else if ((!isAdmin || isMasqProducer) && !isOwnerOfData(data, req.user)) {
+      } else if ((isMasq || !isAdmin) && !isStorySubmittedByUser(data, req.user)) {
+        return;
+      } else if (isAdmin && !isStorySubmittedByUser(data, req.user)) {
         return;
       }
 

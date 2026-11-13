@@ -216,13 +216,72 @@ export async function logout(reason = "User initiated") {
     window.location.href = 'login.html';
 }
 
+function applyMasqueradeToUser(user, baseRole, baseFirst, baseLast) {
+    if (!user) return user;
+    if (!user.realUid) user.realUid = user.uid;
+    if (!user.realEmail) user.realEmail = user.email;
+    const realEmail = (user.realEmail || user.email || '').toLowerCase().trim();
+    const isLezanne = realEmail === 'lezanne@carteblanche.co.za';
+
+    const resolvedBaseRole = baseRole || user.realRole || user.role || (isLezanne ? 'super-admin' : 'producer');
+    user.realRole = resolvedBaseRole;
+
+    const resolvedBaseFirst = baseFirst !== undefined ? baseFirst : (user.realFirstName || user.firstName || (isLezanne ? 'Lezanne' : ''));
+    const resolvedBaseLast = baseLast !== undefined ? baseLast : (user.realLastName || user.lastName || (isLezanne ? 'Janse van Rensburg' : ''));
+    user.realFirstName = resolvedBaseFirst;
+    user.realLastName = resolvedBaseLast;
+
+    const target = getMasqueradeTarget();
+    if (target && isLezanne) {
+        const isUserView = (target.viewMode || 'user') === 'user';
+        if (isUserView) {
+            const targetRole = target.role || 'producer';
+            const targetName = (target.name || '').trim();
+            const parts = targetName.split(/\s+/).filter(Boolean);
+            const tFirst = target.firstName || parts[0] || '';
+            const tLast = target.lastName || parts.slice(1).join(' ') || '';
+
+            user.role = targetRole;
+            user.displayRole = targetRole;
+            user.firstName = tFirst;
+            user.lastName = tLast;
+            user.displayName = tFirst || targetName;
+            user.displayDisplayName = tFirst || targetName;
+            user.displayEmail = target.email || targetName;
+            user.masqueradeUid = target.uid || '';
+            user.isMasquerading = true;
+            return user;
+        } else {
+            user.role = resolvedBaseRole;
+            user.displayRole = resolvedBaseRole;
+            user.firstName = resolvedBaseFirst;
+            user.lastName = resolvedBaseLast;
+            user.displayName = resolvedBaseFirst || realEmail.split('@')[0];
+            user.displayDisplayName = user.displayName;
+            user.displayEmail = `${user.realEmail} (Admin View)`;
+            user.isMasquerading = true;
+            return user;
+        }
+    }
+
+    user.role = resolvedBaseRole;
+    user.displayRole = resolvedBaseRole;
+    user.firstName = resolvedBaseFirst;
+    user.lastName = resolvedBaseLast;
+    user.displayName = resolvedBaseFirst || realEmail.split('@')[0];
+    user.displayDisplayName = user.displayName;
+    user.displayEmail = user.realEmail || user.email;
+    user.isMasquerading = false;
+    return user;
+}
+
 /**
  * Get Current User
  */
 export function getUser() {
     return new Promise((resolve) => {
         onAuthStateChanged(auth, (user) => {
-            resolve(user);
+            resolve(applyMasqueradeToUser(user));
         });
     });
 }
@@ -231,7 +290,7 @@ export function getUser() {
  * Get Synchronous Current User
  */
 export function getCurrentUser() {
-    return auth.currentUser;
+    return applyMasqueradeToUser(auth.currentUser);
 }
 
 /**
@@ -243,42 +302,16 @@ export function checkAuth(redirectIfNotLogged = true) {
         const executeCheck = () => {
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
+                const realEmail = (user.realEmail || user.email || '').toLowerCase();
                 // 1. Check for cached profile to resolve instantly
-                const cachedProfile = localStorage.getItem(`user_profile_${user.email.toLowerCase()}`);
+                const cachedProfile = localStorage.getItem(`user_profile_${realEmail}`);
                 if (cachedProfile) {
                     try {
                         const parsed = JSON.parse(cachedProfile);
-                        user.role = parsed.role;
                         user.isEnabled = parsed.isEnabled;
-                        user.firstName = parsed.firstName || '';
-                        user.lastName = parsed.lastName || '';
-                        user.displayName = `${user.firstName} ${user.lastName}`.trim() || user.email;
+                        applyMasqueradeToUser(user, parsed.role, parsed.firstName || '', parsed.lastName || '');
 
-                        // --- MASQUERADE UI OVERRIDE ---
                         const target = getMasqueradeTarget();
-                        const realEmail = user.email.toLowerCase(); // Original FB email
-                        const isLezanne = realEmail === 'lezanne@carteblanche.co.za';
-                        
-                        // We attach the ROLE to a separate property to avoid mutating the core Firebase email/role
-                        user.displayRole = parsed.role;
-                        user.displayEmail = user.email;
-                        user.displayDisplayName = user.displayName;
-
-                        if (target && isLezanne) {
-                            const isUserView = (target.viewMode || 'user') === 'user';
-                            if (isUserView) {
-                                user.displayRole = target.role;
-                                user.displayEmail = `${target.name} (Masqueraded)`;
-                                user.displayDisplayName = target.name;
-                                user.isMasquerading = true;
-                            } else {
-                                user.displayRole = parsed.role;
-                                user.displayEmail = `${user.email} (Admin View)`;
-                                user.displayDisplayName = user.displayName;
-                                user.isMasquerading = true; // Still in masquerade session
-                            }
-                        }
-
                         console.log("[Auth] Identity Resolution (Cached):", { email: user.displayEmail, name: user.displayDisplayName, role: user.displayRole, masqueraded: !!target });
                         updateMasqueradeBanner();
                         resolve(user); // Resolve early for instant UI
@@ -362,83 +395,59 @@ export function checkAuth(redirectIfNotLogged = true) {
                         
                         const isEnabled = isLezanne ? true : (userData ? (userData.isEnabled !== false) : true);
 
-                    // Update local user object
-                    user.role = role;
+                    const baseFirst = isLezanne ? 'Lezanne' : (userData ? (typeof userData.firstName === 'string' ? userData.firstName : (typeof userData.name === 'string' ? userData.name : '')) : '');
+                    const baseLast = isLezanne ? 'Janse van Rensburg' : (userData ? (typeof userData.lastName === 'string' ? userData.lastName : (typeof userData.surname === 'string' ? userData.surname : '')) : '');
+
                     user.isEnabled = isEnabled;
-                    user.firstName = userData ? (typeof userData.firstName === 'string' ? userData.firstName : (typeof userData.name === 'string' ? userData.name : '')) : '';
-                    user.lastName = userData ? (typeof userData.lastName === 'string' ? userData.lastName : (typeof userData.surname === 'string' ? userData.surname : '')) : '';
 
-                    if (isLezanne) {
-                        user.firstName = 'Lezanne';
-                        user.lastName = 'Janse van Rensburg';
-                    }
-
-                    user.displayName = (userData && userData.firstName) ? userData.firstName : (user.firstName || user.email.split('@')[0]);
-
-                    // Cache for next time
-                    localStorage.setItem(`user_profile_${user.email.toLowerCase()}`, JSON.stringify({ 
+                    // Cache real user profile for next time
+                    localStorage.setItem(`user_profile_${realEmail}`, JSON.stringify({ 
                         role, 
                         isEnabled,
-                        firstName: user.firstName,
-                        lastName: user.lastName
+                        firstName: baseFirst,
+                        lastName: baseLast
                     }));
                     
                     // --- MASQUERADE UI OVERRIDE ---
                     const target = getMasqueradeTarget();
-                    
-                    user.displayRole = role;
-                    user.displayEmail = user.email;
-                    user.displayDisplayName = user.displayName;
-
-                    if (target && isLezanne) {
-                        const isUserView = (target.viewMode || 'user') === 'user';
-                        if (isUserView) {
-                            user.displayRole = target.role;
-                            user.displayEmail = `${target.name} (Masqueraded)`;
-                            user.displayDisplayName = target.name;
-                            user.isMasquerading = true;
-                        } else {
-                            user.displayRole = role;
-                            user.displayEmail = `${user.email} (Admin View)`;
-                            user.displayDisplayName = user.displayName;
-                            user.isMasquerading = true;
-                        }
-                    }
+                    applyMasqueradeToUser(user, role, baseFirst, baseLast);
 
                     // Background update from API for decrypted names
                     fetchWithAuth('/api/profile')
                         .then(r => r.json())
                         .then(d => {
                             if (d && d.success && d.profile) {
-                                user.firstName = d.profile.name;
-                                user.lastName = d.profile.surname;
-                                user.displayName = d.profile.name || user.firstName || user.email.split('@')[0];
-                                
-                                if (d.profile.role) {
-                                    user.role = d.profile.role;
-                                    user.displayRole = d.profile.role;
-                                }
-
                                 const currentTarget = getMasqueradeTarget();
-                                if (currentTarget && isLezanne && (currentTarget.viewMode || 'user') === 'user') {
-                                    user.displayDisplayName = currentTarget.name;
-                                    user.displayRole = currentTarget.role;
+                                const inMasqUserView = Boolean(currentTarget && isLezanne && (currentTarget.viewMode || 'user') === 'user');
+
+                                if (inMasqUserView) {
+                                    const fullTargetName = `${d.profile.name || ''} ${d.profile.surname || ''}`.trim() || currentTarget.name;
+                                    const updatedTarget = {
+                                        ...currentTarget,
+                                        uid: (d.profile.uid && d.profile.uid !== 'masqueraded_producer') ? d.profile.uid : currentTarget.uid,
+                                        name: fullTargetName,
+                                        firstName: d.profile.name || currentTarget.firstName || '',
+                                        lastName: d.profile.surname || currentTarget.lastName || '',
+                                        email: d.profile.email || currentTarget.email || '',
+                                        role: d.profile.role || currentTarget.role || 'producer'
+                                    };
+                                    sessionStorage.setItem('cb_masquerade', JSON.stringify(updatedTarget));
+                                    applyMasqueradeToUser(user, role, baseFirst, baseLast);
                                 } else {
-                                    user.displayDisplayName = user.displayName;
+                                    const refinedRole = d.profile.role || role;
+                                    const refinedFirst = d.profile.name || baseFirst;
+                                    const refinedLast = d.profile.surname || baseLast;
+                                    applyMasqueradeToUser(user, refinedRole, refinedFirst, refinedLast);
+                                    localStorage.setItem(`user_profile_${realEmail}`, JSON.stringify({ 
+                                        role: refinedRole, 
+                                        isEnabled: user.isEnabled,
+                                        firstName: refinedFirst,
+                                        lastName: refinedLast
+                                    }));
                                 }
-                                
-                                const nameEl = document.getElementById('userNameDisplay');
-                                if (nameEl) nameEl.textContent = user.displayDisplayName;
 
                                 initNavBar(user);
                                 updateMasqueradeBanner();
-
-                                localStorage.setItem(`user_profile_${user.email.toLowerCase()}`, JSON.stringify({ 
-                                    role: user.role, 
-                                    isEnabled: user.isEnabled,
-                                    firstName: user.firstName,
-                                    lastName: user.lastName
-                                }));
                                 
                                 console.log("[Auth] Identity Refined via API:", user.displayDisplayName, "Role:", user.role);
                                 window.dispatchEvent(new CustomEvent('authProfileUpdated', { detail: user }));
@@ -602,9 +611,18 @@ export function getMasqueradeTarget() {
 /**
  * START MASQUERADE
  */
-export function startMasquerade(uid, name, role) {
+export function startMasquerade(uid, name, role = 'producer', email = '') {
     if (!confirm(`Are you sure you want to masquerade as ${name}? You will see the site exactly as they do.`)) return;
-    sessionStorage.setItem('cb_masquerade', JSON.stringify({ uid, name, role }));
+    Object.keys(sessionStorage).forEach(key => {
+        if (key.startsWith('cb_cache')) sessionStorage.removeItem(key);
+    });
+    sessionStorage.setItem('cb_masquerade', JSON.stringify({
+        uid: uid || '',
+        name: name || '',
+        role: role || 'producer',
+        email: email || '',
+        viewMode: 'user'
+    }));
     window.location.href = 'index.html';
 }
 
@@ -613,6 +631,9 @@ export function startMasquerade(uid, name, role) {
  */
 export function stopMasquerade() {
     console.log("[Auth] Terminating Masquerade...");
+    Object.keys(sessionStorage).forEach(key => {
+        if (key.startsWith('cb_cache')) sessionStorage.removeItem(key);
+    });
     sessionStorage.removeItem('cb_masquerade');
     sessionStorage.removeItem('cb_user_profile');
     localStorage.removeItem(`user_profile_lezanne@carteblanche.co.za`); // SPECIFIC CLEANUP
@@ -625,6 +646,9 @@ export function stopMasquerade() {
 export function setMasqueradeView(mode) {
     const target = getMasqueradeTarget();
     if (target) {
+        Object.keys(sessionStorage).forEach(key => {
+            if (key.startsWith('cb_cache')) sessionStorage.removeItem(key);
+        });
         target.viewMode = mode;
         sessionStorage.setItem('cb_masquerade', JSON.stringify(target));
         window.location.reload();
@@ -645,7 +669,8 @@ export async function fetchWithAuth(url, options = {}) {
     // 1. Only cache GET requests
     const isGet = !options.method || options.method.toUpperCase() === 'GET';
     const target = getMasqueradeTarget();
-    const masqComponent = (target && target.uid && (target.viewMode || 'user') === 'user') ? `_masq_${target.uid}` : '';
+    const isMasqUser = Boolean(target && (target.uid || target.email || target.name) && (target.viewMode || 'user') === 'user');
+    const masqComponent = isMasqUser ? `_masq_${target.uid || target.email || target.name}` : '';
     const cacheKey = `cb_cache${masqComponent}_${url}`;
     
     // 2. Return from session cache if available and not explicitly skipping
@@ -680,10 +705,15 @@ export async function fetchWithAuth(url, options = {}) {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
-    if (target && target.uid && (target.viewMode || 'user') === 'user') {
-        headers['X-Masquerade-UID'] = target.uid;
+    if (isMasqUser) {
+        if (target.uid) {
+            headers['X-Masquerade-UID'] = target.uid;
+        }
         if (target.email) {
             headers['X-Masquerade-User'] = target.email;
+        }
+        if (target.name) {
+            headers['X-Masquerade-Name'] = target.name;
         }
     }
 
@@ -863,12 +893,11 @@ export function initNavBar(user) {
         }
     });
 
-    // 4. Role-based visibility
+    // 4. Role-based visibility (use effective role so masquerading as a producer hides admin-only buttons)
     const gnavAdminBtn = document.getElementById('gnavAdminBtn');
     if (gnavAdminBtn) {
-        const realRole = (user.role || '').toLowerCase();
-        const displayRole = (user.displayRole || '').toLowerCase();
-        const isAdmin = realRole === 'super-admin' || displayRole === 'super-admin';
+        const effectiveRole = (user.displayRole || user.role || '').toLowerCase();
+        const isAdmin = effectiveRole === 'super-admin';
         gnavAdminBtn.style.display = isAdmin ? 'flex' : 'none';
         gnavAdminBtn.classList.toggle('hidden', !isAdmin);
     }

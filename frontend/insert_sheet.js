@@ -68,7 +68,13 @@ function initInsertSheet() {
     const producerInput = document.getElementById('producer');
     if (producerInput && !producerInput.value) {
         try {
-            const userStr = localStorage.getItem('user_profile_cache') || Object.keys(localStorage).find(k => k.startsWith('user_profile_'));
+            if (window.auth && typeof window.auth.getMasqueradeTarget === 'function') {
+                const masq = window.auth.getMasqueradeTarget();
+                if (masq && (masq.viewMode || 'user') === 'user' && masq.name) {
+                    producerInput.value = masq.name;
+                }
+            }
+            const userStr = !producerInput.value && (localStorage.getItem('user_profile_cache') || Object.keys(localStorage).find(k => k.startsWith('user_profile_')));
             if (userStr) {
                 const u = JSON.parse(localStorage.getItem(userStr) || '{}');
                 const name = u.displayName || `${u.firstName || ''} ${u.lastName || ''}`.trim();

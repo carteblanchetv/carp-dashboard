@@ -99,9 +99,7 @@ window.updateUser = async (id, updates) => {
 
 
 window.startMasquerade = (uid, name, role, email) => {
-    if (!confirm(`Are you sure you want to masquerade as ${name}? You will see the site exactly as they do.`)) return;
-    sessionStorage.setItem('cb_masquerade', JSON.stringify({ uid, name, role, email }));
-    window.location.href = 'index.html';
+    window.auth.startMasquerade(uid, name, role, email);
 };
 
 window.resetUserPassword = async (userId, email) => {

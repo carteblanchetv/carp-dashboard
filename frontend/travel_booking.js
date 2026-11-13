@@ -27,6 +27,12 @@ function initTravelBooking() {
     // -------------------------------------------------------------------------
     function getActiveUserData() {
         try {
+            if (window.auth && typeof window.auth.getMasqueradeTarget === 'function') {
+                const masq = window.auth.getMasqueradeTarget();
+                if (masq && (masq.viewMode || 'user') === 'user' && (masq.name || masq.email)) {
+                    return { name: masq.name || '', email: masq.email || '' };
+                }
+            }
             const cacheKey = localStorage.getItem('user_profile_cache') ||
                 Object.keys(localStorage).find(k => k.startsWith('user_profile_'));
             if (cacheKey) {

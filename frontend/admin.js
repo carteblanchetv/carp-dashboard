@@ -242,7 +242,15 @@ function renderProposals(proposals, canDelete) {
     }
 
     const filtered = activeProducerFilter 
-        ? proposals.filter(p => p.submittedBy === activeProducerFilter)
+        ? proposals.filter(p => {
+            if (activeProducerFilter && activeProducerFilter !== 'HISTORICAL_IMPORT' && p.submittedBy === activeProducerFilter) return true;
+            const filterName = (document.getElementById('masqueradeBtn')?.dataset?.name || '').toLowerCase().trim();
+            if (filterName) {
+                const subDisp = ((p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : (p.historicalSubmitterName || p.producerName || p.producer || p.submittedByName || p.submittedByEmail || '')).toLowerCase().trim();
+                if (subDisp && subDisp === filterName) return true;
+            }
+            return false;
+        })
         : proposals;
 
     // 1. Pending Proposals
@@ -505,7 +513,8 @@ window.setProducerFilter = (uid, name) => {
     // Show masquerade button only for Super Admin (Lezanne)
     const masqBtn = document.getElementById('masqueradeBtn');
     checkAuth().then(user => {
-        if (masqBtn && user && user.email === 'lezanne@carteblanche.co.za') {
+        const realEmail = (user?.realEmail || user?.email || '').toLowerCase();
+        if (masqBtn && realEmail === 'lezanne@carteblanche.co.za') {
             masqBtn.style.display = 'inline-block';
             masqBtn.dataset.uid = uid;
             masqBtn.dataset.name = name;
@@ -526,9 +535,41 @@ window.changePage = (type, delta) => {
 
 window.masqueradeAsFiltered = () => {
     const masqBtn = document.getElementById('masqueradeBtn');
-    const uid = masqBtn.dataset.uid;
-    const name = masqBtn.dataset.name;
-    window.auth.startMasquerade(uid, name, 'producer');
+    let uid = masqBtn.dataset.uid || '';
+    const name = masqBtn.dataset.name || '';
+    let role = 'producer';
+    let email = '';
+
+    const nameNorm = name.toLowerCase().trim();
+    if (Array.isArray(window.producersCache)) {
+        const matchedProd = window.producersCache.find(prod => {
+            const pFull = `${prod.name || ''} ${prod.surname || ''}`.toLowerCase().trim();
+            return (uid && uid !== 'HISTORICAL_IMPORT' && prod.id === uid) || (nameNorm && pFull === nameNorm);
+        });
+        if (matchedProd) {
+            uid = matchedProd.id || uid;
+            email = matchedProd.email || '';
+            role = matchedProd.role || 'producer';
+        }
+    }
+
+    if (!email && Array.isArray(globalProposals)) {
+        const matchedProp = globalProposals.find(p => {
+            const subDisp = ((p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : (p.historicalSubmitterName || p.producerName || p.producer || '')).toLowerCase().trim();
+            return (uid && uid !== 'HISTORICAL_IMPORT' && p.submittedBy === uid) || (nameNorm && subDisp === nameNorm);
+        });
+        if (matchedProp) {
+            const candEmail = (matchedProp.producerEmail || matchedProp.submittedByEmail || '').toLowerCase().trim();
+            if (candEmail && candEmail !== 'imported@carteblanche.co.za') {
+                email = candEmail;
+            }
+            if ((!uid || uid === 'HISTORICAL_IMPORT') && matchedProp.submittedBy && matchedProp.submittedBy !== 'HISTORICAL_IMPORT') {
+                uid = matchedProp.submittedBy;
+            }
+        }
+    }
+
+    window.auth.startMasquerade(uid, name, role, email);
 };
 
 

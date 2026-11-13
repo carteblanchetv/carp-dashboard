@@ -207,13 +207,17 @@
         // Fetch commissioned stories if user is logged in
         async function loadCommissionedStories() {
             try {
-                let token = null;
-                const cachedUserStr = localStorage.getItem('user_profile_cache') || Object.keys(localStorage).find(k => k.startsWith('user_profile_'));
-                if (window.auth && typeof window.auth.getIdToken === 'function') {
-                    token = await window.auth.getIdToken();
+                let res;
+                if (window.auth && typeof window.auth.fetchWithAuth === 'function') {
+                    res = await window.auth.fetchWithAuth('/api/commissioned-stories');
+                } else {
+                    let token = null;
+                    if (window.auth && typeof window.auth.getIdToken === 'function') {
+                        token = await window.auth.getIdToken();
+                    }
+                    const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                    res = await fetch('/api/commissioned-stories', { headers });
                 }
-                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-                const res = await fetch('/api/commissioned-stories', { headers });
                 if (!res.ok) return;
                 const data = await res.json();
                 if (data.success && data.stories && data.stories.length > 0) {

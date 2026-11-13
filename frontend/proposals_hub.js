@@ -23,9 +23,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const LEZANNE_EMAIL = 'lezanne@carteblanche.co.za';
     const masqTarget = window.auth?.getMasqueradeTarget ? window.auth.getMasqueradeTarget() : null;
-    const cacheKey = (masqTarget && (masqTarget.uid || masqTarget.email))
-        ? `proposals_cache_masq_${masqTarget.uid || masqTarget.email}`
-        : `proposals_cache_${user.uid}`;
+    const cacheKey = (masqTarget && (masqTarget.uid || masqTarget.email || masqTarget.name))
+        ? `proposals_cache_v2_masq_${masqTarget.uid || masqTarget.email || masqTarget.name}`
+        : `proposals_cache_v2_${user?.realUid || user?.uid || 'anon'}`;
 
     function isStoryLinkedToLezanne(p, lezanneUid) {
         if (!p) return false;
@@ -76,11 +76,62 @@ document.addEventListener('DOMContentLoaded', async () => {
         );
     }
 
+    function isStoryLinkedToTargetUser(p, target) {
+        if (!p || !target) return false;
+        const tUid = String(target.uid || '').trim();
+        const tEmail = String(target.email || '').toLowerCase().trim();
+        if (tEmail === LEZANNE_EMAIL) {
+            return isStoryLinkedToLezanne(p, tUid);
+        }
+
+        const tName = String(target.name || '').toLowerCase().trim();
+        const nameParts = tName.split(/\s+/).filter(Boolean);
+        const tFirst = String(target.firstName || nameParts[0] || '').toLowerCase().trim();
+        const tLast = String(target.lastName || nameParts.slice(1).join(' ') || '').toLowerCase().trim();
+
+        const submitterDisplay = ((p.submittedByName && p.submittedBySurname)
+            ? `${p.submittedByName} ${p.submittedBySurname}`
+            : (p.historicalSubmitterName || p.producerName || p.producer || p.submittedByName || '')).toLowerCase().trim();
+
+        if (submitterDisplay && submitterDisplay !== 'unknown' && !submitterDisplay.includes('@')) {
+            if (tName && submitterDisplay === tName) return true;
+            if (tFirst && tLast && submitterDisplay.includes(tFirst) && submitterDisplay.includes(tLast)) return true;
+            if (tName || (tFirst && tLast)) {
+                return false;
+            }
+        }
+
+        const subBy = String(p.submittedBy || '').trim();
+        const subEmail = String(p.submittedByEmail || '').toLowerCase().trim();
+        const prodEmail = String(p.producerEmail || p.producer_email || '').toLowerCase().trim();
+
+        if (tUid && tUid !== 'HISTORICAL_IMPORT' && subBy === tUid) return true;
+        if (tEmail && (subBy.toLowerCase() === tEmail || subEmail === tEmail || prodEmail === tEmail)) return true;
+
+        const crew = p.details?.callSheet?.crew;
+        if (Array.isArray(crew)) {
+            for (const member of crew) {
+                if (!member) continue;
+                if (tEmail && member.email && String(member.email).toLowerCase().trim() === tEmail) return true;
+                if (String(member.role || '').toLowerCase().trim() === 'producer' && tFirst && tLast) {
+                    const mName = `${member.name || ''} ${member.surname || ''}`.toLowerCase().trim();
+                    if (mName && mName.includes(tFirst) && mName.includes(tLast)) return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     function filterProposalsForUser(proposals) {
         if (!Array.isArray(proposals)) return [];
-        const isMasqUserView = Boolean(masqTarget && (masqTarget.uid || masqTarget.email) && (masqTarget.viewMode || 'user') === 'user');
-        if (!isMasqUserView && String(user?.email || '').toLowerCase().trim() === LEZANNE_EMAIL) {
-            return proposals.filter(p => isStoryLinkedToLezanne(p, user?.uid));
+        const currentTarget = window.auth?.getMasqueradeTarget ? window.auth.getMasqueradeTarget() : masqTarget;
+        const isMasqUserView = Boolean(currentTarget && (currentTarget.uid || currentTarget.email || currentTarget.name) && (currentTarget.viewMode || 'user') === 'user');
+        if (isMasqUserView) {
+            return proposals.filter(p => isStoryLinkedToTargetUser(p, currentTarget));
+        }
+        if (String(user?.realEmail || user?.email || '').toLowerCase().trim() === LEZANNE_EMAIL) {
+            return proposals.filter(p => isStoryLinkedToLezanne(p, user?.realUid || user?.uid));
         }
         return proposals;
     }
