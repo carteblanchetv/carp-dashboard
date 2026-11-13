@@ -168,12 +168,18 @@ function populateEpisodesSidebar(proposals) {
 
     const txDates = new Set();
     proposals.forEach(p => {
-        if (p.txDate) {
-            const formatted = formatDate(p.txDate);
-            if (formatted !== '—') {
-                txDates.add(formatted);
-            }
+        const allDates = Array.isArray(p.txDates) && p.txDates.length > 0 ? p.txDates : (p.txDate ? [p.txDate] : []);
+        if (p.txDate && !allDates.includes(p.txDate)) {
+            allDates.unshift(p.txDate);
         }
+        allDates.forEach(d => {
+            if (d) {
+                const formatted = formatDate(d);
+                if (formatted !== '—') {
+                    txDates.add(formatted);
+                }
+            }
+        });
     });
 
     const sortedDates = Array.from(txDates).sort((a, b) => new Date(b) - new Date(a));
@@ -412,9 +418,19 @@ function renderProposals(proposals, canDelete) {
         toShow.forEach(p => {
             const tr = document.createElement('tr');
             const paidDate = formatDate(p.paidAt);
-            const rawFormattedTx = p.txDate ? formatDate(p.txDate) : '—';
-            const txDateDisplay = rawFormattedTx !== '—' 
-                ? `<a href="#" onclick="event.preventDefault(); window.setTxDateFilter('${rawFormattedTx}')" style="color: var(--primary); text-decoration: underline;" title="View all stories for this episode">${rawFormattedTx}</a>`
+            const rawTxList = [];
+            if (p.txDate) rawTxList.push(p.txDate);
+            if (Array.isArray(p.txDates)) {
+                p.txDates.forEach(d => {
+                    if (d && !rawTxList.includes(d)) rawTxList.push(d);
+                });
+            }
+            const formattedTxLinks = rawTxList
+                .map(d => formatDate(d))
+                .filter(f => f && f !== '—')
+                .map((formatted, idx) => `<a href="#" onclick="event.preventDefault(); window.setTxDateFilter('${formatted}')" style="color: var(--primary); text-decoration: underline;" title="${idx > 0 ? 'Repeat broadcast episode' : 'View all stories for this episode'}">${formatted}${idx > 0 ? ' <span style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none;">(Repeat)</span>' : ''}</a>`);
+            const txDateDisplay = formattedTxLinks.length > 0
+                ? formattedTxLinks.join('<br>')
                 : paidDate;
             const submitterDisplay = (p.submittedByName && p.submittedBySurname) ? `${p.submittedByName} ${p.submittedBySurname}` : (p.historicalSubmitterName || p.producerName || p.producer || p.submittedByName || p.submittedByEmail);
             tr.innerHTML = `
@@ -605,8 +621,12 @@ window.setTxDateFilter = async (txDate) => {
         // Find the FCC for this date
         const fcc = globalSubmissions.find(s => s.formType === 'control_sheet' && s.txDate && formatDate(s.txDate) === txDate);
 
-        // Fetch stories for this TX Date
-        const matchingStories = globalProposals.filter(p => p.txDate && formatDate(p.txDate) === txDate);
+        // Fetch stories for this TX Date (including repeat / multi-broadcast dates)
+        const matchingStories = globalProposals.filter(p => {
+            if (p.txDate && formatDate(p.txDate) === txDate) return true;
+            if (Array.isArray(p.txDates) && p.txDates.some(d => d && formatDate(d) === txDate)) return true;
+            return false;
+        });
         matchingStories.sort((a, b) => {
             const numA = parseInt(a.commissionNumber) || Infinity;
             const numB = parseInt(b.commissionNumber) || Infinity;
