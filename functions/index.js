@@ -5211,10 +5211,18 @@ app.get('/api/proposals', async (req, res) => {
       proposals.push({ id: doc.id, ...data });
     });
 
+    const getProposalTimeSec = (p) => {
+      const raw = p.submittedAt || p.acceptedAt || p.paidAt || p.lastUpdatedAt;
+      if (!raw) return 0;
+      if (typeof raw.toMillis === 'function') return raw.toMillis() / 1000;
+      if (typeof raw._seconds === 'number') return raw._seconds;
+      if (typeof raw.seconds === 'number') return raw.seconds;
+      const ms = new Date(raw).getTime();
+      return isNaN(ms) ? 0 : ms / 1000;
+    };
+
     proposals.sort((a, b) => {
-      const tA = (a.submittedAt && a.submittedAt._seconds) ? a.submittedAt._seconds : (new Date(a.submittedAt || 0).getTime() / 1000);
-      const tB = (b.submittedAt && b.submittedAt._seconds) ? b.submittedAt._seconds : (new Date(b.submittedAt || 0).getTime() / 1000);
-      return tB - tA;
+      return getProposalTimeSec(b) - getProposalTimeSec(a);
     });
 
     res.json({ success: true, proposals });

@@ -2173,15 +2173,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     const cachedData = localStorage.getItem(cacheKey);
                     if (cachedData) {
                         let proposals = JSON.parse(cachedData);
+                        const idx = proposals.findIndex(p => p.id === proposalId);
+                        const existingSubmittedAt = idx !== -1 ? proposals[idx].submittedAt : null;
                         const newProp = {
                             id: proposalId,
                             story_title: data.story_title || 'Untitled Story',
                             status: status,
-                            submittedAt: new Date().toISOString(),
+                            submittedAt: existingSubmittedAt || new Date().toISOString(),
                             lastUpdatedAt: new Date().toISOString()
                         };
                         
-                        const idx = proposals.findIndex(p => p.id === proposalId);
                         if (idx !== -1) {
                             proposals[idx] = { ...proposals[idx], ...newProp };
                         } else {

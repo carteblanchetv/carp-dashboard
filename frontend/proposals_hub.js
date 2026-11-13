@@ -125,7 +125,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        proposalsList.innerHTML = proposals.map((p, index) => {
+        const getProposalTimestamp = (p) => {
+            const raw = p?.submittedAt || p?.acceptedAt || p?.paidAt || p?.lastUpdatedAt;
+            if (!raw) return 0;
+            if (typeof raw === 'number') return raw < 1e12 ? raw * 1000 : raw;
+            if (typeof raw.toMillis === 'function') return raw.toMillis();
+            if (typeof raw._seconds === 'number') return raw._seconds * 1000 + Math.floor((raw._nanoseconds || 0) / 1e6);
+            if (typeof raw.seconds === 'number') return raw.seconds * 1000 + Math.floor((raw.nanoseconds || 0) / 1e6);
+            const parsed = new Date(raw).getTime();
+            return isNaN(parsed) ? 0 : parsed;
+        };
+
+        const sorted = [...proposals].sort((a, b) => {
+            return getProposalTimestamp(b) - getProposalTimestamp(a);
+        });
+
+        proposalsList.innerHTML = sorted.map((p, index) => {
             const status = p.status || 'pending';
             let statusLabel = 'Pending';
             let statusClass = 'pending';
@@ -138,7 +153,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 statusClass = 'rejected';
             }
 
-            const lastMod = formatStoryDate(p.lastUpdatedAt || p.submittedAt);
+            const lastMod = formatStoryDate(p.submittedAt || p.acceptedAt || p.paidAt || p.lastUpdatedAt);
             const deliveryDate = p.acceptanceDetails?.deliveryDate ? formatStoryDate(p.acceptanceDetails.deliveryDate) : '—';
             
             return `

@@ -240,6 +240,17 @@ async function loadProposals(user) {
     } catch (err) { console.error("Proposals fetch failed:", err); }
 }
 
+function getProposalTimestamp(p) {
+    const raw = p?.submittedAt || p?.acceptedAt || p?.paidAt || p?.lastUpdatedAt;
+    if (!raw) return 0;
+    if (typeof raw === 'number') return raw < 1e12 ? raw * 1000 : raw;
+    if (typeof raw.toMillis === 'function') return raw.toMillis();
+    if (typeof raw._seconds === 'number') return raw._seconds * 1000 + Math.floor((raw._nanoseconds || 0) / 1e6);
+    if (typeof raw.seconds === 'number') return raw.seconds * 1000 + Math.floor((raw.nanoseconds || 0) / 1e6);
+    const parsed = new Date(raw).getTime();
+    return isNaN(parsed) ? 0 : parsed;
+}
+
 function renderProposalsData(proposals) {
     const proposalsSection = document.getElementById('storiesSection');
     const list = document.getElementById('storiesList');
@@ -252,11 +263,9 @@ function renderProposalsData(proposals) {
 
     proposalsSection.classList.remove('hidden');
     
-    // Sort by last updated (newest first)
+    // Sort by submitted/proposal date (newest to oldest, ignoring later edits)
     const sorted = [...proposals].sort((a, b) => {
-        const dateA = a.lastUpdatedAt?._seconds || a.submittedAt?._seconds || 0;
-        const dateB = b.lastUpdatedAt?._seconds || b.submittedAt?._seconds || 0;
-        return dateB - dateA;
+        return getProposalTimestamp(b) - getProposalTimestamp(a);
     });
 
     list.innerHTML = sorted.map((p, index) => {
@@ -267,10 +276,9 @@ function renderProposalsData(proposals) {
         const title = p.story_title || 'Untitled Story';
         
         let dateText = '-';
-        const ts = p.lastUpdatedAt || p.submittedAt;
-        if (ts) {
-            const dateObj = ts._seconds ? new Date(ts._seconds * 1000) : new Date(ts);
-            dateText = dateObj.toLocaleDateString();
+        const tsMs = getProposalTimestamp(p);
+        if (tsMs > 0) {
+            dateText = new Date(tsMs).toLocaleDateString();
         }
 
         let statusLabel = 'PENDING';
