@@ -477,3 +477,18 @@
 [2026-11-13 11:20:43]     at runImporter (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:175:15)
 [2026-11-13 11:20:43]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
 [2026-11-13 11:20:43] Changes detected. Syncing...
+[2026-11-13 11:20:43] warning: in the working copy of 'frontend/auth.js', LF will be replaced by CRLF the next time Git touches it
+[2026-11-13 11:20:43] warning: in the working copy of 'firebase-debug.log', LF will be replaced by CRLF the next time Git touches it
+[2026-11-13 11:20:43] [main 9f93601] auto-sync: 2026-11-13 11:21
+[2026-11-13 11:20:43]  18 files changed, 525 insertions(+), 143 deletions(-)
+[2026-11-13 11:20:43]  create mode 100644 firebase-debug.log
+[2026-11-13 11:20:43] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-11-13 11:20:43]    3bbd1be..9f93601  main -> main
+[2026-11-13 11:20:43] Sync complete.
+[2026-11-13 11:50:43] Running Microsoft Graph Email Importer...
+[2026-11-13 11:50:43] Starting Graph API Email Importer... Mode: LIVE
+[2026-11-13 11:50:43] Fetching messages from Microsoft Graph...
+[2026-11-13 11:50:43] Error during Graph email import execution: Error: Failed to fetch messages: Gateway Timeout - {"error":{"code":"UnknownError","message":"","innerError":{"date":"2026-11-13T09:51:13","request-id":"f08586a8-f3c9-472e-89f1-e706941a3f56","client-request-id":"f08586a8-f3c9-472e-89f1-e706941a3f56"}}}
+[2026-11-13 11:50:43]     at runImporter (C:\Users\lizzy\OneDrive - Combined Artistic Production CC\antigravity\scratch\carp-dashboard\functions\graph_importer.js:175:15)
+[2026-11-13 11:50:43]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-11-13 11:50:43] Changes detected. Syncing...
