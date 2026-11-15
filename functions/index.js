@@ -668,6 +668,15 @@ async function notifyRelevantUsers(type, subject, html, attachments = [], extraR
             }
         }
 
+        // Enforce strict notification policy for Rudi Botha (rudi@combinedartists.co.za):
+        // Only receive 'proposal_commission' (New Commission) and 'control_sheet' (FCC);
+        // remove from any notifications linked to the Forms Hub or other notification types.
+        const rudiAllowedTypes = new Set(['proposal_commission', 'control_sheet']);
+        if (!rudiAllowedTypes.has(type) && recipients.has('rudi@combinedartists.co.za')) {
+            recipients.delete('rudi@combinedartists.co.za');
+            console.log(`[NOTIFY] Removed rudi@combinedartists.co.za from '${type}' notification recipients.`);
+        }
+
         if (recipients.size === 0) {
             console.warn(`[NOTIFY] No recipients found for type '${type}'. Skipping.`);
             return;
@@ -786,7 +795,7 @@ async function resolveProducerDetails({ req, fields = {}, commissionNumber, prod
   const isPlaceholderEmail = (em, nameHint) => {
     if (!em || typeof em !== 'string' || !em.includes('@')) return true;
     const low = em.toLowerCase().trim();
-    if (low === 'release@carteblanche.co.za' || low.includes('@guest')) return true;
+    if (low === 'release@carteblanche.co.za' || low === 'rudi@combinedartists.co.za' || low.includes('@guest')) return true;
     if (low === 'lezanne@carteblanche.co.za') {
       const nLow = (nameHint || '').toLowerCase();
       const reqLow = (req && req.user && req.user.email ? req.user.email : '').toLowerCase();
@@ -877,7 +886,7 @@ async function resolveProducerDetails({ req, fields = {}, commissionNumber, prod
   }
 
   // 2. Fallback to authenticated user (if producer is logged in)
-  if (!finalEmail && req && req.user && req.user.email) {
+  if (!finalEmail && req && req.user && req.user.email && !isPlaceholderEmail(req.user.email, finalName)) {
     finalEmail = req.user.email.trim();
   }
   if ((!finalName || finalName === 'Producer') && req && req.user) {
@@ -2894,7 +2903,7 @@ app.post('/api/countersign-form', async (req, res) => {
       rawExtraRecipients.push('lezanne@carteblanche.co.za');
     }
 
-    const uniqueExtraRecipients = Array.from(new Set(rawExtraRecipients.map(e => e.toLowerCase().trim())));
+    const uniqueExtraRecipients = Array.from(new Set(rawExtraRecipients.map(e => e.toLowerCase().trim()))).filter(e => e !== 'rudi@combinedartists.co.za');
     console.log(`[COUNTERSIGN-FORM] Dispatching finalized ${formTitle} for Comm #${commNum} to extraRecipients:`, uniqueExtraRecipients);
 
     // Dispatch finalized notification to all relevant recipients

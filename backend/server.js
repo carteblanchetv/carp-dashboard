@@ -158,7 +158,10 @@ function getFormRecipients(formType, submitterEmail, extraEmail) {
   }
   [submitterEmail, extraEmail].forEach(email => {
     if (email && typeof email === 'string' && email.includes('@')) {
-      recipients.add(email.toLowerCase().trim());
+      const normalized = email.toLowerCase().trim();
+      if (normalized !== 'rudi@combinedartists.co.za') {
+        recipients.add(normalized);
+      }
     }
   });
   return Array.from(recipients).join(', ');
