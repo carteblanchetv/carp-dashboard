@@ -1349,11 +1349,11 @@ function drawFlightBlock(form, page, fNum, x, y, width) {
   addStandaloneField(form, page, `depDate_${fNum}`, 'Departure Date:', x2, fY1, col2W, 16, { fontSize: 8 });
   addStandaloneField(form, page, `depTime_${fNum}`, 'Departure Time (HH:MM):', x3, fY1, col3W, 16, { fontSize: 8 });
 
-  // Flight details row 2: Arrival Airport, Total Passengers
+  // Flight details row 2: Return Airport, Return Date, Return Time
   const fY2 = y - 73;
-  const arrW = col1W + gap + col2W;
-  addStandaloneField(form, page, `arrAirport_${fNum}`, 'Arrival Airport:', x1, fY2, arrW, 16, { fontSize: 8 });
-  addStandaloneField(form, page, `totalPax_${fNum}`, 'Total Passengers:', x3, fY2, col3W, 16, { fontSize: 8 });
+  addStandaloneField(form, page, `retAirport_${fNum}`, 'Return Airport:', x1, fY2, col1W, 16, { fontSize: 8 });
+  addStandaloneField(form, page, `retDate_${fNum}`, 'Return Date:', x2, fY2, col2W, 16, { fontSize: 8 });
+  addStandaloneField(form, page, `retTime_${fNum}`, 'Return Time (HH:MM):', x3, fY2, col3W, 16, { fontSize: 8 });
 
   // Passenger Info Heading
   page.drawText('PASSENGER INFO', {
