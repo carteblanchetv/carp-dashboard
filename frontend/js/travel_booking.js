@@ -407,17 +407,17 @@ function addFlightLeg(data = {}) {
             </div>
         </div>
 
-        <!-- Return Airport, Date & Time -->
-        <div id="flightReturnRow_${id}" class="field-group-grid-3 ${isOneWayFlight ? 'hidden' : ''}" style="margin-bottom: 1.25rem;">
+        <!-- Arrival Airport, Return Date & Time -->
+        <div id="flightReturnRow_${id}" class="field-group-grid-3" style="margin-bottom: 1.25rem;">
             <div class="form-field">
-                <label>Return Airport</label>
+                <label>Arrival Airport <span class="required">*</span></label>
                 <input type="text" name="flight_retAirport[]" list="saAirportsList" placeholder="e.g. CPT - Cape Town" value="${retAirportVal}">
             </div>
-            <div class="form-field">
+            <div class="form-field flight-return-dt ${isOneWayFlight ? 'hidden' : ''}">
                 <label>Return Date</label>
                 ${renderDateInputHTML('flight_retDate[]', retDate)}
             </div>
-            <div class="form-field">
+            <div class="form-field flight-return-dt ${isOneWayFlight ? 'hidden' : ''}">
                 <label>Return Time</label>
                 ${renderTime24InputHTML('flight_retTime[]', retTime)}
             </div>
@@ -477,7 +477,10 @@ function addFlightLeg(data = {}) {
 window.toggleFlightReturnRow = (flightId, tripTypeVal) => {
     const returnRow = document.getElementById(`flightReturnRow_${flightId}`);
     if (!returnRow) return;
-    returnRow.classList.toggle('hidden', tripTypeVal === 'One-Way');
+    const isOneWay = tripTypeVal === 'One-Way';
+    returnRow.querySelectorAll('.flight-return-dt').forEach(el => {
+        el.classList.toggle('hidden', isOneWay);
+    });
 };
 
 function addPassengerToFlight(flightId, data = {}) {
@@ -822,7 +825,7 @@ async function buildTravelBookingPDF() {
             const depAirport = card.querySelector('input[name="flight_depAirport[]"]')?.value.trim() || '';
             const depDate = formatDateToDDMMYY(card.querySelector('input[name="flight_depDate[]"]')?.value.trim() || '');
             const depTime = formatTimeTo24Hr(card.querySelector('input[name="flight_depTime[]"]')?.value.trim() || '');
-            const retAirport = isReturnFlight ? (card.querySelector('input[name="flight_retAirport[]"]')?.value.trim() || '') : '';
+            const arrAirport = card.querySelector('input[name="flight_retAirport[]"]')?.value.trim() || '';
             const retDate = isReturnFlight ? formatDateToDDMMYY(card.querySelector('input[name="flight_retDate[]"]')?.value.trim() || '') : '';
             const retTime = isReturnFlight ? formatTimeTo24Hr(card.querySelector('input[name="flight_retTime[]"]')?.value.trim() || '') : '';
 
@@ -847,14 +850,15 @@ async function buildTravelBookingPDF() {
                 }
             });
 
-            if (depAirport || depDate || depTime || retAirport || retDate || retTime || flightPassengers.length > 0) {
+            if (depAirport || depDate || depTime || arrAirport || retDate || retTime || flightPassengers.length > 0) {
                 flights.push({
                     flightNumber: flights.length + 1,
                     tripType,
                     depAirport: depAirport || 'N/A',
+                    arrAirport: arrAirport || 'N/A',
+                    retAirport: arrAirport || 'N/A',
                     depDate: depDate || 'N/A',
                     depTime: depTime || 'N/A',
-                    retAirport: isReturnFlight ? (retAirport || 'N/A') : 'One-Way',
                     retDate: isReturnFlight ? (retDate || 'N/A') : 'N/A',
                     retTime: isReturnFlight ? (retTime || 'N/A') : 'N/A',
                     passengers: flightPassengers
@@ -936,265 +940,718 @@ async function buildTravelBookingPDF() {
     // Build PDF Document with pdf-lib
     const { PDFDocument, rgb, StandardFonts } = PDFLib;
     const pdfDoc = await PDFDocument.create();
-    let page = pdfDoc.addPage([595, 842]); // A4 portrait
+    const PAGE_W = 595.28;
+    const PAGE_H = 841.89;
+    const MARGIN_X = 40;
+    const CONTENT_W = PAGE_W - (MARGIN_X * 2); // 515.28
+    const RIGHT_X = MARGIN_X + CONTENT_W;
+
+    let page = pdfDoc.addPage([PAGE_W, PAGE_H]);
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    const fontOblique = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
-    const primaryColor = rgb(0.01, 0.52, 0.78); // #0284c7
-    const darkColor = rgb(0.06, 0.09, 0.16);
-    const mutedColor = rgb(0.39, 0.45, 0.55);
-    const lightBg = rgb(0.96, 0.98, 0.99);
+    const primaryColor = rgb(0 / 255, 143 / 255, 190 / 255);     // #008fbe Carte Blanche Blue
+    const secondaryBlue = rgb(2 / 255, 132 / 255, 199 / 255);    // #0284c7 Sky 600
+    const tealColor = rgb(13 / 255, 148 / 255, 136 / 255);       // #0d9488 Teal 600
+    const darkColor = rgb(15 / 255, 23 / 255, 42 / 255);         // #0f172a Slate 900
+    const bodyColor = rgb(30 / 255, 41 / 255, 59 / 255);         // #1e293b Slate 800
+    const mutedColor = rgb(100 / 255, 116 / 255, 139 / 255);     // #64748b Slate 500
+    const borderColor = rgb(203 / 255, 213 / 255, 225 / 255);    // #cbd5e1 Slate 300
+    const softBorder = rgb(226 / 255, 232 / 255, 240 / 255);     // #e2e8f0 Slate 200
+    const cardBg = rgb(252 / 255, 253 / 255, 255 / 255);
+    const tableHeaderBg = rgb(241 / 255, 245 / 255, 249 / 255);  // #f1f5f9 Slate 100
+    const zebraBg = rgb(248 / 255, 250 / 255, 252 / 255);        // #f8fafc Slate 50
 
-    let y = 800;
-
-    const checkPageBreak = (needed = 40) => {
-        if (y - needed < 50) {
-            page = pdfDoc.addPage([595, 842]);
-            y = 800;
+    // Load official logos if available
+    let cbLogoImg = null;
+    let caLogoImg = null;
+    try {
+        const [cbRes, caRes] = await Promise.all([
+            fetch('assets/carte_blanche_logo.png').catch(() => null),
+            fetch('assets/combined_artists_logo_for_pdf.png').catch(() => fetch('assets/combined_artists_logo.png').catch(() => null))
+        ]);
+        if (cbRes && cbRes.ok) {
+            const cbBytes = await cbRes.arrayBuffer();
+            cbLogoImg = await pdfDoc.embedPng(cbBytes);
         }
-    };
+        if (caRes && caRes.ok) {
+            const caBytes = await caRes.arrayBuffer();
+            caLogoImg = await pdfDoc.embedPng(caBytes);
+        }
+    } catch (logoErr) {
+        console.warn('Logo embed skipped:', logoErr);
+    }
 
     const safeDrawText = (text, options = {}) => {
-        if (!text) return;
-        const cleaned = cleanPdfText(text);
+        if (text === undefined || text === null || text === '') return;
+        const cleaned = cleanPdfText(String(text));
         if (!cleaned) return;
+        const targetPage = options.page || page;
+        const drawOpts = { ...options };
+        delete drawOpts.page;
         try {
-            page.drawText(cleaned, options);
+            targetPage.drawText(cleaned, drawOpts);
         } catch (e) {
-            console.warn('PDF drawText fallback for text:', cleaned, e);
             try {
                 const asciiOnly = cleaned.replace(/[^\x20-\x7E]/g, '');
-                if (asciiOnly) {
-                    page.drawText(asciiOnly, options);
-                }
+                if (asciiOnly) targetPage.drawText(asciiOnly, drawOpts);
             } catch (fallbackErr) {
-                console.error('safeDrawText double-fallback failed:', fallbackErr);
+                console.error('safeDrawText fallback failed:', fallbackErr);
             }
         }
     };
 
-    // Header Banner
-    page.drawRectangle({
-        x: 40,
-        y: y - 50,
-        width: 515,
-        height: 50,
-        color: rgb(0.06, 0.09, 0.16)
-    });
+    const truncateToWidth = (str, fnt, sz, maxW) => {
+        const cleaned = cleanPdfText(String(str || ''));
+        if (!cleaned) return '';
+        if (fnt.widthOfTextAtSize(cleaned, sz) <= maxW) return cleaned;
+        let out = cleaned;
+        while (out.length > 1 && fnt.widthOfTextAtSize(out + '...', sz) > maxW) {
+            out = out.slice(0, -1);
+        }
+        return out + '...';
+    };
 
-    safeDrawText('CARTE BLANCHE  |  COMBINED ARTISTS', {
-        x: 55,
-        y: y - 24,
-        size: 11,
-        font: fontBold,
-        color: rgb(0.01, 0.56, 0.85)
-    });
+    const wrapLines = (str, fnt, sz, maxW) => {
+        const words = cleanPdfText(String(str || '')).split(/\s+/).filter(Boolean);
+        if (words.length === 0) return [];
+        const lines = [];
+        let cur = '';
+        for (const w of words) {
+            const test = cur ? `${cur} ${w}` : w;
+            if (fnt.widthOfTextAtSize(test, sz) <= maxW) {
+                cur = test;
+            } else {
+                if (cur) lines.push(cur);
+                cur = w;
+            }
+        }
+        if (cur) lines.push(cur);
+        return lines;
+    };
 
-    safeDrawText('TRAVEL & LOGISTICS REQUISITION 2026', {
-        x: 55,
-        y: y - 40,
-        size: 13,
-        font: fontBold,
-        color: rgb(1, 1, 1)
-    });
+    const drawPageHeader = (pg, isFirstPage = false) => {
+        if (isFirstPage) {
+            let rightBound = RIGHT_X;
+            if (cbLogoImg) {
+                const cbH = 38;
+                const cbW = (cbH / cbLogoImg.height) * cbLogoImg.width;
+                const cbX = RIGHT_X - cbW;
+                pg.drawImage(cbLogoImg, { x: cbX, y: 766, width: cbW, height: cbH });
+                rightBound = cbX - 14;
+            }
+            if (caLogoImg) {
+                const caH = 23;
+                const caW = (caH / caLogoImg.height) * caLogoImg.width;
+                const caX = rightBound - caW;
+                pg.drawImage(caLogoImg, { x: caX, y: 773.5, width: caW, height: caH });
+            }
 
-    y -= 70;
-
-    // Request Details Card
-    page.drawRectangle({
-        x: 40,
-        y: y - 65,
-        width: 515,
-        height: 65,
-        color: lightBg,
-        borderColor: rgb(0.85, 0.9, 0.95),
-        borderWidth: 1
-    });
-
-    safeDrawText(`Story Title:  ${cleanPdfText(storyName) || 'N/A'}`, { x: 55, y: y - 20, size: 10, font: fontBold, color: darkColor });
-    safeDrawText(`Commission #:  ${cleanPdfText(commNum) || 'N/A'}`, { x: 340, y: y - 20, size: 10, font: fontBold, color: darkColor });
-    safeDrawText(`Requestor:  ${cleanPdfText(requestorName) || 'N/A'}`, { x: 55, y: y - 40, size: 9.5, font, color: darkColor });
-    safeDrawText(`Submitter Email:  ${cleanPdfText(submitterEmail) || 'N/A'}`, { x: 340, y: y - 40, size: 9.5, font, color: darkColor });
-    safeDrawText(`Date Submitted:  ${formatDateToDDMMYY(new Date().toISOString().split('T')[0])}`, { x: 55, y: y - 56, size: 8.5, font, color: mutedColor });
-
-    y -= 85;
-
-    // Air Travel Section
-    if (airTravelRequired && flights.length > 0) {
-        checkPageBreak(60);
-        safeDrawText('AIR TRAVEL REQUIREMENTS', { x: 40, y, size: 11, font: fontBold, color: primaryColor });
-        y -= 18;
-
-        flights.forEach((f, idx) => {
-            checkPageBreak(65);
-            safeDrawText(`Flight #${idx + 1} (${f.tripType || 'Return'})`, {
-                x: 48,
-                y,
-                size: 10,
+            safeDrawText('TRAVEL BOOKING FORM 2026', {
+                page: pg,
+                x: MARGIN_X,
+                y: 785,
+                size: 16,
                 font: fontBold,
                 color: primaryColor
             });
-            y -= 14;
+            safeDrawText('Carte Blanche & Combined Artists  •  Official Travel & Logistics Requisition', {
+                page: pg,
+                x: MARGIN_X,
+                y: 769,
+                size: 8.5,
+                font,
+                color: mutedColor
+            });
+            pg.drawLine({
+                start: { x: MARGIN_X, y: 756 },
+                end: { x: RIGHT_X, y: 756 },
+                thickness: 1.5,
+                color: primaryColor
+            });
+            return 744;
+        } else {
+            safeDrawText('CARTE BLANCHE  •  TRAVEL BOOKING FORM 2026', {
+                page: pg,
+                x: MARGIN_X,
+                y: 802,
+                size: 9.5,
+                font: fontBold,
+                color: primaryColor
+            });
+            safeDrawText(`Story: ${truncateToWidth(storyName || 'N/A', font, 8, 180)}   |   Comm #: ${commNum || 'N/A'}`, {
+                page: pg,
+                x: RIGHT_X - 230,
+                y: 802,
+                size: 8,
+                font,
+                color: mutedColor
+            });
+            pg.drawLine({
+                start: { x: MARGIN_X, y: 794 },
+                end: { x: RIGHT_X, y: 794 },
+                thickness: 1,
+                color: primaryColor
+            });
+            return 780;
+        }
+    };
 
-            safeDrawText(`Departure:   Airport: ${f.depAirport}   |   Date: ${f.depDate}   |   Time: ${f.depTime}`, {
-                x: 55,
-                y,
-                size: 8.8,
+    let y = drawPageHeader(page, true);
+
+    const checkPageBreak = (needed = 45) => {
+        if (y - needed < 44) {
+            page = pdfDoc.addPage([PAGE_W, PAGE_H]);
+            y = drawPageHeader(page, false);
+        }
+    };
+
+    const drawSectionBanner = (title, accent = primaryColor) => {
+        checkPageBreak(45);
+        y -= 4;
+        page.drawRectangle({
+            x: MARGIN_X,
+            y: y - 15,
+            width: 3.5,
+            height: 14,
+            color: accent
+        });
+        safeDrawText(title, {
+            x: MARGIN_X + 9,
+            y: y - 12,
+            size: 10,
+            font: fontBold,
+            color: accent
+        });
+        y -= 21;
+    };
+
+    // -----------------------------------------------------------------
+    // 1. STORY & REQUESTOR SUMMARY GRID
+    // -----------------------------------------------------------------
+    const summaryH = 54;
+    const summaryTopY = y;
+    const summaryBottomY = y - summaryH;
+    const colSplit1 = MARGIN_X + 235;
+    const colSplit2 = MARGIN_X + 390;
+    const rowMidY = summaryTopY - 27;
+    const submittedDateStr = formatDateToDDMMYY(new Date().toISOString().split('T')[0]);
+
+    page.drawRectangle({
+        x: MARGIN_X,
+        y: summaryBottomY,
+        width: CONTENT_W,
+        height: summaryH,
+        color: zebraBg,
+        borderColor,
+        borderWidth: 0.85
+    });
+
+    // Horizontal & vertical grid lines inside summary card
+    page.drawLine({ start: { x: MARGIN_X, y: rowMidY }, end: { x: RIGHT_X, y: rowMidY }, thickness: 0.6, color: softBorder });
+    page.drawLine({ start: { x: colSplit1, y: summaryBottomY }, end: { x: colSplit1, y: summaryTopY }, thickness: 0.6, color: softBorder });
+    page.drawLine({ start: { x: colSplit2, y: summaryBottomY }, end: { x: colSplit2, y: rowMidY }, thickness: 0.6, color: softBorder });
+
+    // Row 1: Story Title | Commission Number
+    safeDrawText('STORY TITLE', { x: MARGIN_X + 8, y: summaryTopY - 9.5, size: 6.5, font: fontBold, color: mutedColor });
+    safeDrawText(truncateToWidth(storyName || 'N/A', fontBold, 9.5, 220), { x: MARGIN_X + 8, y: summaryTopY - 21, size: 9.5, font: fontBold, color: darkColor });
+
+    safeDrawText('COMMISSION NUMBER', { x: colSplit1 + 8, y: summaryTopY - 9.5, size: 6.5, font: fontBold, color: mutedColor });
+    safeDrawText(truncateToWidth(commNum || 'N/A', fontBold, 9.5, 260), { x: colSplit1 + 8, y: summaryTopY - 21, size: 9.5, font: fontBold, color: darkColor });
+
+    // Row 2: Requestor / Producer | Submitter Email | Date Submitted
+    safeDrawText('REQUESTOR / PRODUCER', { x: MARGIN_X + 8, y: rowMidY - 9.5, size: 6.5, font: fontBold, color: mutedColor });
+    safeDrawText(truncateToWidth(requestorName || 'N/A', font, 8.8, 220), { x: MARGIN_X + 8, y: rowMidY - 20.5, size: 8.8, font, color: darkColor });
+
+    safeDrawText('SUBMITTER EMAIL', { x: colSplit1 + 8, y: rowMidY - 9.5, size: 6.5, font: fontBold, color: mutedColor });
+    safeDrawText(truncateToWidth(submitterEmail || 'N/A', font, 8.5, 142), { x: colSplit1 + 8, y: rowMidY - 20.5, size: 8.5, font, color: darkColor });
+
+    safeDrawText('DATE SUBMITTED', { x: colSplit2 + 8, y: rowMidY - 9.5, size: 6.5, font: fontBold, color: mutedColor });
+    safeDrawText(submittedDateStr, { x: colSplit2 + 8, y: rowMidY - 20.5, size: 8.8, font: fontBold, color: darkColor });
+
+    y = summaryBottomY - 14;
+
+    // -----------------------------------------------------------------
+    // 2. AIR TRAVEL SECTION
+    // -----------------------------------------------------------------
+    if (airTravelRequired && flights.length > 0) {
+        drawSectionBanner('AIR TRAVEL REQUIREMENTS', primaryColor);
+
+        flights.forEach((f, idx) => {
+            const isReturn = f.tripType !== 'One-Way';
+            const paxCount = Array.isArray(f.passengers) ? f.passengers.length : 0;
+            const paxRowsCount = Math.max(1, paxCount);
+
+            const headerBarH = 17;
+            const scheduleH = 44;
+            const paxTitleBarH = 14;
+            const paxRowH = 14.5;
+            const cardH = headerBarH + scheduleH + paxTitleBarH + (paxRowsCount * paxRowH) + 4;
+
+            checkPageBreak(cardH + 10);
+
+            const cardTop = y;
+            const cardBottom = y - cardH;
+
+            // Card container
+            page.drawRectangle({
+                x: MARGIN_X,
+                y: cardBottom,
+                width: CONTENT_W,
+                height: cardH,
+                color: cardBg,
+                borderColor,
+                borderWidth: 0.75
+            });
+
+            // Header bar
+            page.drawRectangle({
+                x: MARGIN_X,
+                y: cardTop - headerBarH,
+                width: CONTENT_W,
+                height: headerBarH,
+                color: primaryColor
+            });
+
+            safeDrawText(`FLIGHT #${idx + 1}`, {
+                x: MARGIN_X + 8,
+                y: cardTop - 12,
+                size: 8.5,
+                font: fontBold,
+                color: rgb(1, 1, 1)
+            });
+
+            const badgeText = isReturn ? 'RETURN FLIGHT' : 'ONE-WAY FLIGHT';
+            const badgeW = fontBold.widthOfTextAtSize(badgeText, 7.5);
+            safeDrawText(badgeText, {
+                x: RIGHT_X - badgeW - 8,
+                y: cardTop - 11.5,
+                size: 7.5,
+                font: fontBold,
+                color: rgb(0.9, 0.96, 1)
+            });
+
+            // Schedule Grid (2 rows × 3 columns)
+            const schedTop = cardTop - headerBarH;
+            const schedMid = schedTop - 22;
+            const schedBottom = schedTop - scheduleH;
+            const colDateX = MARGIN_X + 320;
+            const colTimeX = MARGIN_X + 420;
+
+            page.drawLine({ start: { x: MARGIN_X, y: schedMid }, end: { x: RIGHT_X, y: schedMid }, thickness: 0.5, color: softBorder });
+            page.drawLine({ start: { x: MARGIN_X, y: schedBottom }, end: { x: RIGHT_X, y: schedBottom }, thickness: 0.6, color: borderColor });
+            page.drawLine({ start: { x: colDateX, y: schedBottom }, end: { x: colDateX, y: schedTop }, thickness: 0.5, color: softBorder });
+            page.drawLine({ start: { x: colTimeX, y: schedBottom }, end: { x: colTimeX, y: schedTop }, thickness: 0.5, color: softBorder });
+
+            // Schedule Row 1: Departure Airport | Departure Date | Departure Time
+            safeDrawText('DEPARTURE AIRPORT', { x: MARGIN_X + 8, y: schedTop - 7.5, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(truncateToWidth(f.depAirport || 'N/A', fontBold, 8.2, 304), { x: MARGIN_X + 8, y: schedTop - 17.5, size: 8.2, font: fontBold, color: darkColor });
+
+            safeDrawText('DEPARTURE DATE', { x: colDateX + 8, y: schedTop - 7.5, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(f.depDate || 'N/A', { x: colDateX + 8, y: schedTop - 17.5, size: 8.2, font: fontBold, color: darkColor });
+
+            safeDrawText('DEPARTURE TIME (24H)', { x: colTimeX + 8, y: schedTop - 7.5, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(f.depTime || 'N/A', { x: colTimeX + 8, y: schedTop - 17.5, size: 8.2, font: fontBold, color: darkColor });
+
+            // Schedule Row 2: Arrival Airport | Return Date | Return Time
+            safeDrawText('ARRIVAL AIRPORT', { x: MARGIN_X + 8, y: schedMid - 7.5, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(truncateToWidth(f.arrAirport || f.retAirport || 'N/A', fontBold, 8.2, 304), { x: MARGIN_X + 8, y: schedMid - 17.5, size: 8.2, font: fontBold, color: darkColor });
+
+            safeDrawText('RETURN DATE', { x: colDateX + 8, y: schedMid - 7.5, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(isReturn ? (f.retDate || 'N/A') : '— (One-Way)', {
+                x: colDateX + 8,
+                y: schedMid - 17.5,
+                size: 8.2,
+                font: isReturn ? fontBold : fontOblique,
+                color: isReturn ? darkColor : mutedColor
+            });
+
+            safeDrawText('RETURN TIME (24H)', { x: colTimeX + 8, y: schedMid - 7.5, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(isReturn ? (f.retTime || 'N/A') : '—', {
+                x: colTimeX + 8,
+                y: schedMid - 17.5,
+                size: 8.2,
+                font: isReturn ? fontBold : fontOblique,
+                color: isReturn ? darkColor : mutedColor
+            });
+
+            // Passengers Sub-Table Header
+            const paxHeadTop = schedBottom;
+            const paxHeadBottom = paxHeadTop - paxTitleBarH;
+            page.drawRectangle({
+                x: MARGIN_X + 0.5,
+                y: paxHeadBottom,
+                width: CONTENT_W - 1,
+                height: paxTitleBarH,
+                color: tableHeaderBg
+            });
+            page.drawLine({ start: { x: MARGIN_X, y: paxHeadBottom }, end: { x: RIGHT_X, y: paxHeadBottom }, thickness: 0.5, color: softBorder });
+
+            const pColNum = MARGIN_X + 8;
+            const pColName = MARGIN_X + 32;
+            const pColId = MARGIN_X + 245;
+            const pColMob = MARGIN_X + 395;
+
+            safeDrawText('#', { x: pColNum, y: paxHeadBottom + 4, size: 6.5, font: fontBold, color: mutedColor });
+            safeDrawText(`PASSENGERS TAKING FLIGHT #${idx + 1}`, { x: pColName, y: paxHeadBottom + 4, size: 6.5, font: fontBold, color: primaryColor });
+            safeDrawText('ID / PASSPORT NUMBER', { x: pColId, y: paxHeadBottom + 4, size: 6.5, font: fontBold, color: mutedColor });
+            safeDrawText('MOBILE NUMBER', { x: pColMob, y: paxHeadBottom + 4, size: 6.5, font: fontBold, color: mutedColor });
+
+            let rowTop = paxHeadBottom;
+            if (paxCount > 0) {
+                f.passengers.forEach((p, pIdx) => {
+                    const rowBottom = rowTop - paxRowH;
+                    if (pIdx % 2 === 1) {
+                        page.drawRectangle({
+                            x: MARGIN_X + 0.5,
+                            y: rowBottom,
+                            width: CONTENT_W - 1,
+                            height: paxRowH,
+                            color: zebraBg
+                        });
+                    }
+                    if (pIdx < paxCount - 1) {
+                        page.drawLine({ start: { x: MARGIN_X + 4, y: rowBottom }, end: { x: RIGHT_X - 4, y: rowBottom }, thickness: 0.4, color: softBorder });
+                    }
+                    const textY = rowBottom + 4.2;
+                    safeDrawText(`${pIdx + 1}.`, { x: pColNum, y: textY, size: 8, font: fontBold, color: mutedColor });
+                    safeDrawText(truncateToWidth(p.name || 'N/A', fontBold, 8.2, 205), { x: pColName, y: textY, size: 8.2, font: fontBold, color: darkColor });
+                    safeDrawText(truncateToWidth(p.idNumber || 'N/A', font, 8.2, 142), { x: pColId, y: textY, size: 8.2, font, color: bodyColor });
+                    safeDrawText(truncateToWidth(p.mobile || 'N/A', font, 8.2, 110), { x: pColMob, y: textY, size: 8.2, font, color: bodyColor });
+                    rowTop = rowBottom;
+                });
+            } else {
+                const rowBottom = rowTop - paxRowH;
+                safeDrawText('No passengers listed for this flight.', { x: pColName, y: rowBottom + 4.2, size: 8, font: fontOblique, color: mutedColor });
+            }
+
+            y = cardBottom - 8;
+        });
+
+        y -= 4;
+    }
+
+    // -----------------------------------------------------------------
+    // 3. CAR RENTAL SECTION
+    // -----------------------------------------------------------------
+    if (carRentalRequired && vehicles.length > 0) {
+        drawSectionBanner('CAR RENTAL REQUIREMENTS', secondaryBlue);
+
+        vehicles.forEach((v, idx) => {
+            const hasSpec = Boolean(v.specialRequirements && v.specialRequirements !== 'N/A');
+            const headerBarH = 17;
+            const gridH = 24;
+            const specH = hasSpec ? 16 : 0;
+            const cardH = headerBarH + gridH + specH;
+
+            checkPageBreak(cardH + 10);
+
+            const cardTop = y;
+            const cardBottom = y - cardH;
+
+            page.drawRectangle({
+                x: MARGIN_X,
+                y: cardBottom,
+                width: CONTENT_W,
+                height: cardH,
+                color: cardBg,
+                borderColor,
+                borderWidth: 0.75
+            });
+
+            page.drawRectangle({
+                x: MARGIN_X,
+                y: cardTop - headerBarH,
+                width: CONTENT_W,
+                height: headerBarH,
+                color: secondaryBlue
+            });
+
+            safeDrawText(`VEHICLE RENTAL #${idx + 1}`, {
+                x: MARGIN_X + 8,
+                y: cardTop - 12,
+                size: 8.5,
+                font: fontBold,
+                color: rgb(1, 1, 1)
+            });
+
+            const driverText = `RESPONSIBLE DRIVER:  ${v.driver || 'N/A'}`;
+            const driverW = fontBold.widthOfTextAtSize(cleanPdfText(driverText), 7.8);
+            safeDrawText(driverText, {
+                x: RIGHT_X - driverW - 8,
+                y: cardTop - 11.8,
+                size: 7.8,
+                font: fontBold,
+                color: rgb(1, 1, 1)
+            });
+
+            const gTop = cardTop - headerBarH;
+            const gBottom = gTop - gridH;
+            const halfX = MARGIN_X + (CONTENT_W / 2);
+
+            page.drawLine({ start: { x: halfX, y: gBottom }, end: { x: halfX, y: gTop }, thickness: 0.5, color: softBorder });
+            if (hasSpec) {
+                page.drawLine({ start: { x: MARGIN_X, y: gBottom }, end: { x: RIGHT_X, y: gBottom }, thickness: 0.5, color: softBorder });
+            }
+
+            safeDrawText('PICK-UP LOCATION & DATE/TIME (24H)', { x: MARGIN_X + 8, y: gTop - 8, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(truncateToWidth(`${v.pickUp || 'N/A'}   •   ${v.pickUpDate || 'N/A'}`, fontBold, 8.2, (CONTENT_W / 2) - 16), {
+                x: MARGIN_X + 8,
+                y: gTop - 18.5,
+                size: 8.2,
                 font: fontBold,
                 color: darkColor
             });
-            y -= 13;
 
-            if (f.tripType !== 'One-Way') {
-                safeDrawText(`Return:        Airport: ${f.retAirport}   |   Date: ${f.retDate}   |   Time: ${f.retTime}`, {
-                    x: 55,
-                    y,
-                    size: 8.8,
-                    font: fontBold,
-                    color: darkColor
-                });
-                y -= 14;
-            }
-
-            safeDrawText(`Passengers Taking Flight #${idx + 1}:`, {
-                x: 55,
-                y,
-                size: 8.5,
+            safeDrawText('DROP-OFF LOCATION & DATE/TIME (24H)', { x: halfX + 8, y: gTop - 8, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(truncateToWidth(`${v.dropOff || 'N/A'}   •   ${v.dropOffDate || 'N/A'}`, fontBold, 8.2, (CONTENT_W / 2) - 16), {
+                x: halfX + 8,
+                y: gTop - 18.5,
+                size: 8.2,
                 font: fontBold,
-                color: mutedColor
+                color: darkColor
             });
-            y -= 13;
 
-            if (Array.isArray(f.passengers) && f.passengers.length > 0) {
-                f.passengers.forEach((p, pIdx) => {
-                    checkPageBreak(18);
-                    safeDrawText(`${pIdx + 1}. ${p.name}  -  ID/Passport: ${p.idNumber}  -  Mobile: ${p.mobile}`, {
-                        x: 65,
-                        y,
-                        size: 8.5,
-                        font,
-                        color: darkColor
-                    });
-                    y -= 12;
+            if (hasSpec) {
+                page.drawRectangle({
+                    x: MARGIN_X + 0.5,
+                    y: cardBottom + 0.5,
+                    width: CONTENT_W - 1,
+                    height: specH - 0.5,
+                    color: zebraBg
                 });
-            } else {
-                safeDrawText('No passengers listed for this flight.', {
-                    x: 65,
-                    y,
-                    size: 8.2,
-                    font,
-                    color: mutedColor
-                });
-                y -= 12;
-            }
-            y -= 8;
-        });
-        y -= 8;
-    }
-
-    // Car Rental Section
-    if (carRentalRequired && vehicles.length > 0) {
-        checkPageBreak(50);
-        safeDrawText('CAR RENTAL REQUIREMENTS', { x: 40, y, size: 11, font: fontBold, color: primaryColor });
-        y -= 16;
-
-        vehicles.forEach((v, idx) => {
-            checkPageBreak(45);
-            safeDrawText(`Vehicle ${idx + 1} - Driver: ${v.driver}`, { x: 50, y, size: 9.5, font: fontBold, color: darkColor });
-            y -= 13;
-            safeDrawText(`Pick-Up: ${v.pickUp} (${v.pickUpDate})  ->  Drop-Off: ${v.dropOff} (${v.dropOffDate})`, {
-                x: 60,
-                y,
-                size: 8.5,
-                font,
-                color: mutedColor
-            });
-            y -= 13;
-            if (v.specialRequirements) {
-                safeDrawText(`Special Requirements: ${v.specialRequirements}`, {
-                    x: 60,
-                    y,
-                    size: 8.5,
+                safeDrawText('SPECIAL REQUIREMENTS:', { x: MARGIN_X + 8, y: cardBottom + 5, size: 6.8, font: fontBold, color: secondaryBlue });
+                safeDrawText(truncateToWidth(v.specialRequirements, font, 8, CONTENT_W - 115), {
+                    x: MARGIN_X + 102,
+                    y: cardBottom + 5,
+                    size: 8,
                     font,
                     color: darkColor
                 });
-                y -= 13;
             }
-            y -= 6;
+
+            y = cardBottom - 8;
         });
-        y -= 10;
+
+        y -= 4;
     }
 
-    // Accommodation Section
+    // -----------------------------------------------------------------
+    // 4. ACCOMMODATION SECTION
+    // -----------------------------------------------------------------
     if (accommodationRequired && hotels.length > 0) {
-        checkPageBreak(50);
-        safeDrawText('ACCOMMODATION REQUIREMENTS', { x: 40, y, size: 11, font: fontBold, color: primaryColor });
-        y -= 16;
+        drawSectionBanner('ACCOMMODATION REQUIREMENTS', tealColor);
 
         hotels.forEach((h, idx) => {
-            checkPageBreak(50);
-            safeDrawText(`Location ${idx + 1}: ${h.city} - Hotel/B&B: ${h.hotel}`, { x: 50, y, size: 9.5, font: fontBold, color: darkColor });
-            y -= 13;
-            safeDrawText(`Check-In: ${h.checkIn}  |  Check-Out: ${h.checkOut}`, {
-                x: 60,
-                y,
-                size: 8.5,
-                font,
-                color: mutedColor
+            const guestCount = Array.isArray(h.guestDetails) ? h.guestDetails.length : 0;
+            const guestRowsCount = Math.max(1, guestCount);
+            const hasSpec = Boolean(h.specialRequest && h.specialRequest !== 'N/A');
+
+            const headerBarH = 17;
+            const infoRowH = 23;
+            const guestHeaderH = 14;
+            const guestRowH = 14.5;
+            const specH = hasSpec ? 16 : 0;
+            const cardH = headerBarH + infoRowH + guestHeaderH + (guestRowsCount * guestRowH) + specH + 2;
+
+            checkPageBreak(cardH + 10);
+
+            const cardTop = y;
+            const cardBottom = y - cardH;
+
+            page.drawRectangle({
+                x: MARGIN_X,
+                y: cardBottom,
+                width: CONTENT_W,
+                height: cardH,
+                color: cardBg,
+                borderColor,
+                borderWidth: 0.75
             });
-            y -= 13;
-            if (Array.isArray(h.guestDetails) && h.guestDetails.length > 0) {
-                safeDrawText('Guest Details:', { x: 60, y, size: 8.5, font: fontBold, color: mutedColor });
-                y -= 12;
+
+            page.drawRectangle({
+                x: MARGIN_X,
+                y: cardTop - headerBarH,
+                width: CONTENT_W,
+                height: headerBarH,
+                color: tealColor
+            });
+
+            safeDrawText(`ACCOMMODATION LOCATION #${idx + 1}`, {
+                x: MARGIN_X + 8,
+                y: cardTop - 12,
+                size: 8.5,
+                font: fontBold,
+                color: rgb(1, 1, 1)
+            });
+
+            // Top Info Row: Destination/City | Hotel/B&B | Check-In Date | Check-Out Date
+            const infoTop = cardTop - headerBarH;
+            const infoBottom = infoTop - infoRowH;
+            const cHotelX = MARGIN_X + 145;
+            const cInX = MARGIN_X + 335;
+            const cOutX = MARGIN_X + 425;
+
+            page.drawLine({ start: { x: MARGIN_X, y: infoBottom }, end: { x: RIGHT_X, y: infoBottom }, thickness: 0.6, color: borderColor });
+            page.drawLine({ start: { x: cHotelX, y: infoBottom }, end: { x: cHotelX, y: infoTop }, thickness: 0.5, color: softBorder });
+            page.drawLine({ start: { x: cInX, y: infoBottom }, end: { x: cInX, y: infoTop }, thickness: 0.5, color: softBorder });
+            page.drawLine({ start: { x: cOutX, y: infoBottom }, end: { x: cOutX, y: infoTop }, thickness: 0.5, color: softBorder });
+
+            safeDrawText('DESTINATION / CITY', { x: MARGIN_X + 8, y: infoTop - 7.5, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(truncateToWidth(h.city || 'N/A', fontBold, 8.2, 130), { x: MARGIN_X + 8, y: infoTop - 18, size: 8.2, font: fontBold, color: darkColor });
+
+            safeDrawText('PREFERRED HOTEL / B&B', { x: cHotelX + 8, y: infoTop - 7.5, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(truncateToWidth(h.hotel || 'N/A', fontBold, 8.2, 180), { x: cHotelX + 8, y: infoTop - 18, size: 8.2, font: fontBold, color: darkColor });
+
+            safeDrawText('CHECK-IN DATE', { x: cInX + 8, y: infoTop - 7.5, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(h.checkIn || 'N/A', { x: cInX + 8, y: infoTop - 18, size: 8.2, font: fontBold, color: darkColor });
+
+            safeDrawText('CHECK-OUT DATE', { x: cOutX + 8, y: infoTop - 7.5, size: 6, font: fontBold, color: mutedColor });
+            safeDrawText(h.checkOut || 'N/A', { x: cOutX + 8, y: infoTop - 18, size: 8.2, font: fontBold, color: darkColor });
+
+            // Guest Details Sub-Table Header (aligned with Flight Passengers columns!)
+            const gHeadTop = infoBottom;
+            const gHeadBottom = gHeadTop - guestHeaderH;
+            page.drawRectangle({
+                x: MARGIN_X + 0.5,
+                y: gHeadBottom,
+                width: CONTENT_W - 1,
+                height: guestHeaderH,
+                color: tableHeaderBg
+            });
+            page.drawLine({ start: { x: MARGIN_X, y: gHeadBottom }, end: { x: RIGHT_X, y: gHeadBottom }, thickness: 0.5, color: softBorder });
+
+            const gColNum = MARGIN_X + 8;
+            const gColName = MARGIN_X + 32;
+            const gColId = MARGIN_X + 245;
+            const gColMob = MARGIN_X + 395;
+
+            safeDrawText('#', { x: gColNum, y: gHeadBottom + 4, size: 6.5, font: fontBold, color: mutedColor });
+            safeDrawText('GUEST DETAILS (FULL NAME & SURNAME)', { x: gColName, y: gHeadBottom + 4, size: 6.5, font: fontBold, color: tealColor });
+            safeDrawText('ID / PASSPORT NUMBER', { x: gColId, y: gHeadBottom + 4, size: 6.5, font: fontBold, color: mutedColor });
+            safeDrawText('MOBILE NUMBER', { x: gColMob, y: gHeadBottom + 4, size: 6.5, font: fontBold, color: mutedColor });
+
+            let rowTop = gHeadBottom;
+            if (guestCount > 0) {
                 h.guestDetails.forEach((g, gIdx) => {
-                    checkPageBreak(16);
-                    safeDrawText(`${gIdx + 1}. ${g.name}  -  ID/Passport: ${g.idNumber}  -  Mobile: ${g.mobile}`, {
-                        x: 70,
-                        y,
-                        size: 8.5,
-                        font,
-                        color: darkColor
-                    });
-                    y -= 12;
+                    const rowBottom = rowTop - guestRowH;
+                    if (gIdx % 2 === 1) {
+                        page.drawRectangle({
+                            x: MARGIN_X + 0.5,
+                            y: rowBottom,
+                            width: CONTENT_W - 1,
+                            height: guestRowH,
+                            color: zebraBg
+                        });
+                    }
+                    if (gIdx < guestCount - 1 || hasSpec) {
+                        page.drawLine({ start: { x: MARGIN_X + 4, y: rowBottom }, end: { x: RIGHT_X - 4, y: rowBottom }, thickness: 0.4, color: softBorder });
+                    }
+                    const textY = rowBottom + 4.2;
+                    safeDrawText(`${gIdx + 1}.`, { x: gColNum, y: textY, size: 8, font: fontBold, color: mutedColor });
+                    safeDrawText(truncateToWidth(g.name || 'N/A', fontBold, 8.2, 205), { x: gColName, y: textY, size: 8.2, font: fontBold, color: darkColor });
+                    safeDrawText(truncateToWidth(g.idNumber || 'N/A', font, 8.2, 142), { x: gColId, y: textY, size: 8.2, font, color: bodyColor });
+                    safeDrawText(truncateToWidth(g.mobile || 'N/A', font, 8.2, 110), { x: gColMob, y: textY, size: 8.2, font, color: bodyColor });
+                    rowTop = rowBottom;
                 });
+            } else {
+                const rowBottom = rowTop - guestRowH;
+                safeDrawText('No guests listed for this location.', { x: gColName, y: rowBottom + 4.2, size: 8, font: fontOblique, color: mutedColor });
+                rowTop = rowBottom;
             }
-            if (h.specialRequest) {
-                checkPageBreak(16);
-                safeDrawText(`Special Request: ${h.specialRequest}`, {
-                    x: 60,
-                    y,
-                    size: 8.5,
+
+            if (hasSpec) {
+                page.drawRectangle({
+                    x: MARGIN_X + 0.5,
+                    y: cardBottom + 0.5,
+                    width: CONTENT_W - 1,
+                    height: specH - 0.5,
+                    color: zebraBg
+                });
+                safeDrawText('SPECIAL REQUEST:', { x: MARGIN_X + 8, y: cardBottom + 5, size: 6.8, font: fontBold, color: tealColor });
+                safeDrawText(truncateToWidth(h.specialRequest, font, 8, CONTENT_W - 95), {
+                    x: MARGIN_X + 84,
+                    y: cardBottom + 5,
+                    size: 8,
                     font,
                     color: darkColor
                 });
-                y -= 13;
             }
-            y -= 8;
+
+            y = cardBottom - 8;
         });
-        y -= 10;
+
+        y -= 4;
     }
 
-    // General Special Requests
+    // -----------------------------------------------------------------
+    // 5. GENERAL SPECIAL REQUESTS
+    // -----------------------------------------------------------------
     if (specialNotes) {
-        checkPageBreak(60);
-        safeDrawText('GENERAL SPECIAL REQUESTS', { x: 40, y, size: 11, font: fontBold, color: primaryColor });
-        y -= 16;
-        const noteLines = specialNotes.split('\n');
-        noteLines.forEach(nl => {
-            checkPageBreak(15);
-            safeDrawText(nl, { x: 50, y, size: 8.5, font, color: darkColor });
-            y -= 12;
+        drawSectionBanner('GENERAL SPECIAL REQUESTS', primaryColor);
+
+        const rawParagraphs = specialNotes.split('\n').map(s => s.trim()).filter(Boolean);
+        const wrappedNoteLines = [];
+        rawParagraphs.forEach(p => {
+            const lines = wrapLines(p, font, 8.5, CONTENT_W - 20);
+            wrappedNoteLines.push(...lines);
         });
-        y -= 15;
+        const displayLines = wrappedNoteLines.length > 0 ? wrappedNoteLines : [cleanPdfText(specialNotes)];
+        const boxH = Math.max(28, (displayLines.length * 12) + 14);
+
+        checkPageBreak(boxH + 10);
+
+        page.drawRectangle({
+            x: MARGIN_X,
+            y: y - boxH,
+            width: CONTENT_W,
+            height: boxH,
+            color: zebraBg,
+            borderColor,
+            borderWidth: 0.75
+        });
+
+        let noteY = y - 13;
+        displayLines.forEach(line => {
+            safeDrawText(line, { x: MARGIN_X + 10, y: noteY, size: 8.5, font, color: darkColor });
+            noteY -= 12;
+        });
+
+        y -= (boxH + 10);
     }
 
-    // Footer on page
-    safeDrawText('Generated by CARP Dashboard - Combined Artists & Carte Blanche (c) 2026', {
-        x: 40,
-        y: 35,
-        size: 8,
-        font,
-        color: mutedColor
+    // -----------------------------------------------------------------
+    // 6. NUMBERED FOOTERS ON ALL PAGES
+    // -----------------------------------------------------------------
+    const allPages = pdfDoc.getPages();
+    const totalPages = allPages.length;
+    allPages.forEach((pg, idx) => {
+        const footerY = 24;
+        pg.drawLine({
+            start: { x: MARGIN_X, y: footerY + 10 },
+            end: { x: RIGHT_X, y: footerY + 10 },
+            thickness: 0.5,
+            color: softBorder
+        });
+        safeDrawText('Carte Blanche  •  Electronic Media Network (Pty) Ltd  •  Combined Artistic Productions CC', {
+            page: pg,
+            x: MARGIN_X,
+            y: footerY,
+            size: 7,
+            font,
+            color: mutedColor
+        });
+        const pageLabel = `Form Ref: CB-TRF-2026   |   Page ${idx + 1} of ${totalPages}`;
+        const pageLabelW = font.widthOfTextAtSize(pageLabel, 7);
+        safeDrawText(pageLabel, {
+            page: pg,
+            x: RIGHT_X - pageLabelW,
+            y: footerY,
+            size: 7,
+            font,
+            color: mutedColor
+        });
     });
 
     const pdfBytes = await pdfDoc.save();
