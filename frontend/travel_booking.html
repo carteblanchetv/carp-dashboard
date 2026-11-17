@@ -33,7 +33,7 @@
     </script>
     <style>
         .form-page-container {
-            max-width: 900px;
+            max-width: 1060px;
             margin: 0 auto;
             padding: 2rem 1.5rem 5rem;
         }
@@ -49,7 +49,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 3rem;
+            padding: 2.5rem;
             box-shadow: var(--shadow-lg);
         }
         @media (max-width: 640px) {
@@ -191,27 +191,32 @@
         }
         .travel-table th {
             text-align: left;
-            padding: 0.5rem;
+            padding: 0.55rem 0.45rem;
             background: rgba(0,0,0,0.02);
             border-bottom: 1px solid var(--border);
             color: var(--text-muted);
             font-weight: 600;
+            white-space: nowrap;
+            vertical-align: middle;
         }
         .travel-table td {
-            padding: 0.4rem 0.5rem;
+            padding: 0.45rem 0.4rem;
             border-bottom: 1px solid var(--border);
+            vertical-align: middle;
         }
         .field-group-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.25rem;
             margin-bottom: 1.5rem;
+            align-items: end;
         }
         .field-group-grid-3 {
             display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr;
+            grid-template-columns: 1.4fr 1fr 1fr;
             gap: 1rem;
             margin-bottom: 1rem;
+            align-items: end;
         }
         .field-group-full {
             grid-column: span 2;
@@ -232,17 +237,20 @@
         .form-field {
             display: flex;
             flex-direction: column;
+            justify-content: flex-end;
             gap: 0.45rem;
             width: 100%;
             box-sizing: border-box;
         }
         .form-field label {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 700;
             color: var(--text-main);
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.03em;
             display: block;
+            white-space: nowrap;
+            line-height: 1.2;
         }
         .form-field label span.required, .form-field label .required {
             color: var(--danger, #ef4444);
@@ -251,14 +259,18 @@
         .form-field input, .form-field select, .form-field textarea {
             width: 100%;
             box-sizing: border-box;
-            padding: 0.75rem 0.9rem;
+            padding: 0.65rem 0.85rem;
             border-radius: var(--radius-sm, 6px);
             border: 1px solid var(--border);
             background: var(--bg-light);
             color: var(--text-main);
             font-family: inherit;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
+            line-height: 1.25;
             transition: all 0.2s;
+        }
+        .form-field input:not(textarea), .form-field select {
+            height: 42px;
         }
         .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
             outline: none;
@@ -299,13 +311,19 @@
         }
         .travel-table input, .travel-table select {
             width: 100%;
-            padding: 0.35rem 0.5rem;
+            height: 36px;
+            line-height: 1.2;
+            padding: 0.35rem 0.55rem;
             font-size: 0.85rem;
             border: 1px solid var(--border);
             border-radius: 4px;
             background: var(--bg-card);
             color: var(--text-main);
             box-sizing: border-box;
+        }
+        .travel-table select {
+            padding-right: 1.4rem;
+            cursor: pointer;
         }
         .pax-return-wrap {
             display: flex;
@@ -522,12 +540,12 @@
                     </button>
                 </div>
 
-                <!-- 5. SPECIAL REQUIREMENTS & NOTES -->
+                <!-- 5. GENERAL SPECIAL REQUESTS -->
                 <div class="section-subtitle">
-                    <span>📝</span> Special Requirements &amp; Shoot Logistics
+                    <span>📝</span> General Special Requests
                 </div>
                 <div class="form-field" style="margin-top: 0.75rem;">
-                    <label for="specialNotes">Dietary, Excess Filming Gear, Early Check-In or Notes</label>
+                    <label for="specialNotes">DIETARY, EXCESS FILMING GEAR OR OTHER NOTES</label>
                     <textarea id="specialNotes" name="specialNotes" rows="4" placeholder="Detail any specific flight seat preferences, heavy camera pelican cases, excess luggage allowances, dietary restrictions, or production instructions..."></textarea>
                 </div>
 
@@ -550,6 +568,6 @@
         </div>
     </div>
 
-    <script type="module" src="js/travel_booking.js?v=5.4.6"></script>
+    <script type="module" src="js/travel_booking.js?v=5.4.8"></script>
 </body>
 </html>

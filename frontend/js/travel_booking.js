@@ -372,12 +372,23 @@ function addFlightLeg(data = {}) {
     const retAirportVal = (data.retAirport && data.retAirport !== 'N/A')
         ? data.retAirport
         : ((data.arrAirport && data.arrAirport !== 'N/A') ? data.arrAirport : '');
+    const isOneWayFlight = data.tripType === 'One-Way' || data.tripType === 'One Way' || data.tripType === 'Single';
 
     const html = `
     <div class="dynamic-subcard flight-subcard" id="flightLeg_${id}" data-flight-id="${id}">
-        <div class="dynamic-subcard-header">
+        <div class="dynamic-subcard-header" style="flex-wrap: wrap; gap: 0.75rem;">
             <h4 class="flight-card-title">✈️ Flight #${id}</h4>
-            ${id > 1 ? `<button type="button" class="btn-remove-subcard" onclick="window.removeFlightLeg(${id})">✕ Remove Flight</button>` : ''}
+            <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                <div class="toggle-switch-group">
+                    <div class="toggle-pill">
+                        <input type="radio" id="flightOneWay_${id}" name="flight_tripType_${id}" value="One-Way" ${isOneWayFlight ? 'checked' : ''} onchange="window.toggleFlightReturnRow(${id}, 'One-Way')">
+                        <label for="flightOneWay_${id}">One-Way</label>
+                        <input type="radio" id="flightReturn_${id}" name="flight_tripType_${id}" value="Return" ${!isOneWayFlight ? 'checked' : ''} onchange="window.toggleFlightReturnRow(${id}, 'Return')">
+                        <label for="flightReturn_${id}">Return</label>
+                    </div>
+                </div>
+                ${id > 1 ? `<button type="button" class="btn-remove-subcard" onclick="window.removeFlightLeg(${id})">✕ Remove Flight</button>` : ''}
+            </div>
         </div>
 
         <!-- Departure Airport, Date & Time -->
@@ -387,27 +398,27 @@ function addFlightLeg(data = {}) {
                 <input type="text" name="flight_depAirport[]" list="saAirportsList" placeholder="e.g. JNB - O.R. Tambo" value="${depAirportVal}">
             </div>
             <div class="form-field">
-                <label>Departure Date (DD-MM-YY) <span class="required">*</span></label>
+                <label>Departure Date <span class="required">*</span></label>
                 ${renderDateInputHTML('flight_depDate[]', depDate)}
             </div>
             <div class="form-field">
-                <label>Departure Time (24h) <span class="required">*</span></label>
+                <label>Departure Time <span class="required">*</span></label>
                 ${renderTime24InputHTML('flight_depTime[]', depTime)}
             </div>
         </div>
 
         <!-- Return Airport, Date & Time -->
-        <div class="field-group-grid-3" style="margin-bottom: 1.25rem;">
+        <div id="flightReturnRow_${id}" class="field-group-grid-3 ${isOneWayFlight ? 'hidden' : ''}" style="margin-bottom: 1.25rem;">
             <div class="form-field">
                 <label>Return Airport</label>
-                <input type="text" name="flight_retAirport[]" list="saAirportsList" placeholder="e.g. CPT - Cape Town (leave blank if one-way)" value="${retAirportVal}">
+                <input type="text" name="flight_retAirport[]" list="saAirportsList" placeholder="e.g. CPT - Cape Town" value="${retAirportVal}">
             </div>
             <div class="form-field">
-                <label>Return Date (DD-MM-YY)</label>
+                <label>Return Date</label>
                 ${renderDateInputHTML('flight_retDate[]', retDate)}
             </div>
             <div class="form-field">
-                <label>Return Time (24h)</label>
+                <label>Return Time</label>
                 ${renderTime24InputHTML('flight_retTime[]', retTime)}
             </div>
         </div>
@@ -429,12 +440,10 @@ function addFlightLeg(data = {}) {
                 <table class="travel-table" id="passengersTable_${id}">
                     <thead>
                         <tr>
-                            <th style="width: 14%;">First Name</th>
-                            <th style="width: 14%;">Surname</th>
-                            <th style="width: 17%;">ID / Passport Number</th>
-                            <th style="width: 14%;">Mobile Number</th>
-                            <th style="width: 13%;">Flight Type</th>
-                            <th style="width: 24%;">Return Date (DD-MM-YY) &amp; Time (24h)</th>
+                            <th style="width: 24%;">First Name</th>
+                            <th style="width: 24%;">Surname</th>
+                            <th style="width: 26%;">ID / Passport No.</th>
+                            <th style="width: 22%;">Mobile Number</th>
                             <th style="width: 4%;"></th>
                         </tr>
                     </thead>
@@ -455,10 +464,7 @@ function addFlightLeg(data = {}) {
                 firstName: p.firstName || nameParts[0] || '',
                 lastName: p.lastName || nameParts.slice(1).join(' ') || '',
                 idNumber: (p.idNumber && p.idNumber !== 'N/A') ? p.idNumber : '',
-                mobile: (p.mobile && p.mobile !== 'N/A') ? p.mobile : '',
-                tripType: p.tripType || 'One Way',
-                retDate: (p.retDate && p.retDate !== 'N/A') ? p.retDate : '',
-                retTime: (p.retTime && p.retTime !== 'N/A') ? p.retTime : ''
+                mobile: (p.mobile && p.mobile !== 'N/A') ? p.mobile : ''
             });
         });
     } else {
@@ -468,62 +474,33 @@ function addFlightLeg(data = {}) {
     renumberFlightLegs();
 }
 
+window.toggleFlightReturnRow = (flightId, tripTypeVal) => {
+    const returnRow = document.getElementById(`flightReturnRow_${flightId}`);
+    if (!returnRow) return;
+    returnRow.classList.toggle('hidden', tripTypeVal === 'One-Way');
+};
+
 function addPassengerToFlight(flightId, data = {}) {
     const tbody = document.getElementById(`passengersTableBody_${flightId}`);
     if (!tbody) return;
     passengerRowCounter++;
     const rowId = passengerRowCounter;
     const isFirstRow = tbody.querySelectorAll('tr').length === 0;
-    const tripType = data.tripType === 'Return' ? 'Return' : 'One Way';
-    const isReturn = tripType === 'Return';
 
     const html = `
     <tr id="passengerRow_${rowId}" class="flight-passenger-row">
-        <td><input type="text" name="passenger_firstName[]" placeholder="First Name" value="${data.firstName || ''}"></td>
-        <td><input type="text" name="passenger_lastName[]" placeholder="Surname" value="${data.lastName || ''}"></td>
-        <td><input type="text" name="passenger_idNumber[]" placeholder="ID or Passport" value="${data.idNumber || ''}"></td>
-        <td><input type="text" name="passenger_mobile[]" placeholder="Mobile Number" value="${data.mobile || ''}"></td>
-        <td>
-            <select name="passenger_tripType[]" onchange="window.togglePassengerReturnFields(${rowId}, this.value, ${flightId})">
-                <option value="One Way" ${!isReturn ? 'selected' : ''}>One Way</option>
-                <option value="Return" ${isReturn ? 'selected' : ''}>Return</option>
-            </select>
-        </td>
-        <td>
-            <div id="paxReturnFields_${rowId}" class="pax-return-wrap ${isReturn ? '' : 'hidden'}">
-                ${renderDateInputHTML('passenger_retDate[]', data.retDate || '', 'min-width: 118px; flex: 1.2;')}
-                ${renderTime24InputHTML('passenger_retTime[]', data.retTime || '', 'min-width: 82px; width: 88px;')}
-            </div>
-            <span id="paxOneWayBadge_${rowId}" class="${isReturn ? 'hidden' : ''}" style="font-size: 0.78rem; color: var(--text-muted); font-style: italic;">— One Way —</span>
-        </td>
+        <td><input type="text" name="passenger_firstName[]" placeholder="First Name" value="${data.firstName || ''}" oninput="window.refreshAllGuestDropdowns()"></td>
+        <td><input type="text" name="passenger_lastName[]" placeholder="Surname" value="${data.lastName || ''}" oninput="window.refreshAllGuestDropdowns()"></td>
+        <td><input type="text" name="passenger_idNumber[]" placeholder="ID or Passport" value="${data.idNumber || ''}" oninput="window.refreshAllGuestDropdowns()"></td>
+        <td><input type="text" name="passenger_mobile[]" placeholder="Mobile Number" value="${data.mobile || ''}" oninput="window.refreshAllGuestDropdowns()"></td>
         <td style="text-align: center;">
-            ${!isFirstRow ? `<button type="button" class="btn-remove-subcard" title="Remove passenger" onclick="document.getElementById('passengerRow_${rowId}')?.remove()">✕</button>` : ''}
+            ${!isFirstRow ? `<button type="button" class="btn-remove-subcard" title="Remove passenger" onclick="document.getElementById('passengerRow_${rowId}')?.remove(); window.refreshAllGuestDropdowns();">✕</button>` : ''}
         </td>
     </tr>
     `;
     tbody.insertAdjacentHTML('beforeend', html);
+    window.refreshAllGuestDropdowns?.();
 }
-
-window.togglePassengerReturnFields = (rowId, tripTypeVal, flightId) => {
-    const fieldsWrap = document.getElementById(`paxReturnFields_${rowId}`);
-    const badge = document.getElementById(`paxOneWayBadge_${rowId}`);
-    const isReturn = tripTypeVal === 'Return';
-
-    if (fieldsWrap) fieldsWrap.classList.toggle('hidden', !isReturn);
-    if (badge) badge.classList.toggle('hidden', isReturn);
-
-    if (isReturn && fieldsWrap) {
-        const flightCard = document.getElementById(`flightLeg_${flightId}`);
-        const paxDateInput = fieldsWrap.querySelector('input[name="passenger_retDate[]"]');
-        const paxTimeInput = fieldsWrap.querySelector('input[name="passenger_retTime[]"]');
-        if (flightCard) {
-            const flightRetDate = flightCard.querySelector('input[name="flight_retDate[]"]')?.value || '';
-            const flightRetTime = flightCard.querySelector('input[name="flight_retTime[]"]')?.value || '';
-            if (paxDateInput && !paxDateInput.value && flightRetDate) paxDateInput.value = flightRetDate;
-            if (paxTimeInput && !paxTimeInput.value && flightRetTime) paxTimeInput.value = flightRetTime;
-        }
-    }
-};
 
 function renumberFlightLegs() {
     const cards = document.querySelectorAll('#flightLegsList .flight-subcard');
@@ -543,6 +520,7 @@ window.removeFlightLeg = (flightId) => {
     if (el) {
         el.remove();
         renumberFlightLegs();
+        window.refreshAllGuestDropdowns?.();
     }
 };
 
@@ -560,10 +538,7 @@ window.copyPassengersFromFirstFlight = (targetFlightId) => {
         const lastName = row.querySelector('input[name="passenger_lastName[]"]')?.value || '';
         const idNumber = row.querySelector('input[name="passenger_idNumber[]"]')?.value || '';
         const mobile = row.querySelector('input[name="passenger_mobile[]"]')?.value || '';
-        const tripType = row.querySelector('select[name="passenger_tripType[]"]')?.value || 'One Way';
-        const retDate = row.querySelector('input[name="passenger_retDate[]"]')?.value || '';
-        const retTime = row.querySelector('input[name="passenger_retTime[]"]')?.value || '';
-        addPassengerToFlight(targetFlightId, { firstName, lastName, idNumber, mobile, tripType, retDate, retTime });
+        addPassengerToFlight(targetFlightId, { firstName, lastName, idNumber, mobile });
     });
 };
 
@@ -573,32 +548,66 @@ function addVehicle(data = {}) {
     const container = document.getElementById('vehiclesList');
     const id = vehicleCount;
 
+    let pickUpDate = data.pickUpDate || '';
+    let pickUpTime = data.pickUpTime || '';
+    if (!pickUpDate && data.pickUpDateTime) {
+        const parts = String(data.pickUpDateTime).split(/[T ]/);
+        pickUpDate = parts[0] || '';
+        pickUpTime = parts[1] || '';
+    }
+
+    let dropOffDate = data.dropOffDate || '';
+    let dropOffTime = data.dropOffTime || '';
+    if (!dropOffDate && data.dropOffDateTime) {
+        const parts = String(data.dropOffDateTime).split(/[T ]/);
+        dropOffDate = parts[0] || '';
+        dropOffTime = parts[1] || '';
+    }
+
     const html = `
-    <div class="dynamic-subcard" id="vehicleCard_${id}">
+    <div class="dynamic-subcard vehicle-subcard" id="vehicleCard_${id}">
         <div class="dynamic-subcard-header">
             <h4>Vehicle Rental #${id}</h4>
             ${id > 1 ? `<button type="button" class="btn-remove-subcard" onclick="document.getElementById('vehicleCard_${id}').remove()">✕ Remove</button>` : ''}
         </div>
-        <div class="field-group-grid">
+        <div class="field-group-grid-3">
             <div class="form-field">
                 <label>Pick-Up Location</label>
-                <input type="text" name="vehicle_pickUpLocation[]" placeholder="e.g. CPT Airport Avis" value="${data.pickUpLocation || ''}">
+                <input type="text" name="vehicle_pickUpLocation[]" placeholder="e.g. CPT Airport Avis" value="${data.pickUpLocation || data.pickUp || ''}">
             </div>
             <div class="form-field">
-                <label>Pick-Up Date & Time</label>
-                <input type="datetime-local" name="vehicle_pickUpDateTime[]" value="${data.pickUpDateTime || ''}">
+                <label>Pick-Up Date</label>
+                ${renderDateInputHTML('vehicle_pickUpDate[]', pickUpDate)}
             </div>
+            <div class="form-field">
+                <label>Pick-Up Time</label>
+                ${renderTime24InputHTML('vehicle_pickUpTime[]', pickUpTime)}
+            </div>
+        </div>
+        <div class="field-group-grid-3">
             <div class="form-field">
                 <label>Drop-Off Location</label>
-                <input type="text" name="vehicle_dropOffLocation[]" placeholder="e.g. CPT Airport Avis" value="${data.dropOffLocation || ''}">
+                <input type="text" name="vehicle_dropOffLocation[]" placeholder="e.g. CPT Airport Avis" value="${data.dropOffLocation || data.dropOff || ''}">
             </div>
             <div class="form-field">
-                <label>Drop-Off Date & Time</label>
-                <input type="datetime-local" name="vehicle_dropOffDateTime[]" value="${data.dropOffDateTime || ''}">
+                <label>Drop-Off Date</label>
+                ${renderDateInputHTML('vehicle_dropOffDate[]', dropOffDate)}
             </div>
+            <div class="form-field">
+                <label>Drop-Off Time</label>
+                ${renderTime24InputHTML('vehicle_dropOffTime[]', dropOffTime)}
+            </div>
+        </div>
+        <div class="field-group-grid" style="margin-bottom: 1rem;">
             <div class="form-field field-group-full">
-                <label>Responsible Driver (Full Name & Surname)</label>
-                <input type="text" name="vehicle_driverName[]" placeholder="Driver full name..." value="${data.driverName || ''}">
+                <label>Responsible Driver (Full Name &amp; Surname)</label>
+                <input type="text" name="vehicle_driverName[]" placeholder="Driver full name..." value="${data.driverName || data.driver || ''}">
+            </div>
+        </div>
+        <div class="field-group-grid" style="margin-bottom: 0;">
+            <div class="form-field field-group-full">
+                <label>Special Requirements</label>
+                <input type="text" name="vehicle_specialRequirements[]" placeholder="Require SUV, enough room for crew and gear, producer only." value="${data.specialRequirements || ''}">
             </div>
         </div>
     </div>
@@ -606,14 +615,75 @@ function addVehicle(data = {}) {
     container.insertAdjacentHTML('beforeend', html);
 }
 
+function getNamedFlightPassengers() {
+    const paxList = [];
+    const seen = new Set();
+    const rows = document.querySelectorAll('#flightLegsList .flight-passenger-row');
+    rows.forEach(row => {
+        const firstName = row.querySelector('input[name="passenger_firstName[]"]')?.value.trim() || '';
+        const lastName = row.querySelector('input[name="passenger_lastName[]"]')?.value.trim() || '';
+        const idNumber = row.querySelector('input[name="passenger_idNumber[]"]')?.value.trim() || '';
+        const mobile = row.querySelector('input[name="passenger_mobile[]"]')?.value.trim() || '';
+        const fullName = `${firstName} ${lastName}`.trim();
+        if (!fullName) return;
+        const key = `${fullName.toLowerCase()}|${idNumber.toLowerCase()}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        paxList.push({ firstName, lastName, idNumber, mobile, fullName });
+    });
+    return paxList;
+}
+
+function buildFlightPassengerSelectOptions(selectedValue = '') {
+    const paxList = getNamedFlightPassengers();
+    let html = `<option value="">-- Select Flight Passenger --</option>`;
+    paxList.forEach((p, idx) => {
+        const payload = encodeURIComponent(JSON.stringify(p));
+        const label = p.idNumber ? `${p.fullName} (${p.idNumber})` : p.fullName;
+        const isSel = selectedValue && selectedValue === payload ? 'selected' : '';
+        html += `<option value="${payload}" ${isSel}>${label}</option>`;
+    });
+    return html;
+}
+
+window.refreshAllGuestDropdowns = () => {
+    const selects = document.querySelectorAll('.guest-flight-pax-select');
+    selects.forEach(sel => {
+        const curVal = sel.value;
+        sel.innerHTML = buildFlightPassengerSelectOptions(curVal);
+    });
+};
+
+window.applyFlightPassengerToGuest = (selectEl) => {
+    const val = selectEl.value;
+    if (!val) return;
+    try {
+        const pax = JSON.parse(decodeURIComponent(val));
+        const row = selectEl.closest('.hotel-guest-row');
+        if (!row) return;
+        const fnInput = row.querySelector('input[name="guest_firstName[]"]');
+        const lnInput = row.querySelector('input[name="guest_lastName[]"]');
+        const idInput = row.querySelector('input[name="guest_idNumber[]"]');
+        const mobInput = row.querySelector('input[name="guest_mobile[]"]');
+        if (fnInput) fnInput.value = pax.firstName || '';
+        if (lnInput) lnInput.value = pax.lastName || '';
+        if (idInput) idInput.value = pax.idNumber || '';
+        if (mobInput) mobInput.value = pax.mobile || '';
+    } catch (e) {
+        console.warn('Could not parse selected flight passenger:', e);
+    }
+};
+
 let hotelCount = 0;
+let guestRowCounter = 0;
+
 function addHotel(data = {}) {
     hotelCount++;
     const container = document.getElementById('hotelsList');
     const id = hotelCount;
 
     const html = `
-    <div class="dynamic-subcard" id="hotelCard_${id}">
+    <div class="dynamic-subcard hotel-subcard" id="hotelCard_${id}" data-hotel-id="${id}">
         <div class="dynamic-subcard-header">
             <h4>Accommodation Location #${id}</h4>
             ${id > 1 ? `<button type="button" class="btn-remove-subcard" onclick="document.getElementById('hotelCard_${id}').remove()">✕ Remove</button>` : ''}
@@ -624,26 +694,100 @@ function addHotel(data = {}) {
                 <input type="text" name="hotel_city[]" placeholder="e.g. Durban" value="${data.city || ''}">
             </div>
             <div class="form-field">
-                <label>Preferred Hotel / B&B</label>
-                <input type="text" name="hotel_name[]" placeholder="e.g. Southern Sun Elangeni" value="${data.hotelName || ''}">
+                <label>Preferred Hotel / B&amp;B</label>
+                <input type="text" name="hotel_name[]" placeholder="e.g. Southern Sun Elangeni" value="${data.hotelName || data.hotel || ''}">
             </div>
             <div class="form-field">
                 <label>Check-In Date</label>
-                <input type="date" name="hotel_checkIn[]" value="${data.checkIn || ''}">
+                ${renderDateInputHTML('hotel_checkIn[]', data.checkIn || '')}
             </div>
             <div class="form-field">
                 <label>Check-Out Date</label>
-                <input type="date" name="hotel_checkOut[]" value="${data.checkOut || ''}">
+                ${renderDateInputHTML('hotel_checkOut[]', data.checkOut || '')}
             </div>
+        </div>
+
+        <!-- Guest Details Table -->
+        <div style="margin-top: 1rem; margin-bottom: 1.25rem; padding-top: 0.9rem; border-top: 1px dashed var(--border);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                <label style="font-weight: 700; color: var(--text-main); font-size: 0.85rem;">
+                    👥 Guest Details
+                </label>
+                <button type="button" class="btn-add-subcard" style="margin-top: 0; padding: 0.25rem 0.65rem; font-size: 0.78rem;" onclick="window.addGuestToHotel(${id})">
+                    <span>➕</span> Add Guest
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="travel-table" id="guestsTable_${id}">
+                    <thead>
+                        <tr>
+                            <th style="width: 22%;">Select from Flights</th>
+                            <th style="width: 19%;">First Name</th>
+                            <th style="width: 19%;">Surname</th>
+                            <th style="width: 20%;">ID / Passport No.</th>
+                            <th style="width: 16%;">Mobile Number</th>
+                            <th style="width: 4%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="guestsTableBody_${id}" class="hotel-guests-tbody">
+                        <!-- Guest rows for this hotel -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="field-group-grid" style="margin-bottom: 0;">
             <div class="form-field field-group-full">
-                <label>Guest Names & Room Allocations</label>
-                <input type="text" name="hotel_guests[]" placeholder="e.g. Producer (Single Room), Cameraman & Sound (Twin Rooms)" value="${data.guests || ''}">
+                <label>Special Request</label>
+                <input type="text" name="hotel_specialRequest[]" placeholder="Require early check-in or late check-in, etc." value="${data.specialRequest || ''}">
             </div>
         </div>
     </div>
     `;
     container.insertAdjacentHTML('beforeend', html);
+
+    if (Array.isArray(data.guestDetails) && data.guestDetails.length > 0) {
+        data.guestDetails.forEach(g => {
+            const nameParts = (!g.firstName && !g.lastName && g.name) ? String(g.name).split(' ') : [];
+            addGuestToHotel(id, {
+                firstName: g.firstName || nameParts[0] || '',
+                lastName: g.lastName || nameParts.slice(1).join(' ') || '',
+                idNumber: (g.idNumber && g.idNumber !== 'N/A') ? g.idNumber : '',
+                mobile: (g.mobile && g.mobile !== 'N/A') ? g.mobile : ''
+            });
+        });
+    } else {
+        addGuestToHotel(id);
+    }
 }
+
+function addGuestToHotel(hotelId, data = {}) {
+    const tbody = document.getElementById(`guestsTableBody_${hotelId}`);
+    if (!tbody) return;
+    guestRowCounter++;
+    const rowId = guestRowCounter;
+    const isFirstRow = tbody.querySelectorAll('tr').length === 0;
+
+    const html = `
+    <tr id="guestRow_${rowId}" class="hotel-guest-row">
+        <td>
+            <select class="guest-flight-pax-select" onfocus="window.refreshAllGuestDropdowns()" onchange="window.applyFlightPassengerToGuest(this)">
+                ${buildFlightPassengerSelectOptions()}
+            </select>
+        </td>
+        <td><input type="text" name="guest_firstName[]" placeholder="First Name" value="${data.firstName || ''}"></td>
+        <td><input type="text" name="guest_lastName[]" placeholder="Surname" value="${data.lastName || ''}"></td>
+        <td><input type="text" name="guest_idNumber[]" placeholder="ID or Passport" value="${data.idNumber || ''}"></td>
+        <td><input type="text" name="guest_mobile[]" placeholder="Mobile Number" value="${data.mobile || ''}"></td>
+        <td style="text-align: center;">
+            ${!isFirstRow ? `<button type="button" class="btn-remove-subcard" title="Remove guest" onclick="document.getElementById('guestRow_${rowId}')?.remove()">✕</button>` : ''}
+        </td>
+    </tr>
+    `;
+    tbody.insertAdjacentHTML('beforeend', html);
+}
+
+window.addGuestToHotel = (hotelId, data) => addGuestToHotel(hotelId, data);
 
 // Global attach for inline button handlers
 window.removeSubcard = (id) => {
@@ -672,12 +816,15 @@ async function buildTravelBookingPDF() {
     if (airTravelRequired) {
         const flightCards = Array.from(document.querySelectorAll('#flightLegsList .flight-subcard'));
         flightCards.forEach((card, idx) => {
+            const flightId = card.dataset.flightId;
+            const tripType = card.querySelector(`input[name="flight_tripType_${flightId}"]:checked`)?.value || 'Return';
+            const isReturnFlight = tripType === 'Return';
             const depAirport = card.querySelector('input[name="flight_depAirport[]"]')?.value.trim() || '';
-            const depDate = card.querySelector('input[name="flight_depDate[]"]')?.value.trim() || '';
-            const depTime = card.querySelector('input[name="flight_depTime[]"]')?.value.trim() || '';
-            const retAirport = card.querySelector('input[name="flight_retAirport[]"]')?.value.trim() || '';
-            const retDate = card.querySelector('input[name="flight_retDate[]"]')?.value.trim() || '';
-            const retTime = card.querySelector('input[name="flight_retTime[]"]')?.value.trim() || '';
+            const depDate = formatDateToDDMMYY(card.querySelector('input[name="flight_depDate[]"]')?.value.trim() || '');
+            const depTime = formatTimeTo24Hr(card.querySelector('input[name="flight_depTime[]"]')?.value.trim() || '');
+            const retAirport = isReturnFlight ? (card.querySelector('input[name="flight_retAirport[]"]')?.value.trim() || '') : '';
+            const retDate = isReturnFlight ? formatDateToDDMMYY(card.querySelector('input[name="flight_retDate[]"]')?.value.trim() || '') : '';
+            const retTime = isReturnFlight ? formatTimeTo24Hr(card.querySelector('input[name="flight_retTime[]"]')?.value.trim() || '') : '';
 
             const flightPassengers = [];
             const paxRows = card.querySelectorAll('.flight-passenger-row');
@@ -686,9 +833,6 @@ async function buildTravelBookingPDF() {
                 const ln = row.querySelector('input[name="passenger_lastName[]"]')?.value.trim() || '';
                 const idNum = row.querySelector('input[name="passenger_idNumber[]"]')?.value.trim() || '';
                 const mob = row.querySelector('input[name="passenger_mobile[]"]')?.value.trim() || '';
-                const paxTripType = row.querySelector('select[name="passenger_tripType[]"]')?.value || 'One Way';
-                const paxRetDate = row.querySelector('input[name="passenger_retDate[]"]')?.value.trim() || '';
-                const paxRetTime = row.querySelector('input[name="passenger_retTime[]"]')?.value.trim() || '';
                 if (fn || ln || idNum || mob) {
                     const paxObj = {
                         firstName: fn,
@@ -696,9 +840,6 @@ async function buildTravelBookingPDF() {
                         name: `${fn} ${ln}`.trim() || 'N/A',
                         idNumber: idNum || 'N/A',
                         mobile: mob || 'N/A',
-                        tripType: paxTripType,
-                        retDate: paxTripType === 'Return' ? (paxRetDate || retDate || 'N/A') : 'N/A',
-                        retTime: paxTripType === 'Return' ? (paxRetTime || retTime || 'N/A') : 'N/A',
                         flightNumber: idx + 1
                     };
                     flightPassengers.push(paxObj);
@@ -709,12 +850,13 @@ async function buildTravelBookingPDF() {
             if (depAirport || depDate || depTime || retAirport || retDate || retTime || flightPassengers.length > 0) {
                 flights.push({
                     flightNumber: flights.length + 1,
+                    tripType,
                     depAirport: depAirport || 'N/A',
                     depDate: depDate || 'N/A',
                     depTime: depTime || 'N/A',
-                    retAirport: retAirport || 'N/A',
-                    retDate: retDate || 'N/A',
-                    retTime: retTime || 'N/A',
+                    retAirport: isReturnFlight ? (retAirport || 'N/A') : 'One-Way',
+                    retDate: isReturnFlight ? (retDate || 'N/A') : 'N/A',
+                    retTime: isReturnFlight ? (retTime || 'N/A') : 'N/A',
                     passengers: flightPassengers
                 });
             }
@@ -725,19 +867,25 @@ async function buildTravelBookingPDF() {
     const vehicles = [];
     if (carRentalRequired) {
         const pickUps = Array.from(document.querySelectorAll('input[name="vehicle_pickUpLocation[]"]')).map(s => s.value.trim());
-        const pickUpDates = Array.from(document.querySelectorAll('input[name="vehicle_pickUpDateTime[]"]')).map(s => s.value);
+        const pickUpDates = Array.from(document.querySelectorAll('input[name="vehicle_pickUpDate[]"]')).map(s => formatDateToDDMMYY(s.value));
+        const pickUpTimes = Array.from(document.querySelectorAll('input[name="vehicle_pickUpTime[]"]')).map(s => formatTimeTo24Hr(s.value));
         const dropOffs = Array.from(document.querySelectorAll('input[name="vehicle_dropOffLocation[]"]')).map(s => s.value.trim());
-        const dropOffDates = Array.from(document.querySelectorAll('input[name="vehicle_dropOffDateTime[]"]')).map(s => s.value);
+        const dropOffDates = Array.from(document.querySelectorAll('input[name="vehicle_dropOffDate[]"]')).map(s => formatDateToDDMMYY(s.value));
+        const dropOffTimes = Array.from(document.querySelectorAll('input[name="vehicle_dropOffTime[]"]')).map(s => formatTimeTo24Hr(s.value));
         const drivers = Array.from(document.querySelectorAll('input[name="vehicle_driverName[]"]')).map(s => s.value.trim());
+        const specialReqs = Array.from(document.querySelectorAll('input[name="vehicle_specialRequirements[]"]')).map(s => s.value.trim());
 
         pickUps.forEach((pu, idx) => {
-            if (pu || dropOffs[idx] || drivers[idx]) {
+            if (pu || dropOffs[idx] || drivers[idx] || specialReqs[idx]) {
+                const pDateTime = [pickUpDates[idx], pickUpTimes[idx]].filter(Boolean).join(' ') || 'N/A';
+                const dDateTime = [dropOffDates[idx], dropOffTimes[idx]].filter(Boolean).join(' ') || 'N/A';
                 vehicles.push({
                     pickUp: pu || 'N/A',
-                    pickUpDate: pickUpDates[idx] ? pickUpDates[idx].replace('T', ' ') : 'N/A',
+                    pickUpDate: pDateTime,
                     dropOff: dropOffs[idx] || 'N/A',
-                    dropOffDate: dropOffDates[idx] ? dropOffDates[idx].replace('T', ' ') : 'N/A',
-                    driver: drivers[idx] || 'N/A'
+                    dropOffDate: dDateTime,
+                    driver: drivers[idx] || 'N/A',
+                    specialRequirements: specialReqs[idx] || ''
                 });
             }
         });
@@ -746,20 +894,40 @@ async function buildTravelBookingPDF() {
     // Collect Hotels
     const hotels = [];
     if (accommodationRequired) {
-        const cities = Array.from(document.querySelectorAll('input[name="hotel_city[]"]')).map(s => s.value.trim());
-        const names = Array.from(document.querySelectorAll('input[name="hotel_name[]"]')).map(s => s.value.trim());
-        const checkIns = Array.from(document.querySelectorAll('input[name="hotel_checkIn[]"]')).map(s => s.value);
-        const checkOuts = Array.from(document.querySelectorAll('input[name="hotel_checkOut[]"]')).map(s => s.value);
-        const guests = Array.from(document.querySelectorAll('input[name="hotel_guests[]"]')).map(s => s.value.trim());
+        const hotelCards = Array.from(document.querySelectorAll('#hotelsList .hotel-subcard'));
+        hotelCards.forEach(card => {
+            const city = card.querySelector('input[name="hotel_city[]"]')?.value.trim() || '';
+            const hotelName = card.querySelector('input[name="hotel_name[]"]')?.value.trim() || '';
+            const checkIn = formatDateToDDMMYY(card.querySelector('input[name="hotel_checkIn[]"]')?.value.trim() || '');
+            const checkOut = formatDateToDDMMYY(card.querySelector('input[name="hotel_checkOut[]"]')?.value.trim() || '');
+            const specialRequest = card.querySelector('input[name="hotel_specialRequest[]"]')?.value.trim() || '';
 
-        cities.forEach((c, idx) => {
-            if (c || names[idx]) {
+            const guestDetails = [];
+            card.querySelectorAll('.hotel-guest-row').forEach(row => {
+                const fn = row.querySelector('input[name="guest_firstName[]"]')?.value.trim() || '';
+                const ln = row.querySelector('input[name="guest_lastName[]"]')?.value.trim() || '';
+                const idNum = row.querySelector('input[name="guest_idNumber[]"]')?.value.trim() || '';
+                const mob = row.querySelector('input[name="guest_mobile[]"]')?.value.trim() || '';
+                if (fn || ln || idNum || mob) {
+                    guestDetails.push({
+                        firstName: fn,
+                        lastName: ln,
+                        name: `${fn} ${ln}`.trim() || 'N/A',
+                        idNumber: idNum || 'N/A',
+                        mobile: mob || 'N/A'
+                    });
+                }
+            });
+
+            if (city || hotelName || checkIn || checkOut || guestDetails.length > 0 || specialRequest) {
                 hotels.push({
-                    city: c || 'N/A',
-                    hotel: names[idx] || 'N/A',
-                    checkIn: checkIns[idx] || 'N/A',
-                    checkOut: checkOuts[idx] || 'N/A',
-                    guests: guests[idx] || 'N/A'
+                    city: city || 'N/A',
+                    hotel: hotelName || 'N/A',
+                    checkIn: checkIn || 'N/A',
+                    checkOut: checkOut || 'N/A',
+                    guestDetails,
+                    guests: guestDetails.map(g => g.name).join(', ') || 'N/A',
+                    specialRequest
                 });
             }
         });
@@ -847,7 +1015,7 @@ async function buildTravelBookingPDF() {
     safeDrawText(`Commission #:  ${cleanPdfText(commNum) || 'N/A'}`, { x: 340, y: y - 20, size: 10, font: fontBold, color: darkColor });
     safeDrawText(`Requestor:  ${cleanPdfText(requestorName) || 'N/A'}`, { x: 55, y: y - 40, size: 9.5, font, color: darkColor });
     safeDrawText(`Submitter Email:  ${cleanPdfText(submitterEmail) || 'N/A'}`, { x: 340, y: y - 40, size: 9.5, font, color: darkColor });
-    safeDrawText(`Date Submitted:  ${new Date().toLocaleDateString('en-ZA')}`, { x: 55, y: y - 56, size: 8.5, font, color: mutedColor });
+    safeDrawText(`Date Submitted:  ${formatDateToDDMMYY(new Date().toISOString().split('T')[0])}`, { x: 55, y: y - 56, size: 8.5, font, color: mutedColor });
 
     y -= 85;
 
@@ -859,7 +1027,7 @@ async function buildTravelBookingPDF() {
 
         flights.forEach((f, idx) => {
             checkPageBreak(65);
-            safeDrawText(`Flight #${idx + 1}`, {
+            safeDrawText(`Flight #${idx + 1} (${f.tripType || 'Return'})`, {
                 x: 48,
                 y,
                 size: 10,
@@ -877,14 +1045,16 @@ async function buildTravelBookingPDF() {
             });
             y -= 13;
 
-            safeDrawText(`Return:        Airport: ${f.retAirport}   |   Date: ${f.retDate}   |   Time: ${f.retTime}`, {
-                x: 55,
-                y,
-                size: 8.8,
-                font: fontBold,
-                color: darkColor
-            });
-            y -= 14;
+            if (f.tripType !== 'One-Way') {
+                safeDrawText(`Return:        Airport: ${f.retAirport}   |   Date: ${f.retDate}   |   Time: ${f.retTime}`, {
+                    x: 55,
+                    y,
+                    size: 8.8,
+                    font: fontBold,
+                    color: darkColor
+                });
+                y -= 14;
+            }
 
             safeDrawText(`Passengers Taking Flight #${idx + 1}:`, {
                 x: 55,
@@ -898,13 +1068,10 @@ async function buildTravelBookingPDF() {
             if (Array.isArray(f.passengers) && f.passengers.length > 0) {
                 f.passengers.forEach((p, pIdx) => {
                     checkPageBreak(18);
-                    const returnSuffix = p.tripType === 'Return'
-                        ? `  |  Return (Date: ${p.retDate || 'N/A'}, Time: ${p.retTime || 'N/A'})`
-                        : `  |  One Way`;
-                    safeDrawText(`${pIdx + 1}. ${p.name}  -  ID/Passport: ${p.idNumber}  -  Mobile: ${p.mobile}${returnSuffix}`, {
+                    safeDrawText(`${pIdx + 1}. ${p.name}  -  ID/Passport: ${p.idNumber}  -  Mobile: ${p.mobile}`, {
                         x: 65,
                         y,
-                        size: 8.2,
+                        size: 8.5,
                         font,
                         color: darkColor
                     });
@@ -932,7 +1099,7 @@ async function buildTravelBookingPDF() {
         y -= 16;
 
         vehicles.forEach((v, idx) => {
-            checkPageBreak(35);
+            checkPageBreak(45);
             safeDrawText(`Vehicle ${idx + 1} - Driver: ${v.driver}`, { x: 50, y, size: 9.5, font: fontBold, color: darkColor });
             y -= 13;
             safeDrawText(`Pick-Up: ${v.pickUp} (${v.pickUpDate})  ->  Drop-Off: ${v.dropOff} (${v.dropOffDate})`, {
@@ -942,7 +1109,18 @@ async function buildTravelBookingPDF() {
                 font,
                 color: mutedColor
             });
-            y -= 18;
+            y -= 13;
+            if (v.specialRequirements) {
+                safeDrawText(`Special Requirements: ${v.specialRequirements}`, {
+                    x: 60,
+                    y,
+                    size: 8.5,
+                    font,
+                    color: darkColor
+                });
+                y -= 13;
+            }
+            y -= 6;
         });
         y -= 10;
     }
@@ -954,25 +1132,52 @@ async function buildTravelBookingPDF() {
         y -= 16;
 
         hotels.forEach((h, idx) => {
-            checkPageBreak(35);
+            checkPageBreak(50);
             safeDrawText(`Location ${idx + 1}: ${h.city} - Hotel/B&B: ${h.hotel}`, { x: 50, y, size: 9.5, font: fontBold, color: darkColor });
             y -= 13;
-            safeDrawText(`Check-In: ${h.checkIn}  |  Check-Out: ${h.checkOut}  |  Guests: ${h.guests}`, {
+            safeDrawText(`Check-In: ${h.checkIn}  |  Check-Out: ${h.checkOut}`, {
                 x: 60,
                 y,
                 size: 8.5,
                 font,
                 color: mutedColor
             });
-            y -= 18;
+            y -= 13;
+            if (Array.isArray(h.guestDetails) && h.guestDetails.length > 0) {
+                safeDrawText('Guest Details:', { x: 60, y, size: 8.5, font: fontBold, color: mutedColor });
+                y -= 12;
+                h.guestDetails.forEach((g, gIdx) => {
+                    checkPageBreak(16);
+                    safeDrawText(`${gIdx + 1}. ${g.name}  -  ID/Passport: ${g.idNumber}  -  Mobile: ${g.mobile}`, {
+                        x: 70,
+                        y,
+                        size: 8.5,
+                        font,
+                        color: darkColor
+                    });
+                    y -= 12;
+                });
+            }
+            if (h.specialRequest) {
+                checkPageBreak(16);
+                safeDrawText(`Special Request: ${h.specialRequest}`, {
+                    x: 60,
+                    y,
+                    size: 8.5,
+                    font,
+                    color: darkColor
+                });
+                y -= 13;
+            }
+            y -= 8;
         });
         y -= 10;
     }
 
-    // Special Requirements
+    // General Special Requests
     if (specialNotes) {
         checkPageBreak(60);
-        safeDrawText('SPECIAL REQUIREMENTS & LOGISTICS NOTES', { x: 40, y, size: 11, font: fontBold, color: primaryColor });
+        safeDrawText('GENERAL SPECIAL REQUESTS', { x: 40, y, size: 11, font: fontBold, color: primaryColor });
         y -= 16;
         const noteLines = specialNotes.split('\n');
         noteLines.forEach(nl => {
