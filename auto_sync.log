@@ -493,3 +493,187 @@
 [2026-11-16 10:50:43] 
 [2026-11-16 10:50:43] Microsoft Graph email import cycle completed successfully.
 [2026-11-16 10:50:43] Changes detected. Syncing...
+[2026-11-16 10:50:43] [main 2e24b90] auto-sync: 2026-11-16 10:51
+[2026-11-16 10:50:43]  1 file changed, 100 insertions(+), 184 deletions(-)
+[2026-11-16 10:50:43] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-11-16 10:50:43]    9e11d13..2e24b90  main -> main
+[2026-11-16 10:50:43] Sync complete.
+[2026-11-17 09:38:23] Running Microsoft Graph Email Importer...
+[2026-11-17 09:38:23] Starting Graph API Email Importer... Mode: LIVE
+[2026-11-17 09:38:23] Fetching messages from Microsoft Graph...
+[2026-11-17 09:38:23] Fetching messages from Microsoft Graph...
+[2026-11-17 09:38:23] Found 75 email(s) since 1 May 2026 to check.
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-14T07:40:44Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Fwd: NO WATER TANKERS - SUNDOWNER AND SURROUNDS" from Stacy Gericke <stacygericke@gmail.com> (received: 2026-11-14T08:11:45Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Jess ford foundation" from Leigh-ann Mcghee <leighannmcghee66@gmail.com> (received: 2026-11-14T08:25:56Z)
+[2026-11-17 09:38:23] Skipping duplicate: "No water in weltevredenpark" from Giselle Harmsen <giselle.harmsen@gmail.com> (received: 2026-11-14T08:58:09Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Re: Faults" from Kyle Brodie <kyleb6097@gmail.com> (received: 2026-11-14T09:07:39Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-14T10:19:20Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-14T10:25:56Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-14T10:26:00Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-14T10:29:39Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-14T10:30:12Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-14T11:04:15Z)
+[2026-11-17 09:38:23] Skipping duplicate: "(No Subject)" from des.michaelides <des.michaelides@yahoo.com> (received: 2026-11-14T13:28:51Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-14T14:05:02Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Re: Telkom Consumer Exploitation" from Maloisane <tdsomaso@gmail.com> (received: 2026-11-14T18:22:49Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Please Help" from Sergio Freire <Sergio@freire.co.za> (received: 2026-11-14T19:32:10Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-15T03:59:02Z)
+[2026-11-17 09:38:23] Skipping duplicate: "(No Subject)" from Soula Foord <soulafoord406@gmail.com> (received: 2026-11-15T05:16:48Z)
+[2026-11-17 09:38:23] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-17 09:38:23] Skipping duplicate: "OnAirTV unaithorised /illegal deductions" from Paula Allen <paula.allen@uct.ac.za> (received: 2026-11-15T10:43:18Z)
+[2026-11-17 09:38:23] Skipping duplicate: "St Lucia Crocodile farm" from Stephan Beneke <stephanbeneke@gmail.com> (received: 2026-11-15T15:59:15Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-15T16:26:44Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Jmpd corruption" from Mark Hay <27826634438@vodamail.co.za> (received: 2026-11-15T17:25:37Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Rayno bilateral cleft lip and palate assistance" from Priscilla Lottering <priscilla.lottering@gmail.com> (received: 2026-11-15T17:56:43Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-15T17:59:08Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-15T18:04:15Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-15T18:18:47Z)
+[2026-11-17 09:38:23] Skipping duplicate: "JMPD Armoury Investigation" from Charles Bramwell <bramwellct@gmail.com> (received: 2026-11-15T18:48:33Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-15T19:25:19Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Additional Information Regarding Bennet Madzonga" from Nicole Sarah Kahts <nicolesarahkahts@gmail.com> (received: 2026-11-15T19:36:08Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-15T23:35:49Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-16T00:59:22Z)
+[2026-11-17 09:38:23] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-16T03:36:50Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Re: VRA45B9501AC4 - outstanding entry" from Ginzel Sinclair <sinclairginny@gmail.com> (received: 2026-11-16T04:35:42Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Fwd: VRA45B9501AC4 - Affidavit for invoices over 2 trips and outstanding entry" from Ginzel Sinclair <sinclairginny@gmail.com> (received: 2026-11-16T04:41:24Z)
+[2026-11-17 09:38:23] Skipping duplicate: "WATER SHEDDING AND NO WATER IN EKURHULENI" from Gary Purcell <gary.purcell95@gmail.com> (received: 2026-11-16T05:14:02Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Re: VRA Rejected claim - VRAD36B64F3CC [Agent: Marinelle@VRA]" from Ginzel Sinclair <sinclairginny@gmail.com> (received: 2026-11-16T05:29:06Z)
+[2026-11-17 09:38:23] Skipping duplicate: "(No Subject)" from Hestie Jacobs <jacobshestie4@gmail.com> (received: 2026-11-16T05:46:53Z)
+[2026-11-17 09:38:23] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-16T06:23:21Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Cape Peninsula Baboons" from Riley, Fee <fee.riley@siemens.com> (received: 2026-11-16T06:42:53Z)
+[2026-11-17 09:38:23] Skipping duplicate: "RE: Cape Peninsula Baboons" from Riley, Fee <fee.riley@siemens.com> (received: 2026-11-16T07:10:09Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Re: VIEWING OF SCRIPTS AFTER REMARKING" from Quanitah Kaffoor-Karlie <quanitahkk@gmail.com> (received: 2026-11-16T07:56:15Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-16T07:59:49Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Story Idea: Nemzzz to Make His South African Debut at LetGÇÖs Be Friends +ù Ciirco Loko" from Nash Chikazunga <nash@arxna.com> (received: 2026-11-16T08:04:12Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-16T08:17:04Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-16T08:23:32Z)
+[2026-11-17 09:38:23] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-16T08:24:04Z)
+[2026-11-17 09:38:23] Skipping duplicate: "HEARTFELT REQUEST" from Monica De Sousa Alves <desousaalvesmonica93@gmail.com> (received: 2026-11-16T08:47:17Z)
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/pr98vEof9Hhbt12mqPri
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Re: Stephan Welz and Co: Post-sale offers" from jens horber <jens.horber@gmail.com>
+[2026-11-17 09:38:23] Identified formType: email_submission
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/oA4pHgc5mFhMSdo3G0fS
+[2026-11-17 09:38:23] Email was already marked as read. Bypassed marking as read.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/DPDXCrsZewvAsOCQnSpr
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/dhf1cYTpTUN72WgOeVxs
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/5pBdCalviuWJX4LtJSG4
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "BONITAS MEDICAL AID COLLAPSE" from Mizpah Swart <mizpahswart@yahoo.com>
+[2026-11-17 09:38:23] Identified formType: email_submission
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/q0o1MHgjn8LsYLVYqJWK
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Re: URGENT: 107 dBA Structural Infrastructure Noise Violation GÇô Suburb of Gillitts - F260902/922, F260902/882" from Andre Barnard <andre_barnard@ymail.com>
+[2026-11-17 09:38:23] Identified formType: email_submission
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/Z1kO0SxNiu0657wCNmCh
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/8dj54rcJLowRmV9g5dn9
+[2026-11-17 09:38:23] Email was already marked as read. Bypassed marking as read.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/jRn2DuqHEzXW0iYffrZs
+[2026-11-17 09:38:23] Email was already marked as read. Bypassed marking as read.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/VJNZsQFmfYNhq1HQ36oI
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Formal Complaint and Request for Investigation GÇô Bonitas Medical Aid" from claudine de klerk <claudinedeklerk17@gmail.com>
+[2026-11-17 09:38:23] Identified formType: email_submission
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/e066jLbNbbl8IplToWcj
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Re: URGENT FOLLOW-UP GÇô FAILURE TO RESPOND AND NOTICE OF LEGAL ESCALATION" from Michele Pietrucci <michpietrucci@gmail.com>
+[2026-11-17 09:38:23] Identified formType: email_submission
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/EDYiaBfrHD81fuVezfoZ
+[2026-11-17 09:38:23] Email was already marked as read. Bypassed marking as read.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/qofSsiG0ZZiGNXxfW6hO
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/wFmJyz8NdvZLGUpK3tuh
+[2026-11-17 09:38:23] Email was already marked as read. Bypassed marking as read.
+[2026-11-17 09:38:23] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/ze79FnlN6jcGIrffXAuU
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "CSOS CAPTURE" from Sushilla Ramballi <retreat2019202@gmail.com>
+[2026-11-17 09:38:23] Identified formType: email_submission
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/nixENiF049wogMLLhvbx
+[2026-11-17 09:38:23] Email was already marked as read. Bypassed marking as read.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Responses to the body corporate " from lebogang mmusi <hellenmmusi30@gmail.com>
+[2026-11-17 09:38:23] Identified formType: email_submission
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/UQUX4f252xZcDOUMZlaY
+[2026-11-17 09:38:23] Email was already marked as read. Bypassed marking as read.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/lIDBnooa5dkHfvCtGYQo
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/A7EDOZW00jSr7zDwBwud
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Fwd:" from DJ <stormersvswp@gmail.com>
+[2026-11-17 09:38:23] Identified formType: email_submission
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/cacHilp6o4vVKCKQb4fR
+[2026-11-17 09:38:23] Email was already marked as read. Bypassed marking as read.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "RE: " from Laurence Friedman <laurencef@swelco.co.za>
+[2026-11-17 09:38:23] Identified formType: email_submission
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/iBVohCu0ITXi70sUYXtk
+[2026-11-17 09:38:23] Email was already marked as read. Bypassed marking as read.
+[2026-11-17 09:38:23] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Lifestyle, Location and Value Driving Demand Along the Durbanville-De Plattekloof Corridor" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za>
+[2026-11-17 09:38:23] Identified formType: email_submission
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/6wmn6LR6bDqsGq1kZnLS
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com>
+[2026-11-17 09:38:23] Identified formType: dstv_tipoff
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/2bDpoRbTafBItcTGiRfC
+[2026-11-17 09:38:23] Email was already marked as read. Bypassed marking as read.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Processing: "No service delivery in emalahleni" from Wilna van den heever <vandenheever94@gmail.com>
+[2026-11-17 09:38:23] Identified formType: email_submission
+[2026-11-17 09:38:23] Saved submission successfully to Firestore: submissions/HlRNsNjl7tiEbd1CfLHD
+[2026-11-17 09:38:23] Marked email as read on Microsoft Graph.
+[2026-11-17 09:38:23] 
+[2026-11-17 09:38:23] Microsoft Graph email import cycle completed successfully.
+[2026-11-17 09:38:23] Changes detected. Syncing...
