@@ -5368,26 +5368,73 @@ app.post('/api/delete-proposal', express.json(), async (req, res) => {
   }
 });
 
+// In-memory 60s cache for decrypted users lookup map
+let _cachedUserMap = null;
+let _cachedUserMapTime = 0;
+const USER_MAP_TTL_MS = 60 * 1000;
+
+async function getCachedUserMap() {
+  const now = Date.now();
+  if (_cachedUserMap && (now - _cachedUserMapTime) < USER_MAP_TTL_MS) {
+    return _cachedUserMap;
+  }
+  const userSnapshot = await admin.firestore().collection('users').get();
+  const userMap = {};
+  userSnapshot.docs.forEach(udoc => {
+    const udata = udoc.data();
+    const rawName = decrypt(udata.name) || '';
+    const rawSurname = decrypt(udata.surname) || '';
+    userMap[udoc.id] = {
+      name: rawName === '--' ? '' : rawName,
+      surname: rawSurname === '--' ? '' : rawSurname,
+      email: (decrypt(udata.email) || (udoc.id.includes('@') ? udoc.id : '')).toLowerCase().trim()
+    };
+  });
+  _cachedUserMap = userMap;
+  _cachedUserMapTime = now;
+  return userMap;
+}
+
+const PROPOSAL_LIST_FIELDS = [
+  'story_title',
+  'commissionNumber',
+  'status',
+  'txDate',
+  'txDates',
+  'submittedAt',
+  'acceptedAt',
+  'paidAt',
+  'lastUpdatedAt',
+  'decommissionedAt',
+  'decommissionReason',
+  'submittedBy',
+  'submittedByEmail',
+  'submittedByName',
+  'submittedBySurname',
+  'historicalSubmitterName',
+  'producer',
+  'producerName',
+  'producerEmail',
+  'producer_email',
+  'isSensitive',
+  'permittedUids',
+  'legal_req',
+  'acceptanceDetails',
+  'details.presenter',
+  'details.legal_req',
+  'details.callSheet.crew'
+];
+
 app.get('/api/proposals', async (req, res) => {
   try {
     const isAdmin = hasAdminAccess(req.user);
     const uEmail = String(req.user?.email || '').toLowerCase().trim();
     const isLezanne = uEmail === 'lezanne@carteblanche.co.za';
     const isMasq = Boolean(req.user?.isMasquerading);
-    const [snapshot, userSnapshot] = await Promise.all([
-      admin.firestore().collection('proposals').get(),
-      admin.firestore().collection('users').get()
+    const [snapshot, userMap] = await Promise.all([
+      admin.firestore().collection('proposals').select(...PROPOSAL_LIST_FIELDS).get(),
+      getCachedUserMap()
     ]);
-
-    const userMap = {};
-    userSnapshot.docs.forEach(udoc => {
-      const udata = udoc.data();
-      userMap[udoc.id] = {
-        name: decrypt(udata.name) || '',
-        surname: decrypt(udata.surname) || '',
-        email: (decrypt(udata.email) || (udoc.id.includes('@') ? udoc.id : '')).toLowerCase().trim()
-      };
-    });
     
     const proposals = [];
     snapshot.docs.forEach(doc => {
@@ -5412,15 +5459,6 @@ app.get('/api/proposals', async (req, res) => {
         return;
       }
 
-      if (data.caseStudies && data.caseStudies._encrypted) {
-        try { data.caseStudies = JSON.parse(decrypt(data.caseStudies)); } catch (e) {}
-      }
-      if (data.experts && data.experts._encrypted) {
-        try { data.experts = JSON.parse(decrypt(data.experts)); } catch (e) {}
-      }
-      if (data.details) {
-        data.details = decryptCallSheet(data.details);
-      }
       proposals.push({ id: doc.id, ...data });
     });
 
@@ -5826,18 +5864,10 @@ app.get('/api/admin/proposals', async (req, res) => {
       return res.status(403).json({ success: false, error: 'Unauthorized: Admin access required.' });
     }
 
-    const snapshot = await admin.firestore().collection('proposals').get();
-    
-    // Optimization: Fetch all users once and build a lookup map
-    const userSnapshot = await admin.firestore().collection('users').get();
-    const userMap = {};
-    userSnapshot.docs.forEach(udoc => {
-        const udata = udoc.data();
-        userMap[udoc.id] = {
-            name: decrypt(udata.name),
-            surname: decrypt(udata.surname)
-        };
-    });
+    const [snapshot, userMap] = await Promise.all([
+      admin.firestore().collection('proposals').select(...PROPOSAL_LIST_FIELDS).get(),
+      getCachedUserMap()
+    ]);
 
     const proposals = snapshot.docs.map(doc => {
       const data = doc.data();
@@ -5849,7 +5879,8 @@ app.get('/api/admin/proposals', async (req, res) => {
       }
 
       // Resolve Name using Map
-      if (data.submittedBy && userMap[data.submittedBy]) {
+      const isTestAccount = String(data.historicalSubmitterName || '').toLowerCase().trim() === 'test account';
+      if (!isTestAccount && data.submittedBy && userMap[data.submittedBy]) {
           data.submittedByName = userMap[data.submittedBy].name;
           data.submittedBySurname = userMap[data.submittedBy].surname;
       } else if (!data.submittedByName && data.historicalSubmitterName) {
@@ -5858,15 +5889,6 @@ app.get('/api/admin/proposals', async (req, res) => {
           data.submittedBySurname = parts.slice(1).join(' ') || '';
       }
 
-      if (data.caseStudies && data.caseStudies._encrypted) {
-        try { data.caseStudies = JSON.parse(decrypt(data.caseStudies)); } catch (e) {}
-      }
-      if (data.experts && data.experts._encrypted) {
-        try { data.experts = JSON.parse(decrypt(data.experts)); } catch (e) {}
-      }
-      if (data.details) {
-        data.details = decryptCallSheet(data.details);
-      }
       return { id: doc.id, ...data };
     });
     

@@ -46,14 +46,15 @@ if (!document.getElementById('episodeModal')) {
             // Editorial dashboard specific init could go here
         }
 
-        globalProposals = await loadProposals();
+        loadProducers(); // Load producers in parallel without blocking proposals
+
+        globalProposals = await loadProposals(user);
         updateStats(globalProposals);
-        loadProducers(); // Load producers for the edit modal dropdown
 
         // Define Change Page Handler
         window.changePage = (type, delta) => {
             currentPages[type] += delta;
-            renderProposals(globalProposals, window.auth.isAdmin(user));
+            renderProposals(globalProposals, window.auth.isAdmin(user), false);
         };
 
         // Populate Navigation
@@ -125,23 +126,71 @@ if (!document.getElementById('episodeModal')) {
     }
 }
 
-async function loadProposals() {
-    loadingOverlay.classList.add('active');
+function prepareProposalsSortKey(proposals) {
+    if (!Array.isArray(proposals)) return;
+    for (let i = 0; i < proposals.length; i++) {
+        const p = proposals[i];
+        let ts = 0;
+        if (p.txDate) {
+            const d = new Date(p.txDate).getTime();
+            if (!isNaN(d)) ts = d;
+        }
+        if (!ts && p.paidAt) {
+            const d = p.paidAt._seconds ? p.paidAt._seconds * 1000 : new Date(p.paidAt).getTime();
+            if (!isNaN(d)) ts = d;
+        }
+        p._paidSortTs = ts;
+    }
+}
+
+async function loadProposals(passedUser = null) {
+    const user = passedUser || await window.auth.checkAuth();
+    const canDelete = window.auth.isAdmin(user);
+    const cacheKey = `carp_admin_proposals_v2_${user?.uid || 'anon'}`;
+
+    // Stale-while-revalidate: render cached proposals immediately if available
+    let renderedFromCache = false;
+    if (passedUser && globalProposals.length === 0) {
+        try {
+            const cachedRaw = localStorage.getItem(cacheKey);
+            if (cachedRaw) {
+                const cached = JSON.parse(cachedRaw);
+                if (Array.isArray(cached) && cached.length > 0) {
+                    prepareProposalsSortKey(cached);
+                    globalProposals = cached;
+                    renderProposals(globalProposals, canDelete, true);
+                    updateStats(globalProposals);
+                    renderedFromCache = true;
+                }
+            }
+        } catch (e) {
+            console.warn("Cache read skipped:", e);
+        }
+    }
+
+    if (!renderedFromCache) {
+        loadingOverlay.classList.add('active');
+    }
+
     try {
-        const user = await window.auth.checkAuth();
-        const canDelete = window.auth.isAdmin(user);
         const response = await window.auth.fetchWithAuth(`/api/admin/proposals?_cb=${Date.now()}`);
         const result = await response.json();
 
         if (result.success) {
+            prepareProposalsSortKey(result.proposals);
             globalProposals = result.proposals;
-            renderProposals(globalProposals, canDelete);
+            renderProposals(globalProposals, canDelete, true);
+            updateStats(globalProposals);
+            try {
+                localStorage.setItem(cacheKey, JSON.stringify(globalProposals));
+            } catch (e) {}
             return globalProposals;
         } else {
             throw new Error(result.error || "Failed to fetch proposals");
         }
     } catch (err) {
         console.error("Load proposals failed:", err);
+        return globalProposals;
     } finally {
         loadingOverlay.classList.remove('active');
     }
@@ -166,7 +215,7 @@ function populateEpisodesSidebar(proposals) {
     const sidebarList = document.getElementById('episodesSidebarList');
     if (!sidebarList) return;
 
-    const txDates = new Set();
+    const txDatesMap = new Map();
     proposals.forEach(p => {
         const allDates = Array.isArray(p.txDates) && p.txDates.length > 0 ? p.txDates : (p.txDate ? [p.txDate] : []);
         if (p.txDate && !allDates.includes(p.txDate)) {
@@ -175,14 +224,15 @@ function populateEpisodesSidebar(proposals) {
         allDates.forEach(d => {
             if (d) {
                 const formatted = formatDate(d);
-                if (formatted !== '—') {
-                    txDates.add(formatted);
+                if (formatted !== '—' && !txDatesMap.has(formatted)) {
+                    const ts = new Date(d).getTime();
+                    txDatesMap.set(formatted, isNaN(ts) ? 0 : ts);
                 }
             }
         });
     });
 
-    const sortedDates = Array.from(txDates).sort((a, b) => new Date(b) - new Date(a));
+    const sortedDates = Array.from(txDatesMap.keys()).sort((a, b) => txDatesMap.get(b) - txDatesMap.get(a));
 
     sidebarList.innerHTML = '';
     
@@ -235,8 +285,10 @@ function renderCommNumberHtml(commNum) {
     return `<strong>#${commNum}</strong>`;
 }
 
-function renderProposals(proposals, canDelete) {
-    populateEpisodesSidebar(globalProposals);
+function renderProposals(proposals, canDelete, refreshSidebar = true) {
+    if (refreshSidebar) {
+        populateEpisodesSidebar(globalProposals);
+    }
     const propTableBody = document.getElementById('proposalTableBody');
     const commTableBody = document.getElementById('commissionedTableBody');
     const paidTableBody = document.getElementById('paidTableBody');
@@ -392,18 +444,9 @@ function renderProposals(proposals, canDelete) {
         if (hasCommA && !hasCommB) return -1;
         if (!hasCommA && hasCommB) return 1;
 
-        const getSortDate = (p) => {
-            if (p.txDate) {
-                const d = new Date(p.txDate);
-                if (!isNaN(d.getTime())) return d;
-            }
-            if (p.paidAt) {
-                const d = p.paidAt._seconds ? new Date(p.paidAt._seconds * 1000) : new Date(p.paidAt);
-                if (!isNaN(d.getTime())) return d;
-            }
-            return new Date(0);
-        };
-        return getSortDate(b) - getSortDate(a);
+        const tsA = a._paidSortTs !== undefined ? a._paidSortTs : (a.txDate ? new Date(a.txDate).getTime() || 0 : 0);
+        const tsB = b._paidSortTs !== undefined ? b._paidSortTs : (b.txDate ? new Date(b.txDate).getTime() || 0 : 0);
+        return tsB - tsA;
     });
     const totalPagesPaid = Math.max(1, Math.ceil(paid.length / PAGE_SIZE));
     if (currentPages.paid > totalPagesPaid) currentPages.paid = totalPagesPaid;
@@ -689,16 +732,33 @@ window.clearProducerFilter = () => {
     });
 };
 
+const MONTH_NAMES = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+];
+const _formatDateCache = new Map();
+
 function formatDate(timestamp) {
     if (!timestamp) return '—';
+    const cacheKey = typeof timestamp === 'string' || typeof timestamp === 'number'
+        ? timestamp
+        : (timestamp._seconds ? `s:${timestamp._seconds}` : null);
+    if (cacheKey !== null && _formatDateCache.has(cacheKey)) {
+        return _formatDateCache.get(cacheKey);
+    }
+
     const date = timestamp._seconds ? new Date(timestamp._seconds * 1000) : new Date(timestamp);
     if (isNaN(date.getTime())) return '—';
 
     const day = date.getDate().toString().padStart(2, '0');
-    const month = date.toLocaleString('default', { month: 'long' });
+    const month = MONTH_NAMES[date.getMonth()];
     const year = date.getFullYear();
 
-    return `${day} ${month} ${year}`;
+    const formatted = `${day} ${month} ${year}`;
+    if (cacheKey !== null) {
+        _formatDateCache.set(cacheKey, formatted);
+    }
+    return formatted;
 }
 
 function updateStats(proposals) {
