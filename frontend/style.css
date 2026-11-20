@@ -2410,8 +2410,15 @@ input:checked + .slider:before {
     #viewModeBanner, #masqueradeBanner, .loading-overlay, .remove-btn, .add-btn, #backToAdminBtn, #printReportBtn,
     .no-print, .global-top-nav, .form-actions, .form-top-actions, .form-bottom-actions,
     .sig-mode-tabs, .btn-clear-sig, .sig-pad-footer, #carpCoSignBanner,
+    .btn-remove-credit, .btn-add-credit-row, .btn-add-credit,
     #productionPhaseBar, #viewActions, .edit-mode-badge {
         display: none !important;
+    }
+
+    .credit-block-card {
+        page-break-inside: avoid;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
     }
 
     .report-meta {

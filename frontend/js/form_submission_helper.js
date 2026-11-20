@@ -374,13 +374,23 @@ export function prepareTemplatePdf(pdfDoc) {
     try {
         const form = pdfDoc.getForm();
         const fields = form.getFields();
+        const pages = pdfDoc.getPages();
         for (const field of fields) {
             const name = field.getName();
             const widgets = field.acroField.getWidgets();
             for (const w of widgets) {
                 const rect = w.getRectangle();
+                let pIndex = 0;
+                try {
+                    const pRef = w.P();
+                    if (pRef) {
+                        const idx = pages.findIndex(p => p.ref === pRef);
+                        if (idx !== -1) pIndex = idx;
+                    }
+                } catch (pErr) {}
                 if (rect && rect.width > 0 && rect.height > 0) {
                     fieldMap[name] = {
+                        pageIndex: pIndex,
                         x: rect.x,
                         y: rect.y,
                         width: rect.width,

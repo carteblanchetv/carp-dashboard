@@ -201,6 +201,74 @@
             background: rgba(239, 68, 68, 0.1);
             border-color: #ef4444;
         }
+
+        /* Screen Credits Block Styles */
+        .credit-block-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md, 8px);
+            padding: 1.25rem 1.25rem 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+        .credit-block-card:hover {
+            border-color: rgba(99, 102, 241, 0.45);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
+        }
+        .credit-block-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.85rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .credit-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+            padding: 0.25rem 0.65rem;
+            border-radius: 4px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .credit-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 640px) {
+            .credit-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .btn-add-credit-row {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.85rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #6366f1;
+            background: rgba(99, 102, 241, 0.06);
+            border: 2px dashed rgba(99, 102, 241, 0.4);
+            border-radius: var(--radius-md, 8px);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-add-credit-row:hover {
+            background: rgba(99, 102, 241, 0.14);
+            border-color: #6366f1;
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body class="dashboard-body">
@@ -294,10 +362,10 @@
                 </div>
 
                 <!-- CREW & CREDITS -->
-                <div class="section-subtitle">Production Credits</div>
+                <div class="section-subtitle">Production &amp; Technical Crew Details</div>
                 <div class="field-group-grid">
                     <div class="form-field">
-                        <label for="producerName">Producer Name <span class="required">*</span></label>
+                        <label for="producerName">Producer <span class="required">*</span></label>
                         <input type="text" id="producerName" name="producerName" placeholder="Producer name..." required>
                     </div>
 
@@ -312,37 +380,73 @@
                     </div>
 
                     <div class="form-field">
-                        <label for="cameraName">Camera Operator (DOP)</label>
-                        <input type="text" id="cameraName" name="cameraName" placeholder="Camera operator / DOP...">
+                        <label for="cameraName">DOP (Camera Operator)</label>
+                        <input type="text" id="cameraName" name="cameraName" placeholder="DOP / Camera operator...">
                     </div>
 
                     <div class="form-field">
-                        <label for="researcherName">Researcher / Camera Assistant</label>
-                        <input type="text" id="researcherName" name="researcherName" placeholder="Researcher name...">
-                    </div>
-
-                    <div class="form-field">
-                        <label for="soundName">Sound Recordist / Final Mix</label>
-                        <input type="text" id="soundName" name="soundName" placeholder="Sound recordist...">
+                        <label for="researcherName">Camera Assistant / Researcher</label>
+                        <input type="text" id="researcherName" name="researcherName" placeholder="Camera assistant / researcher...">
                     </div>
 
                     <div class="form-field">
                         <label for="editorName">Editor</label>
-                        <input type="text" id="editorName" name="editorName" placeholder="Offline/Online editor...">
+                        <input type="text" id="editorName" name="editorName" placeholder="Editor name...">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="soundName">Final Mix Operator / Sound</label>
+                        <input type="text" id="soundName" name="soundName" placeholder="Final mix operator...">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="storyDuration">Insert Duration (HH:MM:SS)</label>
+                        <input type="text" id="storyDuration" name="storyDuration" placeholder="HH:MM:SS" maxlength="8">
+                    </div>
+
+                    <div class="form-field field-group-full">
+                        <label for="thirdPartyFootage">3rd Party Footage (Yes or No / Details)</label>
+                        <input type="text" id="thirdPartyFootage" name="thirdPartyFootage" placeholder="e.g. No, or Yes - Reuters archive / Irdeto clips" value="No">
                     </div>
                 </div>
 
-                <!-- ADDITIONAL PRODUCTION CREDITS (DYNAMIC) -->
+                <!-- SCREEN CREDITS (LOWER THIRDS & GRAPHICS) -->
+                <div class="screen-credits-header" style="display: flex; justify-content: space-between; align-items: center; margin-top: 2.25rem; margin-bottom: 0.75rem; border-bottom: 2px solid var(--primary, #6366f1); padding-bottom: 0.5rem;">
+                    <div>
+                        <h2 style="font-size: 1.15rem; font-weight: 800; text-transform: uppercase; color: var(--primary, #6366f1); letter-spacing: 0.05em; margin: 0;">
+                            Screen Credits
+                        </h2>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">
+                            Official on-screen lower third supers, titles, and name graphics
+                        </span>
+                    </div>
+                    <span id="creditCounterDisplay" class="credit-counter-badge" style="font-size: 0.8rem; font-weight: 700; color: #6366f1; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); padding: 0.3rem 0.75rem; border-radius: 9999px;">
+                        4 Credits
+                    </span>
+                </div>
+
+                <div id="creditRowsContainer">
+                    <!-- Dynamic Credit Cards rendered here (initial 4) -->
+                </div>
+
+                <div style="margin-top: 0.5rem; margin-bottom: 2rem;">
+                    <button type="button" id="btnAddCreditRow" class="btn-add-credit-row">
+                        <span>➕</span> Add More Credit
+                    </button>
+                </div>
+
+                <!-- ADDITIONAL PRODUCTION CREDITS & NOTES (OPTIONAL / SUPPLEMENTARY) -->
+                <div class="section-subtitle">Additional Crew &amp; Notes (Supplementary)</div>
                 <div id="additionalCreditsList">
                     <!-- Dynamic extra crew credit rows injected here -->
                 </div>
 
-                <div style="margin-top: 0.5rem; margin-bottom: 2rem;">
+                <div style="margin-top: 0.5rem; margin-bottom: 1.5rem;">
                     <button type="button" id="btnAddCredit" class="btn-add-credit">
                         <span>➕</span> Add Additional Production Credit
                     </button>
                     <span style="font-size: 0.8rem; color: var(--text-muted); margin-left: 0.75rem;">
-                        (e.g. Camera Operator 2, Drone Pilot, Co-Producer, Fixer, Online Editor, etc.)
+                        (e.g. Drone Pilot, Co-Producer, Fixer, Online Editor, etc.)
                     </span>
                 </div>
 
@@ -364,18 +468,7 @@
                 </datalist>
 
                 <!-- DURATION & NOTES -->
-                <div class="section-subtitle">Duration &amp; Notes</div>
                 <div class="field-group-grid">
-                    <div class="form-field">
-                        <label for="storyDuration">Insert Duration (MM:SS)</label>
-                        <input type="text" id="storyDuration" name="storyDuration" placeholder="e.g. 14:30">
-                    </div>
-
-                    <div class="form-field">
-                        <label for="musicDetails">Music Tracks Used</label>
-                        <input type="text" id="musicDetails" name="musicDetails" placeholder="Library or custom tracks...">
-                    </div>
-
                     <div class="form-field field-group-full">
                         <label for="notes">General Notes / Lower Third Instructions</label>
                         <textarea id="notes" name="notes" rows="3" placeholder="Enter any specific notes regarding supers, warnings, or graphics..."></textarea>
@@ -401,6 +494,6 @@
         </div>
     </div>
 
-    <script type="module" src="js/insert_sheet.js?v=5.4.3"></script>
+    <script type="module" src="js/insert_sheet.js?v=5.4.4"></script>
 </body>
 </html>

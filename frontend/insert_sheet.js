@@ -1,17 +1,12 @@
-// insert_sheet.js - v5.4.0
-function initInsertSheet() {
-    const form = document.getElementById('insertSheetForm');
-    const container = document.getElementById('creditRowsContainer');
-    const addBtn = document.getElementById('btnAddCreditRow');
-    const counterDisplay = document.getElementById('creditCounterDisplay');
-    const loadingOverlay = document.getElementById('loadingOverlay');
+import { submitLegalForm, getAgreementForCoSign, renderCoSignBanner, showSubmissionSuccessModal, safeDrawField, cleanPdfText, prepareTemplatePdf, drawInFieldBox, normalizeDateForInput, getActiveProducerEmail } from './form_submission_helper.js?v=5.4.4';
+import { openShareModal, downloadAndSharePDF } from './share_helper.js?v=5.4.4';
 
-    let creditCount = 0;
-
+document.addEventListener('DOMContentLoaded', () => {
     // -------------------------------------------------------------------------
     // 1. Timecode Formatter (<HH:MM:SS> automatically adding colons as user types)
     // -------------------------------------------------------------------------
     function formatTimecode(value) {
+        if (!value) return '';
         const digits = value.replace(/\D/g, '').slice(0, 6);
         if (digits.length <= 2) {
             return digits;
@@ -29,43 +24,33 @@ function initInsertSheet() {
         });
     }
 
-    const durationInput = document.getElementById('insertDuration');
+    const durationInput = document.getElementById('storyDuration');
     if (durationInput) {
         attachTimecodeMask(durationInput);
     }
 
     // -------------------------------------------------------------------------
-    // 2. Active User & URL Parameter Pre-fills
+    // 2. Default Dates & URL Parameter Pre-fills
     // -------------------------------------------------------------------------
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialStory = urlParams.get('story') || urlParams.get('storyTitle') || urlParams.get('storyName') || '';
-    const initialComm = urlParams.get('comm') || urlParams.get('commission') || urlParams.get('commissionNumber') || '';
-    const initialProducer = urlParams.get('producer') || urlParams.get('producerName') || '';
-    const initialPresenter = urlParams.get('presenter') || '';
-    const initialDelivery = urlParams.get('delivery') || urlParams.get('deliveryDate') || '';
+    const today = new Date().toISOString().split('T')[0];
+    const txInput = document.getElementById('txDate');
+    if (txInput && !txInput.value) txInput.value = today;
 
-    if (initialStory) {
-        if (document.getElementById('storyTitle')) document.getElementById('storyTitle').value = initialStory;
-        if (document.getElementById('storyName')) document.getElementById('storyName').value = initialStory;
-    }
-    if (initialComm) {
-        if (document.getElementById('commissionNumber')) document.getElementById('commissionNumber').value = initialComm;
-        if (document.getElementById('commNum')) document.getElementById('commNum').value = initialComm;
-    }
-    if (initialProducer && document.getElementById('producer')) {
-        document.getElementById('producer').value = initialProducer;
-    }
-    if (initialPresenter && document.getElementById('presenter')) {
-        document.getElementById('presenter').value = initialPresenter;
-    }
-    if (initialDelivery && document.getElementById('deliveryDate')) {
-        document.getElementById('deliveryDate').value = initialDelivery;
-    } else if (document.getElementById('deliveryDate') && !document.getElementById('deliveryDate').value) {
-        document.getElementById('deliveryDate').value = new Date().toISOString().split('T')[0];
+    const urlParams = new URLSearchParams(window.location.search);
+    const submissionId = urlParams.get('id');
+    const isEditMode = urlParams.get('mode') === 'edit';
+    let loadedSubmission = null;
+
+    const commVal = urlParams.get('commNum') || urlParams.get('comm');
+    if (commVal) document.getElementById('commissionNumber').value = commVal;
+    if (urlParams.get('story')) document.getElementById('storyName').value = urlParams.get('story');
+    if (urlParams.get('producer')) document.getElementById('producerName').value = urlParams.get('producer');
+    if (urlParams.get('presenter') && document.getElementById('presenterName')) {
+        document.getElementById('presenterName').value = urlParams.get('presenter');
     }
 
     // Auto-detect logged-in user profile if producer field is empty
-    const producerInput = document.getElementById('producer');
+    const producerInput = document.getElementById('producerName');
     if (producerInput && !producerInput.value) {
         try {
             if (window.auth && typeof window.auth.getMasqueradeTarget === 'function') {
@@ -73,12 +58,6 @@ function initInsertSheet() {
                 if (masq && (masq.viewMode || 'user') === 'user' && masq.name) {
                     producerInput.value = masq.name;
                 }
-            }
-            const userStr = !producerInput.value && (localStorage.getItem('user_profile_cache') || Object.keys(localStorage).find(k => k.startsWith('user_profile_')));
-            if (userStr) {
-                const u = JSON.parse(localStorage.getItem(userStr) || '{}');
-                const name = u.displayName || `${u.firstName || ''} ${u.lastName || ''}`.trim();
-                if (name) producerInput.value = name;
             }
             if (!producerInput.value && window.auth && typeof window.auth.getCurrentUser === 'function') {
                 const cur = window.auth.getCurrentUser();
@@ -88,53 +67,47 @@ function initInsertSheet() {
     }
 
     // -------------------------------------------------------------------------
-    // 3. Bi-directional Synchronization with Aliases
+    // 3. Dynamic Screen Credits Blocks (Initial 4 + Add More)
     // -------------------------------------------------------------------------
-    const storyTitleEl = document.getElementById('storyTitle');
-    const storyNameEl = document.getElementById('storyName');
-    const commissionNumberEl = document.getElementById('commissionNumber');
-    const commNumEl = document.getElementById('commNum');
-    const producerNameEl = document.getElementById('producerName');
+    const screenCreditsContainer = document.getElementById('creditRowsContainer');
+    const creditCounterDisplay = document.getElementById('creditCounterDisplay');
+    let screenCreditCount = 0;
 
-    function syncAliases() {
-        if (storyTitleEl && storyNameEl) storyNameEl.value = storyTitleEl.value;
-        if (commissionNumberEl && commNumEl) commNumEl.value = commissionNumberEl.value;
-        if (producerInput && producerNameEl) producerNameEl.value = producerInput.value;
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
     }
 
-    if (storyTitleEl) storyTitleEl.addEventListener('input', syncAliases);
-    if (commissionNumberEl) commissionNumberEl.addEventListener('input', syncAliases);
-    if (producerInput) producerInput.addEventListener('input', syncAliases);
-    syncAliases();
-
-    // -------------------------------------------------------------------------
-    // 4. Dynamic Credit Blocks (Initial 4 + <Add More>)
-    // -------------------------------------------------------------------------
-    function createCreditBlock(tcIn = '', name = '', title = '') {
-        creditCount++;
+    function createScreenCreditBlock(tcIn = '', name = '', title = '') {
+        screenCreditCount++;
         const card = document.createElement('div');
         card.className = 'credit-block-card';
-        card.dataset.index = creditCount;
+        card.dataset.index = screenCreditCount;
 
         card.innerHTML = `
             <div class="credit-block-header">
                 <span class="credit-badge">
-                    <span>🏷️</span> <span class="badge-label">CREDIT #${String(creditCount).padStart(2, '0')}</span>
+                    <span>🏷️</span> <span class="badge-label">CREDIT #${String(screenCreditCount).padStart(2, '0')}</span>
                 </span>
                 <button type="button" class="btn-remove-credit" title="Remove Credit Block">
                     <span>✕</span> Remove
                 </button>
             </div>
-            <div class="form-grid">
-                <div class="form-group">
+            <div class="credit-grid">
+                <div class="form-field">
                     <label>TC In:</label>
                     <input type="text" class="input-tc-in" placeholder="HH:MM:SS" maxlength="8" value="${escapeHtml(tcIn)}">
                 </div>
-                <div class="form-group">
+                <div class="form-field">
                     <label>On-Screen Name/Photo Credit:</label>
                     <input type="text" class="input-credit-name" placeholder="e.g. Dr. Brian Ndlovu" value="${escapeHtml(name)}">
                 </div>
-                <div class="form-group full-width">
+                <div class="form-field">
                     <label>Case Study/Expert Title:</label>
                     <input type="text" class="input-credit-title" placeholder="e.g. Renewable Energy Analyst - CSIR" value="${escapeHtml(title)}">
                 </div>
@@ -145,443 +118,645 @@ function initInsertSheet() {
         attachTimecodeMask(tcInInput);
 
         card.querySelector('.btn-remove-credit').addEventListener('click', () => {
-            if (container.querySelectorAll('.credit-block-card').length <= 1) {
+            if (screenCreditsContainer.querySelectorAll('.credit-block-card').length <= 1) {
                 alert('An Insert Sheet requires at least one credit entry.');
                 return;
             }
             card.remove();
-            renumberCredits();
+            renumberScreenCredits();
         });
 
         return card;
     }
 
-    function renumberCredits() {
-        const cards = container.querySelectorAll('.credit-block-card');
+    function renumberScreenCredits() {
+        if (!screenCreditsContainer) return;
+        const cards = screenCreditsContainer.querySelectorAll('.credit-block-card');
         cards.forEach((card, idx) => {
             const num = idx + 1;
             card.dataset.index = num;
             const badge = card.querySelector('.badge-label');
             if (badge) badge.textContent = `CREDIT #${String(num).padStart(2, '0')}`;
         });
-        creditCount = cards.length;
-        if (counterDisplay) {
-            counterDisplay.textContent = `${creditCount} Credit${creditCount === 1 ? '' : 's'}`;
+        screenCreditCount = cards.length;
+        if (creditCounterDisplay) {
+            creditCounterDisplay.textContent = `${screenCreditCount} Credit${screenCreditCount === 1 ? '' : 's'}`;
         }
     }
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    // Add initial 4 credit blocks
+    if (screenCreditsContainer) {
+        screenCreditsContainer.innerHTML = '';
+        screenCreditsContainer.appendChild(createScreenCreditBlock());
+        screenCreditsContainer.appendChild(createScreenCreditBlock());
+        screenCreditsContainer.appendChild(createScreenCreditBlock());
+        screenCreditsContainer.appendChild(createScreenCreditBlock());
+        renumberScreenCredits();
     }
 
-    // Initialize with EXACTLY 4 empty credit blocks as requested
-    container.appendChild(createCreditBlock());
-    container.appendChild(createCreditBlock());
-    container.appendChild(createCreditBlock());
-    container.appendChild(createCreditBlock());
-    renumberCredits();
+    // Add More Credit Button
+    document.getElementById('btnAddCreditRow')?.addEventListener('click', () => {
+        if (!screenCreditsContainer) return;
+        const card = createScreenCreditBlock();
+        screenCreditsContainer.appendChild(card);
+        renumberScreenCredits();
+        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        card.querySelector('.input-tc-in')?.focus();
+    });
 
-    // <Add More> button handler
-    if (addBtn) {
-        addBtn.addEventListener('click', () => {
-            container.appendChild(createCreditBlock());
-            renumberCredits();
-            const lastCard = container.lastElementChild;
-            if (lastCard) {
-                lastCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // -------------------------------------------------------------------------
+    // 4. Load Existing Submission (if ?id=...)
+    // -------------------------------------------------------------------------
+    if (submissionId) {
+        (async () => {
+            try {
+                loadedSubmission = await getAgreementForCoSign(submissionId);
+                let parsedMeta = {};
+                if (loadedSubmission.metadata) {
+                    try {
+                        parsedMeta = typeof loadedSubmission.metadata === 'string'
+                            ? JSON.parse(loadedSubmission.metadata)
+                            : loadedSubmission.metadata;
+                    } catch (e) {}
+                }
+                if (loadedSubmission.commissionNumber) document.getElementById('commissionNumber').value = loadedSubmission.commissionNumber;
+                if (loadedSubmission.storyName || loadedSubmission.storyTitle) document.getElementById('storyName').value = loadedSubmission.storyName || loadedSubmission.storyTitle;
+                if (loadedSubmission.producerName) document.getElementById('producerName').value = loadedSubmission.producerName;
+                const normTx = normalizeDateForInput(loadedSubmission.dateVal || loadedSubmission.txDate || loadedSubmission.deliveryDate || parsedMeta.txDate);
+                if (normTx && txInput) txInput.value = normTx;
+                if (loadedSubmission.presenter || parsedMeta.presenterName) document.getElementById('presenterName').value = loadedSubmission.presenter || parsedMeta.presenterName;
+                if (loadedSubmission.dop || parsedMeta.cameraName) document.getElementById('cameraName').value = loadedSubmission.dop || parsedMeta.cameraName;
+                if (loadedSubmission.camAssist || parsedMeta.researcherName) document.getElementById('researcherName').value = loadedSubmission.camAssist || parsedMeta.researcherName;
+                if (loadedSubmission.editor || parsedMeta.editorName) document.getElementById('editorName').value = loadedSubmission.editor || parsedMeta.editorName;
+                if (loadedSubmission.finalMix || parsedMeta.soundName) document.getElementById('soundName').value = loadedSubmission.finalMix || parsedMeta.soundName;
+                if (loadedSubmission.insertDuration || parsedMeta.duration) document.getElementById('storyDuration').value = loadedSubmission.insertDuration || parsedMeta.duration;
+                if (loadedSubmission.thirdPartyFootage && document.getElementById('thirdPartyFootage')) {
+                    document.getElementById('thirdPartyFootage').value = loadedSubmission.thirdPartyFootage;
+                }
+                if ((loadedSubmission.notes || parsedMeta.notes) && document.getElementById('notes')) {
+                    document.getElementById('notes').value = loadedSubmission.notes || parsedMeta.notes;
+                }
+                const emailEl = document.getElementById('submitterEmail');
+                if (emailEl && !emailEl.value) {
+                    emailEl.value = getActiveProducerEmail(loadedSubmission.submittedByEmail || loadedSubmission.producerEmail) || '';
+                }
+
+                // Populate Screen Credits
+                let savedCredits = loadedSubmission.credits || parsedMeta.credits;
+                if (typeof savedCredits === 'string') {
+                    try { savedCredits = JSON.parse(savedCredits); } catch (e) { savedCredits = null; }
+                }
+                if (Array.isArray(savedCredits) && savedCredits.length > 0 && screenCreditsContainer) {
+                    screenCreditsContainer.innerHTML = '';
+                    screenCreditCount = 0;
+                    savedCredits.forEach(c => {
+                        const tc = c.tcIn || c.tc || '';
+                        const n = c.name || c.creditName || '';
+                        const t = c.title || c.creditTitle || '';
+                        screenCreditsContainer.appendChild(createScreenCreditBlock(tc, n, t));
+                    });
+                    renumberScreenCredits();
+                }
+
+                // Populate Additional Production Credits
+                const extra = parsedMeta.extraCredits || loadedSubmission.extraCredits;
+                if (Array.isArray(extra) && window.addCreditRow) {
+                    extra.forEach(c => window.addCreditRow(c.role || '', c.name || ''));
+                }
+
+                if (isEditMode) {
+                    const container = document.querySelector('.form-card-container') || document.querySelector('.form-container') || document.querySelector('form');
+                    renderCoSignBanner(container, {
+                        title: '✏️ Edit Mode — Updating Existing Insert Sheet',
+                        subtitle: 'Modify any fields below and click Save & Update Insert Sheet.',
+                        status: 'info'
+                    });
+                    const submitBtn = document.getElementById('submitFormBtn');
+                    if (submitBtn) submitBtn.innerHTML = '<span>💾</span> Save & Update Insert Sheet';
+                }
+            } catch (err) {
+                console.error('Failed to load Insert Sheet:', err);
             }
-        });
+        })();
     }
 
-    // -------------------------------------------------------------------------
-    // 5. Form Submission & PDF Generation
-    // -------------------------------------------------------------------------
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const commNum = (document.getElementById('commissionNumber')?.value || '').trim();
-        const storyTitle = (document.getElementById('storyTitle')?.value || '').trim();
-        const producer = (document.getElementById('producer')?.value || '').trim();
-        const presenter = (document.getElementById('presenter')?.value || '').trim();
-        const dop = (document.getElementById('dop')?.value || '').trim();
-        const camAssist = (document.getElementById('camAssist')?.value || '').trim();
-        const editor = (document.getElementById('editor')?.value || '').trim();
-        const finalMix = (document.getElementById('finalMix')?.value || '').trim();
-        const deliveryDate = (document.getElementById('deliveryDate')?.value || '').trim();
-        const insertDuration = (document.getElementById('insertDuration')?.value || '').trim();
-        const thirdPartyFootage = (document.getElementById('thirdPartyFootage')?.value || 'No').trim();
-
-        // Extract credits
-        const creditCards = container.querySelectorAll('.credit-block-card');
-        const credits = [];
-        creditCards.forEach((card, idx) => {
-            const tcIn = card.querySelector('.input-tc-in').value.trim();
-            const name = card.querySelector('.input-credit-name').value.trim();
-            const title = card.querySelector('.input-credit-title').value.trim();
-            if (tcIn || name || title) {
-                credits.push({
-                    index: idx + 1,
-                    tcIn: tcIn || 'N/A',
-                    name: name || 'N/A',
-                    title: title || 'N/A'
-                });
-            }
+    // Share Form Handler
+    document.getElementById('shareFormBtn')?.addEventListener('click', () => {
+        const comm = document.getElementById('commissionNumber')?.value || '';
+        const story = document.getElementById('storyName')?.value || '';
+        openShareModal({
+            title: 'Insert Sheet 2026',
+            url: window.location.href,
+            storyTitle: story,
+            commNum: comm
         });
+    });
 
-        if (credits.length === 0) {
-            alert('Please specify at least one credit entry with a timecode or name.');
+    // -------------------------------------------------------------------------
+    // 5. Dynamic Additional Production Credits (Supplementary Crew)
+    // -------------------------------------------------------------------------
+    let additionalCreditCounter = 0;
+    window.addCreditRow = function(role = '', name = '') {
+        additionalCreditCounter++;
+        const id = additionalCreditCounter;
+        const container = document.getElementById('additionalCreditsList');
+        if (!container) return;
+
+        const row = document.createElement('div');
+        row.className = 'credit-row-item';
+        row.id = `additionalCreditRow_${id}`;
+        row.innerHTML = `
+            <div class="form-field">
+                <label>Credit Role / Title</label>
+                <input type="text" name="extra_credit_role[]" list="commonProductionRoles" placeholder="e.g. Drone Pilot, Co-Producer, Camera 2..." value="${escapeHtml(role)}">
+            </div>
+            <div class="form-field">
+                <label>Crew Member Name</label>
+                <input type="text" name="extra_credit_name[]" placeholder="Full name of crew member..." value="${escapeHtml(name)}">
+            </div>
+            <div>
+                <button type="button" class="btn-remove-credit" onclick="document.getElementById('additionalCreditRow_${id}')?.remove()" title="Remove this credit">
+                    <span>✕</span> Remove
+                </button>
+            </div>
+        `;
+        container.appendChild(row);
+    };
+
+    document.getElementById('btnAddCredit')?.addEventListener('click', () => {
+        window.addCreditRow();
+    });
+
+    // Reset Form Event
+    document.getElementById('resetFormBtn')?.addEventListener('click', () => {
+        const container = document.getElementById('additionalCreditsList');
+        if (container) container.innerHTML = '';
+        if (screenCreditsContainer) {
+            screenCreditsContainer.innerHTML = '';
+            screenCreditCount = 0;
+            screenCreditsContainer.appendChild(createScreenCreditBlock());
+            screenCreditsContainer.appendChild(createScreenCreditBlock());
+            screenCreditsContainer.appendChild(createScreenCreditBlock());
+            screenCreditsContainer.appendChild(createScreenCreditBlock());
+            renumberScreenCredits();
+        }
+    });
+
+    // -------------------------------------------------------------------------
+    // 6. Download & Share Completed PDF Handler
+    // -------------------------------------------------------------------------
+    document.getElementById('downloadCompletedPdfBtn')?.addEventListener('click', async () => {
+        const btn = document.getElementById('downloadCompletedPdfBtn');
+        const origText = btn.innerHTML;
+        btn.innerHTML = '<span>⏳</span> Generating PDF...';
+        btn.disabled = true;
+        try {
+            const { pdfBlob, filename } = await buildCompletedPDF();
+            const comm = document.getElementById('commissionNumber')?.value || '';
+            const story = document.getElementById('storyName')?.value || '';
+            await downloadAndSharePDF(pdfBlob, filename, {
+                title: 'Insert Sheet 2026',
+                storyTitle: story,
+                commNum: comm
+            });
+        } catch (err) {
+            console.error('Failed to generate PDF:', err);
+            alert('Error generating PDF: ' + err.message);
+        } finally {
+            btn.innerHTML = origText;
+            btn.disabled = false;
+        }
+    });
+
+    // -------------------------------------------------------------------------
+    // 7. Submit Sheet Handler
+    // -------------------------------------------------------------------------
+    document.getElementById('submitFormBtn')?.addEventListener('click', async () => {
+        const form = document.getElementById('insertSheetForm');
+        if (!form.checkValidity()) {
+            form.reportValidity();
             return;
         }
 
-        const submitBtn = form.querySelector('button[type="submit"]');
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.dataset.originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Submitted';
-            submitBtn.style.opacity = '0.7';
-            submitBtn.style.cursor = 'not-allowed';
+        const submitBtn = document.getElementById('submitFormBtn');
+        const origSubmitText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span>⏳</span> Submitting & Sending Email...';
+        submitBtn.disabled = true;
+
+        try {
+            const { pdfBlob, filename, metadata } = await buildCompletedPDF();
+
+            const formData = new FormData();
+            if (submissionId) formData.append('submissionId', submissionId);
+            formData.append('pdf', pdfBlob, filename);
+            formData.append('file', pdfBlob, filename);
+            formData.append('insert_sheet_pdf', pdfBlob, filename);
+            formData.append('formType', 'insert_sheet');
+            formData.append('formTitle', 'Insert Sheet 2026');
+            formData.append('storyName', metadata.storyName);
+            formData.append('storyTitle', metadata.storyName);
+            formData.append('commissionNumber', metadata.commNum);
+            formData.append('commNum', metadata.commNum);
+            formData.append('producer', metadata.producerName);
+            formData.append('producerName', metadata.producerName);
+            formData.append('submitterEmail', metadata.submitterEmail);
+            formData.append('deliveryDate', metadata.txDate);
+            formData.append('dateVal', metadata.txDate);
+            formData.append('presenter', metadata.presenterName);
+            formData.append('dop', metadata.cameraName);
+            formData.append('camAssist', metadata.researcherName);
+            formData.append('cameraAssistant', metadata.researcherName);
+            formData.append('editor', metadata.editorName);
+            formData.append('finalMix', metadata.soundName);
+            formData.append('finalMixOperator', metadata.soundName);
+            formData.append('insertDuration', metadata.duration);
+            formData.append('thirdPartyFootage', metadata.thirdPartyFootage);
+            formData.append('notes', metadata.notes || '');
+            formData.append('credits', JSON.stringify(metadata.credits || []));
+            formData.append('extraCredits', JSON.stringify(metadata.extraCredits || []));
+            formData.append('metadata', JSON.stringify({
+                presenterName: metadata.presenterName,
+                researcherName: metadata.researcherName,
+                cameraName: metadata.cameraName,
+                soundName: metadata.soundName,
+                editorName: metadata.editorName,
+                duration: metadata.duration,
+                thirdPartyFootage: metadata.thirdPartyFootage,
+                notes: metadata.notes,
+                credits: metadata.credits,
+                extraCredits: metadata.extraCredits
+            }));
+
+            const response = await submitLegalForm(formData);
+
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                throw new Error(result.error || 'Server rejected submission.');
+            }
+
+            showSubmissionSuccessModal({
+                title: 'Insert Sheet 2026',
+                recipients: result.recipients || [metadata.submitterEmail, 'release@carteblanche.co.za'],
+                pdfBlob,
+                filename
+            });
+
+        } catch (err) {
+            console.error('Submission failed:', err);
+            alert('Submission failed: ' + err.message);
+        } finally {
+            submitBtn.innerHTML = origSubmitText;
+            submitBtn.disabled = false;
         }
+    });
+});
 
-        if (loadingOverlay) loadingOverlay.classList.remove('active');
+// -----------------------------------------------------------------------------
+// 8. Completed PDF Generation using Official Template Carte_Blanche_Insert_Sheet_2026.pdf
+// -----------------------------------------------------------------------------
+async function buildCompletedPDF() {
+    if (document.fonts && document.fonts.ready) {
+        try {
+            await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]);
+        } catch (e) {}
+    }
 
-        // Show confirmation dialog immediately
-        const dialog = document.getElementById('successDialog');
-        let isBgDone = false;
-        let isNavigating = false;
-        let autoCloseTimer = null;
-        let bgSubmitPromise = null;
+    const commNum = (document.getElementById('commissionNumber')?.value || '').trim();
+    const txDate = document.getElementById('txDate')?.value || '';
+    const storyName = (document.getElementById('storyName')?.value || '').trim();
+    const producerName = (document.getElementById('producerName')?.value || '').trim();
+    const submitterEmail = (document.getElementById('submitterEmail')?.value || '').trim();
+    const presenterName = (document.getElementById('presenterName')?.value || '').trim();
+    const cameraName = (document.getElementById('cameraName')?.value || '').trim();
+    const researcherName = (document.getElementById('researcherName')?.value || '').trim();
+    const soundName = (document.getElementById('soundName')?.value || '').trim();
+    const editorName = (document.getElementById('editorName')?.value || '').trim();
+    const duration = (document.getElementById('storyDuration')?.value || '').trim();
+    const thirdPartyFootage = (document.getElementById('thirdPartyFootage')?.value || 'No').trim();
+    const notes = (document.getElementById('notes')?.value || '').trim();
 
-        const handleModalNavigate = async (targetUrl = 'forms_hub.html') => {
-            if (autoCloseTimer) {
-                clearTimeout(autoCloseTimer);
-                autoCloseTimer = null;
-            }
-            if (isNavigating) return;
-            isNavigating = true;
-
-            // Immediately hide dialog so it disappears
-            if (dialog) dialog.classList.add('hidden');
-
-            if (!isBgDone && bgSubmitPromise) {
-                try {
-                    await Promise.race([
-                        bgSubmitPromise,
-                        new Promise(resolve => setTimeout(resolve, 3500))
-                    ]);
-                } catch (e) {
-                    console.warn('[INSERT-SHEET] Proceeding with navigation:', e);
-                }
-            }
-            window.location.href = targetUrl;
-        };
-
-        const scheduleAutoClose = () => {
-            if (autoCloseTimer) clearTimeout(autoCloseTimer);
-            autoCloseTimer = setTimeout(() => {
-                if (!isNavigating) {
-                    handleModalNavigate('forms_hub.html');
-                }
-            }, 2000);
-        };
-
-        if (dialog) {
-            dialog.classList.remove('hidden');
-            const returnBtn = document.getElementById('dialogReturnBtn');
-            const anotherBtn = document.getElementById('dialogAnotherBtn');
-
-            if (returnBtn) {
-                returnBtn.disabled = false;
-                returnBtn.textContent = 'Return to Forms Hub';
-                returnBtn.onclick = () => handleModalNavigate('forms_hub.html');
-            }
-            if (anotherBtn) {
-                anotherBtn.disabled = false;
-                anotherBtn.textContent = 'Submit Another Form';
-                anotherBtn.onclick = () => handleModalNavigate('forms_hub.html');
-            }
-
-            scheduleAutoClose();
+    // Extract dynamic Screen Credits
+    const screenCreditCards = document.querySelectorAll('#creditRowsContainer .credit-block-card');
+    const credits = [];
+    screenCreditCards.forEach((card, idx) => {
+        const tcIn = (card.querySelector('.input-tc-in')?.value || '').trim();
+        const name = (card.querySelector('.input-credit-name')?.value || '').trim();
+        const title = (card.querySelector('.input-credit-title')?.value || '').trim();
+        if (tcIn || name || title) {
+            credits.push({
+                index: idx + 1,
+                tcIn: tcIn || '',
+                name: name || '',
+                title: title || ''
+            });
         }
-
-        bgSubmitPromise = (async () => {
-            try {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4', compress: true });
-                const pageWidth = doc.internal.pageSize.getWidth();
-                const pageHeight = doc.internal.pageSize.getHeight();
-                const margin = 16;
-                const contentWidth = pageWidth - margin * 2;
-
-                const caLogo = (typeof getBlackLogo === 'function' ? getBlackLogo() : (typeof CAP_LOGO_B64 !== 'undefined' ? CAP_LOGO_B64 : null));
-                const cbLogo = (typeof CB_LOGO_B64 !== 'undefined' ? CB_LOGO_B64 : null);
-
-                // Page 1 holds Crew details + up to 4 credits
-                // Subsequent pages hold running header + reference + up to 6 credits per page
-                const remainingCreditsCount = Math.max(0, credits.length - 4);
-                const extraPages = Math.ceil(remainingCreditsCount / 6);
-                const totalPages = 1 + extraPages;
-
-                let curCreditIdx = 0;
-
-                // --- PAGE 1 ---
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(8.5);
-                doc.setTextColor(15, 23, 42);
-                doc.text('Email the completed form to release@carteblanche.co.za', pageWidth / 2, 7.5, { align: 'center' });
-
-                if (caLogo) {
-                    const props = doc.getImageProperties(caLogo);
-                    const caW = 34;
-                    const caH = caW * (props.height / props.width);
-                    doc.addImage(caLogo, 'PNG', margin, 11, caW, caH, undefined, 'FAST');
-                }
-                if (cbLogo) {
-                    const props = doc.getImageProperties(cbLogo);
-                    const cbW = 20;
-                    const cbH = cbW * (props.height / props.width);
-                    doc.addImage(cbLogo, 'PNG', pageWidth - margin - cbW, 10, cbW, cbH, undefined, 'FAST');
-                }
-
-                doc.setTextColor(79, 70, 229);
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(15);
-                doc.text('INSERT SHEET', margin, 34);
-
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(8);
-                doc.setTextColor(100, 116, 139);
-                doc.text('Carte Blanche  •  Official Post-Production Graphics & Credits Delivery', margin, 38.5);
-
-                doc.setDrawColor(79, 70, 229);
-                doc.setLineWidth(0.8);
-                doc.line(margin, 41, pageWidth - margin, 41);
-
-                // Section 1: Crew Details Card
-                let y = 46;
-                doc.setFillColor(248, 250, 252);
-                doc.setDrawColor(226, 232, 240);
-                doc.setLineWidth(0.3);
-                doc.roundedRect(margin, y, contentWidth, 54, 2, 2, 'FD');
-
-                doc.setTextColor(79, 70, 229);
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(9);
-                doc.text('PRODUCTION & TECHNICAL CREW DETAILS', margin + 4, y + 6);
-
-                doc.setTextColor(15, 23, 42);
-                doc.setFont('helvetica', 'normal');
-                doc.setFontSize(8);
-
-                const col1 = margin + 4;
-                const col2 = margin + 45;
-                const col3 = margin + (contentWidth / 2) + 4;
-                const col4 = margin + (contentWidth / 2) + 45;
-
-                let rowY = y + 13;
-                doc.setFont('helvetica', 'bold'); doc.text('Commission Number:', col1, rowY);
-                doc.setFont('helvetica', 'normal'); doc.text(commNum || 'N/A', col2, rowY);
-                doc.setFont('helvetica', 'bold'); doc.text('Story Title:', col3, rowY);
-                doc.setFont('helvetica', 'normal'); doc.text(storyTitle || 'N/A', col4, rowY);
-
-                rowY += 6.5;
-                doc.setFont('helvetica', 'bold'); doc.text('Producer:', col1, rowY);
-                doc.setFont('helvetica', 'normal'); doc.text(producer || 'N/A', col2, rowY);
-                doc.setFont('helvetica', 'bold'); doc.text('Presenter:', col3, rowY);
-                doc.setFont('helvetica', 'normal'); doc.text(presenter || 'N/A', col4, rowY);
-
-                rowY += 6.5;
-                doc.setFont('helvetica', 'bold'); doc.text('DOP:', col1, rowY);
-                doc.setFont('helvetica', 'normal'); doc.text(dop || 'N/A', col2, rowY);
-                doc.setFont('helvetica', 'bold'); doc.text('Camera Assistant:', col3, rowY);
-                doc.setFont('helvetica', 'normal'); doc.text(camAssist || 'N/A', col4, rowY);
-
-                rowY += 6.5;
-                doc.setFont('helvetica', 'bold'); doc.text('Editor:', col1, rowY);
-                doc.setFont('helvetica', 'normal'); doc.text(editor || 'N/A', col2, rowY);
-                doc.setFont('helvetica', 'bold'); doc.text('Final Mix Operator:', col3, rowY);
-                doc.setFont('helvetica', 'normal'); doc.text(finalMix || 'N/A', col4, rowY);
-
-                rowY += 6.5;
-                doc.setFont('helvetica', 'bold'); doc.text('Delivery Date:', col1, rowY);
-                doc.setFont('helvetica', 'normal'); doc.text(deliveryDate || 'N/A', col2, rowY);
-                doc.setFont('helvetica', 'bold'); doc.text('Insert Duration:', col3, rowY);
-                doc.setFont('helvetica', 'normal'); doc.text(insertDuration || 'N/A', col4, rowY);
-
-                rowY += 6.5;
-                doc.setFont('helvetica', 'bold'); doc.text('3rd Party Footage:', col1, rowY);
-                doc.setFont('helvetica', 'normal'); doc.text(thirdPartyFootage || 'No', col2, rowY);
-
-                // Section 2: SCREEN CREDITS on Page 1 (Up to 4)
-                y = 106;
-                doc.setTextColor(79, 70, 229);
-                doc.setFont('helvetica', 'bold');
-                doc.setFontSize(9);
-                doc.text('SCREEN CREDITS', margin, y);
-                y += 4;
-
-                const creditsOnP1 = credits.slice(0, 4);
-                creditsOnP1.forEach(c => {
-                    renderPdfCreditCard(doc, c, margin, y, contentWidth);
-                    y += 26.5;
-                    curCreditIdx++;
-                });
-
-                renderPdfFooter(doc, 1, totalPages, margin, contentWidth);
-
-                // --- SUBSEQUENT PAGES ---
-                let currentPageNum = 2;
-                while (curCreditIdx < credits.length) {
-                    doc.addPage([pageWidth, pageHeight], 'p');
-
-                    doc.setFont('helvetica', 'bold');
-                    doc.setFontSize(8.5);
-                    doc.setTextColor(15, 23, 42);
-                    doc.text('Email the completed form to release@carteblanche.co.za', pageWidth / 2, 7.5, { align: 'center' });
-
-                    doc.setTextColor(79, 70, 229);
-                    doc.setFontSize(9.5);
-                    doc.text('CARTE BLANCHE  •  INSERT SHEET (SCREEN CREDITS)', margin, 15);
-
-                    doc.setFont('helvetica', 'normal');
-                    doc.setFontSize(8);
-                    doc.setTextColor(100, 116, 139);
-                    doc.text(`Story Title: ${storyTitle}  |  Commission Number: ${commNum}`, margin, 19.5);
-
-                    doc.setDrawColor(79, 70, 229);
-                    doc.setLineWidth(0.6);
-                    doc.line(margin, 21.5, pageWidth - margin, 21.5);
-
-                    y = 26;
-                    const pageBatch = credits.slice(curCreditIdx, curCreditIdx + 6);
-                    pageBatch.forEach(c => {
-                        renderPdfCreditCard(doc, c, margin, y, contentWidth);
-                        y += 26.5;
-                        curCreditIdx++;
-                    });
-
-                    renderPdfFooter(doc, currentPageNum, totalPages, margin, contentWidth);
-                    currentPageNum++;
-                }
-
-                const pdfBlob = doc.output('blob');
-
-                const formData = new FormData();
-                formData.append('storyTitle', storyTitle);
-                formData.append('storyName', storyTitle);
-                formData.append('commissionNumber', commNum);
-                formData.append('commNum', commNum);
-                formData.append('producer', producer);
-                formData.append('producerName', producer);
-                formData.append('presenter', presenter);
-                formData.append('dop', dop);
-                formData.append('camAssist', camAssist);
-                formData.append('cameraAssistant', camAssist);
-                formData.append('editor', editor);
-                formData.append('finalMix', finalMix);
-                formData.append('finalMixOperator', finalMix);
-                formData.append('deliveryDate', deliveryDate);
-                formData.append('insertDuration', insertDuration);
-                formData.append('thirdPartyFootage', thirdPartyFootage);
-                formData.append('credits', JSON.stringify(credits));
-
-                const safeFilename = `InsertSheet_${storyTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}.pdf`;
-                formData.append('insert_sheet_pdf', pdfBlob, safeFilename);
-                formData.append('file', pdfBlob, safeFilename);
-
-                const token = (window.auth && typeof window.auth.getIdToken === 'function')
-                    ? await window.auth.getIdToken().catch(() => null)
-                    : null;
-                const headers = {};
-                if (token) headers['Authorization'] = `Bearer ${token}`;
-
-                const response = await fetch('/api/send-insert-sheet', {
-                    method: 'POST',
-                    headers: headers,
-                    body: formData
-                });
-
-                const result = await response.json();
-                if (!result.success) throw new Error(result.error || result.message || 'Server error while submitting');
-
-                isBgDone = true;
-                return result;
-
-            } catch (error) {
-                console.error('[INSERT-SHEET] Background submission error:', error);
-                if (autoCloseTimer) {
-                    clearTimeout(autoCloseTimer);
-                    autoCloseTimer = null;
-                }
-                isNavigating = false;
-                if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = submitBtn.dataset.originalText || 'Submit Insert Sheet';
-                    submitBtn.style.opacity = '1';
-                    submitBtn.style.cursor = 'pointer';
-                }
-                if (dialog) {
-                    dialog.classList.remove('hidden');
-                    const p = dialog.querySelector('p');
-                    if (p) p.innerHTML += `<br><span style="color: #ef4444; font-size: 0.85rem;">Notice: Upload experienced an error (${escapeHtml(error.message)}). Please check your connection.</span>`;
-                }
-                throw error;
-            }
-        })();
     });
 
-    function renderPdfCreditCard(doc, credit, x, y, width) {
-        const height = 23;
-        doc.setFillColor(252, 253, 254);
-        doc.setDrawColor(220, 228, 238);
-        doc.setLineWidth(0.3);
-        doc.roundedRect(x, y, width, height, 1.5, 1.5, 'FD');
-
-        doc.setTextColor(67, 56, 202);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8);
-        doc.text(`CREDIT #${String(credit.index).padStart(2, '0')}`, x + 3.5, y + 4.5);
-
-        doc.setTextColor(100, 116, 139);
-        doc.setFontSize(7.5);
-        doc.text('TC In:', x + width - 38, y + 4.5);
-        doc.setTextColor(15, 23, 42);
-        doc.setFont('helvetica', 'bold');
-        doc.text(credit.tcIn, x + width - 26, y + 4.5);
-
-        doc.setDrawColor(241, 245, 249);
-        doc.setLineWidth(0.25);
-        doc.line(x + 3, y + 6.5, x + width - 3, y + 6.5);
-
-        const halfCol = (width - 10) / 2;
-        doc.setTextColor(100, 116, 139);
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(6.5);
-        doc.text('On-Screen Name/Photo Credit:', x + 3.5, y + 10.5);
-        doc.text('Case Study/Expert Title:', x + 3.5 + halfCol + 4, y + 10.5);
-
-        doc.setTextColor(15, 23, 42);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-
-        const nameLines = doc.splitTextToSize(credit.name || 'N/A', halfCol);
-        doc.text(nameLines, x + 3.5, y + 14.5);
-
-        const titleLines = doc.splitTextToSize(credit.title || 'N/A', halfCol);
-        doc.text(titleLines, x + 3.5 + halfCol + 4, y + 14.5);
+    // Collect dynamic extra crew credits
+    const extraCredits = [];
+    const roleInputs = document.querySelectorAll('input[name="extra_credit_role[]"]');
+    const nameInputs = document.querySelectorAll('input[name="extra_credit_name[]"]');
+    for (let i = 0; i < roleInputs.length; i++) {
+        const role = (roleInputs[i]?.value || '').trim();
+        const name = (nameInputs[i]?.value || '').trim();
+        if (role || name) {
+            extraCredits.push({ role, name });
+        }
     }
 
-    function renderPdfFooter(doc, pageNum, totalPages, x, width) {
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7.5);
-        doc.setTextColor(148, 163, 184);
-        doc.text('Form Ref: CB-INS-2026  •  Carte Blanche Post-Production & Legal', x, 290);
-        doc.text(`Page ${pageNum} of ${totalPages}`, x + width, 290, { align: 'right' });
-    }
-}
+    const formatDate = (val) => {
+        if (!val) return '';
+        const parts = val.split('-');
+        if (parts.length === 3) {
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+        return val;
+    };
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initInsertSheet);
-} else {
-    initInsertSheet();
+    const formattedTxDate = formatDate(txDate);
+
+    // Load official PDF template
+    const templateUrl = 'templates/Carte_Blanche_Insert_Sheet_2026.pdf';
+    const templateBytes = await fetch(templateUrl).then(res => {
+        if (!res.ok) throw new Error('Could not load Insert Sheet PDF template file.');
+        return res.arrayBuffer();
+    });
+
+    const { PDFDocument, rgb, StandardFonts } = PDFLib;
+    const pdfDoc = await PDFDocument.load(templateBytes);
+    const fieldMap = prepareTemplatePdf(pdfDoc);
+    const pages = pdfDoc.getPages();
+
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    const fontSize = 9;
+    const textColor = rgb(0.06, 0.09, 0.16);
+
+    const drawInBox = (fieldName, text, isBold = false, opts = {}) => {
+        const box = fieldMap[fieldName];
+        if (!box) return;
+        const pageIdx = box.pageIndex !== undefined ? box.pageIndex : 0;
+        const targetPage = pages[pageIdx];
+        if (!targetPage) return;
+
+        drawInFieldBox(targetPage, fieldMap, fieldName, text, {
+            size: fontSize,
+            font: isBold ? fontBold : font,
+            color: textColor,
+            ...opts
+        });
+    };
+
+    // 1. Draw Production & Technical Crew Details on Page 1
+    drawInBox('commissionNumber', commNum, true);
+    drawInBox('storyTitle', storyName, true);
+    drawInBox('producer', producerName);
+    drawInBox('presenter', presenterName);
+    drawInBox('dop', cameraName);
+    drawInBox('camAssist', researcherName);
+    drawInBox('editor', editorName);
+    drawInBox('finalMix', soundName);
+    drawInBox('deliveryDate', formattedTxDate);
+    drawInBox('insertDuration', duration);
+    drawInBox('thirdPartyFootage', thirdPartyFootage);
+
+    // 2. Draw Screen Credits into template slots (up to 20 slots)
+    // Page 1: 1..4 | Page 2: 5..10 | Page 3: 11..16 | Page 4: 17..20
+    const templateSlotsCount = 20;
+    const templateCreditsCount = Math.min(credits.length, templateSlotsCount);
+
+    for (let i = 0; i < templateCreditsCount; i++) {
+        const num = i + 1;
+        const c = credits[i];
+        drawInBox(`tcIn_${num}`, c.tcIn, true);
+        drawInBox(`creditName_${num}`, c.name, true);
+        drawInBox(`creditTitle_${num}`, c.title, false);
+    }
+
+    // 3. Page Trimming: Remove trailing unused template pages
+    // Slots: 1..4 on page 1, 5..10 on page 2, 11..16 on page 3, 17..20 on page 4
+    const neededTemplatePages = credits.length <= 4 ? 1 : credits.length <= 10 ? 2 : credits.length <= 16 ? 3 : 4;
+    const originalTemplateCount = pdfDoc.getPageCount();
+    for (let p = originalTemplateCount - 1; p >= neededTemplatePages; p--) {
+        pdfDoc.removePage(p);
+    }
+
+    // 4. Handle Credits beyond 20 on Supplementary Page(s)
+    let extraCreditsStartingIndex = 20;
+    if (credits.length > templateSlotsCount) {
+        const overflowCredits = credits.slice(templateSlotsCount);
+        let suppPage = pdfDoc.addPage([595.28, 841.89]);
+
+        const drawOverflowHeader = (pg) => {
+            pg.drawRectangle({ x: 40, y: 805, width: 515, height: 4, color: rgb(0.39, 0.40, 0.95) });
+            safeDrawField(pg, 'CARTE BLANCHE - INSERT SHEET 2026', 40, 782, { size: 15, font: fontBold, color: rgb(0.08, 0.12, 0.22) });
+            safeDrawField(pg, 'ADDITIONAL SCREEN CREDITS (OVERFLOW)', 40, 766, { size: 9.5, font: fontBold, color: rgb(0.39, 0.40, 0.95) });
+            safeDrawField(pg, `COMMISSION: ${commNum || 'N/A'}  |  STORY: ${storyName || 'N/A'}  |  PRODUCER: ${producerName || 'N/A'}`, 40, 746, { size: 8.5, font: font, color: rgb(0.3, 0.35, 0.45) });
+        };
+
+        drawOverflowHeader(suppPage);
+        let curY = 720;
+
+        // Table Header
+        suppPage.drawRectangle({ x: 40, y: curY - 4, width: 515, height: 22, color: rgb(0.92, 0.94, 0.98), borderColor: rgb(0.82, 0.86, 0.92), borderWidth: 1 });
+        safeDrawField(suppPage, 'TC IN', 52, curY + 2, { size: 8.5, font: fontBold, color: rgb(0.25, 0.3, 0.4) });
+        safeDrawField(suppPage, 'ON-SCREEN NAME / PHOTO CREDIT', 150, curY + 2, { size: 8.5, font: fontBold, color: rgb(0.25, 0.3, 0.4) });
+        safeDrawField(suppPage, 'CASE STUDY / EXPERT TITLE', 340, curY + 2, { size: 8.5, font: fontBold, color: rgb(0.25, 0.3, 0.4) });
+        curY -= 22;
+
+        for (let i = 0; i < overflowCredits.length; i++) {
+            if (curY < 80) {
+                suppPage = pdfDoc.addPage([595.28, 841.89]);
+                drawOverflowHeader(suppPage);
+                curY = 720;
+            }
+            const c = overflowCredits[i];
+            const isOdd = i % 2 === 1;
+
+            suppPage.drawRectangle({
+                x: 40,
+                y: curY - 4,
+                width: 515,
+                height: 22,
+                color: isOdd ? rgb(0.97, 0.98, 1.0) : rgb(1, 1, 1),
+                borderColor: rgb(0.88, 0.90, 0.94),
+                borderWidth: 0.5
+            });
+
+            safeDrawField(suppPage, c.tcIn || '-', 52, curY + 2, { size: 9, font: fontBold, color: rgb(0.15, 0.20, 0.30) });
+            safeDrawField(suppPage, c.name || '-', 150, curY + 2, { size: 9, font: fontBold, color: rgb(0.06, 0.09, 0.16) });
+            safeDrawField(suppPage, c.title || '-', 340, curY + 2, { size: 8.5, font: font, color: rgb(0.15, 0.20, 0.28) });
+            curY -= 22;
+        }
+    }
+
+    // 5. Supplementary Page for Extra Crew Credits or Notes
+    if (extraCredits.length > 0 || notes) {
+        let suppPage = pdfDoc.addPage([595.28, 841.89]);
+
+        const drawSuppHeader = (pg) => {
+            pg.drawRectangle({ x: 40, y: 805, width: 515, height: 4, color: rgb(0.39, 0.40, 0.95) });
+            safeDrawField(pg, 'CARTE BLANCHE - INSERT SHEET 2026', 40, 782, { size: 15, font: fontBold, color: rgb(0.08, 0.12, 0.22) });
+            safeDrawField(pg, 'ADDITIONAL PRODUCTION CREDITS & NOTES (SUPPLEMENTARY)', 40, 766, { size: 9.5, font: fontBold, color: rgb(0.39, 0.40, 0.95) });
+            safeDrawField(pg, `COMMISSION: ${commNum || 'N/A'}  |  STORY: ${storyName || 'N/A'}  |  PRODUCER: ${producerName || 'N/A'}`, 40, 746, { size: 8.5, font: font, color: rgb(0.3, 0.35, 0.45) });
+        };
+
+        drawSuppHeader(suppPage);
+        let curY = 710;
+
+        if (extraCredits.length > 0) {
+            safeDrawField(suppPage, 'ADDITIONAL PRODUCTION CREW CREDITS', 40, curY, { size: 11, font: fontBold, color: rgb(0.08, 0.12, 0.22) });
+            curY -= 18;
+
+            suppPage.drawRectangle({ x: 40, y: curY - 4, width: 515, height: 22, color: rgb(0.92, 0.94, 0.98), borderColor: rgb(0.82, 0.86, 0.92), borderWidth: 1 });
+            safeDrawField(suppPage, 'ROLE / PRODUCTION TITLE', 52, curY + 2, { size: 8.5, font: fontBold, color: rgb(0.25, 0.3, 0.4) });
+            safeDrawField(suppPage, 'CREW MEMBER NAME', 250, curY + 2, { size: 8.5, font: fontBold, color: rgb(0.25, 0.3, 0.4) });
+            curY -= 22;
+
+            for (let i = 0; i < extraCredits.length; i++) {
+                if (curY < 80) {
+                    suppPage = pdfDoc.addPage([595.28, 841.89]);
+                    drawSuppHeader(suppPage);
+                    curY = 710;
+                }
+                const credit = extraCredits[i];
+                const isOdd = i % 2 === 1;
+
+                suppPage.drawRectangle({
+                    x: 40,
+                    y: curY - 4,
+                    width: 515,
+                    height: 22,
+                    color: isOdd ? rgb(0.97, 0.98, 1.0) : rgb(1, 1, 1),
+                    borderColor: rgb(0.88, 0.90, 0.94),
+                    borderWidth: 0.5
+                });
+
+                safeDrawField(suppPage, credit.role || '-', 52, curY + 2, { size: 9, font: fontBold, color: rgb(0.15, 0.20, 0.30) });
+                safeDrawField(suppPage, credit.name || '-', 250, curY + 2, { size: 9.5, font: font, color: rgb(0.06, 0.09, 0.16) });
+                curY -= 22;
+            }
+            curY -= 15;
+        }
+
+        if (notes) {
+            if (curY < 140) {
+                suppPage = pdfDoc.addPage([595.28, 841.89]);
+                drawSuppHeader(suppPage);
+                curY = 710;
+            }
+
+            safeDrawField(suppPage, 'GENERAL NOTES & LOWER THIRD INSTRUCTIONS', 40, curY, { size: 11, font: fontBold, color: rgb(0.08, 0.12, 0.22) });
+            curY -= 14;
+
+            const wrapText = (text, maxChars = 85) => {
+                const lines = [];
+                const rawParagraphs = text.split('\n');
+                for (const para of rawParagraphs) {
+                    if (!para.trim()) { lines.push(''); continue; }
+                    const words = para.split(/\s+/);
+                    let currentLine = '';
+                    for (const word of words) {
+                        if (!currentLine) currentLine = word;
+                        else if ((currentLine + ' ' + word).length <= maxChars) currentLine += ' ' + word;
+                        else { lines.push(currentLine); currentLine = word; }
+                    }
+                    if (currentLine) lines.push(currentLine);
+                }
+                return lines;
+            };
+
+            const noteLines = wrapText(notes, 85);
+            const boxPadding = 10;
+            const lineHeight = 14;
+            const boxHeight = Math.max(36, (noteLines.length * lineHeight) + (boxPadding * 2));
+
+            suppPage.drawRectangle({
+                x: 40,
+                y: curY - boxHeight,
+                width: 515,
+                height: boxHeight,
+                color: rgb(0.98, 0.99, 1.0),
+                borderColor: rgb(0.85, 0.88, 0.92),
+                borderWidth: 1
+            });
+
+            let textY = curY - boxPadding - 10;
+            for (const line of noteLines) {
+                if (textY < 60) {
+                    suppPage = pdfDoc.addPage([595.28, 841.89]);
+                    drawSuppHeader(suppPage);
+                    textY = 680;
+                }
+                safeDrawField(suppPage, line, 52, textY, { size: 9, font: font, color: rgb(0.15, 0.20, 0.28) });
+                textY -= lineHeight;
+            }
+        }
+    }
+
+    // 6. Update Page Numbers on all final pages
+    const finalPages = pdfDoc.getPages();
+    const finalTotalPages = finalPages.length;
+
+    for (let p = 0; p < finalTotalPages; p++) {
+        const pg = finalPages[p];
+        if (p < neededTemplatePages) {
+            // Template page: cover original "Page X of 4" with white patch and write new page number
+            pg.drawRectangle({
+                x: 480,
+                y: 20,
+                width: 75,
+                height: 14,
+                color: rgb(1, 1, 1)
+            });
+            pg.drawText(`Page ${p + 1} of ${finalTotalPages}`, {
+                x: 495,
+                y: 22,
+                size: 7.5,
+                font: font,
+                color: rgb(0.4, 0.45, 0.55)
+            });
+        } else {
+            // Supplementary page footer
+            safeDrawField(pg, 'Carte Blanche Insert Sheet 2026 | Combined Artists | Automated CARP Deliverables', 40, 25, {
+                size: 7.5,
+                font: font,
+                color: rgb(0.55, 0.60, 0.68)
+            });
+            safeDrawField(pg, `Page ${p + 1} of ${finalTotalPages}`, 495, 25, {
+                size: 7.5,
+                font: font,
+                color: rgb(0.55, 0.60, 0.68)
+            });
+        }
+    }
+
+    const pdfBytes = await pdfDoc.save();
+    const pdfBlob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+    const cleanStory = (storyName || 'Carte_Blanche').replace(/[^a-zA-Z0-9_-]/g, '_');
+    const filename = `Insert_Sheet_${cleanStory}_2026.pdf`;
+
+    return {
+        pdfBlob,
+        filename,
+        metadata: {
+            commNum,
+            txDate: formattedTxDate,
+            storyName,
+            producerName,
+            submitterEmail,
+            presenterName,
+            researcherName,
+            cameraName,
+            soundName,
+            editorName,
+            duration,
+            thirdPartyFootage,
+            notes,
+            credits,
+            extraCredits
+        }
+    };
 }
