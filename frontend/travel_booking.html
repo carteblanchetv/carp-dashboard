@@ -340,7 +340,7 @@
             width: 100%;
         }
         .ddmmyy-date-wrap input.ddmmyy-input {
-            padding-right: 2rem !important;
+            padding-right: 2.2rem !important;
             width: 100%;
         }
         .ddmmyy-picker-btn {
@@ -349,25 +349,29 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             line-height: 1;
             padding: 0.15rem;
             color: var(--text-muted);
-            z-index: 2;
+            z-index: 1;
+            pointer-events: none;
         }
         .ddmmyy-picker-btn:hover {
             color: #0284c7;
         }
         .ddmmyy-native-picker {
             position: absolute;
-            right: 0;
-            bottom: 0;
-            width: 1px;
-            height: 1px;
+            right: 0.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2rem;
+            height: 2rem;
             opacity: 0;
-            pointer-events: none;
+            cursor: pointer;
+            z-index: 2;
             border: none;
             padding: 0;
+            background: transparent;
         }
     </style>
 </head>
@@ -591,6 +595,6 @@
         </div>
     </div>
 
-    <script type="module" src="js/travel_booking.js?v=5.5.0"></script>
+    <script type="module" src="js/travel_booking.js?v=5.5.1"></script>
 </body>
 </html>

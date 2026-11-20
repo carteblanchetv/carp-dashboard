@@ -287,6 +287,16 @@ window.handleDDMMYYBlur = (inputEl) => {
     inputEl.value = formatDateToDDMMYY(inputEl.value);
 };
 
+window.prepareNativeDatePicker = (nativeInput) => {
+    const wrap = nativeInput.closest('.ddmmyy-date-wrap');
+    if (!wrap) return;
+    const textInput = wrap.querySelector('.ddmmyy-input');
+    const iso = ddmmyyToIso(textInput?.value);
+    if (iso && nativeInput.value !== iso) {
+        nativeInput.value = iso;
+    }
+};
+
 window.openNativeDatePicker = (btnEl) => {
     const wrap = btnEl.closest('.ddmmyy-date-wrap');
     if (!wrap) return;
@@ -295,23 +305,60 @@ window.openNativeDatePicker = (btnEl) => {
     if (!nativeInput) return;
     const iso = ddmmyyToIso(textInput?.value);
     if (iso) nativeInput.value = iso;
+    try {
+        nativeInput.focus();
+    } catch (e) {}
     if (typeof nativeInput.showPicker === 'function') {
         try {
             nativeInput.showPicker();
             return;
         } catch (e) {}
     }
-    nativeInput.focus();
-    nativeInput.click();
+    try {
+        nativeInput.click();
+    } catch (e) {}
 };
 
+let isSyncingNativeDate = false;
 window.syncFromNativeDatePicker = (nativeInput) => {
+    if (isSyncingNativeDate) return;
     const wrap = nativeInput.closest('.ddmmyy-date-wrap');
     if (!wrap) return;
     const textInput = wrap.querySelector('.ddmmyy-input');
-    if (textInput && nativeInput.value) {
-        textInput.value = formatDateToDDMMYY(nativeInput.value);
-        textInput.dispatchEvent(new Event('change', { bubbles: true }));
+    const val = nativeInput.value;
+    if (!val || String(val).length < 10) return;
+
+    isSyncingNativeDate = true;
+    try {
+        if (textInput) {
+            textInput.value = formatDateToDDMMYY(val);
+            textInput.dispatchEvent(new Event('change', { bubbles: true }));
+            textInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        // Force dismiss the calendar popup immediately:
+        // 1. Explicitly blur the native input
+        try {
+            nativeInput.blur();
+        } catch (e) {}
+
+        // 2. Toggling input type destroys the Chromium/WebKit native popup overlay
+        try {
+            nativeInput.type = 'text';
+            nativeInput.type = 'date';
+            nativeInput.value = val;
+        } catch (e) {}
+
+        // 3. Shift focus to text input so the calendar popup is dismissed
+        if (textInput) {
+            try {
+                textInput.focus();
+            } catch (e) {}
+        }
+    } finally {
+        setTimeout(() => {
+            isSyncingNativeDate = false;
+        }, 120);
     }
 };
 
@@ -337,7 +384,7 @@ function renderDateInputHTML(name, val = '', extraStyle = '') {
     <div class="ddmmyy-date-wrap" ${extraStyle ? `style="${extraStyle}"` : ''}>
         <input type="text" name="${name}" class="ddmmyy-input" placeholder="DD-MM-YY" maxlength="8" inputmode="numeric" value="${formatted}" oninput="window.handleDDMMYYInput(this)" onblur="window.handleDDMMYYBlur(this)" title="Date (DD-MM-YY)">
         <button type="button" class="ddmmyy-picker-btn" tabindex="-1" title="Select date (DD-MM-YY)" onclick="window.openNativeDatePicker(this)">📅</button>
-        <input type="date" class="ddmmyy-native-picker" tabindex="-1" onchange="window.syncFromNativeDatePicker(this)">
+        <input type="date" class="ddmmyy-native-picker" tabindex="-1" onpointerdown="window.prepareNativeDatePicker(this)" onfocus="window.prepareNativeDatePicker(this)" onchange="window.syncFromNativeDatePicker(this)" oninput="window.syncFromNativeDatePicker(this)">
     </div>`;
 }
 
