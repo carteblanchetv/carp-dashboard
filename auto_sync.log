@@ -442,3 +442,51 @@
 [2026-11-21 19:50:43] 
 [2026-11-21 19:50:43] Microsoft Graph email import cycle completed successfully.
 [2026-11-21 19:50:43] Changes detected. Syncing...
+[2026-11-21 19:50:43] [main 6ce0be4] auto-sync: 2026-11-21 19:51
+[2026-11-21 19:50:43]  1 file changed, 49 insertions(+), 101 deletions(-)
+[2026-11-21 19:50:43] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-11-21 19:50:43]    06777a6..6ce0be4  main -> main
+[2026-11-21 19:50:43] Sync complete.
+[2026-11-21 20:20:44] Running Microsoft Graph Email Importer...
+[2026-11-21 20:20:44] Starting Graph API Email Importer... Mode: LIVE
+[2026-11-21 20:20:44] Fetching messages from Microsoft Graph...
+[2026-11-21 20:20:44] Found 36 email(s) since 1 May 2026 to check.
+[2026-11-21 20:20:44] Skipping duplicate: "Re: Unfair employment treatment by Ndalama Capital Mining " from Keobakile Dithato <dithatosk@hotmail.com> (received: 2026-11-19T04:49:52Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Re: Unfair employment treatment by Ndalama Capital Mining " from Keobakile Dithato <dithatosk@hotmail.com> (received: 2026-11-19T04:53:13Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Request for Investigation G«Ù Netball South Africa and the Impact on Private Netball Development" from Arina Viljoen <arinaviljoen@gmail.com> (received: 2026-11-19T06:07:33Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-19T06:47:40Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-19T06:47:41Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-19T06:47:41Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-19T06:48:41Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Re: GW-17449 Formal Complaint G«Ù Damaged Furniture, Inadequate Packaging and Poor Customer ServiceComplaint G«Ù Faulty Couch Assembly and Transit Damage" from Mahomed Hassen <hassenhg@googlemail.com> (received: 2026-11-19T06:54:11Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Re: GW-17449 Formal Complaint G«Ù Damaged Furniture, Inadequate Packaging and Poor Customer ServiceComplaint G«Ù Faulty Couch Assembly and Transit Damage" from Mahomed Hassen <hassenhg@googlemail.com> (received: 2026-11-19T06:54:36Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Venters butxhery boksburg" from Mario Pretorius <mariopretorius45@gmail.com> (received: 2026-11-19T07:54:46Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Re: GW-17449 Formal Complaint G«Ù Damaged Furniture, Inadequate Packaging and Poor Customer ServiceComplaint G«Ù Faulty Couch Assembly and Transit Damage" from Mahomed Hassen <hassenhg@googlemail.com> (received: 2026-11-19T08:03:45Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-19T08:33:06Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-19T08:33:10Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-19T08:48:34Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-19T08:50:18Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-19T08:52:12Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Liberty Group Unlawful Account Freeze Without Prior Notice or Service of Summons G«Ù (Eastgate Mall)" from Katso Lux Curtains <info@katsoluxcurtains.co.za> (received: 2026-11-19T09:31:17Z)
+[2026-11-21 20:20:44] Skipping duplicate: "World Toilet Day 2026 G«Ù Every Flush Counts. Every Life Matters" from Pravarni <pravarni@envirosan.co.za> (received: 2026-11-19T09:48:09Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Re: GW-17449 Formal Complaint G«Ù Damaged Furniture, Inadequate Packaging and Poor Customer ServiceComplaint G«Ù Faulty Couch Assembly and Transit Damage" from Mahomed Hassen <hassenhg@googlemail.com> (received: 2026-11-19T10:14:39Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Constant Power Cuts (Honeypark, Roodepoort, Johannesburg)" from Ripfumelo Mokoki <rmokoki37@gmail.com> (received: 2026-11-19T10:43:38Z)
+[2026-11-21 20:20:44] Skipping duplicate: "We worked for Taylor Swifts husband" from Toon53 Productions <michael@toon53productions.com> (received: 2026-11-19T13:29:18Z)
+[2026-11-21 20:20:44] Skipping duplicate: "KFC fraud and theft of sugar tax" from Graham Bowman <graham.bowman432@gmail.com> (received: 2026-11-19T14:00:58Z)
+[2026-11-21 20:20:44] Skipping backend spam/quarantine email: "Spam to Recipient" from quarantine@e-purifier.com <quarantine@e-purifier.com>
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-19T22:09:20Z)
+[2026-11-21 20:20:44] Skipping duplicate: "BBEXPO 2026 Celebrated local business and recognises emerging business talent" from Nadia Hearn <pressrelease@faselis.com> (received: 2026-11-20T07:13:43Z)
+[2026-11-21 20:20:44] Skipping duplicate: "FW: Cashnet Logistics & Vertex gone with millions of clients funds" from Elsa Olckers <elsa@totaluta.co.za> (received: 2026-11-20T07:22:37Z)
+[2026-11-21 20:20:44] Skipping duplicate: "From conference learning to community impact: LIASA-Sabinet Grant recipients share their experiences" from Jeanine Liebenberg <jeanine@sabinetmailer.co.za> (received: 2026-11-20T08:19:37Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-20T08:56:21Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Separated, Not Divorced: The Hidden Problem Behind SA's Burial Disputes" from ingridolivier@idotwrite.co.za <ingridolivier@idotwrite.co.za> (received: 2026-11-20T09:57:06Z)
+[2026-11-21 20:20:44] Skipping duplicate: "FW:  =Éƒ‰PRAESIDIUM SECURITAS PROTECTION SERVICES =Éƒ‰" from Lindie van Jaarsveld <Lindie@prasec.co.za> (received: 2026-11-20T11:24:44Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-20T12:02:18Z)
+[2026-11-21 20:20:44] Skipping backend spam/quarantine email: "Quarantine Message Notification" from e-Purifier Support <Postmaster@e-Purifier.com>
+[2026-11-21 20:20:44] Skipping duplicate: "The Montreal Book 2026 " from Housing Department <reservations@stay-manager.com> (received: 2026-11-20T18:17:20Z)
+[2026-11-21 20:20:44] Skipping duplicate: "(No Subject)" from Lientjie Beyer <pandokids.bloemfontein@gmail.com> (received: 2026-11-21T09:15:36Z)
+[2026-11-21 20:20:44] Skipping duplicate: "(No Subject)" from Anthea Knowles <Anthea.knowles@as-sure.co.za> (received: 2026-11-21T14:39:40Z)
+[2026-11-21 20:20:44] Skipping duplicate: "Carte Blanche Tip Offs" from DSTV Business (No Reply) <noreplymcleads@gmail.com> (received: 2026-11-21T16:54:10Z)
+[2026-11-21 20:20:44] 
+[2026-11-21 20:20:44] Microsoft Graph email import cycle completed successfully.
+[2026-11-21 20:20:44] Changes detected. Syncing...
