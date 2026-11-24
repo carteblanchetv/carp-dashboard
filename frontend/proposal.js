@@ -2758,7 +2758,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             txBadge.id = 'deliveredTxBadgeTop';
                             txBadge.href = '#';
                             txBadge.className = 'status-badge';
-                            txBadge.style.cssText = 'cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(0, 143, 190, 0.12); border: 1px solid var(--primary); color: var(--primary); font-weight: 700; font-size: 0.85rem; padding: 0.35rem 0.75rem; border-radius: 6px; text-decoration: none;';
+                            txBadge.style.cssText = 'cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(249, 115, 22, 0.12); border: 1px solid #f97316; color: #f97316; font-weight: 700; font-size: 0.85rem; padding: 0.35rem 0.75rem; border-radius: 6px; text-decoration: none;';
                             txBadge.title = 'Click to view Episode FCC & stories';
                             commBadge.appendChild(txBadge);
                         }
@@ -3186,6 +3186,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                 ${acc.contractAccepted ? 'âœ… Accepted' : 'âŒ Pending'}
                             </div>
                         </div>
+                        ${((sub.status === 'paid' || sub.status === 'delivered') && (sub.txDate || (Array.isArray(sub.txDates) && sub.txDates.length > 0))) ? `
+                        <div class="comm-data-item">
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;">TX Date</div>
+                            <div style="font-size: 1.1rem; font-weight: 700;">
+                                <a href="#" onclick="event.preventDefault(); window.openEpisodeModal('${formatStoryDate(sub.txDate || sub.txDates[0])}')" style="color: var(--primary); text-decoration: underline; cursor: pointer;">
+                                    📺 ${formatStoryDate(sub.txDate || sub.txDates[0])}
+                                </a>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
                     </div>
                     ${(acc.acceptedBy || isAdminView) ? `
                         <div style="padding: 0.75rem 1.5rem; background: var(--bg-light); border-top: 1px solid var(--border); font-size: 0.7rem; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center;">
