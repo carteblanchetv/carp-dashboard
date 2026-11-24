@@ -31,6 +31,34 @@ function formatStoryDate(dateInput) {
     return `${day} ${month} ${year}`;
 }
 
+function maskPhone(phone) {
+    if (!phone) return '';
+    const clean = String(phone).trim();
+    if (clean.length <= 4) return '••••';
+    return clean.slice(0, 3) + ' ••• ••• ' + clean.slice(-2);
+}
+
+function maskEmail(email) {
+    if (!email) return '';
+    const parts = String(email).trim().split('@');
+    if (parts.length !== 2) return '••••@••••';
+    const name = parts[0];
+    const maskedName = name.length > 2 ? name[0] + '•••' + name.slice(-1) : name[0] + '••';
+    return `${maskedName}@${parts[1]}`;
+}
+
+window.toggleContactReveal = function(btn) {
+    const parent = btn.closest('.contact-card-info');
+    if (!parent) return;
+    const vals = parent.querySelectorAll('.contact-val');
+    const isMasked = btn.getAttribute('data-revealed') !== 'true';
+    vals.forEach(val => {
+        val.textContent = isMasked ? val.getAttribute('data-raw') : val.getAttribute('data-masked');
+    });
+    btn.setAttribute('data-revealed', isMasked ? 'true' : 'false');
+    btn.textContent = isMasked ? '🔒 Mask Details (POPIA)' : '👁️ Reveal Details (POPIA)';
+};
+
 
 const urlParams = new URLSearchParams(window.location.search);
 const isReadOnlyMode = urlParams.get('view') === 'text';
@@ -512,17 +540,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function addCaseStudyRow() {
         return createGenericRow('caseStudiesTableBody', `
-            <td><input type="text" name="cs_name[]" class="table-input"></td>
-            <td><input type="text" name="cs_surname[]" class="table-input"></td>
-            <td><input type="text" name="cs_role[]" class="table-input"></td>
+            <td><input type="text" name="cs_name[]" class="table-input" placeholder="First Name"></td>
+            <td><input type="text" name="cs_surname[]" class="table-input" placeholder="Surname"></td>
+            <td><input type="text" name="cs_role[]" class="table-input" placeholder="e.g. Victim, Whistleblower"></td>
+            <td><input type="tel" name="cs_phone[]" class="table-input" placeholder="082 123 4567"></td>
+            <td><input type="email" name="cs_email[]" class="table-input" placeholder="contact@domain.co.za"></td>
+            <td style="text-align: center; vertical-align: middle;">
+                <label style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.2rem; margin: 0; font-size: 0.75rem;" title="Flag as Confidential Source under POPIA">
+                    <input type="checkbox" name="cs_confidential[]" value="true" style="cursor: pointer;">
+                    <span>🔒</span>
+                </label>
+            </td>
         `);
     }
 
     function addExpertRow() {
         return createGenericRow('expertsTableBody', `
-            <td><input type="text" name="ex_name[]" class="table-input"></td>
-            <td><input type="text" name="ex_surname[]" class="table-input"></td>
-            <td><input type="text" name="ex_role[]" class="table-input"></td>
+            <td><input type="text" name="ex_name[]" class="table-input" placeholder="First Name"></td>
+            <td><input type="text" name="ex_surname[]" class="table-input" placeholder="Surname"></td>
+            <td><input type="text" name="ex_role[]" class="table-input" placeholder="e.g. Forensic Analyst"></td>
+            <td><input type="tel" name="ex_phone[]" class="table-input" placeholder="082 123 4567"></td>
+            <td><input type="email" name="ex_email[]" class="table-input" placeholder="expert@domain.co.za"></td>
         `);
     }
 
@@ -1688,18 +1726,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     const nEl = row.querySelector('[name="cs_name[]"]');
                     const sEl = row.querySelector('[name="cs_surname[]"]');
                     const rEl = row.querySelector('[name="cs_role[]"]');
+                    const pEl = row.querySelector('[name="cs_phone[]"]');
+                    const eEl = row.querySelector('[name="cs_email[]"]');
+                    const cEl = row.querySelector('[name="cs_confidential[]"]');
                     if (nEl) nEl.value = item.name || '';
                     if (sEl) sEl.value = item.surname || '';
                     if (rEl) rEl.value = item.role || '';
+                    if (pEl) pEl.value = item.phone || '';
+                    if (eEl) eEl.value = item.email || '';
+                    if (cEl) cEl.checked = !!item.confidential;
                 });
 
                 populateTable('expertsTableBody', sub.experts, addExpertRow, (row, item) => {
                     const nEl = row.querySelector('[name="ex_name[]"]');
                     const sEl = row.querySelector('[name="ex_surname[]"]');
                     const rEl = row.querySelector('[name="ex_role[]"]');
+                    const pEl = row.querySelector('[name="ex_phone[]"]');
+                    const eEl = row.querySelector('[name="ex_email[]"]');
                     if (nEl) nEl.value = item.name || '';
                     if (sEl) sEl.value = item.surname || '';
                     if (rEl) rEl.value = item.role || '';
+                    if (pEl) pEl.value = item.phone || '';
+                    if (eEl) eEl.value = item.email || '';
                 });
 
                 // Phase 2 visibility
@@ -2074,20 +2122,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Grab case studies
-        const cs_names = formData.getAll('cs_name[]');
-        const cs_surnames = formData.getAll('cs_surname[]');
-        const cs_roles = formData.getAll('cs_role[]');
-        cs_names.forEach((name, i) => {
-            if (name) data.caseStudies.push({ name, surname: cs_surnames[i], role: cs_roles[i] });
+        // Grab case studies (with POPIA contact details & confidentiality)
+        const csRows = document.querySelectorAll('#caseStudiesTableBody tr');
+        csRows.forEach(row => {
+            const name = (row.querySelector('[name="cs_name[]"]')?.value || '').trim();
+            const surname = (row.querySelector('[name="cs_surname[]"]')?.value || '').trim();
+            const role = (row.querySelector('[name="cs_role[]"]')?.value || '').trim();
+            const phone = (row.querySelector('[name="cs_phone[]"]')?.value || '').trim();
+            const email = (row.querySelector('[name="cs_email[]"]')?.value || '').trim();
+            const confidential = !!row.querySelector('[name="cs_confidential[]"]')?.checked;
+            if (name || surname || role || phone || email) {
+                data.caseStudies.push({ name, surname, role, phone, email, confidential });
+            }
         });
 
-        // Grab experts
-        const ex_names = formData.getAll('ex_name[]');
-        const ex_surnames = formData.getAll('ex_surname[]');
-        const ex_roles = formData.getAll('ex_role[]');
-        ex_names.forEach((name, i) => {
-            if (name) data.experts.push({ name, surname: ex_surnames[i], role: ex_roles[i] });
+        // Grab experts (with POPIA contact details)
+        const exRows = document.querySelectorAll('#expertsTableBody tr');
+        exRows.forEach(row => {
+            const name = (row.querySelector('[name="ex_name[]"]')?.value || '').trim();
+            const surname = (row.querySelector('[name="ex_surname[]"]')?.value || '').trim();
+            const role = (row.querySelector('[name="ex_role[]"]')?.value || '').trim();
+            const phone = (row.querySelector('[name="ex_phone[]"]')?.value || '').trim();
+            const email = (row.querySelector('[name="ex_email[]"]')?.value || '').trim();
+            if (name || surname || role || phone || email) {
+                data.experts.push({ name, surname, role, phone, email });
+            }
         });
 
         const existingDetails = window.currentProposal?.details || {};
@@ -2958,15 +3017,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (validCaseStudies.length > 0) {
                     caseStudiesHtml = `
                         <div style="margin-bottom: 3rem;">
-                            <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Case Studies</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); margin: 0; font-weight: 700;">Case Studies</h3>
+                                <span style="font-size: 0.7rem; color: #0284c7; background: rgba(2, 132, 199, 0.08); padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid rgba(2, 132, 199, 0.2);">🛡️ POPIA Protected</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
                                 ${validCaseStudies.map(cs => {
                                     const name = typeof cs === 'string' ? cs : `${cs.name || ''} ${cs.surname || ''}`.trim();
                                     const role = (typeof cs === 'object' && cs.role) || 'Case Study';
+                                    const isConfidential = typeof cs === 'object' && !!cs.confidential;
+                                    const rawPhone = typeof cs === 'object' && cs.phone ? cs.phone.trim() : '';
+                                    const rawEmail = typeof cs === 'object' && cs.email ? cs.email.trim() : '';
+                                    const maskedP = maskPhone(rawPhone);
+                                    const maskedE = maskEmail(rawEmail);
+                                    const hasContact = rawPhone || rawEmail;
+
                                     return `
-                                    <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02);">
-                                        <div style="font-weight: 700; font-size: 1rem;">${escapeHtml(name)}</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(role)}</div>
+                                    <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;">
+                                        <div>
+                                            ${isConfidential ? `<div style="display: inline-block; font-size: 0.68rem; font-weight: 800; color: #b91c1c; background: rgba(239, 68, 68, 0.12); padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid rgba(239, 68, 68, 0.25); margin-bottom: 0.35rem;">🔒 CONFIDENTIAL SOURCE</div>` : ''}
+                                            <div style="font-weight: 700; font-size: 1rem;">${escapeHtml(name)}</div>
+                                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.25rem;">${escapeHtml(role)}</div>
+                                        </div>
+                                        ${hasContact ? `
+                                        <div class="contact-card-info" style="margin-top: 0.6rem; padding-top: 0.5rem; border-top: 1px dashed var(--border); font-size: 0.78rem; line-height: 1.45;">
+                                            ${rawPhone ? `<div><span style="color: var(--text-muted);">📞 Tel:</span> <span class="contact-val" data-raw="${escapeHtml(rawPhone)}" data-masked="${escapeHtml(maskedP)}">${escapeHtml(maskedP)}</span></div>` : ''}
+                                            ${rawEmail ? `<div><span style="color: var(--text-muted);">✉️ Email:</span> <span class="contact-val" data-raw="${escapeHtml(rawEmail)}" data-masked="${escapeHtml(maskedE)}">${escapeHtml(maskedE)}</span></div>` : ''}
+                                            <button type="button" class="btn-toggle-contact-reveal" onclick="window.toggleContactReveal(this)" style="background: none; border: none; color: #0284c7; font-size: 0.72rem; cursor: pointer; padding: 2px 0; margin-top: 4px; text-decoration: underline; font-weight: 600;">
+                                                👁️ Reveal Details (POPIA)
+                                            </button>
+                                        </div>` : ''}
                                     </div>
                                     `;
                                 }).join('')}
@@ -2993,15 +3073,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (validExperts.length > 0) {
                     expertsHtml = `
                         <div style="margin-bottom: 3rem;">
-                            <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem; font-weight: 700;">Experts</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1rem;">
+                                <h3 style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--primary); margin: 0; font-weight: 700;">Experts</h3>
+                                <span style="font-size: 0.7rem; color: #0284c7; background: rgba(2, 132, 199, 0.08); padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid rgba(2, 132, 199, 0.2);">🛡️ POPIA Protected</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
                                 ${validExperts.map(ex => {
                                     const name = typeof ex === 'string' ? ex : `${ex.name || ''} ${ex.surname || ''}`.trim();
                                     const role = (typeof ex === 'object' && ex.role) || 'Expert';
+                                    const rawPhone = typeof ex === 'object' && ex.phone ? ex.phone.trim() : '';
+                                    const rawEmail = typeof ex === 'object' && ex.email ? ex.email.trim() : '';
+                                    const maskedP = maskPhone(rawPhone);
+                                    const maskedE = maskEmail(rawEmail);
+                                    const hasContact = rawPhone || rawEmail;
+
                                     return `
-                                    <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02);">
-                                        <div style="font-weight: 700; font-size: 1rem;">${escapeHtml(name)}</div>
-                                        <div style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(role)}</div>
+                                    <div style="padding: 1rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between;">
+                                        <div>
+                                            <div style="font-weight: 700; font-size: 1rem;">${escapeHtml(name)}</div>
+                                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.25rem;">${escapeHtml(role)}</div>
+                                        </div>
+                                        ${hasContact ? `
+                                        <div class="contact-card-info" style="margin-top: 0.6rem; padding-top: 0.5rem; border-top: 1px dashed var(--border); font-size: 0.78rem; line-height: 1.45;">
+                                            ${rawPhone ? `<div><span style="color: var(--text-muted);">📞 Tel:</span> <span class="contact-val" data-raw="${escapeHtml(rawPhone)}" data-masked="${escapeHtml(maskedP)}">${escapeHtml(maskedP)}</span></div>` : ''}
+                                            ${rawEmail ? `<div><span style="color: var(--text-muted);">✉️ Email:</span> <span class="contact-val" data-raw="${escapeHtml(rawEmail)}" data-masked="${escapeHtml(maskedE)}">${escapeHtml(maskedE)}</span></div>` : ''}
+                                            <button type="button" class="btn-toggle-contact-reveal" onclick="window.toggleContactReveal(this)" style="background: none; border: none; color: #0284c7; font-size: 0.72rem; cursor: pointer; padding: 2px 0; margin-top: 4px; text-decoration: underline; font-weight: 600;">
+                                                👁️ Reveal Details (POPIA)
+                                            </button>
+                                        </div>` : ''}
                                     </div>
                                     `;
                                 }).join('')}
@@ -3224,15 +3323,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (validCaseStudies.length > 0) {
                     caseStudiesHtml = `
                         <div class="report-section">
-                            <div class="report-section-title"><span>👥</span> Case Studies</div>
+                            <div class="report-section-title" style="display: flex; align-items: center; justify-content: space-between;">
+                                <span>👥 Case Studies</span>
+                                <span style="font-size: 0.7rem; font-weight: 600; color: #0284c7; background: rgba(2, 132, 199, 0.08); padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid rgba(2, 132, 199, 0.2);">🛡️ POPIA Protected</span>
+                            </div>
                             <div class="report-grid">
                                 ${validCaseStudies.map(cs => {
                                     const name = typeof cs === 'string' ? cs : `${cs.name || ''} ${cs.surname || ''}`.trim();
                                     const role = (typeof cs === 'object' && cs.role) || 'Case Study';
+                                    const isConfidential = typeof cs === 'object' && !!cs.confidential;
+                                    const rawPhone = typeof cs === 'object' && cs.phone ? cs.phone.trim() : '';
+                                    const rawEmail = typeof cs === 'object' && cs.email ? cs.email.trim() : '';
+                                    const maskedP = maskPhone(rawPhone);
+                                    const maskedE = maskEmail(rawEmail);
+                                    const hasContact = rawPhone || rawEmail;
+
                                     return `
-                                    <div class="profile-card">
-                                        <span class="profile-name">${escapeHtml(name)}</span>
-                                        <span class="profile-role">${escapeHtml(role)}</span>
+                                    <div class="profile-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                                        <div>
+                                            ${isConfidential ? `<div style="font-size: 0.65rem; font-weight: 800; color: #b91c1c; background: rgba(239, 68, 68, 0.12); padding: 0.1rem 0.4rem; border-radius: 4px; width: fit-content; margin-bottom: 0.25rem;">🔒 CONFIDENTIAL</div>` : ''}
+                                            <span class="profile-name">${escapeHtml(name)}</span>
+                                            <span class="profile-role">${escapeHtml(role)}</span>
+                                        </div>
+                                        ${hasContact ? `
+                                        <div class="contact-card-info" style="margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px dashed var(--border); font-size: 0.75rem; line-height: 1.4;">
+                                            ${rawPhone ? `<div>📞 <span class="contact-val" data-raw="${escapeHtml(rawPhone)}" data-masked="${escapeHtml(maskedP)}">${escapeHtml(maskedP)}</span></div>` : ''}
+                                            ${rawEmail ? `<div>✉️ <span class="contact-val" data-raw="${escapeHtml(rawEmail)}" data-masked="${escapeHtml(maskedE)}">${escapeHtml(maskedE)}</span></div>` : ''}
+                                            <button type="button" class="btn-toggle-contact-reveal" onclick="window.toggleContactReveal(this)" style="background: none; border: none; color: #0284c7; font-size: 0.68rem; cursor: pointer; padding: 2px 0; margin-top: 3px; text-decoration: underline; font-weight: 600;">
+                                                👁️ Reveal (POPIA)
+                                            </button>
+                                        </div>` : ''}
                                     </div>
                                     `;
                                 }).join('')}
@@ -3259,15 +3379,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (validExperts.length > 0) {
                     expertsHtml = `
                         <div class="report-section">
-                            <div class="report-section-title"><span>🎓</span> Experts</div>
+                            <div class="report-section-title" style="display: flex; align-items: center; justify-content: space-between;">
+                                <span>🎓 Experts</span>
+                                <span style="font-size: 0.7rem; font-weight: 600; color: #0284c7; background: rgba(2, 132, 199, 0.08); padding: 0.15rem 0.45rem; border-radius: 4px; border: 1px solid rgba(2, 132, 199, 0.2);">🛡️ POPIA Protected</span>
+                            </div>
                             <div class="report-grid">
                                 ${validExperts.map(ex => {
                                     const name = typeof ex === 'string' ? ex : `${ex.name || ''} ${ex.surname || ''}`.trim();
                                     const role = (typeof ex === 'object' && ex.role) || 'Expert';
+                                    const rawPhone = typeof ex === 'object' && ex.phone ? ex.phone.trim() : '';
+                                    const rawEmail = typeof ex === 'object' && ex.email ? ex.email.trim() : '';
+                                    const maskedP = maskPhone(rawPhone);
+                                    const maskedE = maskEmail(rawEmail);
+                                    const hasContact = rawPhone || rawEmail;
+
                                     return `
-                                    <div class="profile-card">
-                                        <span class="profile-name">${escapeHtml(name)}</span>
-                                        <span class="profile-role">${escapeHtml(role)}</span>
+                                    <div class="profile-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                                        <div>
+                                            <span class="profile-name">${escapeHtml(name)}</span>
+                                            <span class="profile-role">${escapeHtml(role)}</span>
+                                        </div>
+                                        ${hasContact ? `
+                                        <div class="contact-card-info" style="margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px dashed var(--border); font-size: 0.75rem; line-height: 1.4;">
+                                            ${rawPhone ? `<div>📞 <span class="contact-val" data-raw="${escapeHtml(rawPhone)}" data-masked="${escapeHtml(maskedP)}">${escapeHtml(maskedP)}</span></div>` : ''}
+                                            ${rawEmail ? `<div>✉️ <span class="contact-val" data-raw="${escapeHtml(rawEmail)}" data-masked="${escapeHtml(maskedE)}">${escapeHtml(maskedE)}</span></div>` : ''}
+                                            <button type="button" class="btn-toggle-contact-reveal" onclick="window.toggleContactReveal(this)" style="background: none; border: none; color: #0284c7; font-size: 0.68rem; cursor: pointer; padding: 2px 0; margin-top: 3px; text-decoration: underline; font-weight: 600;">
+                                                👁️ Reveal (POPIA)
+                                            </button>
+                                        </div>` : ''}
                                     </div>
                                     `;
                                 }).join('')}
@@ -5323,26 +5462,32 @@ window.downloadProposalPDF = async () => {
             }
         }
 
-        // Case Studies
+        // Case Studies (with POPIA Protection)
         if (!sub._isRestrictedView && sub.caseStudies && (Array.isArray(sub.caseStudies) ? sub.caseStudies.length > 0 : String(sub.caseStudies).trim().length > 0)) {
             if (currentY > 250) { doc.addPage(); currentY = 20; }
             doc.setFontSize(12);
             doc.setTextColor(0, 143, 190);
             doc.setFont('helvetica', 'bold');
-            doc.text('CASE STUDIES', margin, currentY);
+            doc.text('CASE STUDIES (POPIA PROTECTED)', margin, currentY);
             currentY += 8;
             
             if (Array.isArray(sub.caseStudies)) {
                 const validCaseStudies = sub.caseStudies.filter(cs => cs);
                 doc.autoTable({
                     startY: currentY,
+                    head: [['Name', 'Role / Relation', 'Contact Details']],
                     body: validCaseStudies.map(cs => {
                         const name = typeof cs === 'string' ? cs : `${cs.name || ''} ${cs.surname || ''}`.trim();
                         const role = (typeof cs === 'object' && cs.role) || 'Case Study';
-                        return [name, role];
+                        if (typeof cs === 'object' && cs.confidential) {
+                            return [name, role, '[CONFIDENTIAL - POPIA Protected Source]'];
+                        }
+                        const contact = typeof cs === 'object' ? [cs.phone, cs.email].filter(Boolean).join(' | ') : '';
+                        return [name, role, contact || '—'];
                     }),
-                    theme: 'plain',
-                    styles: { fontSize: 10 },
+                    theme: 'striped',
+                    styles: { fontSize: 9 },
+                    headStyles: { fillColor: [0, 143, 190], textColor: 255 },
                     margin: { left: margin, right: margin }
                 });
                 currentY = doc.lastAutoTable.finalY + 12;
@@ -5369,13 +5514,16 @@ window.downloadProposalPDF = async () => {
                 const validExperts = sub.experts.filter(ex => ex);
                 doc.autoTable({
                     startY: currentY,
+                    head: [['Name', 'Role / Affiliation', 'Contact Details']],
                     body: validExperts.map(ex => {
                         const name = typeof ex === 'string' ? ex : `${ex.name || ''} ${ex.surname || ''}`.trim();
                         const role = (typeof ex === 'object' && ex.role) || 'Expert';
-                        return [name, role];
+                        const contact = typeof ex === 'object' ? [ex.phone, ex.email].filter(Boolean).join(' | ') : '';
+                        return [name, role, contact || '—'];
                     }),
-                    theme: 'plain',
-                    styles: { fontSize: 10 },
+                    theme: 'striped',
+                    styles: { fontSize: 9 },
+                    headStyles: { fillColor: [0, 143, 190], textColor: 255 },
                     margin: { left: margin, right: margin }
                 });
                 currentY = doc.lastAutoTable.finalY + 12;

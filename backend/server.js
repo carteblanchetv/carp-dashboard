@@ -670,8 +670,8 @@ app.post('/api/send-footage-release-agreement', async (req, res, next) => {
     const footageDescription = fields.footageDescription || '';
     const courtesyCredit = fields.courtesyCredit || '';
     const broadcastDated = fields.broadcastDated || fields.broadcastDate || '';
-    const phone = fields.phone || '';
-    const email = fields.email || '';
+    const phone = fields.ownerPhone || fields.phone || '';
+    const email = fields.ownerEmail || fields.email || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
 
@@ -749,9 +749,9 @@ app.post('/api/send-participant-release', async (req, res, next) => {
     if (!file) return res.status(400).json({ success: false, error: 'No PDF file provided.' });
 
     const fullName = fields.participantName || fields.participant || fields.fullName || 'Participant';
-    const idNumber = fields.idNumber || '';
-    const phone = fields.contactNumber || fields.phone || '';
-    const email = fields.email || '';
+    const idNumber = fields.idNumber || fields.participantId || '';
+    const phone = fields.participantContact || fields.contactNumber || fields.phone || '';
+    const email = fields.participantEmail || fields.email || '';
     const storyTitle = fields.storyTitle || fields.storyName || 'Story';
     const storyName = storyTitle;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
@@ -834,8 +834,8 @@ app.post('/api/send-minor-release', async (req, res, next) => {
     const guardianId = parentIdNumber;
     const minorName = childName;
     const minorAge = fields.minorAge || '';
-    const phone = fields.phone || '';
-    const email = fields.email || '';
+    const phone = fields.ownerPhone || fields.phone || '';
+    const email = fields.ownerEmail || fields.email || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || email;
     const producerEmail = fields.producerEmail || fields.producer_email;
 

@@ -382,8 +382,9 @@ function initParticipantRelease() {
         const storyTitle = (document.getElementById('storyTitle')?.value || document.getElementById('storyName')?.value || '').trim();
         const resolvedProd = (document.getElementById('producerName')?.value || producerName || '').trim();
         const participant = (document.getElementById('participantName')?.value || document.getElementById('fullName')?.value || '').trim();
-        const idNumber = (document.getElementById('idNumber')?.value || '').trim();
-        const contactNumber = (document.getElementById('contactNumber')?.value || document.getElementById('phone')?.value || '').trim();
+        const idNumber = (document.getElementById('idNumber')?.value || document.getElementById('participantId')?.value || '').trim();
+        const contactNumber = (document.getElementById('contactNumber')?.value || document.getElementById('phone')?.value || document.getElementById('participantContact')?.value || '').trim();
+        const participantEmail = (document.getElementById('participantEmail')?.value || document.getElementById('email')?.value || '').trim();
 
         const participantSignedAt = (document.getElementById('participantSignedAt')?.value || document.getElementById('signedAt')?.value || '').trim();
         const participantSignedDate = (document.getElementById('participantSignedDate')?.value || document.getElementById('signedDate')?.value || todayFormatted).trim();
@@ -503,6 +504,16 @@ function initParticipantRelease() {
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(15, 23, 42);
         doc.text(contactNumber || 'N/A', col2X + 28, currY);
+
+        if (participantEmail) {
+            currY += rowH;
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(71, 85, 105);
+            doc.text('Email Address:', col1X, currY);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(15, 23, 42);
+            doc.text(participantEmail, col1X + 37, currY);
+        }
 
         // Divider between Section 2 and Legal Copy
         currY += 4.5;
@@ -669,13 +680,18 @@ function initParticipantRelease() {
         if (document.getElementById('participantName')) document.getElementById('participantName').value = pName;
         if (document.getElementById('fullName')) document.getElementById('fullName').value = pName;
 
-        if (document.getElementById('idNumber')) document.getElementById('idNumber').value = sub.idNumber || '';
+        const pId = sub.participantId || sub.idNumber || '';
+        if (document.getElementById('participantId')) document.getElementById('participantId').value = pId;
+        if (document.getElementById('idNumber')) document.getElementById('idNumber').value = pId;
 
-        const phoneVal = sub.contactNumber || sub.phone || '';
+        const phoneVal = sub.participantContact || sub.contactNumber || sub.phone || '';
+        if (document.getElementById('participantContact')) document.getElementById('participantContact').value = phoneVal;
         if (document.getElementById('contactNumber')) document.getElementById('contactNumber').value = phoneVal;
         if (document.getElementById('phone')) document.getElementById('phone').value = phoneVal;
 
-        if (document.getElementById('email')) document.getElementById('email').value = sub.email || '';
+        const emailVal = sub.participantEmail || sub.email || '';
+        if (document.getElementById('participantEmail')) document.getElementById('participantEmail').value = emailVal;
+        if (document.getElementById('email')) document.getElementById('email').value = emailVal;
 
         const sTitle = sub.storyTitle || sub.storyName || '';
         if (document.getElementById('storyTitle')) document.getElementById('storyTitle').value = sTitle;

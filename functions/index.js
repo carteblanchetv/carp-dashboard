@@ -2936,8 +2936,8 @@ app.post('/api/send-footage-release-agreement', async (req, res) => {
     const footageDescription = fields.footageDescription || '';
     const courtesyCredit = fields.courtesyCredit || '';
     const broadcastDated = fields.broadcastDated || fields.broadcastDate || '';
-    const phone = fields.phone || '';
-    const email = fields.email || '';
+    const phone = fields.ownerPhone || fields.phone || '';
+    const email = fields.ownerEmail || fields.email || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
 
     const commNum = fields.commissionNumber || fields.commission_number || 'N/A';
@@ -3088,9 +3088,9 @@ app.post('/api/send-participant-release', async (req, res) => {
     }
 
     const fullName = fields.participantName || fields.participant || fields.fullName || fields.contributorName || 'Participant';
-    const idNumber = fields.idNumber || parsedMeta.participantId || '';
-    const phone = fields.contactNumber || fields.phone || parsedMeta.participantContact || '';
-    const email = fields.email || '';
+    const idNumber = fields.idNumber || fields.participantId || parsedMeta.participantId || '';
+    const phone = fields.participantContact || fields.contactNumber || fields.phone || parsedMeta.participantContact || '';
+    const email = fields.participantEmail || fields.email || '';
     const storyTitle = fields.storyTitle || fields.storyName || 'Story';
     const storyName = storyTitle;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.submitterEmail || fields.email;

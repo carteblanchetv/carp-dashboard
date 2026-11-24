@@ -458,21 +458,34 @@
             </section>
 
             <!-- CASE STUDIES & EXPERTS -->
-            <div class="form-grid-2-col">
+            <div class="form-sections-stack" style="display: flex; flex-direction: column; gap: 1.5rem;">
                 <section class="form-section collapsible-section" id="caseStudiesSection">
                     <div class="collapsible-header" onclick="toggleSection('caseStudiesSection')">
-                        <h2 class="section-title">Case Studies</h2>
+                        <div style="display: flex; align-items: center; gap: 0.6rem;">
+                            <h2 class="section-title" style="margin: 0;">Case Studies</h2>
+                            <span style="font-size: 0.72rem; font-weight: 700; color: #0284c7; background: rgba(2, 132, 199, 0.1); padding: 0.2rem 0.5rem; border-radius: 999px; border: 1px solid rgba(2, 132, 199, 0.25);">🛡️ POPIA Protected</span>
+                        </div>
                         <span class="collapsible-trigger">▼</span>
                     </div>
                     <div class="collapsible-content">
+                        <div style="background: rgba(2, 132, 199, 0.06); border: 1px solid rgba(2, 132, 199, 0.2); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 0.85rem; font-size: 0.82rem; line-height: 1.45; color: var(--text-muted); display: flex; align-items: flex-start; gap: 0.65rem;">
+                            <span style="font-size: 1.15rem; line-height: 1;">🛡️</span>
+                            <div>
+                                <strong style="color: var(--primary);">POPIA Processing &amp; Safeguards:</strong>
+                                Participant contact details are encrypted at rest and processed strictly for interview logistics, legal verification, and copyright clearance. Mark sensitive sources or whistleblowers as <strong>Confidential (🔒)</strong> to mask their contact information and protect identity across broad exports.
+                            </div>
+                        </div>
                         <div class="table-container">
-                            <table class="data-table equal-width-cols">
+                            <table class="data-table" style="min-width: 680px; width: 100%;">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Surname</th>
-                                        <th>Role</th>
-                                        <th></th>
+                                        <th style="width: 17%;">Name</th>
+                                        <th style="width: 17%;">Surname</th>
+                                        <th style="width: 20%;">Role / Relation</th>
+                                        <th style="width: 18%;">Contact No.</th>
+                                        <th style="width: 20%;">Email</th>
+                                        <th style="width: 8%; text-align: center;" title="Flag as Confidential Source (POPIA Protection)">Confidential</th>
+                                        <th style="width: 45px; text-align: center;"></th>
                                     </tr>
                                 </thead>
                                 <tbody id="caseStudiesTableBody"></tbody>
@@ -484,18 +497,30 @@
 
                 <section class="form-section collapsible-section" id="expertsSection">
                     <div class="collapsible-header" onclick="toggleSection('expertsSection')">
-                        <h2 class="section-title">Experts</h2>
+                        <div style="display: flex; align-items: center; gap: 0.6rem;">
+                            <h2 class="section-title" style="margin: 0;">Experts</h2>
+                            <span style="font-size: 0.72rem; font-weight: 700; color: #0284c7; background: rgba(2, 132, 199, 0.1); padding: 0.2rem 0.5rem; border-radius: 999px; border: 1px solid rgba(2, 132, 199, 0.25);">🛡️ POPIA Protected</span>
+                        </div>
                         <span class="collapsible-trigger">▼</span>
                     </div>
                     <div class="collapsible-content">
+                        <div style="background: rgba(2, 132, 199, 0.06); border: 1px solid rgba(2, 132, 199, 0.2); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 0.85rem; font-size: 0.82rem; line-height: 1.45; color: var(--text-muted); display: flex; align-items: flex-start; gap: 0.65rem;">
+                            <span style="font-size: 1.15rem; line-height: 1;">🛡️</span>
+                            <div>
+                                <strong style="color: var(--primary);">POPIA Processing Notice:</strong>
+                                Expert contact details are processed strictly for story fact-checking, background research, and shoot coordination. All records are securely encrypted at rest.
+                            </div>
+                        </div>
                         <div class="table-container">
-                            <table class="data-table equal-width-cols">
+                            <table class="data-table" style="min-width: 650px; width: 100%;">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Surname</th>
-                                        <th>Role</th>
-                                        <th></th>
+                                        <th style="width: 20%;">Name</th>
+                                        <th style="width: 20%;">Surname</th>
+                                        <th style="width: 24%;">Role / Affiliation</th>
+                                        <th style="width: 18%;">Contact No.</th>
+                                        <th style="width: 20%;">Email</th>
+                                        <th style="width: 45px; text-align: center;"></th>
                                     </tr>
                                 </thead>
                                 <tbody id="expertsTableBody"></tbody>

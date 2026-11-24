@@ -393,6 +393,8 @@ function initFootageAgreement() {
             const footageDesc = (footageDescInput?.value || '').trim();
             const ownerPlace = (ownerSignedAtInput?.value || '').trim();
             const ownerDate = (ownerSignedDateEl?.value || todayStr).trim();
+            const ownerPhone = (document.getElementById('ownerPhone')?.value || '').trim();
+            const ownerEmail = (document.getElementById('ownerEmail')?.value || '').trim();
 
             const prodPlace = (document.getElementById('producerSignedAt')?.value || '').trim();
             const prodDate = (prodSignedDateEl?.value || todayStr).trim();
@@ -508,6 +510,10 @@ function initFootageAgreement() {
 
             y += 4.5;
             doc.text(`Broadcast Date:  ${broadcastDate || '___________________________'}`, margin, y);
+            if (ownerPhone || ownerEmail) {
+                const contactParts = [ownerPhone ? `Tel: ${ownerPhone}` : '', ownerEmail ? `Email: ${ownerEmail}` : ''].filter(Boolean).join('  •  ');
+                doc.text(`Owner Contact:  ${contactParts}`, margin + 90, y);
+            }
 
             // 5. Legal Terms Part 1
             y += 5.5;
@@ -653,10 +659,10 @@ function initFootageAgreement() {
             const auditText = `Digital Audit Trail • Status: ${producerSigImg && contributorSigImg ? 'APPROVED' : 'PARTIALLY_SIGNED'} • Initiated by: ${resolvedProdName || 'Producer'} • Co-Signed by: ${footageOwnerNameInput?.value || 'Rights Holder'} • Executed: ${new Date().toISOString()}`;
             doc.text(auditText, margin, auditY + 3.8);
 
-            // Footer note
-            doc.setFontSize(7);
+            // Footer note & POPIA Compliance
+            doc.setFontSize(6.5);
             doc.setTextColor(148, 163, 184);
-            doc.text('Combined Artists CC & Electronic Media Network Limited (M-Net)  •  Form Ref: CB-FA-2026', margin, pageHeight - 7);
+            doc.text('Combined Artists CC & Electronic Media Network Limited (M-Net)  •  Form Ref: CB-FA-2026  •  POPIA Protected (Act 4 of 2013)', margin, pageHeight - 7);
 
             return doc.output('blob');
         } catch (fatalErr) {
@@ -707,6 +713,14 @@ function initFootageAgreement() {
 
         const desc = sub.footageDescription || '';
         if (footageDescInput) footageDescInput.value = desc;
+
+        const oPhone = sub.ownerPhone || sub.phone || sub.contactNumber || '';
+        const phoneEl = document.getElementById('ownerPhone') || document.getElementById('phone');
+        if (phoneEl && oPhone) phoneEl.value = oPhone;
+
+        const oEmail = sub.ownerEmail || sub.email || '';
+        const emailEl = document.getElementById('ownerEmail') || document.getElementById('email');
+        if (emailEl && oEmail) emailEl.value = oEmail;
 
         const ownerSignedAt = sub.ownerSignedAt || sub.signedAt || '';
         if (ownerSignedAtInput) ownerSignedAtInput.value = ownerSignedAt;
