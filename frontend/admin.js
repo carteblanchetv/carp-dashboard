@@ -651,37 +651,18 @@ window.setTxDateFilter = async (txDate) => {
     document.body.style.overflow = 'hidden';
 
     try {
-        if (!globalSubmissions) {
-            const response = await window.auth.fetchWithAuth('/api/admin/submissions');
-            const data = await response.json();
-            if (data.success) {
-                globalSubmissions = data.submissions;
-            } else {
-                throw new Error(data.error || 'Failed to fetch submissions');
-            }
-        }
+        const response = await window.auth.fetchWithAuth(`/api/episode-data?txDate=${encodeURIComponent(txDate)}`);
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error || 'Failed to fetch episode data');
 
-        // Find the FCC for this date
-        const fcc = globalSubmissions.find(s => s.formType === 'control_sheet' && s.txDate && formatDate(s.txDate) === txDate);
-
-        // Fetch stories for this TX Date (including repeat / multi-broadcast dates)
-        const matchingStories = globalProposals.filter(p => {
-            if (p.txDate && formatDate(p.txDate) === txDate) return true;
-            if (Array.isArray(p.txDates) && p.txDates.some(d => d && formatDate(d) === txDate)) return true;
-            return false;
-        });
-        matchingStories.sort((a, b) => {
-            const numA = parseInt(a.commissionNumber) || Infinity;
-            const numB = parseInt(b.commissionNumber) || Infinity;
-            return numA - numB;
-        });
+        const { fcc, stories } = data;
 
         let storiesHtml = '';
-        if (matchingStories.length > 0) {
+        if (stories && stories.length > 0) {
             storiesHtml += '<div style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.2rem;">';
             storiesHtml += '<h4 style="margin-bottom: 0.8rem; color: var(--text-main); font-size: 1rem; font-weight: 600;">Stories in this Episode</h4>';
             storiesHtml += '<ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">';
-            matchingStories.forEach(story => {
+            stories.forEach(story => {
                 storiesHtml += `<li style="padding: 0.6rem 0.8rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: var(--radius-sm); display: flex; align-items: center; gap: 0.8rem; transition: border-color 0.2s;"><span class="comm-num" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; min-width: 45px;">#${story.commissionNumber || '—'}</span> <a href="proposal?id=${story.id}&view=admin" target="_blank" class="story-title" style="color: var(--primary); text-decoration: none; font-weight: 500; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-hover)'; this.style.textDecoration='underline'" onmouseout="this.style.color='var(--primary)'; this.style.textDecoration='none'">${story.story_title || 'Untitled'}</a></li>`;
             });
             storiesHtml += '</ul></div>';
@@ -691,7 +672,7 @@ window.setTxDateFilter = async (txDate) => {
             // Update Title with Metadata from FCC
             if (modalTitle) {
                 modalTitle.innerHTML = `
-                    Episode: ${txDate}
+                    Episode: ${data.txDate || txDate}
                     <div style="font-size: 0.95rem; color: var(--text-muted); font-weight: 500; margin-top: 0.4rem; letter-spacing: 0.5px;">
                         UID: ${fcc.uid || '—'} &nbsp;&bull;&nbsp; Season: ${fcc.season || '—'} &nbsp;&bull;&nbsp; Episode: ${fcc.episode || '—'}
                     </div>

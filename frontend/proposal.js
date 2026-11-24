@@ -2464,6 +2464,98 @@ document.addEventListener('DOMContentLoaded', () => {
         await handleSubmissionSync('pending');
     });
 
+    // --- EPISODE MODAL (FCC & Stories) ---
+    window.openEpisodeModal = async (txDate) => {
+        if (!txDate || txDate === '—') return;
+
+        if (!document.getElementById('episodeModal')) {
+            const modalHTML = `
+            <div id="episodeModal" class="modal-backdrop">
+                <div class="modal-card" style="max-width: 900px;">
+                    <div class="modal-header">
+                        <h3 id="episodeModalTitle">Episode: </h3>
+                        <button class="close-modal" id="closeEpisodeModalBtn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <ul id="episodeModalList" class="episode-modal-list">
+                        </ul>
+                    </div>
+                </div>
+            </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            const closeBtn = document.getElementById('closeEpisodeModalBtn');
+            const modal = document.getElementById('episodeModal');
+            const closeModal = () => {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+            if (closeBtn) closeBtn.onclick = closeModal;
+            modal.onclick = (e) => {
+                if (e.target === modal) closeModal();
+            };
+        }
+
+        const modal = document.getElementById('episodeModal');
+        const modalList = document.getElementById('episodeModalList');
+        const modalTitle = document.getElementById('episodeModalTitle');
+
+        if (modalTitle) {
+            modalTitle.textContent = `Episode: ${txDate}`;
+        }
+
+        if (modalList) {
+            modalList.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-muted);">Fetching document... <span class="spinner" style="display:inline-block; margin-left: 10px;">⏳</span></div>';
+        }
+
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        try {
+            const response = await fetchWithAuth(`/api/episode-data?txDate=${encodeURIComponent(txDate)}`);
+            const data = await response.json();
+            if (!data.success) throw new Error(data.error || 'Failed to fetch episode data');
+
+            const { fcc, stories } = data;
+
+            let storiesHtml = '';
+            if (stories && stories.length > 0) {
+                storiesHtml += '<div style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1.2rem;">';
+                storiesHtml += '<h4 style="margin-bottom: 0.8rem; color: var(--text-main); font-size: 1rem; font-weight: 600;">Stories in this Episode</h4>';
+                storiesHtml += '<ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem;">';
+                stories.forEach(story => {
+                    storiesHtml += `<li style="padding: 0.6rem 0.8rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: var(--radius-sm); display: flex; align-items: center; gap: 0.8rem; transition: border-color 0.2s;"><span class="comm-num" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; min-width: 45px;">#${story.commissionNumber || '—'}</span> <a href="proposal.html?id=${story.id}&view=${isAdminView ? 'admin' : 'preview'}" target="_blank" class="story-title" style="color: var(--primary); text-decoration: none; font-weight: 500; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--primary-hover)'; this.style.textDecoration='underline'" onmouseout="this.style.color='var(--primary)'; this.style.textDecoration='none'">${story.story_title || 'Untitled'}</a></li>`;
+                });
+                storiesHtml += '</ul></div>';
+            }
+
+            if (fcc) {
+                if (modalTitle) {
+                    modalTitle.innerHTML = `
+                        Episode: ${data.txDate || txDate}
+                        <div style="font-size: 0.95rem; color: var(--text-muted); font-weight: 500; margin-top: 0.4rem; letter-spacing: 0.5px;">
+                            UID: ${fcc.uid || '—'} &nbsp;&bull;&nbsp; Season: ${fcc.season || '—'} &nbsp;&bull;&nbsp; Episode: ${fcc.episode || '—'}
+                        </div>
+                    `;
+                }
+
+                if (modalList) {
+                    const token = await getIdToken();
+                    modalList.innerHTML = storiesHtml + `<iframe src="/api/admin/get-file?path=${encodeURIComponent(fcc.storagePath)}&inline=true&token=${token}" class="fcc-iframe"></iframe>`;
+                }
+            } else {
+                if (modalList) {
+                    modalList.innerHTML = storiesHtml + '<div style="padding: 2.5rem; text-align: center; color: var(--text-muted); background: rgba(255, 255, 255, 0.02); border-radius: var(--radius-md); border: 1px dashed var(--border); margin-bottom: 1rem;">No FCC Document has been uploaded for this broadcast yet.</div>';
+                }
+            }
+        } catch (err) {
+            console.error("Episode modal load error:", err);
+            if (modalList) {
+                modalList.innerHTML = `<div style="padding: 2rem; text-align: center; color: #cc0000;">Error: ${err.message}</div>`;
+            }
+        }
+    };
+
     // --- PROPOSAL PREVIEW LOGIC (Read-only) ---
     function showProposalPreview(sub, linkedAssets = []) {
         console.log("[DEBUG] showProposalPreview - ID:", sub.id, "Status:", sub.status, "isAdminView:", isAdminView);
@@ -2646,6 +2738,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (commBadge && displayCommNum) {
                     commBadge.classList.remove('hidden');
                     displayCommNum.textContent = sub.commissionNumber || '—';
+
+                    const isDelivered = statusStr === 'paid' || statusStr === 'delivered';
+                    const rawTxList = [];
+                    if (sub.txDate) rawTxList.push(sub.txDate);
+                    if (Array.isArray(sub.txDates)) {
+                        sub.txDates.forEach(d => {
+                            if (d && !rawTxList.includes(d)) rawTxList.push(d);
+                        });
+                    }
+                    const formattedTxList = rawTxList
+                        .map(d => formatStoryDate(d))
+                        .filter(f => f && f !== '—');
+
+                    let txBadge = document.getElementById('deliveredTxBadgeTop');
+                    if (isDelivered && formattedTxList.length > 0) {
+                        if (!txBadge) {
+                            txBadge = document.createElement('a');
+                            txBadge.id = 'deliveredTxBadgeTop';
+                            txBadge.href = '#';
+                            txBadge.className = 'status-badge';
+                            txBadge.style.cssText = 'cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(0, 143, 190, 0.12); border: 1px solid var(--primary); color: var(--primary); font-weight: 700; font-size: 0.85rem; padding: 0.35rem 0.75rem; border-radius: 6px; text-decoration: none;';
+                            txBadge.title = 'Click to view Episode FCC & stories';
+                            commBadge.appendChild(txBadge);
+                        }
+                        txBadge.innerHTML = `📺 TX Date: <span style="text-decoration: underline;">${formattedTxList[0]}</span>`;
+                        txBadge.onclick = (e) => {
+                            e.preventDefault();
+                            window.openEpisodeModal(formattedTxList[0]);
+                        };
+                        txBadge.style.display = 'inline-flex';
+                    } else if (txBadge) {
+                        txBadge.style.display = 'none';
+                    }
                     
                     if (window.auth.isAdmin(loggedInUser) || isAdminView) {
                         editBtn.style.display = 'inline-block';
@@ -2680,13 +2805,28 @@ document.addEventListener('DOMContentLoaded', () => {
         let statusLabel = 'Pending';
         let statusClass = 'pending';
         const statusStr = (sub.status || '').toLowerCase();
-        if (statusStr === 'accepted' || statusStr === 'paid') {
+        const isDelivered = statusStr === 'paid' || statusStr === 'delivered';
+        if (isDelivered) {
+            statusLabel = 'Delivered';
+            statusClass = 'accepted';
+        } else if (statusStr === 'accepted') {
             statusLabel = 'Commissioned';
             statusClass = 'accepted';
         } else if (status === 'rejected') {
             statusLabel = 'Rejected';
             statusClass = 'rejected';
         }
+
+        const rawTxList = [];
+        if (sub.txDate) rawTxList.push(sub.txDate);
+        if (Array.isArray(sub.txDates)) {
+            sub.txDates.forEach(d => {
+                if (d && !rawTxList.includes(d)) rawTxList.push(d);
+            });
+        }
+        const formattedTxList = rawTxList
+            .map(d => formatStoryDate(d))
+            .filter(f => f && f !== '—');
 
         const acc = sub.acceptanceDetails || {};
         const deliveryDate = acc.deliveryDate ? formatStoryDate(acc.deliveryDate) : '';
@@ -2930,6 +3070,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 ` : ''}
+                        ${(isDelivered && formattedTxList.length > 0) ? `
+                        <div style="margin-top: 0.25rem; display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem;">
+                            ${formattedTxList.map((fDate, idx) => `
+                                <a href="#" onclick="event.preventDefault(); window.openEpisodeModal('${fDate}')" class="status-badge" style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(0, 143, 190, 0.12); border: 1px solid var(--primary); color: var(--primary); font-weight: 700; font-size: 0.85rem; padding: 0.4rem 0.8rem; border-radius: 6px; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(0, 143, 190, 0.2)'" onmouseout="this.style.background='rgba(0, 143, 190, 0.12)'" title="Click to view Episode FCC & stories">
+                                    📺 TX Date: <span style="text-decoration: underline;">${fDate}${idx > 0 ? ' (Repeat)' : ''}</span>
+                                </a>
+                            `).join('')}
+                        </div>
+                        ` : ''}
                     </div>
                 </div>
 
@@ -2937,6 +3086,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Location</span><span style="font-weight: 700;">${locationDisplay}</span></div>
                     ${acc.duration ? `<div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Duration</span><span style="font-weight: 700;">${acc.duration}</span></div>` : ''}
                     ${(deliveryDate && !sub._isRestrictedView) ? `<div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Delivery Date</span><span style="font-weight: 700;">${deliveryDate}</span></div>` : ''}
+                    ${(isDelivered && formattedTxList.length > 0) ? `
+                    <div>
+                        <span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">TX Date</span>
+                        <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                            ${formattedTxList.map((fDate, idx) => `
+                                <a href="#" onclick="event.preventDefault(); window.openEpisodeModal('${fDate}')" style="font-weight: 700; color: var(--primary); text-decoration: underline; display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.95rem;" title="Click to view Episode FCC & stories">
+                                    📺 ${fDate}${idx > 0 ? ' (Repeat)' : ''}
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>` : ''}
                     ${((isAdminView || (loggedInUser && (isAdmin(loggedInUser) || isSuperAdmin(loggedInUser) || isEditorialProduction(loggedInUser)))) && !sub._isRestrictedView) ? `
                     <div>
                         <span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Sensitivity</span>

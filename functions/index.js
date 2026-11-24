@@ -5905,12 +5905,14 @@ app.get('/api/admin/proposals', async (req, res) => {
  */
 app.get('/api/admin/get-file', async (req, res) => {
   try {
-    if (!hasAdminAccess(req.user)) return res.status(403).json({ success: false, error: 'Unauthorized' });
-
     const storagePath = req.query.path;
     if (!storagePath) return res.status(400).json({ success: false, error: 'Path required' });
 
-    console.log(`[STORAGE] Decrypting file for admin: ${storagePath}`);
+    const isControlSheet = storagePath.includes('control_sheet');
+    const isAuthorized = hasAdminAccess(req.user) || (isControlSheet && AUTHORIZED_LOGGED_IN_ROLES.includes(req.user?.role));
+    if (!isAuthorized) return res.status(403).json({ success: false, error: 'Unauthorized' });
+
+    console.log(`[STORAGE] Decrypting file for user: ${storagePath}`);
     const [fileBuffer] = await defaultBucket.file(storagePath).download();
     
     const decryptedBuffer = decryptBuffer(fileBuffer);
@@ -5921,6 +5923,76 @@ app.get('/api/admin/get-file', async (req, res) => {
     res.send(decryptedBuffer);
   } catch (error) {
     console.error('File decryption failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * [EPISODE DATA] Get Episode FCC and stories for a specific TX Date
+ */
+app.get('/api/episode-data', async (req, res) => {
+  try {
+    if (!req.user || !AUTHORIZED_LOGGED_IN_ROLES.includes(req.user.role)) {
+      return res.status(403).json({ success: false, error: 'Unauthorized' });
+    }
+
+    const rawTxDate = req.query.txDate;
+    if (!rawTxDate) return res.status(400).json({ success: false, error: 'txDate query required' });
+
+    const formatD = (d) => {
+      if (!d) return null;
+      const date = d._seconds ? new Date(d._seconds * 1000) : new Date(d);
+      if (isNaN(date.getTime())) return null;
+      const day = date.getDate().toString().padStart(2, '0');
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      return `${day} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    };
+
+    const targetFormatted = formatD(rawTxDate) || String(rawTxDate).trim();
+
+    // 1. Get FCC submission
+    const fccSnap = await admin.firestore().collection('submissions')
+      .where('formType', '==', 'control_sheet')
+      .get();
+
+    let fcc = null;
+    for (const doc of fccSnap.docs) {
+      const data = doc.data();
+      const fDate = formatD(data.txDate) || (data.txDate ? String(data.txDate).trim() : null);
+      if (fDate === targetFormatted || data.txDate === rawTxDate) {
+        fcc = { id: doc.id, ...data };
+        break;
+      }
+    }
+
+    // 2. Get proposals for this episode
+    const propSnap = await admin.firestore().collection('proposals')
+      .select('commissionNumber', 'story_title', 'txDate', 'txDates', 'status')
+      .get();
+
+    const stories = [];
+    propSnap.docs.forEach(doc => {
+      const p = doc.data();
+      const d1 = formatD(p.txDate) || (p.txDate ? String(p.txDate).trim() : null);
+      const dList = Array.isArray(p.txDates) ? p.txDates.map(d => formatD(d) || (d ? String(d).trim() : null)) : [];
+      if (d1 === targetFormatted || dList.includes(targetFormatted) || p.txDate === rawTxDate) {
+        stories.push({
+          id: doc.id,
+          commissionNumber: p.commissionNumber || '—',
+          story_title: p.story_title || 'Untitled'
+        });
+      }
+    });
+
+    stories.sort((a, b) => {
+      const numA = parseInt(a.commissionNumber) || Infinity;
+      const numB = parseInt(b.commissionNumber) || Infinity;
+      return numA - numB;
+    });
+
+    res.json({ success: true, txDate: targetFormatted, fcc, stories });
+  } catch (error) {
+    console.error('[API] /api/episode-data error:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -6105,7 +6177,17 @@ app.get('/api/admin/submissions', async (req, res) => {
       return res.status(403).json({ success: false, error: 'Unauthorized: Admin access required.' });
     }
 
-    const snapshot = await admin.firestore().collection('submissions')
+    const { formType } = req.query;
+    let query = admin.firestore().collection('submissions');
+
+    if (formType) {
+      query = query.where('formType', '==', formType);
+    } else {
+      // Exclude public tip-offs / email submissions by default to prevent response size limit crashes (>10MB)
+      query = query.where('formType', 'in', ['control_sheet', 'episode_footage', 'insert_footage', 'insert_sheet']);
+    }
+
+    const snapshot = await query
       .orderBy('submittedAt', 'desc')
       .get();
     
