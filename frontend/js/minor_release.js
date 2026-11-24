@@ -122,6 +122,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (idVal) {
                     document.getElementById('parentId').value = idVal;
                 }
+                const parentContactVal = loadedSubmission.parentContact || loadedSubmission.parentCell || loadedSubmission.phone || loadedSubmission.contactNumber || loadedSubmission.cellNumber || parsedMeta.parentContact || parsedMeta.parentCell || parsedMeta.phone || parsedMeta.cellNumber || '';
+                if (parentContactVal && document.getElementById('parentContact')) {
+                    document.getElementById('parentContact').value = parentContactVal;
+                }
+                const parentEmailVal = loadedSubmission.parentEmail || loadedSubmission.email || parsedMeta.parentEmail || parsedMeta.email || '';
+                if (parentEmailVal && document.getElementById('parentEmail')) {
+                    document.getElementById('parentEmail').value = parentEmailVal;
+                }
                 const emailEl = document.getElementById('submitterEmail');
                 if (emailEl && !emailEl.value) {
                     emailEl.value = getActiveProducerEmail(loadedSubmission.submittedByEmail || loadedSubmission.producerEmail) || 'release@carteblanche.co.za';
@@ -548,6 +556,8 @@ async function buildCompletedPDF(parentPad, producerPad) {
     const childName = document.getElementById('childName').value.trim();
     const parentName = document.getElementById('parentName').value.trim();
     const parentId = document.getElementById('parentId').value.trim();
+    const parentContact = document.getElementById('parentContact')?.value.trim() || '';
+    const parentEmail = document.getElementById('parentEmail')?.value.trim() || '';
     const place = document.getElementById('signedAt').value.trim();
     const dateVal = document.getElementById('signedOn').value;
 
@@ -587,6 +597,11 @@ async function buildCompletedPDF(parentPad, producerPad) {
     drawBox('childName', childName, true);
     drawBox('parentName', parentName, true);
     drawBox('parentIdNumber', parentId);
+    drawBox('parentContact', parentContact);
+    drawBox('parentEmail', parentEmail);
+    drawBox('parentCell', parentContact);
+    drawBox('guardianContact', parentContact);
+    drawBox('guardianEmail', parentEmail);
     drawBox('parentSignedAt', place);
     drawBox('producerSignedAt', place);
     drawBox('parentSignedDate', formattedDate);
@@ -622,6 +637,13 @@ async function buildCompletedPDF(parentPad, producerPad) {
             childName,
             parentName,
             parentId,
+            parentContact,
+            parentEmail,
+            parentCell: parentContact,
+            phone: parentContact,
+            cellNumber: parentContact,
+            contactNumber: parentContact,
+            email: parentEmail,
             place,
             formattedDate
         }

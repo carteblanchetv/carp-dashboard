@@ -398,8 +398,9 @@ function initMinorRelease() {
 
         const childName = (document.getElementById('childName')?.value || document.getElementById('minorName')?.value || '').trim();
         const parentName = (document.getElementById('parentName')?.value || document.getElementById('guardianName')?.value || '').trim();
-        const parentIdNumber = (document.getElementById('parentIdNumber')?.value || document.getElementById('guardianId')?.value || '').trim();
-        const contactNumber = (document.getElementById('contactNumber')?.value || document.getElementById('phone')?.value || '').trim();
+        const parentIdNumber = (document.getElementById('parentIdNumber')?.value || document.getElementById('parentId')?.value || document.getElementById('guardianId')?.value || '').trim();
+        const contactNumber = (document.getElementById('parentContact')?.value || document.getElementById('contactNumber')?.value || document.getElementById('phone')?.value || '').trim();
+        const parentEmail = (document.getElementById('parentEmail')?.value || document.getElementById('email')?.value || '').trim();
 
         const parentSignedAt = (document.getElementById('parentSignedAt')?.value || document.getElementById('signedAt')?.value || '').trim();
         const parentSignedDate = (document.getElementById('parentSignedDate')?.value || document.getElementById('signedDate')?.value || todayFormatted).trim();
@@ -694,13 +695,18 @@ function initMinorRelease() {
         if (document.getElementById('guardianName')) document.getElementById('guardianName').value = pName;
         if (document.getElementById('fullName')) document.getElementById('fullName').value = pName;
 
-        const pId = sub.parentIdNumber || sub.guardianId || '';
+        const pId = sub.parentIdNumber || sub.parentId || sub.guardianId || '';
         if (document.getElementById('parentIdNumber')) document.getElementById('parentIdNumber').value = pId;
+        if (document.getElementById('parentId')) document.getElementById('parentId').value = pId;
         if (document.getElementById('guardianId')) document.getElementById('guardianId').value = pId;
 
-        const contact = sub.contactNumber || sub.phone || '';
+        const contact = sub.parentContact || sub.parentCell || sub.contactNumber || sub.phone || sub.cellNumber || '';
+        if (document.getElementById('parentContact')) document.getElementById('parentContact').value = contact;
         if (document.getElementById('contactNumber')) document.getElementById('contactNumber').value = contact;
         if (document.getElementById('phone')) document.getElementById('phone').value = contact;
+
+        const parentEmailVal = sub.parentEmail || sub.email || '';
+        if (document.getElementById('parentEmail')) document.getElementById('parentEmail').value = parentEmailVal;
 
         const sTitle = sub.storyTitle || sub.storyName || '';
         if (document.getElementById('storyTitle')) document.getElementById('storyTitle').value = sTitle;

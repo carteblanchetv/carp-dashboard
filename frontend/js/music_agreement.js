@@ -136,6 +136,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (sEl && !sEl.value) sEl.value = ownerVal;
                     if (nEl && !nEl.value) nEl.value = ownerVal;
                 }
+                const ownerContactVal = loadedSubmission.ownerContact || loadedSubmission.ownerCell || loadedSubmission.ownerPhone || loadedSubmission.phone || loadedSubmission.cellNumber || loadedSubmission.contactNumber || parsedMeta.ownerContact || parsedMeta.ownerCell || parsedMeta.ownerPhone || parsedMeta.phone || parsedMeta.cellNumber || '';
+                if (ownerContactVal && document.getElementById('ownerContact')) {
+                    document.getElementById('ownerContact').value = ownerContactVal;
+                }
+                const ownerEmailVal = loadedSubmission.ownerEmail || loadedSubmission.email || parsedMeta.ownerEmail || parsedMeta.email || '';
+                if (ownerEmailVal && document.getElementById('ownerEmail')) {
+                    document.getElementById('ownerEmail').value = ownerEmailVal;
+                }
                 const emailEl = document.getElementById('submitterEmail');
                 if (emailEl && !emailEl.value) {
                     emailEl.value = getActiveProducerEmail(loadedSubmission.submittedByEmail || loadedSubmission.producerEmail) || 'release@carteblanche.co.za';
@@ -564,6 +572,8 @@ async function buildCompletedPDF(producerPad, ownerPad) {
     const ownerSignatory = document.getElementById('ownerSignatory')?.value.trim() || '';
     const ownerName = document.getElementById('ownerName')?.value.trim() || ownerSignatory;
     const ownerEntity = document.getElementById('ownerEntity')?.value.trim() || 'Individual';
+    const ownerContact = document.getElementById('ownerContact')?.value.trim() || '';
+    const ownerEmail = document.getElementById('ownerEmail')?.value.trim() || '';
     const musicTracks = document.getElementById('musicTracks')?.value.trim() || '';
     const storyTitle = document.getElementById('storyTitle')?.value.trim() || '';
     const commNum = document.getElementById('commissionNumber')?.value.trim() || '';
@@ -609,6 +619,14 @@ async function buildCompletedPDF(producerPad, ownerPad) {
 
     drawBox('musicOwnerName', ownerSignatory, true, { align: 'center' });
     drawBox('musicOwnerCompany', ownerEntity, true, { align: 'center' });
+    drawBox('ownerContact', ownerContact);
+    drawBox('ownerEmail', ownerEmail);
+    drawBox('ownerPhone', ownerContact);
+    drawBox('ownerCell', ownerContact);
+    drawBox('musicOwnerPhone', ownerContact);
+    drawBox('musicOwnerEmail', ownerEmail);
+    drawBox('phone', ownerContact);
+    drawBox('email', ownerEmail);
     drawBox('storyTitle', storyTitle, true);
     drawBox('commissionNumber', commNum, true);
     drawBox('broadcastDate', formatDate(broadcastDate));
@@ -645,7 +663,18 @@ async function buildCompletedPDF(producerPad, ownerPad) {
         filename,
         metadata: {
             ownerSignatory,
+            ownerName,
             ownerEntity,
+            ownerContact,
+            ownerEmail,
+            ownerPhone: ownerContact,
+            ownerCell: ownerContact,
+            musicOwnerPhone: ownerContact,
+            musicOwnerEmail: ownerEmail,
+            phone: ownerContact,
+            cellNumber: ownerContact,
+            contactNumber: ownerContact,
+            email: ownerEmail,
             musicTracks,
             storyTitle,
             commNum,

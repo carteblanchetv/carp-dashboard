@@ -103,6 +103,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         document.getElementById('ownerName').value = val;
                     }
                 }
+                const ownerContactVal = loadedSubmission.ownerContact || loadedSubmission.ownerCell || loadedSubmission.ownerPhone || loadedSubmission.phone || loadedSubmission.cellNumber || loadedSubmission.contactNumber || parsedMeta.ownerContact || parsedMeta.ownerCell || parsedMeta.ownerPhone || parsedMeta.phone || parsedMeta.cellNumber || '';
+                if (ownerContactVal && document.getElementById('ownerContact')) {
+                    document.getElementById('ownerContact').value = ownerContactVal;
+                }
+                const ownerEmailVal = loadedSubmission.ownerEmail || loadedSubmission.email || parsedMeta.ownerEmail || parsedMeta.email || '';
+                if (ownerEmailVal && document.getElementById('ownerEmail')) {
+                    document.getElementById('ownerEmail').value = ownerEmailVal;
+                }
                 const normFilmingDate = normalizeDateForInput(loadedSubmission.dateOfFilming || loadedSubmission.dateVal || parsedMeta.dateOfFilming);
                 if (normFilmingDate) {
                     document.getElementById('dateOfFilming').value = normFilmingDate;
@@ -527,6 +535,8 @@ async function buildCompletedPDF(producerPad, ownerPad) {
         } catch (e) {}
     }
     const ownerName = document.getElementById('ownerName').value.trim();
+    const ownerContact = document.getElementById('ownerContact')?.value.trim() || '';
+    const ownerEmail = document.getElementById('ownerEmail')?.value.trim() || '';
     const locationAddress = document.getElementById('locationAddress').value.trim();
     const dateOfFilming = document.getElementById('dateOfFilming').value;
     const commNum = document.getElementById('commissionNumber').value.trim();
@@ -568,6 +578,12 @@ async function buildCompletedPDF(producerPad, ownerPad) {
     };
 
     drawBox('locationOwnerName', ownerName, true, 'center');
+    drawBox('ownerContact', ownerContact);
+    drawBox('ownerEmail', ownerEmail);
+    drawBox('ownerPhone', ownerContact);
+    drawBox('ownerCell', ownerContact);
+    drawBox('phone', ownerContact);
+    drawBox('email', ownerEmail);
     drawBox('commissionNumber', commNum, true);
     drawBox('storyTitle', storyName, true);
     drawBox('locationAddress', locationAddress);
@@ -598,6 +614,14 @@ async function buildCompletedPDF(producerPad, ownerPad) {
         filename,
         metadata: {
             ownerName,
+            ownerContact,
+            ownerEmail,
+            ownerPhone: ownerContact,
+            ownerCell: ownerContact,
+            phone: ownerContact,
+            cellNumber: ownerContact,
+            contactNumber: ownerContact,
+            email: ownerEmail,
             locationAddress,
             dateOfFilming: formatDate(dateOfFilming),
             commNum,

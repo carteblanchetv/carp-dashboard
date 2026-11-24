@@ -121,9 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (resolvedId) {
                     document.getElementById('participantId').value = resolvedId;
                 }
-                const resolvedContact = loadedSubmission.phone || loadedSubmission.contactNumber || loadedSubmission.participantContact || parsedMeta.participantContact || parsedMeta.phone || parsedMeta.contactNumber;
+                const resolvedContact = loadedSubmission.phone || loadedSubmission.contactNumber || loadedSubmission.participantContact || loadedSubmission.participantCell || loadedSubmission.cellNumber || parsedMeta.participantContact || parsedMeta.phone || parsedMeta.contactNumber || parsedMeta.cellNumber;
                 if (resolvedContact) {
                     document.getElementById('participantContact').value = resolvedContact;
+                }
+                const resolvedPartEmail = loadedSubmission.participantEmail || loadedSubmission.email || parsedMeta.participantEmail || parsedMeta.email;
+                if (resolvedPartEmail && document.getElementById('participantEmail')) {
+                    document.getElementById('participantEmail').value = resolvedPartEmail;
                 }
                 const emailEl = document.getElementById('submitterEmail');
                 if (emailEl && (!emailEl.value || emailEl.value === 'release@carteblanche.co.za')) {
@@ -560,6 +564,7 @@ async function buildCompletedPDF(participantPad, producerPad) {
     const participantName = document.getElementById('participantName').value.trim();
     const participantId = document.getElementById('participantId').value.trim();
     const participantContact = document.getElementById('participantContact').value.trim();
+    const participantEmail = document.getElementById('participantEmail')?.value.trim() || '';
     const place = document.getElementById('placeOfSignature').value.trim();
     const dateVal = document.getElementById('dateOfSignature').value;
 
@@ -600,6 +605,10 @@ async function buildCompletedPDF(participantPad, producerPad) {
     drawBox('participantName', participantName, true);
     drawBox('idNumber', participantId);
     drawBox('contactNumber', participantContact);
+    drawBox('email', participantEmail);
+    drawBox('cellNumber', participantContact);
+    drawBox('participantEmail', participantEmail);
+    drawBox('participantContact', participantContact);
     drawBox('participantSignedAt', place);
     drawBox('producerSignedAt', place);
     drawBox('participantSignedDate', formattedDate);
@@ -635,6 +644,11 @@ async function buildCompletedPDF(participantPad, producerPad) {
             participantName,
             participantId,
             participantContact,
+            participantEmail,
+            contactNumber: participantContact,
+            cellNumber: participantContact,
+            phone: participantContact,
+            email: participantEmail,
             place,
             formattedDate
         }

@@ -425,15 +425,17 @@ async function generateParticipantRelease(cbBytes, caBytes) {
 
   layout.addDivider(0.5);
 
-  // Participant Info: Participant, ID Number, Contact Number
+  // Participant Info: Participant, ID Number, Contact Number, Email
   layout.addHeading('PARTICIPANT INFO');
   layout.addFieldRow([
     { id: 'participantName', label: 'Participant:', width: CONTENT_W, gap: 0 }
   ]);
 
+  const partThirdW = (CONTENT_W - 12) / 3;
   layout.addFieldRow([
-    { id: 'idNumber', label: 'ID Number:', width: halfW },
-    { id: 'contactNumber', label: 'Contact Number:', width: halfW, gap: 0 }
+    { id: 'idNumber', label: 'ID / Passport Number:', width: partThirdW },
+    { id: 'contactNumber', label: 'Cell Nr:', width: partThirdW },
+    { id: 'email', label: 'Email Address:', width: partThirdW, gap: 0 }
   ]);
 
   // Legal Terms
@@ -515,6 +517,14 @@ async function generateParticipantRelease(cbBytes, caBytes) {
     aliasFull.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasPhone = form.createTextField('phone');
     aliasPhone.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasCell = form.createTextField('cellNumber');
+    aliasCell.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasPartCell = form.createTextField('participantCell');
+    aliasPartCell.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasPartContact = form.createTextField('participantContact');
+    aliasPartContact.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasPartEmail = form.createTextField('participantEmail');
+    aliasPartEmail.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasSignAt = form.createTextField('signedAt');
     aliasSignAt.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasSignDate = form.createTextField('signedDate');
@@ -604,7 +614,12 @@ async function generateMinorRelease(cbBytes, caBytes) {
   const halfW = (CONTENT_W - 12) / 2;
   layout.addFieldRow([
     { id: 'parentName', label: 'Parent/Guardian Name & Surname:', width: halfW },
-    { id: 'parentIdNumber', label: 'Parent/Guardian ID Number:', width: halfW, gap: 0 }
+    { id: 'parentIdNumber', label: 'Parent/Guardian ID / Passport Number:', width: halfW, gap: 0 }
+  ]);
+
+  layout.addFieldRow([
+    { id: 'parentContact', label: 'Parent/Guardian Cell Nr:', width: halfW },
+    { id: 'parentEmail', label: 'Parent/Guardian Email Address:', width: halfW, gap: 0 }
   ]);
 
   // Execution: THE PARENT/GUARDIAN & THE PRODUCER
@@ -656,6 +671,22 @@ async function generateMinorRelease(cbBytes, caBytes) {
     aliasGuardian.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasGuardianId = form.createTextField('guardianId');
     aliasGuardianId.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasParentCell = form.createTextField('parentCell');
+    aliasParentCell.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasParentPhone = form.createTextField('parentPhone');
+    aliasParentPhone.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasGuardianPhone = form.createTextField('guardianPhone');
+    aliasGuardianPhone.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasGuardianContact = form.createTextField('guardianContact');
+    aliasGuardianContact.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasPhone = form.createTextField('phone');
+    aliasPhone.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasCell = form.createTextField('cellNumber');
+    aliasCell.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasEmail = form.createTextField('email');
+    aliasEmail.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasGuardianEmail = form.createTextField('guardianEmail');
+    aliasGuardianEmail.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasSignAt = form.createTextField('signedAt');
     aliasSignAt.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasSignDate = form.createTextField('signedDate');
@@ -693,9 +724,13 @@ async function generateLocationAgreement(cbBytes, caBytes) {
   layout.addCenteredParagraph('and', page.docBoldFont, 8, COLOR_TEXT_DARK, 11);
 
   layout.addCenteredField('locationOwnerName', 'Location Owner/Manager Name & Surname:', 320, 18);
-  layout.addCenteredParagraph('(“the owner”)', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 12);
+  layout.addCenteredParagraph('(“the owner”)', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 10);
 
   const halfW = (CONTENT_W - 12) / 2;
+  layout.addFieldRow([
+    { id: 'ownerContact', label: 'Owner/Manager Cell Nr:', width: halfW },
+    { id: 'ownerEmail', label: 'Owner/Manager Email Address:', width: halfW, gap: 0 }
+  ]);
   layout.addFieldRow([
     { id: 'commissionNumber', label: 'Commission Number:', width: halfW },
     { id: 'storyTitle', label: 'Story Title:', width: halfW, gap: 0 }
@@ -777,6 +812,16 @@ async function generateLocationAgreement(cbBytes, caBytes) {
   try {
     const aliasOwner = form.createTextField('ownerName');
     aliasOwner.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasOwnerPhone = form.createTextField('ownerPhone');
+    aliasOwnerPhone.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasOwnerCell = form.createTextField('ownerCell');
+    aliasOwnerCell.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasPhone = form.createTextField('phone');
+    aliasPhone.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasEmail = form.createTextField('email');
+    aliasEmail.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasContact = form.createTextField('contactNumber');
+    aliasContact.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasProp = form.createTextField('propertyAddress');
     aliasProp.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasFilmDate = form.createTextField('filmingDate');
@@ -963,7 +1008,12 @@ async function generateMusicAgreement(cbBytes, caBytes) {
   layout.addCenteredField('musicOwnerName', 'Music Owner Name & Surname:', 300, 18);
   layout.addCenteredParagraph('on behalf of', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 9);
   layout.addCenteredField('musicOwnerCompany', 'Music Owner Company:', 300, 18);
-  layout.addCenteredParagraph('(“the owner”)', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 11);
+  layout.addCenteredParagraph('(“the owner”)', page.docItalicFont, 7.5, COLOR_TEXT_MUTED, 10);
+
+  layout.addFieldRow([
+    { id: 'ownerContact', label: 'Music Owner Cell Nr:', width: halfW },
+    { id: 'ownerEmail', label: 'Music Owner Email Address:', width: halfW, gap: 0 }
+  ]);
 
   // Story Title, Commission Number, Broadcast Date
   const thirdW = (CONTENT_W - 16) / 3;
@@ -1047,6 +1097,20 @@ async function generateMusicAgreement(cbBytes, caBytes) {
   try {
     const aliasStory = form.createTextField('storyName');
     aliasStory.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasOwnerPhone = form.createTextField('ownerPhone');
+    aliasOwnerPhone.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasOwnerCell = form.createTextField('ownerCell');
+    aliasOwnerCell.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasMusicOwnerPhone = form.createTextField('musicOwnerPhone');
+    aliasMusicOwnerPhone.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasMusicOwnerEmail = form.createTextField('musicOwnerEmail');
+    aliasMusicOwnerEmail.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasPhone = form.createTextField('phone');
+    aliasPhone.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasEmail = form.createTextField('email');
+    aliasEmail.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
+    const aliasContact = form.createTextField('contactNumber');
+    aliasContact.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasProd = form.createTextField('producer');
     aliasProd.addToPage(page, { x: 0, y: 0, width: 0, height: 0 });
     const aliasProdName = form.createTextField('producerName');
