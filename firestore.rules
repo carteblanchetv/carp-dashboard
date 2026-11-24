@@ -31,5 +31,23 @@ service cloud.firestore {
       // Writing is handled strictly by the backend API
       allow write: if false;
     }
+
+    // Dedicated Contacts Directory: strictly accessible to Lezanne, Laura, Stenette, and Ofentse
+    function isContactsUser() {
+      let email = request.auth.token.email.lower();
+      return request.auth != null && (
+        email == 'lezanne@carteblanche.co.za' ||
+        email == 'laura@carteblanche.co.za' ||
+        email == 'laura@combinedartists.co.za' ||
+        email == 'stenette@carteblanche.co.za' ||
+        email == 'ofentse@combinedartists.co.za' ||
+        email == 'ofentse@carteblanche.co.za'
+      );
+    }
+
+    match /contacts/{docId} {
+      allow read: if isContactsUser();
+      allow write: if false; // Handled strictly by backend API
+    }
   }
 }

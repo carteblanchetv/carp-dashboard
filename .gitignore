@@ -30,3 +30,5 @@ scratch/
 # Environment configurations
 .env
 functions/.env
+
+firebase-debug.log

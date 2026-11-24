@@ -41,6 +41,16 @@ function renderDashboardUI(user) {
         if (document.getElementById('footageAgreementCard')) document.getElementById('footageAgreementCard').classList.add('hidden');
     }
 
+    // Contacts Directory Card (Restricted strictly to Lezanne, Laura, Stenette, Ofentse)
+    const contactsCard = document.getElementById('contactsDirectoryCard');
+    if (contactsCard) {
+        if (window.auth.isContactsDirectoryAuthorized && window.auth.isContactsDirectoryAuthorized(user)) {
+            contactsCard.classList.remove('hidden');
+        } else {
+            contactsCard.classList.add('hidden');
+        }
+    }
+
     // Show Submit Invoice card for all roles
     if (document.getElementById('invoiceActionCard')) {
         document.getElementById('invoiceActionCard').classList.remove('hidden');

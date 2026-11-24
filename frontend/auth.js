@@ -595,6 +595,21 @@ export function isSuperAdmin(user) {
     return superAdminRoles.includes(currentRole);
 }
 
+export const CONTACTS_AUTHORIZED_EMAILS = [
+    'lezanne@carteblanche.co.za',
+    'laura@carteblanche.co.za',
+    'laura@combinedartists.co.za',
+    'stenette@carteblanche.co.za',
+    'ofentse@combinedartists.co.za',
+    'ofentse@carteblanche.co.za'
+];
+
+export function isContactsDirectoryAuthorized(user) {
+    if (!user) return false;
+    const email = (user.realEmail || user.email || '').toLowerCase().trim();
+    return CONTACTS_AUTHORIZED_EMAILS.includes(email);
+}
+
 /**
  * GET MASQUERADE TARGET
  */
@@ -876,6 +891,31 @@ export function initNavBar(user) {
                 actionsContainer.appendChild(helpBtn);
             }
         }
+
+        // D. Inject CONTACTS button for authorized users (Lezanne, Laura, Stenette, Ofentse)
+        let contactsBtn = actionsContainer.querySelector('#gnavContactsBtn');
+        if (isContactsDirectoryAuthorized(user)) {
+            if (!contactsBtn) {
+                contactsBtn = document.createElement('a');
+                contactsBtn.id = 'gnavContactsBtn';
+                contactsBtn.href = 'contacts.html';
+                contactsBtn.className = 'gnav-btn';
+                contactsBtn.title = "Editorial Contacts Directory";
+                contactsBtn.style.border = '1px solid var(--border)';
+                contactsBtn.innerHTML = `
+                    <span>📇</span>
+                    <span>CONTACTS</span>
+                `;
+                const themeBtn = actionsContainer.querySelector('button[onclick="window.toggleTheme()"]');
+                if (themeBtn) {
+                    actionsContainer.insertBefore(contactsBtn, themeBtn);
+                } else {
+                    actionsContainer.appendChild(contactsBtn);
+                }
+            }
+        } else if (contactsBtn) {
+            contactsBtn.remove();
+        }
     }
 
     // 3. Update Home Link (Always point to the new deliverables hub)
@@ -993,6 +1033,8 @@ window.auth = {
     isAdmin,
     isSuperAdmin,
     isEditorialProduction,
+    isContactsDirectoryAuthorized,
+    CONTACTS_AUTHORIZED_EMAILS,
     fetchWithAuth,
     getMasqueradeTarget,
     startMasquerade,

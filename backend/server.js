@@ -1517,6 +1517,92 @@ app.get('/api/proposal-legal-forms', async (req, res) => {
   }
 });
 
+// =========================================================================
+// DEDICATED EDITORIAL CONTACTS DIRECTORY
+// Access Strictly Restricted to: Lezanne, Laura, Stenette, and Ofentse
+// =========================================================================
+const CONTACTS_DIRECTORY_AUTHORIZED_EMAILS = [
+  'lezanne@carteblanche.co.za',
+  'laura@carteblanche.co.za',
+  'laura@combinedartists.co.za',
+  'stenette@carteblanche.co.za',
+  'ofentse@combinedartists.co.za',
+  'ofentse@carteblanche.co.za'
+];
+
+function checkContactsAuthorized(req) {
+  const email = (req.user && req.user.email ? req.user.email.toLowerCase().trim() : '');
+  return Boolean(email && CONTACTS_DIRECTORY_AUTHORIZED_EMAILS.includes(email));
+}
+
+app.get('/api/contacts', async (req, res) => {
+  try {
+    if (!checkContactsAuthorized(req)) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: The Contacts Directory is strictly restricted to Lezanne, Laura, Stenette, and Ofentse.'
+      });
+    }
+    const snapshot = await admin.firestore().collection('contacts').get();
+    const contacts = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    res.json({ success: true, contacts });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.post('/api/contacts', express.json(), async (req, res) => {
+  try {
+    if (!checkContactsAuthorized(req)) {
+      return res.status(403).json({ success: false, error: 'Access denied.' });
+    }
+    const { name = '', surname = '', type = 'expert', role = '', organization = '', phone = '', email = '', notes = '', confidential = false, stories = [] } = req.body;
+    const fullName = `${name} ${surname}`.trim() || name;
+    const docRef = await admin.firestore().collection('contacts').add({
+      name: name.trim(),
+      surname: surname.trim(),
+      fullName,
+      type,
+      role: role.trim(),
+      organization: organization.trim(),
+      phone: phone.trim(),
+      email: email.trim(),
+      notes: notes.trim(),
+      confidential: !!confidential,
+      hasSignedRelease: false,
+      stories: Array.isArray(stories) ? stories : [],
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdBy: req.user.email
+    });
+    res.json({ success: true, id: docRef.id });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.put('/api/contacts/:id', express.json(), async (req, res) => {
+  try {
+    if (!checkContactsAuthorized(req)) return res.status(403).json({ success: false, error: 'Access denied.' });
+    const { id } = req.params;
+    const updates = { ...req.body, updatedAt: admin.firestore.FieldValue.serverTimestamp(), updatedBy: req.user.email };
+    await admin.firestore().collection('contacts').doc(id).set(updates, { merge: true });
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+app.delete('/api/contacts/:id', async (req, res) => {
+  try {
+    if (!checkContactsAuthorized(req)) return res.status(403).json({ success: false, error: 'Access denied.' });
+    await admin.firestore().collection('contacts').doc(req.params.id).delete();
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Global Error Handler for JSON responses
 app.use((err, req, res, next) => {
   console.error('SERVER ERROR:', err);

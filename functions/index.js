@@ -6225,6 +6225,393 @@ app.get('/api/admin/submissions', async (req, res) => {
   }
 });
 
+// =========================================================================
+// DEDICATED EDITORIAL CONTACTS DIRECTORY
+// Access Strictly Restricted to: Lezanne, Laura, Stenette, and Ofentse
+// =========================================================================
+const CONTACTS_DIRECTORY_AUTHORIZED_EMAILS = [
+  'lezanne@carteblanche.co.za',
+  'laura@carteblanche.co.za',
+  'laura@combinedartists.co.za',
+  'stenette@carteblanche.co.za',
+  'ofentse@combinedartists.co.za',
+  'ofentse@carteblanche.co.za'
+];
+
+function checkContactsAuthorized(req) {
+  const email = (req.user && req.user.email ? req.user.email.toLowerCase().trim() : '');
+  return Boolean(email && CONTACTS_DIRECTORY_AUTHORIZED_EMAILS.includes(email));
+}
+
+function normalizeContactKey(name, surname, phone, email) {
+  const p = (phone || '').replace(/[^0-9]/g, '');
+  if (p && p.length >= 7) return `phone:${p.slice(-9)}`;
+  const e = (email || '').trim().toLowerCase();
+  if (e && e.includes('@') && !e.includes('carteblanche.co.za') && !e.includes('combinedartists.co.za')) {
+    return `email:${e}`;
+  }
+  const n = `${(name || '').trim().toLowerCase()} ${(surname || '').trim().toLowerCase()}`.trim();
+  if (n && n.length > 2) return `name:${n}`;
+  return null;
+}
+
+async function harvestContactsInternal() {
+  const contactsMap = new Map();
+
+  // 1. Fetch proposals
+  try {
+    const proposalsSnap = await admin.firestore().collection('proposals').get();
+    for (const doc of proposalsSnap.docs) {
+      const p = doc.data();
+      const storyTitle = p.storyTitle || p.title || 'Untitled Story';
+      const commNum = p.commissionNumber || p.commNum || '';
+      const producer = p.producerName || p.producer || '';
+      const year = p.year || (p.createdAt && p.createdAt._seconds ? new Date(p.createdAt._seconds * 1000).getFullYear() : (p.createdAt ? new Date(p.createdAt).getFullYear() : ''));
+
+      // Case Studies
+      let csList = p.caseStudies;
+      if (csList && csList._encrypted) {
+        try { csList = JSON.parse(decrypt(csList)); } catch (e) { csList = null; }
+      }
+      if (Array.isArray(csList)) {
+        csList.forEach(cs => {
+          if (!cs) return;
+          const name = typeof cs === 'string' ? cs : (cs.name || '');
+          const surname = typeof cs === 'object' ? (cs.surname || '') : '';
+          const role = typeof cs === 'object' ? (cs.role || 'Case Study') : 'Case Study';
+          const phone = typeof cs === 'object' ? (cs.phone || cs.contactNumber || '') : '';
+          const email = typeof cs === 'object' ? (cs.email || '') : '';
+          const confidential = typeof cs === 'object' ? !!cs.confidential : false;
+
+          const key = normalizeContactKey(name, surname, phone, email);
+          if (!key) return;
+
+          const existing = contactsMap.get(key) || {
+            name,
+            surname,
+            fullName: `${name} ${surname}`.trim() || name,
+            type: 'case_study',
+            role,
+            organization: '',
+            phone,
+            email,
+            confidential,
+            hasSignedRelease: false,
+            stories: [],
+            source: 'proposal'
+          };
+
+          if (phone && !existing.phone) existing.phone = phone;
+          if (email && !existing.email) existing.email = email;
+          if (confidential) existing.confidential = true;
+          if (!existing.stories.some(s => s.proposalId === doc.id)) {
+            existing.stories.push({
+              proposalId: doc.id,
+              storyTitle,
+              commissionNumber: commNum,
+              producerName: producer,
+              year,
+              role
+            });
+          }
+          contactsMap.set(key, existing);
+        });
+      }
+
+      // Experts
+      let exList = p.experts;
+      if (exList && exList._encrypted) {
+        try { exList = JSON.parse(decrypt(exList)); } catch (e) { exList = null; }
+      }
+      if (Array.isArray(exList)) {
+        exList.forEach(ex => {
+          if (!ex) return;
+          const name = typeof ex === 'string' ? ex : (ex.name || '');
+          const surname = typeof ex === 'object' ? (ex.surname || '') : '';
+          const role = typeof ex === 'object' ? (ex.role || 'Expert') : 'Expert';
+          const phone = typeof ex === 'object' ? (ex.phone || ex.contactNumber || '') : '';
+          const email = typeof ex === 'object' ? (ex.email || '') : '';
+
+          const key = normalizeContactKey(name, surname, phone, email);
+          if (!key) return;
+
+          const existing = contactsMap.get(key) || {
+            name,
+            surname,
+            fullName: `${name} ${surname}`.trim() || name,
+            type: 'expert',
+            role,
+            organization: '',
+            phone,
+            email,
+            confidential: false,
+            hasSignedRelease: false,
+            stories: [],
+            source: 'proposal'
+          };
+
+          if (phone && !existing.phone) existing.phone = phone;
+          if (email && !existing.email) existing.email = email;
+          if (existing.type !== 'expert') existing.type = 'expert';
+          if (!existing.stories.some(s => s.proposalId === doc.id)) {
+            existing.stories.push({
+              proposalId: doc.id,
+              storyTitle,
+              commissionNumber: commNum,
+              producerName: producer,
+              year,
+              role
+            });
+          }
+          contactsMap.set(key, existing);
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('[CONTACTS HARVEST] Error parsing proposals:', err);
+  }
+
+  // 2. Fetch legal release form submissions
+  try {
+    const subSnap = await admin.firestore().collection('submissions')
+      .where('formType', 'in', ['participant_release', 'footage_release_agreement', 'footage_agreement', 'minor_release'])
+      .get();
+
+    for (const doc of subSnap.docs) {
+      const s = doc.data();
+      const rawName = s.participantName || s.fullName || s.contributorName || s.footageOwnerName || s.ownerName || '';
+      if (!rawName) continue;
+
+      const parts = rawName.trim().split(/\s+/);
+      const name = parts[0] || '';
+      const surname = parts.slice(1).join(' ') || '';
+      const phone = s.contactNumber || s.phone || s.ownerPhone || s.participantContact || '';
+      const email = s.participantEmail || s.ownerEmail || (s.email && !s.email.includes('@carteblanche.co.za') ? s.email : '');
+      const type = (s.formType === 'footage_release_agreement' || s.formType === 'footage_agreement') ? 'footage_licensor' : 'case_study';
+      const storyTitle = s.storyTitle || s.storyName || 'Story';
+      const commNum = s.commissionNumber || s.commission_number || '';
+      const producer = s.producerName || '';
+
+      const key = normalizeContactKey(name, surname, phone, email);
+      if (!key) continue;
+
+      const existing = contactsMap.get(key) || {
+        name,
+        surname,
+        fullName: rawName,
+        type,
+        role: type === 'footage_licensor' ? 'Footage Licensor' : 'Release Signatory',
+        organization: s.footageOwnerCompany || s.ownerEntity || '',
+        phone,
+        email,
+        confidential: false,
+        hasSignedRelease: true,
+        releaseStoragePath: s.storagePath || '',
+        releaseDocId: doc.id,
+        stories: [],
+        source: 'submission'
+      };
+
+      existing.hasSignedRelease = true;
+      if (s.storagePath) existing.releaseStoragePath = s.storagePath;
+      if (doc.id) existing.releaseDocId = doc.id;
+      if (phone && !existing.phone) existing.phone = phone;
+      if (email && !existing.email) existing.email = email;
+      if (s.footageOwnerCompany && !existing.organization) existing.organization = s.footageOwnerCompany;
+
+      if (!existing.stories.some(st => st.submissionId === doc.id || (st.commissionNumber && st.commissionNumber === commNum))) {
+        existing.stories.push({
+          submissionId: doc.id,
+          storyTitle,
+          commissionNumber: commNum,
+          producerName: producer,
+          formType: s.formType,
+          hasRelease: true
+        });
+      }
+      contactsMap.set(key, existing);
+    }
+  } catch (err) {
+    console.warn('[CONTACTS HARVEST] Error parsing submissions:', err);
+  }
+
+  // 3. Batch commit to /contacts collection
+  const contactsColl = admin.firestore().collection('contacts');
+  const now = admin.firestore.FieldValue.serverTimestamp();
+  let count = 0;
+
+  const entries = Array.from(contactsMap.entries());
+  // Process in batches of 400
+  for (let i = 0; i < entries.length; i += 400) {
+    const batch = admin.firestore().batch();
+    const chunk = entries.slice(i, i + 400);
+
+    for (const [key, data] of chunk) {
+      // Deterministic document ID based on hash of key to avoid duplicates
+      const safeDocId = Buffer.from(key).toString('base64').replace(/[/+=]/g, '_').slice(0, 40);
+      const docRef = contactsColl.doc(safeDocId);
+
+      batch.set(docRef, {
+        ...data,
+        updatedAt: now,
+        _autoHarvested: true
+      }, { merge: true });
+      count++;
+    }
+    await batch.commit();
+  }
+
+  return count;
+}
+
+// GET /api/contacts - List & filter contacts
+app.get('/api/contacts', async (req, res) => {
+  try {
+    if (!checkContactsAuthorized(req)) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: The Contacts Directory is strictly restricted to Lezanne, Laura, Stenette, and Ofentse.'
+      });
+    }
+
+    const snapshot = await admin.firestore().collection('contacts').get();
+
+    // If completely empty, auto-harvest once
+    if (snapshot.empty) {
+      const harvestedCount = await harvestContactsInternal();
+      console.log(`[CONTACTS] Initial auto-harvest complete: ${harvestedCount} contacts created.`);
+      const newSnap = await admin.firestore().collection('contacts').get();
+      const contacts = newSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      return res.json({ success: true, contacts, autoHarvested: true });
+    }
+
+    const contacts = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    res.json({ success: true, contacts });
+  } catch (error) {
+    console.error('[CONTACTS] List failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// POST /api/contacts - Create manual contact
+app.post('/api/contacts', express.json(), async (req, res) => {
+  try {
+    if (!checkContactsAuthorized(req)) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: The Contacts Directory is strictly restricted to Lezanne, Laura, Stenette, and Ofentse.'
+      });
+    }
+
+    const { name = '', surname = '', type = 'expert', role = '', organization = '', phone = '', email = '', notes = '', confidential = false, stories = [] } = req.body;
+
+    const fullName = `${name} ${surname}`.trim() || name;
+    if (!fullName) {
+      return res.status(400).json({ success: false, error: 'Name is required' });
+    }
+
+    const docRef = await admin.firestore().collection('contacts').add({
+      name: name.trim(),
+      surname: surname.trim(),
+      fullName,
+      type,
+      role: role.trim(),
+      organization: organization.trim(),
+      phone: phone.trim(),
+      email: email.trim(),
+      notes: notes.trim(),
+      confidential: !!confidential,
+      hasSignedRelease: false,
+      stories: Array.isArray(stories) ? stories : [],
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      createdBy: req.user.email
+    });
+
+    res.json({ success: true, id: docRef.id });
+  } catch (error) {
+    console.error('[CONTACTS] Create failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// PUT /api/contacts/:id - Update contact
+app.put('/api/contacts/:id', express.json(), async (req, res) => {
+  try {
+    if (!checkContactsAuthorized(req)) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: The Contacts Directory is strictly restricted to Lezanne, Laura, Stenette, and Ofentse.'
+      });
+    }
+
+    const { id } = req.params;
+    const { name, surname, type, role, organization, phone, email, notes, confidential, stories } = req.body;
+
+    const updates = {
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedBy: req.user.email
+    };
+
+    if (name !== undefined) updates.name = String(name).trim();
+    if (surname !== undefined) updates.surname = String(surname).trim();
+    if (name !== undefined || surname !== undefined) {
+      updates.fullName = `${updates.name || ''} ${updates.surname || ''}`.trim();
+    }
+    if (type !== undefined) updates.type = type;
+    if (role !== undefined) updates.role = String(role).trim();
+    if (organization !== undefined) updates.organization = String(organization).trim();
+    if (phone !== undefined) updates.phone = String(phone).trim();
+    if (email !== undefined) updates.email = String(email).trim();
+    if (notes !== undefined) updates.notes = String(notes).trim();
+    if (confidential !== undefined) updates.confidential = !!confidential;
+    if (Array.isArray(stories)) updates.stories = stories;
+
+    await admin.firestore().collection('contacts').doc(id).set(updates, { merge: true });
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[CONTACTS] Update failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// DELETE /api/contacts/:id - Remove contact
+app.delete('/api/contacts/:id', async (req, res) => {
+  try {
+    if (!checkContactsAuthorized(req)) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: The Contacts Directory is strictly restricted to Lezanne, Laura, Stenette, and Ofentse.'
+      });
+    }
+
+    const { id } = req.params;
+    await admin.firestore().collection('contacts').doc(id).delete();
+    res.json({ success: true });
+  } catch (error) {
+    console.error('[CONTACTS] Delete failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// POST /api/contacts/harvest - Trigger manual sync / harvest from proposals and releases
+app.post('/api/contacts/harvest', async (req, res) => {
+  try {
+    if (!checkContactsAuthorized(req)) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: The Contacts Directory is strictly restricted to Lezanne, Laura, Stenette, and Ofentse.'
+      });
+    }
+
+    const count = await harvestContactsInternal();
+    res.json({ success: true, count, message: `Successfully harvested and updated ${count} contacts.` });
+  } catch (error) {
+    console.error('[CONTACTS] Harvest failed:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.get('/api/admin/users', async (req, res) => {
   try {
     const allowedRoles = ['admin', 'super-admin'];

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Editorial Contacts Directory - CARP Dashboard</title>
+    <link rel="stylesheet" href="style.css?v=5.1.1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="js/theme.js?v=5.1.1"></script>
+    <script src="contacts.js?v=1.0.0" type="module"></script>
+    <style>
+        .contacts-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .contacts-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .contacts-header h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 0 0 0.35rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .contacts-header p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .access-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #a78bfa;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.15rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-icon {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            margin-top: 0.2rem;
+        }
+
+        .controls-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .search-actions-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .search-input-wrap {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .search-input-wrap input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.6rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .search-input-wrap .search-icon {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .chip-btn {
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.4rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .chip-btn:hover {
+            border-color: var(--primary);
+            color: var(--text-main);
+        }
+
+        .chip-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-primary-action {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.65rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary-action:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary-action {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 0.65rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary-action:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary);
+        }
+
+        .type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .type-expert {
+            background: rgba(14, 165, 233, 0.12);
+            color: #0ea5e9;
+            border: 1px solid rgba(14, 165, 233, 0.25);
+        }
+
+        .type-case_study {
+            background: rgba(168, 85, 247, 0.12);
+            color: #a855f7;
+            border: 1px solid rgba(168, 85, 247, 0.25);
+        }
+
+        .type-footage_licensor {
+            background: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .confidential-badge {
+            background: rgba(239, 68, 68, 0.12);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            margin-left: 0.4rem;
+        }
+
+        .release-badge-signed {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 0.78rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            text-decoration: none;
+        }
+
+        .release-badge-pending {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+        }
+
+        .story-pill {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            margin-right: 0.25rem;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+        }
+
+        .contact-action-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.35rem 0.65rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.2s;
+        }
+
+        .contact-action-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .contact-link {
+            color: var(--text-main);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.82rem;
+        }
+
+        .contact-link:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            padding: 2rem;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .form-grid-modal {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group-full {
+            grid-column: span 2;
+        }
+
+        .modal-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .modal-field label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .modal-field input, .modal-field select, .modal-field textarea {
+            padding: 0.65rem 0.85rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            border-top: 1px solid var(--border);
+            padding-top: 1.25rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <!-- TOP NAVIGATION -->
+    <nav class="global-top-nav">
+        <div class="gnav-inner">
+            <div class="gnav-user-left">
+                <span id="userNameDisplay" style="font-weight: 700; color: var(--primary);">Loading...</span>
+                <span id="userEmailDisplay" class="gnav-email"></span>
+            </div>
+            <div class="gnav-actions">
+                <a href="index.html" class="gnav-btn" title="Back to Dashboard">
+                    <span>🏠</span>
+                    <span>HOME</span>
+                </a>
+                <a href="admin_dashboard.html" class="gnav-btn" title="Admin Commission Hub">
+                    <span>🔐</span>
+                    <span>COMMISSIONS</span>
+                </a>
+                <button onclick="window.toggleTheme()" class="gnav-btn" title="Toggle Theme">
+                    <span>🌓</span>
+                    <span>THEME</span>
+                </button>
+                <button onclick="window.auth.logout()" class="gnav-btn logout" title="Log Out">
+                    <span>🚪</span>
+                    <span>LOG OUT</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MASQUERADE BANNER -->
+    <div id="masqueradeBanner" class="masquerade-banner">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 1.25rem;">🎭</span>
+            <div style="display: flex; flex-direction: column; gap: 0.1rem;">
+                <div style="line-height: 1.2;"><b>Masquerade Mode:</b> <span id="masqueradeName"></span></div>
+                <div style="opacity: 0.9; font-size: 0.8em; line-height: 1.2;">Perspective: <span id="masqueradeRole" style="text-transform: uppercase; font-weight: bold;"></span></div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <div id="masqueradeViewAction"></div>
+            <button onclick="window.auth.stopMasquerade()" class="btn-soft" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.4); padding: 0.4rem 0.8rem; font-size: 0.75rem; border-radius: 6px; cursor: pointer;">Stop Masquerade</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="contacts-container">
+        <!-- HEADER -->
+        <header class="contacts-header">
+            <div>
+                <h1>📇 Editorial Contacts Directory</h1>
+                <p>Centralized database of case studies, experts, and footage licensors across Carte Blanche stories.</p>
+            </div>
+            <div class="access-pill" title="Restricted access granted to Lezanne, Laura, Stenette, and Ofentse">
+                <span>🔒</span>
+                <span>Restricted Editorial Directory</span>
+            </div>
+        </header>
+
+        <!-- STATS -->
+        <section class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon">📇</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statTotalContacts">0</span>
+                    <span class="stat-label">Total Contacts</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎓</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statExperts">0</span>
+                    <span class="stat-label">Experts</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statCaseStudies">0</span>
+                    <span class="stat-label">Case Studies</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎞️</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statLicensors">0</span>
+                    <span class="stat-label">Footage Licensors</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📑</div>
+                <div class="stat-info">
+                    <span class="stat-value" id="statReleases">0</span>
+                    <span class="stat-label">Signed Releases</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTROLS & FILTERS -->
+        <section class="controls-card">
+            <div class="search-actions-bar">
+                <div class="search-input-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="contactsSearchInput" placeholder="Search by name, cell nr, email, role, organization, or story title...">
+                </div>
+                <button type="button" class="btn-primary-action" id="btnAddContact">
+                    <span>+</span>
+                    <span>Add New Contact</span>
+                </button>
+                <button type="button" class="btn-secondary-action" id="btnSyncContacts" title="Scan proposals & release forms to aggregate latest contacts">
+                    <span>🔄</span>
+                    <span>Sync from Stories</span>
+                </button>
+                <button type="button" class="btn-secondary-action" id="btnExportContacts" title="Export directory to CSV">
+                    <span>📥</span>
+                    <span>Export CSV</span>
+                </button>
+            </div>
+
+            <!-- CHIPS -->
+            <div class="filter-chips">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-right: 0.25rem;">Filter:</span>
+                <button type="button" class="chip-btn active" data-filter="all">All Contacts</button>
+                <button type="button" class="chip-btn" data-filter="expert">🎓 Experts</button>
+                <button type="button" class="chip-btn" data-filter="case_study">👥 Case Studies</button>
+                <button type="button" class="chip-btn" data-filter="footage_licensor">🎞️ Footage Licensors</button>
+                <button type="button" class="chip-btn" data-filter="confidential">🔒 Confidential Only</button>
+                <button type="button" class="chip-btn" data-filter="has_release">📑 Signed Release On File</button>
+            </div>
+        </section>
+
+        <!-- TABLE SECTION -->
+        <section class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Name &amp; Surname</th>
+                        <th style="width: 12%; text-align: center;">Category</th>
+                        <th style="width: 18%;">Role &amp; Affiliation</th>
+                        <th style="width: 15%;">Cell Nr</th>
+                        <th style="width: 15%;">Email</th>
+                        <th style="width: 12%;">Linked Stories</th>
+                        <th style="width: 8%; text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="contactsTableBody">
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2.5rem; color: var(--text-muted);">
+                            Loading contacts directory...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- ADD / EDIT CONTACT MODAL -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Contact</h2>
+                <button type="button" class="close-btn" id="closeContactModalBtn">&times;</button>
+            </div>
+            <form id="contactForm">
+                <input type="hidden" id="editContactId">
+                <div class="form-grid-modal">
+                    <div class="modal-field">
+                        <label for="inputName">First Name <span style="color: var(--danger);">*</span></label>
+                        <input type="text" id="inputName" required placeholder="First name...">
+                    </div>
+                    <div class="modal-field">
+                        <label for="inputSurname">Surname</label>
+                        <input type="text" id="inputSurname" placeholder="Surname...">
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="inputType">Category <span style="color: var(--danger);">*</span></label>
+                        <select id="inputType" required>
+                            <option value="expert">🎓 Expert / Analyst</option>
+                            <option value="case_study">👥 Case Study / Participant</option>
+                            <option value="footage_licensor">🎞️ Footage Licensor</option>
+                            <option value="source">🕵️ Confidential Source</option>
+                            <option value="general">📁 General Contact</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="inputRole">Role / Title</label>
+                        <input type="text" id="inputRole" placeholder="e.g. Forensic Analyst, Victim...">
+                    </div>
+
+                    <div class="modal-field form-group-full">
+                        <label for="inputOrganization">Organization / Affiliation</label>
+                        <input type="text" id="inputOrganization" placeholder="e.g. Wits University, SAPS, Independent...">
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="inputPhone">Cell Nr</label>
+                        <input type="tel" id="inputPhone" placeholder="e.g. 082 123 4567">
+                    </div>
+
+                    <div class="modal-field">
+                        <label for="inputEmail">Email Address</label>
+                        <input type="email" id="inputEmail" placeholder="e.g. name@domain.com">
+                    </div>
+
+                    <div class="modal-field form-group-full">
+                        <label for="inputStory">Linked Story Title &amp; Comm # (Optional)</label>
+                        <input type="text" id="inputStory" placeholder="e.g. Fake Doctors (Comm # 7002)">
+                    </div>
+
+                    <div class="modal-field form-group-full">
+                        <label for="inputNotes">Private Editorial Notes</label>
+                        <textarea id="inputNotes" rows="3" placeholder="Interview performance, reachability notes, verification details..."></textarea>
+                    </div>
+
+                    <div class="modal-field form-group-full" style="flex-direction: row; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+                        <input type="checkbox" id="inputConfidential" style="width: auto; cursor: pointer;">
+                        <label for="inputConfidential" style="margin: 0; cursor: pointer; text-transform: none; font-size: 0.85rem;">
+                            🔒 <strong>Confidential / Whistleblower Source</strong> (Protects identity across story exports)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary-action" id="cancelModalBtn">Cancel</button>
+                    <button type="submit" class="btn-primary-action" id="saveContactBtn">Save Contact</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- VIEW CONTACT DETAILS MODAL -->
+    <div class="modal-overlay" id="viewContactModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2 id="viewContactName">Contact Profile</h2>
+                <button type="button" class="close-btn" id="closeViewModalBtn">&times;</button>
+            </div>
+            <div id="viewContactBody" style="font-size: 0.9rem; line-height: 1.5;"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary-action" id="closeViewBtn">Close</button>
+                <button type="button" class="btn-primary-action" id="editFromViewBtn">Edit Contact</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div id="loadingOverlay" class="loading-overlay active">
+        <div class="spinner"></div>
+        <h2 style="color: var(--primary);" id="loadingText">Verifying Editorial Clearance...</h2>
+    </div>
+</body>
+</html>
