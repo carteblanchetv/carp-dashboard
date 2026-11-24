@@ -3089,8 +3089,8 @@ app.post('/api/send-participant-release', async (req, res) => {
 
     const fullName = fields.participantName || fields.participant || fields.fullName || fields.contributorName || 'Participant';
     const idNumber = fields.idNumber || fields.participantId || parsedMeta.participantId || '';
-    const phone = fields.participantContact || fields.contactNumber || fields.phone || parsedMeta.participantContact || '';
-    const email = fields.participantEmail || fields.email || '';
+    const phone = fields.participantContact || fields.participantCell || fields.contactNumber || fields.cellNumber || fields.phone || parsedMeta.participantContact || parsedMeta.cellNumber || '';
+    const email = fields.participantEmail || fields.email || parsedMeta.participantEmail || '';
     const storyTitle = fields.storyTitle || fields.storyName || 'Story';
     const storyName = storyTitle;
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.submitterEmail || fields.email;
@@ -3138,8 +3138,11 @@ app.post('/api/send-participant-release', async (req, res) => {
         participantId: idNumber,
         phone,
         contactNumber: phone,
+        cellNumber: phone,
         participantContact: phone,
+        participantCell: phone,
         email,
+        participantEmail: email,
         storyName,
         storyTitle,
         commissionNumber,
@@ -3245,8 +3248,8 @@ app.post('/api/send-minor-release', async (req, res) => {
     const guardianId = parentIdNumber;
     const minorName = childName;
     const minorAge = fields.minorAge || '';
-    const phone = fields.contactNumber || fields.phone || '';
-    const email = fields.email || '';
+    const phone = fields.parentContact || fields.parentCell || fields.parentPhone || fields.contactNumber || fields.cellNumber || fields.phone || '';
+    const email = fields.parentEmail || fields.email || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
@@ -3293,7 +3296,11 @@ app.post('/api/send-minor-release', async (req, res) => {
         parentId: parentIdNumber, parentIdNumber, guardianId: parentIdNumber,
         phone,
         contactNumber: phone,
+        cellNumber: phone,
+        parentContact: phone,
+        parentCell: phone,
         email,
+        parentEmail: email,
         storyName, storyTitle,
         commissionNumber, producerName, producerEmail,
         place: fields.place || fields.producerSignedAt || fields.parentSignedAt || null,
@@ -3399,7 +3406,9 @@ app.post('/api/send-location-agreement', async (req, res) => {
     const producerSignedAt = fields.producerSignedAt || '';
     const producerSignedDate = fields.producerSignedDate || '';
 
-    const { ownerId, phone, email } = fields;
+    const phone = fields.ownerContact || fields.ownerCell || fields.ownerPhone || fields.phone || fields.contactNumber || fields.cellNumber || '';
+    const email = fields.ownerEmail || fields.email || '';
+    const ownerId = fields.ownerId || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
@@ -3456,7 +3465,12 @@ app.post('/api/send-location-agreement', async (req, res) => {
         producerSignedDate,
         ownerId,
         phone,
+        contactNumber: phone,
+        cellNumber: phone,
+        ownerContact: phone,
+        ownerCell: phone,
         email,
+        ownerEmail: email,
         storyName: storyTitle,
         storyTitle,
         commissionNumber,
@@ -3558,7 +3572,9 @@ app.post('/api/send-music-agreement', async (req, res) => {
     const producerSignedDate = fields.producerSignedDate || '';
     const musicTracks = fields.musicTracks || fields.trackTitle || fields.musicTrackTitle || '';
 
-    const { phone, email, trackDuration } = fields;
+    const phone = fields.ownerContact || fields.ownerCell || fields.ownerPhone || fields.musicOwnerPhone || fields.phone || fields.contactNumber || fields.cellNumber || '';
+    const email = fields.ownerEmail || fields.musicOwnerEmail || fields.email || '';
+    const trackDuration = fields.trackDuration || '';
     const submitterEmail = (req.user && req.user.email) || fields.submittedByEmail || fields.email;
 
     const commissionNumber = fields.commissionNumber || fields.commission_number || 'N/A';
@@ -3611,7 +3627,14 @@ app.post('/api/send-music-agreement', async (req, res) => {
         producerSignedDate,
         musicTracks,
         phone,
+        contactNumber: phone,
+        cellNumber: phone,
+        ownerContact: phone,
+        ownerCell: phone,
+        musicOwnerPhone: phone,
         email,
+        ownerEmail: email,
+        musicOwnerEmail: email,
         trackTitle: musicTracks,
         trackDuration,
         storyName: storyTitle,
