@@ -2742,3 +2742,12 @@
 [2026-11-24 16:20:43] 
 [2026-11-24 16:20:43] Microsoft Graph email import cycle completed successfully.
 [2026-11-24 16:20:43] Changes detected. Syncing...
+[2026-11-24 16:20:43] warning: in the working copy of 'frontend/location_agreement.html', LF will be replaced by CRLF the next time Git touches it
+[2026-11-24 16:20:43] warning: in the working copy of 'frontend/minor_release.html', LF will be replaced by CRLF the next time Git touches it
+[2026-11-24 16:20:43] warning: in the working copy of 'frontend/music_agreement.html', LF will be replaced by CRLF the next time Git touches it
+[2026-11-24 16:20:43] warning: in the working copy of 'frontend/participant_release.html', LF will be replaced by CRLF the next time Git touches it
+[2026-11-24 16:20:43] [main 0ab3412] auto-sync: 2026-11-24 16:21
+[2026-11-24 16:20:43]  5 files changed, 2353 insertions(+), 196 deletions(-)
+[2026-11-24 16:20:43] To https://github.com/carteblanchetv/carp-dashboard.git
+[2026-11-24 16:20:43]    a5de3ba..0ab3412  main -> main
+[2026-11-24 16:20:43] Sync complete.
