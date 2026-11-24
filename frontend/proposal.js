@@ -3070,15 +3070,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 ` : ''}
-                        ${(isDelivered && formattedTxList.length > 0) ? `
-                        <div style="margin-top: 0.25rem; display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem;">
-                            ${formattedTxList.map((fDate, idx) => `
-                                <a href="#" onclick="event.preventDefault(); window.openEpisodeModal('${fDate}')" class="status-badge" style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(0, 143, 190, 0.12); border: 1px solid var(--primary); color: var(--primary); font-weight: 700; font-size: 0.85rem; padding: 0.4rem 0.8rem; border-radius: 6px; text-decoration: none; transition: all 0.2s;" onmouseover="this.style.background='rgba(0, 143, 190, 0.2)'" onmouseout="this.style.background='rgba(0, 143, 190, 0.12)'" title="Click to view Episode FCC & stories">
-                                    📺 TX Date: <span style="text-decoration: underline;">${fDate}${idx > 0 ? ' (Repeat)' : ''}</span>
-                                </a>
-                            `).join('')}
-                        </div>
-                        ` : ''}
+
                     </div>
                 </div>
 
@@ -3086,17 +3078,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Location</span><span style="font-weight: 700;">${locationDisplay}</span></div>
                     ${acc.duration ? `<div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Duration</span><span style="font-weight: 700;">${acc.duration}</span></div>` : ''}
                     ${(deliveryDate && !sub._isRestrictedView) ? `<div><span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Delivery Date</span><span style="font-weight: 700;">${deliveryDate}</span></div>` : ''}
-                    ${(isDelivered && formattedTxList.length > 0) ? `
-                    <div>
-                        <span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">TX Date</span>
-                        <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-                            ${formattedTxList.map((fDate, idx) => `
-                                <a href="#" onclick="event.preventDefault(); window.openEpisodeModal('${fDate}')" style="font-weight: 700; color: var(--primary); text-decoration: underline; display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; font-size: 0.95rem;" title="Click to view Episode FCC & stories">
-                                    📺 ${fDate}${idx > 0 ? ' (Repeat)' : ''}
-                                </a>
-                            `).join('')}
-                        </div>
-                    </div>` : ''}
+
                     ${((isAdminView || (loggedInUser && (isAdmin(loggedInUser) || isSuperAdmin(loggedInUser) || isEditorialProduction(loggedInUser)))) && !sub._isRestrictedView) ? `
                     <div>
                         <span style="color: var(--text-muted); font-size: 0.7rem; display: block; text-transform: uppercase; letter-spacing: 0.05em;">Sensitivity</span>
@@ -3190,7 +3172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="comm-data-item">
                             <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.25rem;">TX Date</div>
                             <div style="font-size: 1.1rem; font-weight: 700;">
-                                <a href="#" onclick="event.preventDefault(); window.openEpisodeModal('${formatStoryDate(sub.txDate || sub.txDates[0])}')" style="color: var(--primary); text-decoration: underline; cursor: pointer;">
+                                <a href="#" onclick="event.preventDefault(); window.openEpisodeModal('${formatStoryDate(sub.txDate || sub.txDates[0])}')" style="color: #f97316; text-decoration: underline; cursor: pointer;">
                                     📺 ${formatStoryDate(sub.txDate || sub.txDates[0])}
                                 </a>
                             </div>
