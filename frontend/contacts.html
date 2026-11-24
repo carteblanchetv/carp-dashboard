@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
-    <script src="contacts.js?v=1.0.0" type="module"></script>
+    <script src="contacts.js?v=1.0.1" type="module"></script>
     <style>
         .contacts-container {
             max-width: 1400px;
@@ -320,6 +320,101 @@
             text-decoration: underline;
         }
 
+        /* Contacts Table Layout & Wrapping */
+        .contacts-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            table-layout: fixed;
+        }
+
+        .contacts-table th {
+            text-align: left;
+            padding: 1rem 0.75rem;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border);
+            font-weight: 700;
+            background: var(--bg-card);
+        }
+
+        .contacts-table td {
+            padding: 0.85rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            white-space: normal !important;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .contacts-table tbody tr:hover td {
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        .contacts-table tbody tr:hover td:first-child {
+            box-shadow: inset 4px 0 0 var(--primary);
+        }
+
+        .contact-detail-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .phone-link {
+            font-weight: 600;
+            color: #38bdf8 !important;
+        }
+
+        .email-link {
+            font-weight: 500;
+            color: #818cf8 !important;
+            word-break: break-all;
+        }
+
+        .wa-btn {
+            background: rgba(37, 211, 102, 0.12);
+            border: 1px solid rgba(37, 211, 102, 0.35);
+            color: #25d366;
+            border-radius: 6px;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.82rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .wa-btn:hover {
+            background: rgba(37, 211, 102, 0.25);
+            transform: scale(1.05);
+        }
+
+        .quick-add-link {
+            background: none;
+            border: 1px dashed var(--border);
+            color: var(--text-muted);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .quick-add-link:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(14, 165, 233, 0.08);
+        }
+
         /* Modal styles */
         .modal-overlay {
             position: fixed;
@@ -552,16 +647,16 @@
 
         <!-- TABLE SECTION -->
         <section class="table-container">
-            <table class="admin-table">
+            <table class="contacts-table">
                 <thead>
                     <tr>
                         <th style="width: 20%;">Name &amp; Surname</th>
-                        <th style="width: 12%; text-align: center;">Category</th>
-                        <th style="width: 18%;">Role &amp; Affiliation</th>
-                        <th style="width: 15%;">Cell Nr</th>
-                        <th style="width: 15%;">Email</th>
-                        <th style="width: 12%;">Linked Stories</th>
-                        <th style="width: 8%; text-align: center;">Actions</th>
+                        <th style="width: 11%; text-align: center;">Category</th>
+                        <th style="width: 17%;">Cell / WhatsApp</th>
+                        <th style="width: 19%;">Email Address</th>
+                        <th style="width: 17%;">Role &amp; Affiliation</th>
+                        <th style="width: 10%;">Stories</th>
+                        <th style="width: 6%; text-align: center;">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="contactsTableBody">

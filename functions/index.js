@@ -6243,16 +6243,21 @@ function checkContactsAuthorized(req) {
   return Boolean(email && CONTACTS_DIRECTORY_AUTHORIZED_EMAILS.includes(email));
 }
 
-function normalizeContactKey(name, surname, phone, email) {
-  const p = (phone || '').replace(/[^0-9]/g, '');
-  if (p && p.length >= 7) return `phone:${p.slice(-9)}`;
-  const e = (email || '').trim().toLowerCase();
-  if (e && e.includes('@') && !e.includes('carteblanche.co.za') && !e.includes('combinedartists.co.za')) {
-    return `email:${e}`;
+function cleanPersonName(name, surname) {
+  let full = `${name || ''} ${surname || ''}`.trim().toLowerCase();
+  full = full.replace(/^(dr|dr\.|prof|prof\.|adv|adv\.|mr|mr\.|mrs|mrs\.|ms|ms\.)\s+/i, '');
+  full = full.replace(/\s+/g, ' ').trim();
+  return full;
+}
+
+function formatDisplayName(name, surname) {
+  const n = (name || '').trim();
+  const s = (surname || '').trim();
+  if (n && s) {
+    if (n.toLowerCase().endsWith(s.toLowerCase())) return n;
+    return `${n} ${s}`.replace(/\s+/g, ' ');
   }
-  const n = `${(name || '').trim().toLowerCase()} ${(surname || '').trim().toLowerCase()}`.trim();
-  if (n && n.length > 2) return `name:${n}`;
-  return null;
+  return (n || s).replace(/\s+/g, ' ');
 }
 
 async function harvestContactsInternal() {
@@ -6279,42 +6284,47 @@ async function harvestContactsInternal() {
           const name = typeof cs === 'string' ? cs : (cs.name || '');
           const surname = typeof cs === 'object' ? (cs.surname || '') : '';
           const role = typeof cs === 'object' ? (cs.role || 'Case Study') : 'Case Study';
-          const phone = typeof cs === 'object' ? (cs.phone || cs.contactNumber || '') : '';
+          const phone = typeof cs === 'object' ? (cs.phone || cs.contactNumber || cs.cell || '') : '';
           const email = typeof cs === 'object' ? (cs.email || '') : '';
           const confidential = typeof cs === 'object' ? !!cs.confidential : false;
 
-          const key = normalizeContactKey(name, surname, phone, email);
-          if (!key) return;
+          const normKey = cleanPersonName(name, surname);
+          if (!normKey || normKey.length < 3) return;
 
-          const existing = contactsMap.get(key) || {
-            name,
-            surname,
-            fullName: `${name} ${surname}`.trim() || name,
+          const displayName = formatDisplayName(name, surname);
+          const existing = contactsMap.get(normKey) || {
+            name: name.trim(),
+            surname: surname.trim(),
+            fullName: displayName,
             type: 'case_study',
-            role,
+            role: role.trim() || 'Case Study',
             organization: '',
-            phone,
-            email,
+            phone: (phone || '').trim(),
+            email: (email || '').trim(),
             confidential,
             hasSignedRelease: false,
             stories: [],
             source: 'proposal'
           };
 
-          if (phone && !existing.phone) existing.phone = phone;
-          if (email && !existing.email) existing.email = email;
+          if (phone && !existing.phone) existing.phone = phone.trim();
+          if (email && !existing.email) existing.email = email.trim();
           if (confidential) existing.confidential = true;
-          if (!existing.stories.some(s => s.proposalId === doc.id)) {
+          if (role && role !== 'Case Study' && (!existing.role || existing.role === 'Case Study')) {
+            existing.role = role.trim();
+          }
+
+          if (!existing.stories.some(s => s.proposalId === doc.id || (s.commissionNumber && s.commissionNumber === commNum))) {
             existing.stories.push({
               proposalId: doc.id,
               storyTitle,
               commissionNumber: commNum,
               producerName: producer,
               year,
-              role
+              role: role.trim()
             });
           }
-          contactsMap.set(key, existing);
+          contactsMap.set(normKey, existing);
         });
       }
 
@@ -6329,41 +6339,46 @@ async function harvestContactsInternal() {
           const name = typeof ex === 'string' ? ex : (ex.name || '');
           const surname = typeof ex === 'object' ? (ex.surname || '') : '';
           const role = typeof ex === 'object' ? (ex.role || 'Expert') : 'Expert';
-          const phone = typeof ex === 'object' ? (ex.phone || ex.contactNumber || '') : '';
+          const phone = typeof ex === 'object' ? (ex.phone || ex.contactNumber || cs.cell || '') : '';
           const email = typeof ex === 'object' ? (ex.email || '') : '';
 
-          const key = normalizeContactKey(name, surname, phone, email);
-          if (!key) return;
+          const normKey = cleanPersonName(name, surname);
+          if (!normKey || normKey.length < 3) return;
 
-          const existing = contactsMap.get(key) || {
-            name,
-            surname,
-            fullName: `${name} ${surname}`.trim() || name,
+          const displayName = formatDisplayName(name, surname);
+          const existing = contactsMap.get(normKey) || {
+            name: name.trim(),
+            surname: surname.trim(),
+            fullName: displayName,
             type: 'expert',
-            role,
+            role: role.trim() || 'Expert',
             organization: '',
-            phone,
-            email,
+            phone: (phone || '').trim(),
+            email: (email || '').trim(),
             confidential: false,
             hasSignedRelease: false,
             stories: [],
             source: 'proposal'
           };
 
-          if (phone && !existing.phone) existing.phone = phone;
-          if (email && !existing.email) existing.email = email;
-          if (existing.type !== 'expert') existing.type = 'expert';
-          if (!existing.stories.some(s => s.proposalId === doc.id)) {
+          existing.type = 'expert';
+          if (role && role !== 'Expert' && (!existing.role || existing.role === 'Case Study' || existing.role === 'Expert')) {
+            existing.role = role.trim();
+          }
+          if (phone && !existing.phone) existing.phone = phone.trim();
+          if (email && !existing.email) existing.email = email.trim();
+
+          if (!existing.stories.some(s => s.proposalId === doc.id || (s.commissionNumber && s.commissionNumber === commNum))) {
             existing.stories.push({
               proposalId: doc.id,
               storyTitle,
               commissionNumber: commNum,
               producerName: producer,
               year,
-              role
+              role: role.trim()
             });
           }
-          contactsMap.set(key, existing);
+          contactsMap.set(normKey, existing);
         });
       }
     }
@@ -6380,30 +6395,36 @@ async function harvestContactsInternal() {
     for (const doc of subSnap.docs) {
       const s = doc.data();
       const rawName = s.participantName || s.fullName || s.contributorName || s.footageOwnerName || s.ownerName || '';
-      if (!rawName) continue;
+      if (!rawName || rawName.trim().length < 2) continue;
 
-      const parts = rawName.trim().split(/\s+/);
-      const name = parts[0] || '';
-      const surname = parts.slice(1).join(' ') || '';
-      const phone = s.contactNumber || s.phone || s.ownerPhone || s.participantContact || '';
-      const email = s.participantEmail || s.ownerEmail || (s.email && !s.email.includes('@carteblanche.co.za') ? s.email : '');
-      const type = (s.formType === 'footage_release_agreement' || s.formType === 'footage_agreement') ? 'footage_licensor' : 'case_study';
+      const normKey = cleanPersonName(rawName, '');
+      if (!normKey || normKey.length < 3) continue;
+
+      const parts = rawName.trim().replace(/\s+/g, ' ').split(' ');
+      const firstName = parts[0] || '';
+      const lastName = parts.slice(1).join(' ') || '';
+
+      const phone = (s.contactNumber || s.phone || s.ownerPhone || s.participantContact || '').trim();
+      let email = (s.participantEmail || s.ownerEmail || s.email || '').trim();
+      if (email.includes('@carteblanche.co.za') || email.includes('@combinedartists.co.za')) {
+        email = '';
+      }
+
+      const isFootage = s.formType === 'footage_release_agreement' || s.formType === 'footage_agreement';
+      const type = isFootage ? 'footage_licensor' : 'case_study';
       const storyTitle = s.storyTitle || s.storyName || 'Story';
       const commNum = s.commissionNumber || s.commission_number || '';
       const producer = s.producerName || '';
 
-      const key = normalizeContactKey(name, surname, phone, email);
-      if (!key) continue;
-
-      const existing = contactsMap.get(key) || {
-        name,
-        surname,
-        fullName: rawName,
+      const existing = contactsMap.get(normKey) || {
+        name: firstName,
+        surname: lastName,
+        fullName: rawName.trim().replace(/\s+/g, ' '),
         type,
-        role: type === 'footage_licensor' ? 'Footage Licensor' : 'Release Signatory',
+        role: isFootage ? 'Footage Licensor' : 'Release Signatory',
         organization: s.footageOwnerCompany || s.ownerEntity || '',
-        phone,
-        email,
+        phone: '',
+        email: '',
         confidential: false,
         hasSignedRelease: true,
         releaseStoragePath: s.storagePath || '',
@@ -6418,6 +6439,7 @@ async function harvestContactsInternal() {
       if (phone && !existing.phone) existing.phone = phone;
       if (email && !existing.email) existing.email = email;
       if (s.footageOwnerCompany && !existing.organization) existing.organization = s.footageOwnerCompany;
+      if (isFootage && existing.type !== 'expert') existing.type = 'footage_licensor';
 
       if (!existing.stories.some(st => st.submissionId === doc.id || (st.commissionNumber && st.commissionNumber === commNum))) {
         existing.stories.push({
@@ -6429,7 +6451,7 @@ async function harvestContactsInternal() {
           hasRelease: true
         });
       }
-      contactsMap.set(key, existing);
+      contactsMap.set(normKey, existing);
     }
   } catch (err) {
     console.warn('[CONTACTS HARVEST] Error parsing submissions:', err);
@@ -6441,14 +6463,12 @@ async function harvestContactsInternal() {
   let count = 0;
 
   const entries = Array.from(contactsMap.entries());
-  // Process in batches of 400
   for (let i = 0; i < entries.length; i += 400) {
     const batch = admin.firestore().batch();
     const chunk = entries.slice(i, i + 400);
 
-    for (const [key, data] of chunk) {
-      // Deterministic document ID based on hash of key to avoid duplicates
-      const safeDocId = Buffer.from(key).toString('base64').replace(/[/+=]/g, '_').slice(0, 40);
+    for (const [normKey, data] of chunk) {
+      const safeDocId = Buffer.from(`name:${normKey}`).toString('base64').replace(/[/+=]/g, '_').slice(0, 40);
       const docRef = contactsColl.doc(safeDocId);
 
       batch.set(docRef, {

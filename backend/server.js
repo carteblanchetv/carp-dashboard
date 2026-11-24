@@ -1603,6 +1603,21 @@ app.delete('/api/contacts/:id', async (req, res) => {
   }
 });
 
+app.post('/api/contacts/harvest', async (req, res) => {
+  try {
+    if (!checkContactsAuthorized(req)) {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: The Contacts Directory is strictly restricted to Lezanne, Laura, Stenette, and Ofentse.'
+      });
+    }
+    const harvestScript = require('../scripts/harvest_contacts.js');
+    res.json({ success: true, message: 'Harvest completed' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Global Error Handler for JSON responses
 app.use((err, req, res, next) => {
   console.error('SERVER ERROR:', err);

@@ -169,21 +169,31 @@ function renderTable() {
         const typeClass = c.type === 'expert' ? 'type-expert' : (c.type === 'footage_licensor' ? 'type-footage_licensor' : 'type-case_study');
 
         // Phone & WhatsApp
-        let phoneHtml = '—';
+        let phoneHtml = `<button type="button" class="quick-add-link btn-add-phone" title="Click to add cell number">+ Add Cell</button>`;
         if (c.phone) {
             const waUrl = getWhatsAppUrl(c.phone);
             phoneHtml = `
-                <div style="display: flex; align-items: center; gap: 0.4rem;">
-                    <a href="tel:${escapeHtml(c.phone)}" class="contact-link" title="Call">📞 ${escapeHtml(c.phone)}</a>
-                    <a href="${waUrl}" target="_blank" rel="noopener" title="Open WhatsApp" style="text-decoration: none; font-size: 0.9rem;">💬</a>
+                <div class="contact-detail-cell">
+                    <a href="tel:${escapeHtml(c.phone)}" class="contact-link phone-link" title="Call ${escapeHtml(c.phone)}">
+                        <span>📞</span>
+                        <span>${escapeHtml(c.phone)}</span>
+                    </a>
+                    <a href="${waUrl}" target="_blank" rel="noopener" class="wa-btn" title="Open WhatsApp">💬</a>
                 </div>
             `;
         }
 
         // Email
-        let emailHtml = '—';
+        let emailHtml = `<button type="button" class="quick-add-link btn-add-email" title="Click to add email address">+ Add Email</button>`;
         if (c.email) {
-            emailHtml = `<a href="mailto:${escapeHtml(c.email)}" class="contact-link" title="Send Email">✉️ ${escapeHtml(c.email)}</a>`;
+            emailHtml = `
+                <div class="contact-detail-cell">
+                    <a href="mailto:${escapeHtml(c.email)}" class="contact-link email-link" title="Email ${escapeHtml(c.email)}">
+                        <span>✉️</span>
+                        <span>${escapeHtml(c.email)}</span>
+                    </a>
+                </div>
+            `;
         }
 
         // Linked Stories
@@ -192,7 +202,7 @@ function renderTable() {
             storiesHtml = c.stories.slice(0, 3).map(s => {
                 const title = s.storyTitle || 'Story';
                 const comm = s.commissionNumber ? ` (#${s.commissionNumber})` : '';
-                return `<span class="story-pill" title="${escapeHtml(title + comm)}">${escapeHtml(title.slice(0, 22))}${title.length > 22 ? '…' : ''}</span>`;
+                return `<span class="story-pill" title="${escapeHtml(title + comm)}">${escapeHtml(title.slice(0, 20))}${title.length > 20 ? '…' : ''}</span>`;
             }).join('');
             if (c.stories.length > 3) {
                 storiesHtml += `<span class="story-pill" style="font-weight: 700;">+${c.stories.length - 3} more</span>`;
@@ -211,12 +221,12 @@ function renderTable() {
                 <td style="text-align: center;">
                     <span class="type-badge ${typeClass}">${escapeHtml(typeLabel)}</span>
                 </td>
+                <td>${phoneHtml}</td>
+                <td>${emailHtml}</td>
                 <td>
                     <div style="font-weight: 600; color: var(--text-main); font-size: 0.85rem;">${escapeHtml(c.role || '—')}</div>
                     ${c.organization ? `<div style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(c.organization)}</div>` : ''}
                 </td>
-                <td>${phoneHtml}</td>
-                <td>${emailHtml}</td>
                 <td>${storiesHtml}</td>
                 <td style="text-align: center;">
                     <div style="display: inline-flex; gap: 0.35rem;">
@@ -238,10 +248,26 @@ function renderTable() {
         const viewBtn = tr.querySelector('.btn-view');
         const editBtn = tr.querySelector('.btn-edit');
         const deleteBtn = tr.querySelector('.btn-delete');
+        const addPhoneBtn = tr.querySelector('.btn-add-phone');
+        const addEmailBtn = tr.querySelector('.btn-add-email');
 
         if (viewBtn) viewBtn.onclick = () => openViewModal(contact);
         if (editBtn) editBtn.onclick = () => openEditModal(contact);
         if (deleteBtn) deleteBtn.onclick = () => confirmDeleteContact(contact);
+        if (addPhoneBtn) addPhoneBtn.onclick = () => {
+            openEditModal(contact);
+            setTimeout(() => {
+                const el = document.getElementById('inputPhone');
+                if (el) { el.focus(); el.scrollIntoView({ behavior: 'smooth' }); }
+            }, 100);
+        };
+        if (addEmailBtn) addEmailBtn.onclick = () => {
+            openEditModal(contact);
+            setTimeout(() => {
+                const el = document.getElementById('inputEmail');
+                if (el) { el.focus(); el.scrollIntoView({ behavior: 'smooth' }); }
+            }, 100);
+        };
     });
 }
 
