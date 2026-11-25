@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="js/theme.js?v=5.1.1"></script>
-    <script src="contacts.js?v=1.0.1" type="module"></script>
+    <script src="contacts.js?v=1.0.2" type="module"></script>
     <style>
         .contacts-container {
             max-width: 1400px;
@@ -415,6 +415,194 @@
             background: rgba(14, 165, 233, 0.08);
         }
 
+        /* Multi-story linked chips & autocomplete */
+        .linked-stories-chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-bottom: 0.65rem;
+            min-height: 28px;
+            align-items: center;
+        }
+
+        .linked-story-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            background: rgba(14, 165, 233, 0.12);
+            border: 1px solid rgba(14, 165, 233, 0.35);
+            color: var(--text-main);
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            line-height: 1.2;
+            transition: all 0.2s;
+        }
+
+        .linked-story-chip:hover {
+            border-color: var(--primary);
+        }
+
+        .linked-story-chip .chip-comm {
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            letter-spacing: 0.03em;
+        }
+
+        .linked-story-chip .chip-title {
+            font-weight: 600;
+        }
+
+        .linked-story-chip .chip-prod {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .linked-story-chip .chip-remove {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+            padding: 0 0.2rem;
+            margin-left: 0.2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .linked-story-chip .chip-remove:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .no-stories-note {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 0.2rem 0;
+        }
+
+        .story-search-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .story-input-icon-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .story-input-icon-wrap input {
+            width: 100%;
+            padding: 0.65rem 0.85rem 0.65rem 2.3rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg-body);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .story-input-icon-wrap input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+        }
+
+        .story-input-icon-wrap .story-search-icon {
+            position: absolute;
+            left: 0.8rem;
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 0.9rem;
+        }
+
+        .story-autocomplete-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            max-height: 260px;
+            overflow-y: auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+            z-index: 10001;
+        }
+
+        .story-dropdown-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 0.85rem;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+            font-size: 0.85rem;
+        }
+
+        .story-dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .story-dropdown-item:hover,
+        .story-dropdown-item.active {
+            background: var(--bg-hover);
+        }
+
+        .story-dropdown-item .item-left {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .story-dropdown-item .item-comm {
+            background: rgba(14, 165, 233, 0.15);
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            color: #38bdf8;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .story-dropdown-item .item-title {
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .story-dropdown-item .item-producer {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            margin-left: 0.25rem;
+        }
+
+        .story-dropdown-item .item-add-btn {
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 700;
+            white-space: nowrap;
+            padding-left: 0.5rem;
+        }
+
         /* Modal styles */
         .modal-overlay {
             position: fixed;
@@ -721,8 +909,27 @@
                     </div>
 
                     <div class="modal-field form-group-full">
-                        <label for="inputStory">Linked Story Title &amp; Comm # (Optional)</label>
-                        <input type="text" id="inputStory" placeholder="e.g. Fake Doctors (Comm # 7002)">
+                        <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                            <span>Linked Stories / Commissions</span>
+                            <span style="font-size: 0.72rem; font-weight: 500; text-transform: none; color: var(--text-muted);">
+                                Type Comm # or Title to link multiple stories
+                            </span>
+                        </label>
+                        <!-- Selected Stories Chips -->
+                        <div id="modalLinkedStoriesContainer" class="linked-stories-chips-container"></div>
+                        <!-- Search & Autocomplete Input -->
+                        <div class="story-search-wrapper">
+                            <div class="story-input-icon-wrap">
+                                <span class="story-search-icon">🔍</span>
+                                <input 
+                                    type="text" 
+                                    id="modalStorySearchInput" 
+                                    placeholder="Type Comm # (e.g. 7000) or Story Title to add..." 
+                                    autocomplete="off"
+                                >
+                            </div>
+                            <div id="storyAutocompleteDropdown" class="story-autocomplete-dropdown" style="display: none;"></div>
+                        </div>
                     </div>
 
                     <div class="modal-field form-group-full">

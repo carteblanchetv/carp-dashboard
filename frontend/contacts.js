@@ -271,6 +271,196 @@ function renderTable() {
     });
 }
 
+// Multi-story linking state in modal
+let modalLinkedStories = [];
+let searchDebounceTimer = null;
+let activeDropdownIndex = -1;
+let currentDropdownResults = [];
+
+function renderModalLinkedStories() {
+    const container = document.getElementById('modalLinkedStoriesContainer');
+    if (!container) return;
+    if (!Array.isArray(modalLinkedStories) || modalLinkedStories.length === 0) {
+        container.innerHTML = `<div class="no-stories-note">No stories linked yet. Type commission number or story title below to link stories.</div>`;
+        return;
+    }
+    container.innerHTML = modalLinkedStories.map((s, idx) => {
+        const comm = s.commissionNumber ? `<span class="chip-comm">#${escapeHtml(s.commissionNumber)}</span>` : '';
+        const title = escapeHtml(s.storyTitle || 'Untitled Story');
+        const prod = s.producerName ? `<span class="chip-prod">(${escapeHtml(s.producerName)})</span>` : '';
+        return `
+            <div class="linked-story-chip" data-idx="${idx}">
+                ${comm}
+                <span class="chip-title">${title}</span>
+                ${prod}
+                <button type="button" class="chip-remove" data-remove-idx="${idx}" title="Remove story">&times;</button>
+            </div>
+        `;
+    }).join('');
+
+    container.querySelectorAll('.chip-remove').forEach(btn => {
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            const idx = parseInt(btn.getAttribute('data-remove-idx'), 10);
+            modalLinkedStories.splice(idx, 1);
+            renderModalLinkedStories();
+        };
+    });
+}
+
+function setupStoryAutocomplete() {
+    const searchInput = document.getElementById('modalStorySearchInput');
+    const dropdown = document.getElementById('storyAutocompleteDropdown');
+    if (!searchInput || !dropdown) return;
+
+    async function doSearch(query) {
+        try {
+            const res = await fetchWithAuth(`/api/contacts/stories/search?q=${encodeURIComponent(query)}`);
+            const data = await res.json();
+            if (data.success) {
+                currentDropdownResults = data.stories || [];
+                renderDropdown(query);
+            }
+        } catch (err) {
+            console.error("Story search failed:", err);
+        }
+    }
+
+    function renderDropdown(query) {
+        activeDropdownIndex = -1;
+        if (currentDropdownResults.length === 0 && !query) {
+            dropdown.style.display = 'none';
+            return;
+        }
+
+        let itemsHtml = '';
+        if (currentDropdownResults.length > 0) {
+            itemsHtml = currentDropdownResults.map((s, idx) => {
+                const isAlreadyAdded = modalLinkedStories.some(m => 
+                    (s.proposalId && m.proposalId && m.proposalId === s.proposalId) ||
+                    (s.commissionNumber && m.commissionNumber && s.commissionNumber === m.commissionNumber) ||
+                    (s.storyTitle && m.storyTitle && s.storyTitle.toLowerCase() === m.storyTitle.toLowerCase())
+                );
+                const comm = s.commissionNumber ? `<span class="item-comm">#${escapeHtml(s.commissionNumber)}</span>` : '';
+                const title = escapeHtml(s.storyTitle || 'Untitled');
+                const prod = s.producerName ? `<span class="item-producer">(${escapeHtml(s.producerName)})</span>` : '';
+                const action = isAlreadyAdded 
+                    ? `<span style="font-size: 0.75rem; color: var(--success); font-weight: 700;">✓ Added</span>`
+                    : `<span class="item-add-btn">+ Add</span>`;
+
+                return `
+                    <div class="story-dropdown-item ${isAlreadyAdded ? 'already-added' : ''}" data-idx="${idx}">
+                        <div class="item-left">
+                            ${comm}
+                            <span class="item-title">${title}</span>
+                            ${prod}
+                        </div>
+                        ${action}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Option to add as custom story if not found
+        if (query && !currentDropdownResults.some(s => s.storyTitle.toLowerCase() === query.toLowerCase() || s.commissionNumber === query)) {
+            itemsHtml += `
+                <div class="story-dropdown-item custom-entry" data-custom="${escapeHtml(query)}">
+                    <div class="item-left" style="color: var(--primary);">
+                        <span>➕</span>
+                        <span>Link custom story: "<strong>${escapeHtml(query)}</strong>"</span>
+                    </div>
+                    <span class="item-add-btn">+ Add</span>
+                </div>
+            `;
+        }
+
+        dropdown.innerHTML = itemsHtml;
+        dropdown.style.display = 'block';
+
+        dropdown.querySelectorAll('.story-dropdown-item').forEach(el => {
+            el.onclick = () => {
+                const custom = el.getAttribute('data-custom');
+                if (custom) {
+                    addStoryToModal({
+                        storyTitle: custom,
+                        commissionNumber: /^\d+$/.test(custom) ? custom : ''
+                    });
+                } else {
+                    const idx = parseInt(el.getAttribute('data-idx'), 10);
+                    const story = currentDropdownResults[idx];
+                    if (story) addStoryToModal(story);
+                }
+            };
+        });
+    }
+
+    function addStoryToModal(story) {
+        const exists = modalLinkedStories.some(m => 
+            (story.proposalId && m.proposalId && m.proposalId === story.proposalId) ||
+            (story.commissionNumber && m.commissionNumber && story.commissionNumber === m.commissionNumber) ||
+            (story.storyTitle && m.storyTitle && story.storyTitle.toLowerCase() === m.storyTitle.toLowerCase())
+        );
+        if (!exists) {
+            modalLinkedStories.push({
+                proposalId: story.proposalId || '',
+                commissionNumber: story.commissionNumber || '',
+                storyTitle: story.storyTitle || 'Untitled Story',
+                producerName: story.producerName || '',
+                year: story.year || ''
+            });
+            renderModalLinkedStories();
+        }
+        searchInput.value = '';
+        dropdown.style.display = 'none';
+        searchInput.focus();
+    }
+
+    searchInput.addEventListener('input', (e) => {
+        const val = e.target.value.trim();
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+            doSearch(val);
+        }, 150);
+    });
+
+    searchInput.addEventListener('focus', () => {
+        const val = searchInput.value.trim();
+        doSearch(val);
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+        const items = dropdown.querySelectorAll('.story-dropdown-item');
+        if (!items.length || dropdown.style.display === 'none') return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            activeDropdownIndex = (activeDropdownIndex + 1) % items.length;
+            items.forEach((it, idx) => it.classList.toggle('active', idx === activeDropdownIndex));
+            items[activeDropdownIndex]?.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            activeDropdownIndex = (activeDropdownIndex - 1 + items.length) % items.length;
+            items.forEach((it, idx) => it.classList.toggle('active', idx === activeDropdownIndex));
+            items[activeDropdownIndex]?.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (activeDropdownIndex >= 0 && items[activeDropdownIndex]) {
+                items[activeDropdownIndex].click();
+            } else if (items.length > 0) {
+                items[0].click();
+            }
+        } else if (e.key === 'Escape') {
+            dropdown.style.display = 'none';
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+}
+
 function openAddModal() {
     document.getElementById('modalTitle').textContent = "Add New Contact";
     document.getElementById('editContactId').value = "";
@@ -281,9 +471,16 @@ function openAddModal() {
     document.getElementById('inputOrganization').value = "";
     document.getElementById('inputPhone').value = "";
     document.getElementById('inputEmail').value = "";
-    document.getElementById('inputStory').value = "";
     document.getElementById('inputNotes').value = "";
     document.getElementById('inputConfidential').checked = false;
+
+    // Reset linked stories
+    modalLinkedStories = [];
+    renderModalLinkedStories();
+    const searchInput = document.getElementById('modalStorySearchInput');
+    if (searchInput) searchInput.value = "";
+    const dropdown = document.getElementById('storyAutocompleteDropdown');
+    if (dropdown) dropdown.style.display = "none";
 
     document.getElementById('contactModal').classList.add('active');
 }
@@ -301,9 +498,13 @@ function openEditModal(c) {
     document.getElementById('inputNotes').value = c.notes || "";
     document.getElementById('inputConfidential').checked = !!c.confidential;
 
-    // First story preview if present
-    const firstStory = Array.isArray(c.stories) && c.stories[0];
-    document.getElementById('inputStory').value = firstStory ? `${firstStory.storyTitle || ''} (${firstStory.commissionNumber || ''})` : "";
+    // Populate multiple linked stories
+    modalLinkedStories = Array.isArray(c.stories) ? JSON.parse(JSON.stringify(c.stories)) : [];
+    renderModalLinkedStories();
+    const searchInput = document.getElementById('modalStorySearchInput');
+    if (searchInput) searchInput.value = "";
+    const dropdown = document.getElementById('storyAutocompleteDropdown');
+    if (dropdown) dropdown.style.display = "none";
 
     document.getElementById('contactModal').classList.add('active');
 }
@@ -372,10 +573,30 @@ function openViewModal(c) {
             </div>` : ''}
 
             <div>
-                <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--primary); font-weight: 800; display: block; margin-bottom: 0.5rem;">Associated Story History</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span style="font-size: 0.8rem; text-transform: uppercase; color: var(--primary); font-weight: 800;">
+                        Associated Stories (${Array.isArray(c.stories) ? c.stories.length : 0})
+                    </span>
+                    <button type="button" class="btn-secondary-action btn-sm" id="btnEditStoriesFromView" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;">+ Add Story</button>
+                </div>
                 ${storiesListHtml}
             </div>
         `;
+
+        const editStoriesBtn = bodyEl.querySelector('#btnEditStoriesFromView');
+        if (editStoriesBtn) {
+            editStoriesBtn.onclick = () => {
+                document.getElementById('viewContactModal').classList.remove('active');
+                openEditModal(c);
+                setTimeout(() => {
+                    const searchInput = document.getElementById('modalStorySearchInput');
+                    if (searchInput) {
+                        searchInput.focus();
+                        searchInput.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }, 100);
+            };
+        }
     }
 
     document.getElementById('viewContactModal').classList.add('active');
@@ -393,7 +614,6 @@ async function handleFormSubmit(e) {
     const email = document.getElementById('inputEmail').value.trim();
     const notes = document.getElementById('inputNotes').value.trim();
     const confidential = document.getElementById('inputConfidential').checked;
-    const storyInput = document.getElementById('inputStory').value.trim();
 
     const saveBtn = document.getElementById('saveContactBtn');
     if (saveBtn) saveBtn.disabled = true;
@@ -408,12 +628,9 @@ async function handleFormSubmit(e) {
             phone,
             email,
             notes,
-            confidential
+            confidential,
+            stories: Array.isArray(modalLinkedStories) ? modalLinkedStories : []
         };
-
-        if (storyInput) {
-            payload.stories = [{ storyTitle: storyInput }];
-        }
 
         let res;
         if (id) {
@@ -526,6 +743,7 @@ function exportContactsCsv() {
 // Event Listeners
 document.addEventListener('DOMContentLoaded', () => {
     initContactsPage();
+    setupStoryAutocomplete();
 
     // Search
     const searchInput = document.getElementById('contactsSearchInput');

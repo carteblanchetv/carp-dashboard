@@ -1535,6 +1535,117 @@ function checkContactsAuthorized(req) {
   return Boolean(email && CONTACTS_DIRECTORY_AUTHORIZED_EMAILS.includes(email));
 }
 
+let _cachedStoriesList = null;
+let _cachedStoriesTime = 0;
+const STORIES_CACHE_TTL_MS = 10 * 60 * 1000;
+
+async function getCachedStoriesList() {
+  const now = Date.now();
+  if (_cachedStoriesList && (now - _cachedStoriesTime < STORIES_CACHE_TTL_MS)) {
+    return _cachedStoriesList;
+  }
+
+  const snap = await admin.firestore().collection('proposals')
+    .select('story_title', 'storyTitle', 'title', 'commissionNumber', 'commNum', 'producerName', 'producer', 'year', 'createdAt')
+    .get();
+
+  _cachedStoriesList = snap.docs.map(doc => {
+    const d = doc.data();
+    const title = (d.story_title || d.storyTitle || d.title || '').trim();
+    const comm = String(d.commissionNumber || d.commNum || '').trim();
+    const producer = (d.producerName || d.producer || '').trim();
+    const year = d.year || (d.createdAt?._seconds ? new Date(d.createdAt._seconds * 1000).getFullYear() : (d.createdAt ? new Date(d.createdAt).getFullYear() : ''));
+    return {
+      proposalId: doc.id,
+      storyTitle: title,
+      commissionNumber: comm,
+      producerName: producer,
+      year: year ? String(year) : ''
+    };
+  }).filter(s => s.storyTitle || s.commissionNumber);
+
+  _cachedStoriesTime = now;
+  return _cachedStoriesList;
+}
+
+async function syncContactToProposals(contactData, stories) {
+  if (!Array.isArray(stories) || stories.length === 0) return;
+  for (const story of stories) {
+    if (!story.proposalId) continue;
+    try {
+      const propRef = admin.firestore().collection('proposals').doc(story.proposalId);
+      const propSnap = await propRef.get();
+      if (!propSnap.exists) continue;
+      const propData = propSnap.data();
+
+      const isExpert = contactData.type === 'expert';
+      const arrayField = isExpert ? 'experts' : 'caseStudies';
+      let list = propData[arrayField] || [];
+      if (typeof list === 'string') list = [];
+      if (!Array.isArray(list)) list = [];
+
+      const fullName = (contactData.fullName || `${contactData.name || ''} ${contactData.surname || ''}`).trim();
+      const alreadyInList = list.some(item => {
+        if (!item) return false;
+        const itemName = typeof item === 'string' ? item : `${item.name || ''} ${item.surname || ''}`.trim();
+        return itemName.toLowerCase() === fullName.toLowerCase();
+      });
+
+      if (!alreadyInList) {
+        list.push({
+          name: contactData.name || '',
+          surname: contactData.surname || '',
+          role: contactData.role || (isExpert ? 'Expert' : 'Case Study'),
+          phone: contactData.phone || '',
+          email: contactData.email || '',
+          confidential: !!contactData.confidential
+        });
+        await propRef.update({ [arrayField]: list });
+      }
+    } catch (err) {
+      console.warn(`[CONTACTS] Failed to sync contact to proposal ${story.proposalId}:`, err.message);
+    }
+  }
+}
+
+app.get('/api/contacts/stories/search', async (req, res) => {
+  try {
+    if (!checkContactsAuthorized(req)) {
+      return res.status(403).json({ success: false, error: 'Access denied.' });
+    }
+
+    const q = String(req.query.q || '').trim().toLowerCase();
+    const allStories = await getCachedStoriesList();
+
+    if (!q) {
+      return res.json({ success: true, stories: allStories.slice(0, 15) });
+    }
+
+    const matches = allStories.filter(s => {
+      const comm = s.commissionNumber.toLowerCase();
+      const title = s.storyTitle.toLowerCase();
+      const prod = s.producerName.toLowerCase();
+      return comm.includes(q) || title.includes(q) || prod.includes(q);
+    }).sort((a, b) => {
+      const aComm = a.commissionNumber.toLowerCase();
+      const bComm = b.commissionNumber.toLowerCase();
+      if (aComm === q) return -1;
+      if (bComm === q) return 1;
+      if (aComm.startsWith(q) && !bComm.startsWith(q)) return -1;
+      if (!aComm.startsWith(q) && bComm.startsWith(q)) return 1;
+      const aTitle = a.storyTitle.toLowerCase();
+      const bTitle = b.storyTitle.toLowerCase();
+      if (aTitle.startsWith(q) && !bTitle.startsWith(q)) return -1;
+      if (!aTitle.startsWith(q) && bTitle.startsWith(q)) return 1;
+      return a.storyTitle.localeCompare(b.storyTitle);
+    }).slice(0, 20);
+
+    res.json({ success: true, stories: matches });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.get('/api/contacts', async (req, res) => {
   try {
     if (!checkContactsAuthorized(req)) {
@@ -1575,6 +1686,9 @@ app.post('/api/contacts', express.json(), async (req, res) => {
       updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       createdBy: req.user.email
     });
+    if (Array.isArray(stories) && stories.length > 0) {
+      syncContactToProposals({ name, surname, fullName, type, role, phone, email, confidential }, stories);
+    }
     res.json({ success: true, id: docRef.id });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -1587,6 +1701,9 @@ app.put('/api/contacts/:id', express.json(), async (req, res) => {
     const { id } = req.params;
     const updates = { ...req.body, updatedAt: admin.firestore.FieldValue.serverTimestamp(), updatedBy: req.user.email };
     await admin.firestore().collection('contacts').doc(id).set(updates, { merge: true });
+    if (Array.isArray(req.body.stories) && req.body.stories.length > 0) {
+      syncContactToProposals({ id, ...updates }, req.body.stories);
+    }
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
