@@ -287,80 +287,214 @@ window.handleDDMMYYBlur = (inputEl) => {
     inputEl.value = formatDateToDDMMYY(inputEl.value);
 };
 
-window.prepareNativeDatePicker = (nativeInput) => {
-    const wrap = nativeInput.closest('.ddmmyy-date-wrap');
-    if (!wrap) return;
-    const textInput = wrap.querySelector('.ddmmyy-input');
-    const iso = ddmmyyToIso(textInput?.value);
-    if (iso && nativeInput.value !== iso) {
-        nativeInput.value = iso;
-    }
-};
+// -------------------------------------------------------------------------
+// Crash-Proof Custom Calendar Popover (Replaces native <input type="date">
+// to prevent Safari WebKit DateTimeChooserMac crash/reload on macOS)
+// -------------------------------------------------------------------------
+let activeCalPopover = null;
+let activeCalTargetInput = null;
+let activeCalYear = new Date().getFullYear();
+let activeCalMonth = new Date().getMonth();
 
-window.openNativeDatePicker = (btnEl) => {
+const MONTH_NAMES = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+];
+
+function closeCustomCalendar() {
+    if (activeCalPopover) {
+        activeCalPopover.remove();
+        activeCalPopover = null;
+    }
+    activeCalTargetInput = null;
+}
+
+function parseDDMMYYToDateObj(val) {
+    const m = String(val || '').trim().match(/^(\d{2})-(\d{2})-(\d{2})$/);
+    if (!m) return null;
+    const dd = parseInt(m[1], 10);
+    const mm = parseInt(m[2], 10) - 1;
+    const yyyy = 2000 + parseInt(m[3], 10);
+    const d = new Date(yyyy, mm, dd);
+    if (isNaN(d.getTime()) || d.getMonth() !== mm || d.getDate() !== dd) return null;
+    return d;
+}
+
+function selectCalendarDate(yyyy, mm, dd) {
+    if (!activeCalTargetInput) return;
+    const ddStr = String(dd).padStart(2, '0');
+    const mmStr = String(mm + 1).padStart(2, '0');
+    const yyStr = String(yyyy).slice(-2);
+    activeCalTargetInput.value = `${ddStr}-${mmStr}-${yyStr}`;
+    activeCalTargetInput.dispatchEvent(new Event('input', { bubbles: true }));
+    activeCalTargetInput.dispatchEvent(new Event('change', { bubbles: true }));
+    closeCustomCalendar();
+}
+
+function renderCustomCalendarGrid() {
+    if (!activeCalPopover) return;
+    const selectedDate = parseDDMMYYToDateObj(activeCalTargetInput?.value);
+    const today = new Date();
+
+    const firstDayOfMonth = new Date(activeCalYear, activeCalMonth, 1);
+    // Monday = 0 ... Sunday = 6
+    const startOffset = (firstDayOfMonth.getDay() + 6) % 7;
+    const daysInMonth = new Date(activeCalYear, activeCalMonth + 1, 0).getDate();
+    const daysInPrevMonth = new Date(activeCalYear, activeCalMonth, 0).getDate();
+
+    let daysHtml = '';
+
+    // Leading days from previous month
+    for (let i = startOffset - 1; i >= 0; i--) {
+        const d = daysInPrevMonth - i;
+        const prevMonth = activeCalMonth === 0 ? 11 : activeCalMonth - 1;
+        const prevYear = activeCalMonth === 0 ? activeCalYear - 1 : activeCalYear;
+        daysHtml += `<button type="button" class="carp-cal-day is-outside" data-y="${prevYear}" data-m="${prevMonth}" data-d="${d}">${d}</button>`;
+    }
+
+    // Current month days
+    for (let d = 1; d <= daysInMonth; d++) {
+        const isToday = today.getFullYear() === activeCalYear && today.getMonth() === activeCalMonth && today.getDate() === d;
+        const isSelected = selectedDate && selectedDate.getFullYear() === activeCalYear && selectedDate.getMonth() === activeCalMonth && selectedDate.getDate() === d;
+        const classes = ['carp-cal-day'];
+        if (isToday) classes.push('is-today');
+        if (isSelected) classes.push('is-selected');
+        daysHtml += `<button type="button" class="${classes.join(' ')}" data-y="${activeCalYear}" data-m="${activeCalMonth}" data-d="${d}">${d}</button>`;
+    }
+
+    // Trailing days to complete 6 rows (42 cells) or 5 rows (35 cells)
+    const totalCells = startOffset + daysInMonth;
+    const targetCells = totalCells > 35 ? 42 : 35;
+    for (let d = 1; d <= targetCells - totalCells; d++) {
+        const nextMonth = activeCalMonth === 11 ? 0 : activeCalMonth + 1;
+        const nextYear = activeCalMonth === 11 ? activeCalYear + 1 : activeCalYear;
+        daysHtml += `<button type="button" class="carp-cal-day is-outside" data-y="${nextYear}" data-m="${nextMonth}" data-d="${d}">${d}</button>`;
+    }
+
+    activeCalPopover.innerHTML = `
+        <div class="carp-cal-header">
+            <button type="button" class="carp-cal-nav" data-nav="-1" title="Previous Month">‹</button>
+            <span class="carp-cal-title">${MONTH_NAMES[activeCalMonth]} ${activeCalYear}</span>
+            <button type="button" class="carp-cal-nav" data-nav="1" title="Next Month">›</button>
+        </div>
+        <div class="carp-cal-weekdays">
+            <span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span><span>Su</span>
+        </div>
+        <div class="carp-cal-grid">
+            ${daysHtml}
+        </div>
+        <div class="carp-cal-footer">
+            <button type="button" data-action="clear">Clear</button>
+            <button type="button" data-action="today">Today</button>
+        </div>
+    `;
+}
+
+function positionCalendarPopover(wrapEl) {
+    if (!activeCalPopover || !wrapEl) return;
+    const rect = wrapEl.getBoundingClientRect();
+    const popW = 260;
+    const popH = 290;
+    let top = rect.bottom + 6;
+    if (top + popH > window.innerHeight - 10 && rect.top - popH - 6 > 10) {
+        top = rect.top - popH - 6;
+    }
+    let left = rect.left;
+    if (left + popW > window.innerWidth - 12) {
+        left = Math.max(12, window.innerWidth - popW - 12);
+    }
+    activeCalPopover.style.top = `${top}px`;
+    activeCalPopover.style.left = `${left}px`;
+}
+
+window.openNativeDatePicker = (btnEl, ev) => {
+    if (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+    }
     const wrap = btnEl.closest('.ddmmyy-date-wrap');
     if (!wrap) return;
     const textInput = wrap.querySelector('.ddmmyy-input');
-    const nativeInput = wrap.querySelector('.ddmmyy-native-picker');
-    if (!nativeInput) return;
-    const iso = ddmmyyToIso(textInput?.value);
-    if (iso) nativeInput.value = iso;
-    try {
-        nativeInput.focus();
-    } catch (e) {}
-    if (typeof nativeInput.showPicker === 'function') {
-        try {
-            nativeInput.showPicker();
+    if (!textInput) return;
+
+    if (activeCalPopover && activeCalTargetInput === textInput) {
+        closeCustomCalendar();
+        return;
+    }
+
+    closeCustomCalendar();
+    activeCalTargetInput = textInput;
+
+    const parsed = parseDDMMYYToDateObj(textInput.value) || new Date();
+    activeCalYear = parsed.getFullYear();
+    activeCalMonth = parsed.getMonth();
+
+    activeCalPopover = document.createElement('div');
+    activeCalPopover.className = 'carp-cal-popover';
+    activeCalPopover.addEventListener('mousedown', (e) => {
+        // Prevent input blur or form events while interacting with calendar
+        e.stopPropagation();
+    });
+    activeCalPopover.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const navBtn = e.target.closest('.carp-cal-nav');
+        if (navBtn) {
+            const delta = parseInt(navBtn.dataset.nav, 10);
+            activeCalMonth += delta;
+            if (activeCalMonth < 0) {
+                activeCalMonth = 11;
+                activeCalYear--;
+            } else if (activeCalMonth > 11) {
+                activeCalMonth = 0;
+                activeCalYear++;
+            }
+            renderCustomCalendarGrid();
             return;
-        } catch (e) {}
-    }
-    try {
-        nativeInput.click();
-    } catch (e) {}
+        }
+        const dayBtn = e.target.closest('.carp-cal-day');
+        if (dayBtn) {
+            const y = parseInt(dayBtn.dataset.y, 10);
+            const m = parseInt(dayBtn.dataset.m, 10);
+            const d = parseInt(dayBtn.dataset.d, 10);
+            selectCalendarDate(y, m, d);
+            return;
+        }
+        const actionBtn = e.target.closest('button[data-action]');
+        if (actionBtn) {
+            if (actionBtn.dataset.action === 'today') {
+                const now = new Date();
+                selectCalendarDate(now.getFullYear(), now.getMonth(), now.getDate());
+            } else if (actionBtn.dataset.action === 'clear' && activeCalTargetInput) {
+                activeCalTargetInput.value = '';
+                activeCalTargetInput.dispatchEvent(new Event('input', { bubbles: true }));
+                activeCalTargetInput.dispatchEvent(new Event('change', { bubbles: true }));
+                closeCustomCalendar();
+            }
+        }
+    });
+
+    document.body.appendChild(activeCalPopover);
+    renderCustomCalendarGrid();
+    positionCalendarPopover(wrap);
 };
 
-let isSyncingNativeDate = false;
-window.syncFromNativeDatePicker = (nativeInput) => {
-    if (isSyncingNativeDate) return;
-    const wrap = nativeInput.closest('.ddmmyy-date-wrap');
-    if (!wrap) return;
-    const textInput = wrap.querySelector('.ddmmyy-input');
-    const val = nativeInput.value;
-    if (!val || String(val).length < 10) return;
-
-    isSyncingNativeDate = true;
-    try {
-        if (textInput) {
-            textInput.value = formatDateToDDMMYY(val);
-            textInput.dispatchEvent(new Event('change', { bubbles: true }));
-            textInput.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-
-        // Force dismiss the calendar popup immediately:
-        // 1. Explicitly blur the native input
-        try {
-            nativeInput.blur();
-        } catch (e) {}
-
-        // 2. Toggling input type destroys the Chromium/WebKit native popup overlay
-        try {
-            nativeInput.type = 'text';
-            nativeInput.type = 'date';
-            nativeInput.value = val;
-        } catch (e) {}
-
-        // 3. Shift focus to text input so the calendar popup is dismissed
-        if (textInput) {
-            try {
-                textInput.focus();
-            } catch (e) {}
-        }
-    } finally {
-        setTimeout(() => {
-            isSyncingNativeDate = false;
-        }, 120);
+// Close custom calendar when clicking outside or pressing Escape
+document.addEventListener('mousedown', (e) => {
+    if (!activeCalPopover) return;
+    if (e.target.closest('.carp-cal-popover') || e.target.closest('.ddmmyy-picker-btn')) return;
+    closeCustomCalendar();
+});
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && activeCalPopover) {
+        closeCustomCalendar();
     }
-};
+});
+window.addEventListener('scroll', () => {
+    if (activeCalPopover && activeCalTargetInput) {
+        const wrap = activeCalTargetInput.closest('.ddmmyy-date-wrap');
+        if (wrap) positionCalendarPopover(wrap);
+    }
+}, true);
 
 window.handleTime24Input = (inputEl) => {
     const raw = inputEl.value;
@@ -382,9 +516,8 @@ function renderDateInputHTML(name, val = '', extraStyle = '') {
     const formatted = formatDateToDDMMYY(val);
     return `
     <div class="ddmmyy-date-wrap" ${extraStyle ? `style="${extraStyle}"` : ''}>
-        <input type="text" name="${name}" class="ddmmyy-input" placeholder="DD-MM-YY" maxlength="8" inputmode="numeric" value="${formatted}" oninput="window.handleDDMMYYInput(this)" onblur="window.handleDDMMYYBlur(this)" title="Date (DD-MM-YY)">
-        <button type="button" class="ddmmyy-picker-btn" tabindex="-1" title="Select date (DD-MM-YY)" onclick="window.openNativeDatePicker(this)">📅</button>
-        <input type="date" class="ddmmyy-native-picker" tabindex="-1" onpointerdown="window.prepareNativeDatePicker(this)" onfocus="window.prepareNativeDatePicker(this)" onchange="window.syncFromNativeDatePicker(this)" oninput="window.syncFromNativeDatePicker(this)">
+        <input type="text" name="${name}" class="ddmmyy-input" placeholder="DD-MM-YY" maxlength="8" inputmode="numeric" autocomplete="off" value="${formatted}" oninput="window.handleDDMMYYInput(this)" onblur="window.handleDDMMYYBlur(this)" title="Date (DD-MM-YY)">
+        <button type="button" class="ddmmyy-picker-btn" tabindex="-1" title="Select date (DD-MM-YY)" onclick="window.openNativeDatePicker(this, event)">📅</button>
     </div>`;
 }
 
